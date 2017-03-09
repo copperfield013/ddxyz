@@ -43,12 +43,7 @@
         <property name="acquireRetryAttempts" value="60"></property>  
         <property name="breakAfterAcquireFailure" value="false"></property> 
     </bean>
-	<!-- 加载jdbc.properties配置文件 -->
-    <bean id="jdbcPropCfg" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="order" value="1" />
-		<property name="ignoreUnresolvablePlaceholders" value="true" />
-		<property name="locations" value="classpath:jdbc.properties" />  
-	</bean> 
+	
  
 	<!-- 开启事务管理器（声明式事务在tx:annotation-driven中打开） -->  
 	 <bean id="transactionManager"

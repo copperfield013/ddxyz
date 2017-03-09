@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ include file="/WEB-INF/jsp/common/base.jsp"%>
+<%@ include file="/WEB-INF/jsp/common/base_empty.jsp"%>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -9,8 +9,8 @@
 <body>
 	<div data-role="page">
 		<div data-role="content">
+			微信主页
 			<div class="order-dest">
-				
 			</div>
 			<div class="order-product">
 				

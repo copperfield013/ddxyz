@@ -26,6 +26,6 @@
 	</mvc:interceptors>
 	
 	<!-- 微信Js安全接口证书 -->
-	<mvc:resources mapping="/MP_verify_MRdq6BiOsXRFSB0M.txt" location="/resources/MP_verify_MRdq6BiOsXRFSB0M.txt" />
+	<mvc:resources mapping="/MP_verify_SqRzGfNfLdgz3Hsl.txt" location="/resources/MP_verify_SqRzGfNfLdgz3Hsl.txt" />
 	
 </beans>
