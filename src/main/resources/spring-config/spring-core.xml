@@ -11,12 +11,25 @@
 
 	<!-- 默认日期时间格式 -->
 	<bean id="dateFormat" class="cn.sowell.copframe.dto.format.OfDateFormat" scope="singleton"></bean>
-	<!-- jackson的工具类 -->
-	<!-- <bean id="jacksonUtils" class="cn.sowell.copframe.jackson.DefaultJacksonUtils">
-		<constructor-arg>
-			<bean class="cn.sowell.copframe.messageConverter.OfObjectMapper">
-				<constructor-arg ref="dateFormat" />
-			</bean>
-		</constructor-arg>
-	</bean> -->
+	
+	<!-- 微信模块的service -->
+	<context:component-scan base-package="cn.sowell.copframe.weixin.*.service.impl" />
+	<!-- 微信预付款订单工厂对象 -->
+	<bean id="prepayOrderFactory" class="cn.sowell.copframe.weixin.pay.prepay.DefaultPrepayOrderFactory" >
+		<property name="strategies">
+			<bean class="cn.sowell.copframe.weixin.pay.prepay.JsApiPrepayOrderHandleStrategy" />
+		</property>
+	</bean>
+	
+	<!-- 加载jdbc.properties配置文件 -->
+    <bean id="propConfig" class="cn.sowell.copframe.common.property.PropertyPlaceholder">
+		<property name="order" value="1" />
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+		<property name="locations">
+			<list>
+				<value>classpath:jdbc.properties</value>
+				<value>classpath:config.properties</value>
+			</list>
+		</property>  
+	</bean> 
 </beans>    

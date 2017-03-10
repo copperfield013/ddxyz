@@ -22,10 +22,11 @@
 	<context:component-scan base-package="cn.sowell.ddxyz.*.controller.*" />
 	
 	<mvc:interceptors>
-		<bean class="cn.sowell.ddxyz.common.weixin.interceptor.CommonRequestAttributeSetInterceptor" />
+		<!-- 用于在请求中设置一些常用的变量 -->
+		<bean class="cn.sowell.ddxyz.weixin.interceptor.CommonRequestAttributeSetInterceptor" />
 	</mvc:interceptors>
 	
-	<!-- 微信Js安全接口证书 -->
-	<mvc:resources mapping="/MP_verify_SqRzGfNfLdgz3Hsl.txt" location="/resources/MP_verify_SqRzGfNfLdgz3Hsl.txt" />
+	<!-- 预付款订单号生成器 -->
+	<bean id="prepayTradeNoGenerator" class="cn.sowell.ddxyz.weixin.common.PrepayTradeNoGenerator"/>
 	
 </beans>

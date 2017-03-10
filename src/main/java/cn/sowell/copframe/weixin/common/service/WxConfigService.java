@@ -1,6 +1,56 @@
 package cn.sowell.copframe.weixin.common.service;
 
+import java.util.Map;
+
+import cn.sowell.copframe.xml.XmlNode;
+
 public interface WxConfigService {
 	String getAppid();
+	
+	/**
+	 * 获得全局唯一的秘钥
+	 * @return
+	 */
 	String getSecret();
+	
+	/**
+	 * 微信支付秘钥（key设置路径：微信商户平台(pay.weixin.qq.com)-->账户设置-->API安全-->密钥设置）
+	 * @return
+	 */
+	String getWxPayKey();
+	
+	/**
+	 * 微信签名生成算法。获得的签名全部是大写
+	 * @param key 秘钥
+	 * @param parameters 要生成签名的各个参数
+	 * @return
+	 */
+	String getSignature(String key, Map<String, String> parameters);
+	/**
+	 * 检查xml的签名合法性
+	 * 如果xml中传入了sign标签，那么清除，并且以signature参数为准。
+	 * 如果参数sinature为null，那么用sign标签的值来验证
+	 * <b>注意区分大小写，验证的签名应该全部是大写</b>
+	 * @param signature
+	 * @param xml
+	 * @return
+	 */
+	boolean checkSignature(String signature, XmlNode xml);
+	
+	/**
+	 * 微信商户号
+	 * @return
+	 */
+	String getMerchantId();
+	/**
+	 * 微信支付的通知地址
+	 * @return
+	 */
+	String getPayNotifyURL();
+	/**
+	 * 获得项目所在地址
+	 * @return
+	 */
+	String getProjectURL();
+	
 }

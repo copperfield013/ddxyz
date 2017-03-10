@@ -1,11 +1,17 @@
 package cn.sowell.copframe.utils;
 
+import java.math.BigInteger;
 import java.net.URLDecoder;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
 import org.apache.log4j.Logger;
 
 public class TextUtils {
+	static Logger logger = Logger.getLogger(TextUtils.class);
+	
+	
 	/**
 	 * 传入多个字符串对象，取第一个不为空的字符串
 	 * @param texts
@@ -20,7 +26,6 @@ public class TextUtils {
 		return null;
 	}
 	
-Logger logger = Logger.getLogger(TextUtils.class);
 	
 	/**
 	  * 去除字符串首尾的特定字符序列
@@ -167,4 +172,22 @@ Logger logger = Logger.getLogger(TextUtils.class);
 				return this.scope;
 			}
 		}
+
+	 
+	/**
+	 * md5加密
+	 * @param string
+	 * @return
+	 */
+	public static String md5Encode(String string) {
+		;
+		try {
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			md.update(string.getBytes());
+			return new BigInteger(1, md.digest()).toString(16);
+		} catch (NoSuchAlgorithmException e) {
+		}
+		return null;
+	}
+	
 }

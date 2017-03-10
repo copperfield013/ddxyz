@@ -1,4 +1,4 @@
-package cn.sowell.ddxyz.common.weixin.interceptor;
+package cn.sowell.ddxyz.weixin.interceptor;
 
 import org.springframework.ui.ModelMap;
 import org.springframework.web.context.request.WebRequest;

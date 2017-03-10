@@ -1,6 +1,8 @@
 package cn.sowell.copframe.dto.format;
 
 import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.LinkedHashMap;
 /**
  * 
  * <p>Title: FormatUtils</p>
@@ -82,7 +84,7 @@ public class FormatUtils {
 	 * @param o
 	 * @return 如果转换有误，返回false
 	 */
-	public static boolean toBoolean(Object o){
+	public static Boolean toBoolean(Object o){
 		try {
 			if(o != null){
 				if(o instanceof String){
@@ -93,5 +95,47 @@ public class FormatUtils {
 			}
 		} catch (Exception e) {}
 		return false;
+	}
+	
+	public static LinkedHashMap<Object, Object> toMap(Object[] objs){
+		if(objs != null){
+			LinkedHashMap<Object, Object> ret = new LinkedHashMap<Object, Object>();
+			for (Object obj : objs) {
+				ret.put(obj, obj);
+			}
+			return ret;
+		}
+		return null;
+	}
+	
+	public static LinkedHashMap<Object, Object> toMap(Collection<Object> objs){
+		if(objs != null){
+			return toMap(objs.toArray(new Object[objs.size()]));
+		}
+		return null;
+	}
+	
+	/**
+	 * 整合各个方法，将value转换成其他类型的对象
+	 * @param formatClass
+	 * @param value
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T toClass(Class<T> formatClass, Object value){
+		if(String.class.equals(formatClass)){
+			return (T) toString(value);
+		}else if(Integer.class == formatClass){
+			return (T) toInteger(value);
+		}else if(Long.class == formatClass){
+			return (T) toLong(value);
+		}else if(Double.class == formatClass){
+			return (T) toDouble(value);
+		}else if(BigDecimal.class == formatClass){
+			return (T) toBigDecimal(value);
+		}else if(Boolean.class == formatClass){
+			return (T) toBoolean(value);
+		}
+		return null;
 	}
 }

@@ -14,17 +14,6 @@ http://www.springframework.org/schema/context/spring-context-4.3.xsd">
 	<import resource="spring-core.xml"/>
 	<import resource="spring-dao.xml"/>
 	
-	<!-- 加载jdbc.properties配置文件 -->
-    <bean id="propConfig" class="cn.sowell.copframe.common.property.PropertyPlaceholder">
-		<property name="order" value="1" />
-		<property name="ignoreUnresolvablePlaceholders" value="true" />
-		<property name="locations">
-			<list>
-				<value>classpath:jdbc.properties</value>
-				<value>classpath:config.properties</value>
-			</list>
-		</property>  
-	</bean> 
 	
 	
 	<!-- 请求映射处理，位置放在前面表示这些配置的优先级高于spring的默认处理器 -->
@@ -106,10 +95,10 @@ http://www.springframework.org/schema/context/spring-context-4.3.xsd">
 	<mvc:resources mapping="/media/**" location="/resources/media/" />
 	<mvc:resources mapping="/picture/**" location="/resources/picture/" />
 	
-	<context:component-scan base-package="cn.sowell.copframe.weixin.common.service.impl" />
 	
 	<import resource="spring-ddxyz.xml"/>
 	<import resource="spring-security.xml"/>
 	
-	
+	<!-- 微信Js安全接口证书 -->
+	<mvc:resources mapping="/MP_verify_SqRzGfNfLdgz3Hsl.txt" location="/resources/MP_verify_SqRzGfNfLdgz3Hsl.txt" />
 </beans>
