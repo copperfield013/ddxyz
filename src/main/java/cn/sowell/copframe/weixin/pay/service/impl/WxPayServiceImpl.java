@@ -80,7 +80,7 @@ public class WxPayServiceImpl implements WxPayService{
 				singNode = xml.addNode("sign");
 			}
 			LinkedHashMap<String, String> parameters = xml.toTagTextMap();
-			String signature = configService.getSignature(configService.getWxPayKey(), parameters);
+			String signature = configService.getMd5Signature(configService.getWxPayKey(), parameters);
 			singNode.addCDATA(signature);
 			order.setSign(signature);
 		}

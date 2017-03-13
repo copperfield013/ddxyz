@@ -189,5 +189,15 @@ public class TextUtils {
 		}
 		return null;
 	}
+
+	/**
+	 * sha1加密
+	 * @param upperCase
+	 * @return
+	 */
+	public static String sha1Encode(String upperCase) {
+		SHA1 sha1 = new SHA1();
+		return sha1.Digest(upperCase);
+	}
 	
 }

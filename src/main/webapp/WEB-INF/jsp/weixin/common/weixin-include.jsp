@@ -25,8 +25,15 @@
 		    	'$CPF'		: 'COMMON/cpf/cpf-core.js',
 				'utils'		: 'COMMON/cpf/cpf-utils.js',
 				'console'	: 'COMMON/cpf/cpf-console.js',
+				'wxpay'		: 'COMMON/cpf/cpf-wxpay.js',
+				'wxconfig'	: 'MAIN/weixin-sdkconfig.js'
 				//..其他模块
 		  	}
+		});
+		define('$paramMap', function(require, exports){
+			try{
+				$.extend(exports, $.parseJSON('${$paramMapJson}'));
+			}catch(e){}
 		});
 		seajs.use('MAIN/weixin-main.js');
 	});

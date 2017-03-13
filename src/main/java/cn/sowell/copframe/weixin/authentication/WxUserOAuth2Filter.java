@@ -47,12 +47,14 @@ public class WxUserOAuth2Filter implements Filter {
 		//只处理Http请求
 		if(req instanceof HttpServletRequest && res instanceof HttpServletResponse){
 			HttpServletRequest request = (HttpServletRequest) req;
+			HttpSession session = request.getSession();
+			System.out.println(session.getAttribute("aaa"));
+			session.setAttribute("aaa", "aaa");
 			//获得当前会话的认证对象
 			Authentication authentication = context.getAuthentication();
 			logger.debug("过滤微信端请求:[" + HttpRequestUtils.getCompleteURL(request) + "],远程地址[" + request.getRemoteAddr() + "]");
 			//如果当前认证对象为空，那么可能是用户对象还没有构造
 			if(authentication == null || authentication instanceof AnonymousAuthenticationToken){
-				HttpSession session = request.getSession();
 				//从session中获得认证对象
 				WeiXinUser user = (WeiXinUser) session.getAttribute(SystemConstants.WXUSER_KEY);
 				if(user != null){

@@ -49,6 +49,7 @@
 			authentication-manager-ref="wxAuthenticationManager"
 		>
 		<anonymous enabled="false"/>
+		<csrf disabled="true" />
 		<!-- 所有微信用户都有ROLE_WXUSER权限 -->
 		<intercept-url pattern="/weixin/**" access="${wx_default_authen}" />
 		<!-- 把微信授权过滤器放在SESSION_MANAGEMENT_FILTER构建之前，保证在将认证对象保存到Session之前不会被清除-->

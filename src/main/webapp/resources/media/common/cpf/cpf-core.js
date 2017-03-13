@@ -7,7 +7,8 @@ define(function(require, exports, module){
 	var initSequeue = [],
 		pageInitSequeue = [],
 		defaultParamSequeue = [],
-		$loading = undefined
+		$loading = undefined,
+		_data = {}
 	;
 	var $CPF = {
 		/**
@@ -110,6 +111,16 @@ define(function(require, exports, module){
 		closeLoading		: function(){
 			if($loading){
 				$loading.modal('hide');
+			}
+		},
+		data				: function(key, value){
+			if(typeof key === 'string'){
+				if(value !== undefined){
+					_data[key] = value;
+					return $CPF;
+				}else{
+					return _data[key];
+				}
 			}
 		}
 	};

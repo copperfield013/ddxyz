@@ -25,7 +25,7 @@ public interface WxConfigService {
 	 * @param parameters 要生成签名的各个参数
 	 * @return
 	 */
-	String getSignature(String key, Map<String, String> parameters);
+	String getMd5Signature(String key, Map<String, String> parameters);
 	/**
 	 * 检查xml的签名合法性
 	 * 如果xml中传入了sign标签，那么清除，并且以signature参数为准。
@@ -52,5 +52,17 @@ public interface WxConfigService {
 	 * @return
 	 */
 	String getProjectURL();
+
+	/**
+	 * 获得当前的时间戳，单位是秒
+	 * @return
+	 */
+	long getCurrentTimestamp();
+	/**
+	 * 计算签名，以sha1方式加密
+	 * @param signParam
+	 * @return
+	 */
+	String getSha1Signature(Map<String, String> signParam);
 	
 }

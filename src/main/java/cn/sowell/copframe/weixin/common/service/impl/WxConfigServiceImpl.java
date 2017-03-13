@@ -62,15 +62,14 @@ public class WxConfigServiceImpl implements WxConfigService{
 				signNode.empty();
 			}
 			if(signature != null 
-					&& signature.equals(getSignature(getWxPayKey(), xml.toTagTextMap()))){
+					&& signature.equals(getMd5Signature(getWxPayKey(), xml.toTagTextMap()))){
 				return true;
 			}
 		}
 		return false;
 	}
 	
-	@Override
-	public String getSignature(String key, Map<String, String> parameters) {
+	public String getSignature(String key, String encodeType, Map<String, String> parameters) {
 		TreeMap<String, String> map = new TreeMap<String, String>(new Comparator<String>() {
 
 			@Override
@@ -93,10 +92,29 @@ public class WxConfigServiceImpl implements WxConfigService{
 			concat.deleteCharAt(concat.length() - 1);
 		}
 		logger.debug(concat.substring(0, concat.length() - keyLength - 1));
-		return TextUtils.md5Encode(concat.toString()).toUpperCase();
+		if("md5".equalsIgnoreCase(encodeType)){
+			return TextUtils.md5Encode(concat.toString()).toUpperCase();
+		}else if("sha1".equalsIgnoreCase(encodeType)){
+			return TextUtils.sha1Encode(concat.toString()).toUpperCase();
+		}
+		return null;
+	}
+	
+	
+	@Override
+	public String getMd5Signature(String key, Map<String, String> parameters) {
+		return getSignature(key, "md5", parameters);
+	}
+	
+	@Override
+	public String getSha1Signature(Map<String, String> signParam) {
+		return getSignature(null, "sha1", signParam).toLowerCase();
 	}
 
-	
+	@Override
+	public long getCurrentTimestamp() {
+		return System.currentTimeMillis() / 1000;
+	}
 	
 	
 }

@@ -1,47 +1,50 @@
 package cn.sowell.copframe.weixin.common.service.impl;
 
+import javax.annotation.Resource;
+
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-
-import cn.sowell.copframe.common.property.PropertyPlaceholder;
-import cn.sowell.copframe.utils.WXHTTPClient;
+import cn.sowell.copframe.weixin.common.service.WxConfigService;
 import cn.sowell.copframe.weixin.common.service.WxCredentialService;
+import cn.sowell.copframe.weixin.common.utils.TransientData;
 
 @Service
 public class WxCredentialServiceImpl implements WxCredentialService{
-	private static Byte lock = 1;
-	private static String accessToken;
-	private static Long accessExpiresIn;
-	private static long lastGetTokenTime;
+	
 	
 	Logger logger = Logger.getLogger(WxCredentialService.class);
 	
+	@Resource
+	WxConfigService configService;
+	
+	
+	TransientData<String> accessToken = new TransientData<String>();
+	TransientData<String> jsApiTicket = new TransientData<String>();
+	
+	
 	@Override
 	public String getAccessToken() {
-		synchronized (lock) {
-			if(accessToken == null || (System.currentTimeMillis() - lastGetTokenTime) > accessExpiresIn){
-				String reqURL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET";
-				reqURL = reqURL.replace("APPID", PropertyPlaceholder.getProperty("appid"))
-						.replace("APPSECRET", PropertyPlaceholder.getProperty("wxsecret"))
-						;
-				String res = WXHTTPClient.request(reqURL, "GET", null);
-				JSONObject json = JSON.parseObject(res);
-				String thisToken = json.getString("access_token");
-				if(thisToken != null){
-					accessToken = thisToken;
-					accessExpiresIn = json.getLong("expires_in") * 1000;
-					lastGetTokenTime = System.currentTimeMillis();
-				}else{
-					logger.error("请求微信AccessToken时发生错误:返回数据(" + res + ")，请求地址(" 
-							+ reqURL.substring(0, reqURL.length() - 10) 
-							+ "***隐藏10位secret***)" );
-				}
-			}
+		if(!accessToken.hasInit()){
+			String reqURL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET";
+			reqURL = reqURL.replace("APPID", configService.getAppid())
+					.replace("APPSECRET", configService.getSecret())
+					;
+			accessToken.init(reqURL, "access_token");
 		}
-		return accessToken;
+		return accessToken.getValue();
+		
+		
+	}
+	
+	@Override
+	public String getJsApiTicket(){
+		if(!jsApiTicket.hasInit()){
+			String reqUrl = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=ACCESS_TOKEN&type=jsapi";
+			reqUrl = reqUrl.replace("ACCESS_TOKEN", getAccessToken());
+			jsApiTicket.init(reqUrl, "ticket");
+		}
+		return jsApiTicket.getValue();
 	}
 	
 }

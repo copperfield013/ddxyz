@@ -70,6 +70,18 @@ public class HttpRequestUtils {
 			;
 		return url;
 	}
+	
+	public static String getURI(HttpServletRequest req) {
+		String reqURI = req.getRequestURI(),
+				contextPath = req.getContextPath();
+		if(reqURI.startsWith(contextPath)){
+			return reqURI.substring(contextPath.length(), reqURI.length() );
+		}else{
+			logger.error("获得uri失败，requestURI为[" + reqURI + "],contextPath为[" + contextPath + "]，无法截取");
+			return reqURI;
+		}
+	}
+	
 	/**
 	 * 将request中parameter数据转到attribute中
 	 * @param request
@@ -179,6 +191,7 @@ public class HttpRequestUtils {
 		}
 		return null;
 	}
+
 	
 	
 	
