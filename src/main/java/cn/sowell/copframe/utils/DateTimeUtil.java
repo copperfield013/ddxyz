@@ -1,6 +1,7 @@
 package cn.sowell.copframe.utils;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
@@ -24,6 +25,7 @@ public class DateTimeUtil {
 	
 	@SuppressWarnings("rawtypes")
 	public static List getTimeList(String dateString,Calendar cal) throws ParseException{
+		
 		//一周第一天是否为星期天
 		boolean isFirstSunday = (cal.getFirstDayOfWeek() == Calendar.SUNDAY);
 		int day_of_week = cal.get(Calendar.DAY_OF_WEEK);
@@ -45,12 +47,21 @@ public class DateTimeUtil {
 		for(int i=0; i<dateList.length; i++){
 			if(dateList[i].contains("Y")){ //年
 				dateY = dateList[i].split(",");
+				/*if(dateY.length > 0){
+					dateY[0] = dateY[0].substring(1);
+				}*/
 			}
 			if(dateList[i].contains("M")){ //月
 				dateM = dateList[i].split(",");
+				if(dateM.length > 0){
+					dateM[0] = dateM[0].substring(1);
+				}
 			}
 			if(dateList[i].contains("D")){ //日
 				dateD = dateList[i].split(",");
+				if(dateD.length > 0){
+					dateD[0] = dateD[0].substring(1);
+				}
 			}
 			if(dateList[i].contains("T")){ //时间
 				dateT = dateList[i].split(",");
@@ -60,37 +71,20 @@ public class DateTimeUtil {
 			}
 			if(dateList[i].contains("W")){ //周
 				dateW = dateList[i].split(",");
-			}
-		}
-		if(dateY != null){
-			for(int i=0; i<dateY.length; i++){
-				if(dateY[i].contains(String.valueOf(year))){
-					if(dateM != null){
-						for(int j=0; j<dateM.length; j++){
-							if(dateM[j].contains(String.valueOf(month))){
-								if(dateD != null){
-									for(int m=0; m<dateD.length; m++){
-										if(dateD[m].contains(String.valueOf(day))){
-											if(dateT != null){
-												return Arrays.asList(dateT);
-											}
-										}
-									}
-								}else if(dateW != null){
-									for(int n=0; n<dateW.length; n++){
-										if(dateW[n].contains(String.valueOf(day_of_week))){
-											if(dateT != null){
-												return Arrays.asList(dateT);
-											}
-										}
-									}
-								}
-							}
-						}
-					}
+				if(dateW.length > 0){
+					dateW[0] = dateW[0].substring(1);
 				}
 			}
 		}
-		return Arrays.asList("");
+		if(dateY == null || !Arrays.asList(dateY).contains(String.valueOf(year))){
+			return new ArrayList();
+		}
+		if(dateM == null || !Arrays.asList(dateM).contains(String.valueOf(month))){
+			return new ArrayList();
+		}
+		if((dateD != null && !Arrays.asList(dateD).contains(String.valueOf(day))) || (dateW != null && !Arrays.asList(dateW).contains(String.valueOf(day_of_week)))){
+			return new ArrayList();
+		}
+		return Arrays.asList(dateT);
 	}
 }
