@@ -47,9 +47,9 @@ public class DateTimeUtil {
 		for(int i=0; i<dateList.length; i++){
 			if(dateList[i].contains("Y")){ //年
 				dateY = dateList[i].split(",");
-				/*if(dateY.length > 0){
+				if(dateY.length > 0){
 					dateY[0] = dateY[0].substring(1);
-				}*/
+				}
 			}
 			if(dateList[i].contains("M")){ //月
 				dateM = dateList[i].split(",");
