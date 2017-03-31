@@ -7,7 +7,6 @@
 <script src="${basePath }media/jquery-1.11.3.js"></script>
 <!-- SeaJS -->
 <script src="${basePath }media/sea-debug.js"></script>
-
 <!-- 页面加载时把各个JS模块加载到容器当中 -->
 <script type="text/javascript">
 	$(function(){
@@ -20,8 +19,11 @@
 		  	alias	: {
 		    	'$CPF'		: 'COMMON/cpf/cpf-core.js',
 				'utils'		: 'COMMON/cpf/cpf-utils.js',
-				'console'	: 'COMMON/cpf/cpf-console.js'
-				
+				'console'	: 'COMMON/cpf/cpf-console.js',
+				'print'		: 'COMMON/cpf/cpf-print.js',
+				'ajax'		: 'COMMON/cpf/cpf-ajax.js',
+				'page'		: 'COMMON/cpf/cpf-page.js',
+				'dialog'	: 'COMMON/cpf/cpf-dialog.js'
 				//..其他模块
 		  	}
 		});
