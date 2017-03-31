@@ -28,12 +28,18 @@ define(function(require, exports, module){
 		var page = $($page).getLocatePage();
 		if(page instanceof Page){
 			if(page.getType() === 'dialog'){
-				$('a[href],button[href]', page.getContainer()).click(function(){
-					goPage(this, page);
+				$('a[href],button[href]', page.getContainer()).click(function(e){
+					var href = $(this).attr('href');
+					if(href !== '#'){
+						goPage(this, page);
+					}
 				});
 			}else{
 				$('a[href],button[href]', $page).click(function(){
-					goPage(this, page);
+					var href = $(this).attr('href');
+					if(href !== '#'){
+						goPage(this, page);
+					}
 				});
 			}
 			

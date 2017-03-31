@@ -3,7 +3,8 @@
  */
 define(function(require, exports, module){
 	var $CPF = require('$CPF'),
-		Utils = require('utils')
+		Utils = require('utils'),
+		Page = require('page')
 		;
 	/**
 	 * 添加默认方法
@@ -31,7 +32,32 @@ define(function(require, exports, module){
 		lastPageCount	: 1,
 		//分页器显示的每页条数
 		pageSizeOptions	: [5, 10, 15, 20],
-		paginatorGoPage	: $.noop
+		//分页器跳转的方法,this是当前所在Page的对象，PageInfo是分页的信息，包含pageNo和pageSize两个字段
+		paginatorGoPage	: function(pageInfo){
+			if(this instanceof Page){
+				var $content = this.getContent(),
+					$form = $('form', $content).first()
+					;
+				if($form.length === 1){
+					var action = $form.attr('action');
+					if(action){
+						var parameters = $form.serializeArray(),
+							formData = new FormData();
+						
+						for(var i in parameters){
+							formData.append(parameters[i].name, parameters[i].value);
+						}
+						if(pageInfo.pageNo){
+							formData.append('pageNo', pageInfo.pageNo);
+						}
+						if(pageInfo.pageSize){
+							formData.append('pageSize', pageInfo.pageSize);
+						}
+						this.loadContent(action, undefined, formData);
+					}
+				}
+			}
+		}
 	});
 	/**
 	 * 添加页面初始化
@@ -108,7 +134,12 @@ define(function(require, exports, module){
 		}
 		var ul = $('<ul>').addClass('pagination pagination-sm');
 		if(pageInfo.pageNo > 1){
-			ul.append($('<li><a href="#">«</a></li>'));
+			var $firstPage = $('<li>').append($('<a href="#">«</a>').click(function(e){
+				e.stopImmediatePropagation();
+				goPage($(this).getLocatePage(), 1);
+				return false;
+			}));
+			ul.append($firstPage);
 		}
 		for(var i= frontShowBegin; i <= frontShowEnd; i++){
 			buildPagingLi(i).appendTo(ul).addClass(i == pageInfo.pageNo? 'active': undefined);
@@ -120,7 +151,12 @@ define(function(require, exports, module){
 			}
 		}
 		if(pageInfo.pageNo < pageCount){
-			ul.append($('<li><a href="#">»</a></li>'));
+			var $lastPage = $('<li>').append($('<a href="#">»</a>').click(function(e){
+				e.stopImmediatePropagation();
+				goPage($(this).getLocatePage(), pageCount);
+				return false;
+			}));
+			ul.append($lastPage);
 		}
 		//将分页器的页面跳转控件放到ul中
 		ul.append(paginatorJumpLi
@@ -131,17 +167,18 @@ define(function(require, exports, module){
 				.append($('<button type="button" >')
 							.addClass('cpf-paginator-jump-button btn-default btn')
 							.text('go')
-							.click(function(){
+							.click(function(e){
+								e.stopImmediatePropagation();
 								//点击按钮时跳转页面
 								var pageNo = $(this).val();
-								goPage(pageNo, pageSizeSelect.val());
+								goPage($(this).getLocatePage(), pageNo, pageSizeSelect.val());
 								return false;
 							})
 						)
 			);
 		//构造分页器的每页条数选项
 		var  pageSizeOptions = $CPF.getParam('pageSizeOptions')
-		if(!$.inArray(pageInfo.pageSize, pageSizeOptions)){
+		if($.inArray(pageInfo.pageSize, pageSizeOptions) == -1){
 			pageSizeSelect.append('<option value="' + pageInfo.pageSize + '">' + pageInfo.pageSize + '</option>');
 		}
 		for(var i in pageSizeOptions){
@@ -152,19 +189,24 @@ define(function(require, exports, module){
 				.append(pageSizeSelect)
 			);
 		//修改每页条数时，触发跳转
-		pageSizeSelect.change(function(){
+		pageSizeSelect.change(function(e){
+			e.stopImmediatePropagation();
 			var pageSize = $(this).val();
 			var pageNo = Number(ul.find('li.active a').text());
-			goPage(pageNo, pageSize);
+			goPage($(this).getLocatePage(), pageNo, pageSize);
+			return false;
 		});
 		return ul
 	}
 	
 	function buildPagingLi(pageNo){
 		var a = $('<a href="#">' + pageNo + '</a>');
-		a.on('click', function(){
+		a.click(function(e){
+			e.stopImmediatePropagation();
 			var goPageNo = Number($(this).text());
-			goPage(goPageNo);
+			var page = $(this).getLocatePage();
+			goPage(page, goPageNo);
+			return false;
 		});
 		var li = $('<li>').append(a);
 		return li;
@@ -174,10 +216,10 @@ define(function(require, exports, module){
 	/**
 	 * 页面跳转
 	 */
-	function goPage(pageNo, pageSize){
-		$CPF.getParam('paginatorGoPage')({
+	function goPage(page, pageNo, pageSize){
+		$CPF.getParam('paginatorGoPage').apply(page, [{
 			pageNo	: pageNo,
 			pageSize: pageSize
-		});
+		}]);
 	}
 });

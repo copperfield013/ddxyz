@@ -115,7 +115,127 @@ define(function(require, exports){
 				jqObj.toggleClass(class2, !flag);
 			}
 			return this;
+		},
+		/**
+		 * 将dom元素的内容设置为数字编辑器
+		 */
+		NumberEdit	: function(_param, whenEnter){
+			var defaultParam = {
+				$target		: null,
+				scope		: document,
+				whenEnter	: $.noop
+			};
+			var param = {};
+			if(_param instanceof $){
+				$.extend(param, defaultParam, {
+					$target		: _param,
+					whenEnter	: whenEnter
+				});
+			}else{
+				$.extend(param, defaultParam, _param);
+			}
+			$(param.scope).keydown(function(e){
+				if($(e.target).is(':text,textarea')){
+					return;
+				}
+				console.log(e.keyCode);
+				var $number = param.$target,
+					oNumber = $number.text();
+				if(e.keyCode >= 48 && e.keyCode <= 57){
+					oNumber = oNumber === '0'? '': oNumber;
+					oNumber += String(e.keyCode - 48);
+					$number.text(oNumber);
+				}else if(e.keyCode == 13){
+					var _return = param.whenEnter(parseInt(oNumber));
+					if(_return !== false){
+						//回车时将数字置零
+						$number.text(0);
+					}
+				}else if(e.keyCode == 8){
+					if(oNumber.length > 1){
+						oNumber = oNumber.substr(0, oNumber.length - 1);
+					}else{
+						oNumber = '0';
+					}
+					$number.text(oNumber);
+				}
+			});
+		},
+		/**
+		 * 将滚动条滑动到指定元素的位置
+		 */
+		scrollTo	: function($container, position){
+			var $position
+			if(position instanceof $){
+				$position = position;
+			}else{
+				$position = $container.children().last()
+			}
+			$container.scrollTop(
+				$position.offset().top - $container.offset().top + $container.scrollTop()
+			);
+		},
+		createPrintTemp	: function(){
+			//创建打印模板，需要
+			
+		},
+		/**
+		 * 验证联系号码的格式
+		 */
+		testContactNumber	: function(contact){
+			return /^1[34578]\d{9}$/.test(contact)
+			|| /^(\(\d{3,4}\)|\d{3,4}-|\s)?\d{7,8}$/.test(contact)
+		},
+		/**
+		 * 格式化日期
+		 */
+		formatDate			: function(date, fmt){
+			if(typeof date === 'string' && fmt === undefined){
+				fmt = date;
+				date = new Date();
+			}
+			if(date instanceof Date){
+				var o = { 
+						"M+" : date.getMonth()+1,                 //月份 
+						"d+" : date.getDate(),                    //日 
+						"h+" : date.getHours(),                   //小时 
+						"m+" : date.getMinutes(),                 //分 
+						"s+" : date.getSeconds(),                 //秒 
+						"q+" : Math.floor((date.getMonth()+3)/3), //季度 
+						"S"  : date.getMilliseconds()             //毫秒 
+				}; 
+				if(/(y+)/.test(fmt)) {
+					fmt=fmt.replace(RegExp.$1, (date.getFullYear()+"").substr(4 - RegExp.$1.length)); 
+				}
+				for(var k in o) {
+					if(new RegExp("("+ k +")").test(fmt)){
+						fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+					}
+				}
+				return fmt; 
+			}
+		},
+		/**
+		 * 获得当天时间的零点Date对象
+		 * @param date {Date} 传入要获取零点的那天的某个时间对象，不传入时，取当天
+		 * @return {Date} 零点时的时间对象
+		 */
+		getDate			: function(date, incDay){
+			if(!(date instanceof Date)){
+				date = new Date();
+			}else{
+				date = new Date(date);
+			}
+			date.setHours(0);
+			date.setMinutes(0);
+			date.setSeconds(0);
+			date.setMilliseconds(0);
+			if(typeof incDay === 'number' && incDay > 0){
+				date = new Date(Date.parse(date) + incDay * 86400000);
+			}
+			return date;
 		}
+		
 	});
 	
 	function returnTrue(){return true;}
