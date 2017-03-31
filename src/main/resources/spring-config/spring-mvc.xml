@@ -24,6 +24,8 @@ http://www.springframework.org/schema/context/spring-context-4.3.xsd">
       		<list>
         		<!-- PageInfo参数的解析器 -->
         		<bean class="cn.sowell.copframe.dto.page.PageInfoArgumentResolver" />
+        		<!-- JSONObject参数解析器 -->
+        		<bean class="cn.sowell.copframe.dto.ajax.JsonObjectArgumentResolver"/>
       		</list>
     	</property>
     	<!-- Controller返回值的转换器 -->
