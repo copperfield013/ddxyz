@@ -69,7 +69,7 @@ public class CommonRequestAttributeSetInterceptor implements WebRequestIntercept
 				request.setAttribute("$paramMap", paramMap, WebRequest.SCOPE_REQUEST);
 				request.setAttribute("$paramMapJson", JSON.toJSON(paramMap), WebRequest.SCOPE_REQUEST);
 			}
-			req.setAttribute("basePath", basePath + "/");
+			req.setAttribute("basePath", basePath);
 		}
 		
 	}

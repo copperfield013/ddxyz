@@ -3,6 +3,7 @@ package cn.sowell.copframe.dto.format;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 /**
  * 
@@ -114,4 +115,60 @@ public class AbstractFrameDateFormat implements FrameDateFormat{
 		return this.parse(dateStr, format);
 	}
 
+
+	@Override
+	public Date[] splitDateRange(String dateRange, String spliter){
+		Date[] result = new Date[2];
+		if(dateRange != null){
+			String[] strs = dateRange.split(spliter, 2);
+			try {
+				result[0] = dateTimeFormat.parse(strs[0]);
+			} catch (ParseException e) {
+				try {
+					result[0] = dateFormat.parse(strs[0]);
+				} catch (ParseException e1) {
+				}
+			}
+			if(strs.length > 1){
+				try {
+					result[1] = dateTimeFormat.parse(strs[1]);
+				} catch (ParseException e) {
+					try {
+						result[1] = dateFormat.parse(strs[1]);
+					} catch (ParseException e1) {
+					}
+				}
+			}
+		}
+		return result;
+	}
+
+	@Override
+	public Date[] splitDateRange(String dateRange){
+		return splitDateRange(dateRange, "~");
+	}
+	
+
+	@Override
+	public Date getTheDayZero(Date theDay){
+		if(theDay != null){
+			Calendar c = Calendar.getInstance();
+			c.setTime(theDay);
+			c.set(Calendar.HOUR_OF_DAY, 0);
+			c.set(Calendar.MINUTE, 0);
+			c.set(Calendar.SECOND, 0);
+			c.set(Calendar.MILLISECOND, 0);
+			return c.getTime();
+		}
+		return null;
+	}
+	
+	@Override
+	public Date incDay(Date datetime, int incDay){
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(datetime);
+		cal.add(Calendar.DATE, incDay);
+		return cal.getTime();
+	}
+	
 }

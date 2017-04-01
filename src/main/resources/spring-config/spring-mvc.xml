@@ -24,20 +24,13 @@ http://www.springframework.org/schema/context/spring-context-4.3.xsd">
       		<list>
         		<!-- PageInfo参数的解析器 -->
         		<bean class="cn.sowell.copframe.dto.page.PageInfoArgumentResolver" />
-        		<!-- JSONObject参数解析器 -->
-        		<bean class="cn.sowell.copframe.dto.ajax.JsonObjectArgumentResolver"/>
       		</list>
     	</property>
-    	<!-- Controller返回值的转换器 -->
+    	<!-- Controller的消息转换器 -->
     	<property name="messageConverters">
         	<list>
-        		<!-- <bean class="cn.sowell.copframe.messageConverter.JsonResponseConverter">
-	        		<property name="supportedMediaTypes">    
-						<list>    
-							<value>application/json;charset=UTF-8</value>
-						</list>
-					</property>    
-        		</bean> -->
+        		<!-- 支持在application/json请求下，将请求主体转换为JsonRequest对象 -->
+				<bean class="cn.sowell.copframe.messageConverter.JsonRequestConverter" />
         		<!-- 用于将返回的Json字符串转化编码 -->
 				<bean class="cn.sowell.copframe.messageConverter.JsonStringConverter">
 					<property name="supportedMediaTypes">    
@@ -46,6 +39,8 @@ http://www.springframework.org/schema/context/spring-context-4.3.xsd">
 						</list>
 					</property>    
 				</bean>
+				<!-- 用于将返回的jsonReponse对象写到响应正文中 -->
+				<bean class="cn.sowell.copframe.messageConverter.JsonResponseConverter"  />
 				<!-- 用于将返回的纯字符串转换编码 -->
 				<bean class="org.springframework.http.converter.StringHttpMessageConverter">
 					<constructor-arg value="UTF-8" /> 
@@ -55,19 +50,9 @@ http://www.springframework.org/schema/context/spring-context-4.3.xsd">
 						</list>    
 					</property>    
 				</bean>
-				<!-- 用于将普通对象转换为Json字符串并返回 -->
-				<!-- <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" >
-					<property name="supportedMediaTypes">
-						<list>    
-				      		<value>application/json;charset=UTF-8</value>
-				      </list>    
-					</property>
-					<property name="objectMapper">
-						<bean class="cn.sowell.copframe.messageConverter.OfObjectMapper" >
-							<constructor-arg ref="dateFormat" />要求传入时间格式化的工具对象，这个在spring-dao中声明
-						</bean>
-					</property>
-				</bean>    --> 
+				<!-- fastJson的json转换器 -->
+				<bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter4" />
+				<!-- 二进制流转换器 -->
    				<bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter"/> 
         	</list>     
 		</property>

@@ -48,8 +48,6 @@ public class WxUserOAuth2Filter implements Filter {
 		if(req instanceof HttpServletRequest && res instanceof HttpServletResponse){
 			HttpServletRequest request = (HttpServletRequest) req;
 			HttpSession session = request.getSession();
-			System.out.println(session.getAttribute("aaa"));
-			session.setAttribute("aaa", "aaa");
 			//获得当前会话的认证对象
 			Authentication authentication = context.getAuthentication();
 			logger.debug("过滤微信端请求:[" + HttpRequestUtils.getCompleteURL(request) + "],远程地址[" + request.getRemoteAddr() + "]");

@@ -14,14 +14,13 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 
-public class JsonObjectArgumentResolver implements HandlerMethodArgumentResolver{
+public class JsonRequestResolver implements HandlerMethodArgumentResolver{
 
 	@Override
 	public Object resolveArgument(MethodParameter parameter, 
 			ModelAndViewContainer mavContainer, 
 			NativeWebRequest webRequest, 
 			WebDataBinderFactory binderFactory) throws Exception {
-		// TODO Auto-generated method stub
 		HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
 		BufferedReader reader = request.getReader();
 		StringBuffer buffer = new StringBuffer();
@@ -30,13 +29,15 @@ public class JsonObjectArgumentResolver implements HandlerMethodArgumentResolver
 			buffer.append(line);
 		}
 		JSONObject json = JSON.parseObject(buffer.toString());
-		return json;
+		JsonRequest jr = new JsonRequest();
+		jr.setJsonObject(json);
+		return jr;
 	}
 
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
 		Class<?> paramClass = parameter.getParameterType();
-		if(JSONObject.class.isAssignableFrom(paramClass)){
+		if(JsonRequest.class.isAssignableFrom(paramClass)){
 			return true;
 		}
 		return false;

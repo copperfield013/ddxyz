@@ -1,9 +1,12 @@
 package cn.sowell.ddxyz.admin.controller.demo;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.fastjson.JSONObject;
+import cn.sowell.copframe.dto.ajax.JsonRequest;
+import cn.sowell.copframe.dto.ajax.JsonResponse;
 
 @Controller
 @RequestMapping("/admin/demo")
@@ -14,9 +17,11 @@ public class DemoController {
 		return "/admin/demo/index.jsp";
 	}
 	
-	@RequestMapping(value="/testJson",headers="ACCEPT=application/json")
-	public String testJson(JSONObject json){
-		return json.toJSONString();
+	@ResponseBody
+	@RequestMapping(value="/testJson")
+	public Object testJson(@RequestBody JsonRequest jReq, JsonResponse jRes){
+		System.out.println(jReq);
+		return jRes.setJsonObject(jReq.getJsonObject());
 	}
 	
 	

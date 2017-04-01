@@ -88,5 +88,32 @@ public interface FrameDateFormat {
 	 * @see {@link #parse(String, DateFormat)}
 	 */
 	public Date parse(String dateStr, String formatStr);
+	/**
+	 * 从字符串中分割时间范围
+	 * @param dateRange 包含时间范围的字符串
+	 * @param spliter 分割开始时间和结束时间的字符串
+	 * @return 一个数组，包含两个元素，第一个是开始时间，第二个时间结束时间。
+	 * 无论字符串是否包含两个时间，都会返回长度为2的数组，但是元素可能为null
+	 */
+	Date[] splitDateRange(String dateRange, String spliter);
+	/**
+	 * 用符号“~”来分割开始时间和结束时间的字符串
+	 * @param dateRange 时间范围字符串 
+	 * @return 
+	 * @see DateUtils#splitDateRange(String, String)
+	 */
+	Date[] splitDateRange(String dateRange);
+	/**
+	 * 获得某天的零点时间对象
+	 * @return
+	 */
+	Date getTheDayZero(Date theDay);
+	/**
+	 * 根据日期，获得增加指定天数后的日期对象
+	 * @param datetime 初始时间
+	 * @param incDay 增加的天数，可以为负数
+	 * @return 返回计算后的日期时间对象，注意只有日期改变，时间不变
+	 */
+	Date incDay(Date datetime, int incDay);
 
 }
