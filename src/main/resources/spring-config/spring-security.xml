@@ -9,6 +9,12 @@
 	>
 
 	<debug />
+	<!-- 处理管理系统登录之后的认证对象 -->
+	<authentication-manager alias="authenticationManager" id="authenticationManager" erase-credentials="false">
+		<authentication-provider user-service-ref="adminUserService">
+			<password-encoder hash="md5" />
+		</authentication-provider>
+	</authentication-manager>
 	<!-- 拦截管理界面请求 -->
 	<http pattern="/admin/login" security="none" />
 	<http pattern="/admin/**" use-expressions="false" auto-config="true" authentication-manager-ref="authenticationManager">
@@ -31,14 +37,6 @@
 			invalidate-session="true" delete-cookies="JSESSIONID" />
 	</http>
 
-	<!-- 处理管理系统登录之后的认证对象 -->
-	<authentication-manager alias="authenticationManager" erase-credentials="false">
-		<authentication-provider user-service-ref="adminUserSerivice">
-			<password-encoder hash="md5" />
-		</authentication-provider>
-	</authentication-manager>
-
-
 
 	<!-- 用于微信授权 -->
 	<http pattern="${wx_authenticate_uri}" security="none" />
@@ -57,13 +55,17 @@
 	</http>
 
 	<!-- 用于微信授权后的验证 -->
-	<authentication-manager alias="wxAuthenticationManager">
+	<authentication-manager alias="wxAuthenticationManager" id="wxAuthenticationManager">
 		<authentication-provider ref="wxAuthenticationProvider"/>
 	</authentication-manager>
 	<!-- 用于处理微信授权后的本地权限处理 -->
 	<beans:bean id="wxAuthenticationProvider" class="cn.sowell.copframe.weixin.authentication.WxAuthenticationProvider" />
 	<!-- 用于从微信OAuth2服务器获取微信用户的信息 -->
 	<beans:bean id="wxUserOAuth2Filter" class="cn.sowell.copframe.weixin.authentication.WxUserOAuth2Filter" />
+	
+	
+	
+	
 	
 	
 </beans:beans>
