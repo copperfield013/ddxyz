@@ -10,7 +10,7 @@ import org.springframework.util.StringUtils;
 import cn.sowell.ddxyz.model.admin.dao.AdminUserDao;
 import cn.sowell.ddxyz.model.admin.service.AdminUserService;
 
-@Service("adminUserSerivice")
+@Service("adminUserService")
 public class AdminUserServiceImpl implements AdminUserService {
 
 	@Resource

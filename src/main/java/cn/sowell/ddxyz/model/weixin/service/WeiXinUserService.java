@@ -1,7 +1,6 @@
 package cn.sowell.ddxyz.model.weixin.service;
 
 import cn.sowell.copframe.weixin.authentication.WxUserPrincipal;
-import cn.sowell.copframe.weixin.authentication.WxAuthorizationAccessToken;
 import cn.sowell.ddxyz.model.weixin.pojo.WeiXinUser;
 
 import com.alibaba.fastjson.JSONObject;
