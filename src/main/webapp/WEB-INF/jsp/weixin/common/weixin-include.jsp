@@ -26,6 +26,9 @@
 				'utils'		: 'COMMON/cpf/cpf-utils.js',
 				'console'	: 'COMMON/cpf/cpf-console.js',
 				'wxpay'		: 'COMMON/cpf/cpf-wxpay.js',
+				'ajax'		: 'COMMON/cpf/cpf-ajax.js',
+				'page'		: 'COMMON/cpf/cpf-page.js',
+				'dialog'	: 'COMMON/cpf/cpf-dialog.js',
 				'wxconfig'	: 'MAIN/weixin-sdkconfig.js'
 				//..其他模块
 		  	}

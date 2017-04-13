@@ -1,0 +1,135 @@
+@charset "utf-8";
+html {
+  color: #000;
+  font-size: 15px;
+}
+/* 按钮 */
+a.btn {
+  display: inline-block;
+  color: #00A048;
+  background-color: #fff;
+  border: 1px solid #00A048;
+  line-height: 2em;
+  -webkit-border-radius: 2em;
+  -moz-border-radius: 2em;
+  border-radius: 2em;
+  padding: 0 1em;
+}
+/* 表单 */
+input,
+textarea,
+select {
+  color: inherit;
+  font-size: inherit;
+  font-family: inherit;
+  border: none;
+  outline: 0;
+  background-color: transparent;
+}
+.form h4 {
+  font-weight: normal;
+  line-height: 35px;
+  padding: 0 15px;
+  background-color: #F7F7F6;
+}
+.form dl {
+  display: flex;
+  align-items: center;
+  position: relative;
+  height: 50px;
+  padding: 0 15px;
+  background-color: #fff;
+  border-bottom: 1px solid #E6E3E5;
+}
+.form dl dt {
+  width: 105px;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+.form dl dd {
+  flex: 1;
+  position: relative;
+}
+.form dl dd input,
+.form dl dd select {
+  width: 100%;
+  -webkit-appearance: none;
+  height: 1.5em;
+  line-height: 1.5em;
+}
+.form dl dd select {
+  padding-right: 30px;
+}
+.form .select dd:after {
+  content: " ";
+  display: inline-block;
+  height: 6px;
+  width: 6px;
+  border-width: 2px 2px 0 0;
+  border-color: #C8C8CD;
+  border-style: solid;
+  -webkit-transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
+  transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  margin-top: -4px;
+}
+.form label.error {
+  position: absolute;
+  right: 8px;
+  top: 0;
+  font-family: icon;
+  font-size: 16px;
+  color: #e64340;
+}
+.form label.error:before {
+  content: "\e63d";
+}
+main {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 52px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  box-sizing: content-box;
+  pointer-events: auto;
+  -webkit-overflow-scrolling: touch;
+  overflow-scrolling: touch;
+}
+/* 底部 */
+footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 52px;
+  line-height: 52px;
+  display: flex;
+  font-size: 17px;
+  text-align: center;
+  border-top: 1px solid #efefef;
+}
+footer .order {
+  width: 130px;
+  background-color: #fefefe;
+  color: #004621;
+}
+footer .order:before {
+  font-family: icon;
+  content: '\e6f8';
+  margin-right: .5em;
+}
+footer .main {
+  flex: 2;
+  background-color: #004621;
+  color: #fff;
+}
+@font-face {
+  font-family: 'icon';
+  /* project id 252810 */
+  src: url('../font/iconfont.eot');
+  src: url('../font/iconfont.eot?#iefix') format('embedded-opentype'), url('../font/iconfont.woff') format('woff'), url('../font/iconfont.ttf') format('truetype'), url('../font/iconfont.svg#icon') format('svg');
+}

@@ -1,0 +1,47 @@
+@charset "utf-8";
+
+/* 单选/复选框 */
+input[type="checkbox"].x-check,input[type="radio"].x-check {
+    position: absolute;
+	left: -9999px;
+	/* visibility: hidden; */ /* IE8下隐藏提交无效 */
+}
+label.x-check {
+	position: relative;
+	display: inline-block;
+	cursor: pointer;
+	margin: 5px 10px 5px 0px;
+	padding: 0 1.5em;
+	height: 2.5em;
+	line-height: 2.5em;
+	text-align: center;
+    color: #444;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    overflow: hidden;
+}
+label.x-check.radio {
+	-webkit-border-radius: 2.5em;
+	-moz-border-radius: 2.5em;
+	border-radius: 2.5em;
+}
+label.x-check.checkbox {
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+label.x-check.checked {
+    color: #00A048;
+    border-color: #E6F4E9;
+    background-color: #E6F4E9;
+}
+label.x-check.checkbox.checked:after {
+    font-family: icon;
+    content: '\e65c';
+    position: absolute;
+    display: block;
+    bottom: -9px;
+    right: -3px;
+    font-size: 22px;
+    border-radius: 5px;
+}

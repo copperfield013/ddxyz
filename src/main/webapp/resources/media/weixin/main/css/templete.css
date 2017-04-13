@@ -1,0 +1,60 @@
+@charset "utf-8";
+html {
+  font: normal 13px/1.5em Microsoft YaHei, Arial, Verdana, Tahoma, Sans-serif;
+}
+* {
+  margin: 0;
+  padding: 0;
+}
+body,
+a,
+input,
+textarea,
+select,
+option,
+button,
+pre {
+  font: inherit;
+}
+ol,
+ul,
+li,
+dl,
+dd,
+dt,
+img {
+  display: block;
+  list-style: none;
+  overflow: hidden;
+}
+a,
+input,
+img,
+textarea,
+del,
+ins {
+  text-decoration: none;
+  text-shadow: none !important;
+  outline: none !important;
+}
+img {
+  display: inline-block;
+}
+.clearfix {
+  clear: both;
+  float: none;
+}
+.clear-both:after {
+  content: " ";
+  display: block;
+  height: 0;
+  clear: both;
+}
+.table-cell:after {
+  content: " . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ";
+  visibility: hidden;
+  clear: both;
+  height: 0!important;
+  display: block;
+  line-height: 0;
+}

@@ -1,0 +1,46 @@
+@charset "utf-8";
+
+/* 单选/复选框 */
+input[type="number"].x-number {
+    position: absolute;
+	left: -9999px;
+	/* visibility: hidden; */ /* IE8下隐藏提交无效 */
+}
+label.x-number {
+	position: relative;
+	display: inline-block;
+	cursor: pointer;
+}
+
+label.x-number i {
+    display: inline-block;
+    font-style: normal;
+}
+label.x-number i.text {
+    margin: 0 15px;
+}
+label.x-number i.minus, label.x-number i.plus {
+    font-family: icon;
+    cursor: pointer;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    font-size: 15px;
+    border: 1px solid #009239;
+}
+label.x-number i.minus {
+    color: #009239;
+    background-color: #fff;
+}
+label.x-number i.plus {
+    color: #fff;
+    background-color: #009239;
+}
+label.x-number i.minus:before {
+    content: "\e632";
+}
+label.x-number i.plus:before {
+    content: "\e619";
+}

@@ -1,0 +1,135 @@
+@charset "utf-8";
+header img {
+  width: 100%;
+}
+.block {
+  margin: 20px 15px 40px;
+}
+.block h4 {
+  font-size: 17px;
+}
+.block h4:before {
+  font-family: icon;
+  margin-right: 8px;
+}
+.block h4 pre {
+  display: inline;
+  white-space: inherit;
+  margin-left: 1em;
+  font-weight: normal;
+  font-size: 14px;
+}
+.block h4 pre:before {
+  content: '*';
+  color: red;
+}
+.timeline h4:before {
+  content: '\e74f';
+}
+.timeline p {
+  display: flex;
+  justify-content: space-between;
+  margin: 15px 0;
+}
+.timeline p > * {
+  display: inline-block;
+  text-align: center;
+  width: 5em;
+  line-height: 2.5em;
+  -webkit-border-radius: 2.5em;
+  -moz-border-radius: 2.5em;
+  border-radius: 2.5em;
+  border: 1px solid #E6F4E9;
+}
+.timeline p .no {
+  border-color: #ccc;
+  color: #666;
+}
+.timeline p .yes {
+  background-color: #E6F4E9;
+  color: #00A048;
+}
+.milktea h4:before {
+  content: '\e606';
+}
+.milktea p {
+  margin: 20px 0;
+}
+.milktea p img {
+  display: block;
+  float: left;
+  width: 130px;
+  height: 130px;
+  margin-right: 20px;
+}
+.milktea p span {
+  display: block;
+  line-height: 30px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.milktea p .name {
+  font-size: 18px;
+  padding: 30px 0 10px;
+}
+.milktea p .price b {
+  font-weight: normal;
+  font-size: 16px;
+  color: red;
+}
+.milktea p .price i {
+  font-style: normal;
+  margin-left: .5em;
+  letter-spacing: -1px;
+}
+.milktea p:after {
+  content: " ";
+  display: block;
+  height: 0;
+  clear: both;
+}
+.address h4:before {
+  content: '\e750';
+}
+.address p {
+  margin: 20px 0;
+}
+.address p img {
+  display: block;
+  float: left;
+  width: 150px;
+  height: auto;
+  margin-right: 20px;
+}
+.address p span {
+  display: block;
+  line-height: 1.5em;
+}
+.address p .name {
+  font-size: 18px;
+  padding: 15px 0 5px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.address p .name:after {
+  font-family: icon;
+  content: '\e65b';
+  margin-left: .5em;
+}
+.address p .addr {
+  line-height: 1.5em;
+  height: 3em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.address p:after {
+  content: " ";
+  display: block;
+  height: 0;
+  clear: both;
+}
