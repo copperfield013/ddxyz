@@ -14,7 +14,8 @@
     <!--<script src="js/less.min.js"></script>-->
     <link rel="stylesheet" href="${basePath }media/weixin/main/css/templete.css">
     <link rel="stylesheet" href="${basePath }media/weixin/main/css/common.css">
-    <link rel="stylesheet" href="${basePath }media/weixin/main/css/order.css">
+    <!-- <link rel="stylesheet" href="${basePath }media/weixin/main/css/order.css"> -->
+    <link rel="stylesheet" href="${basePath }media/weixin/main/css/orderFix.css">
     <script src="${basePath }media/weixin/main/js/ix.js"></script>
     <script>
     $(function() {
@@ -25,6 +26,7 @@
 <body>
 <main>
     <!-- 待收货 -->
+    <!--  
     <div class="order">
         <p class="number">订单号：M1790378T1<i class="todo">待收货</i></p>
         <p class="detail">
@@ -39,8 +41,9 @@
             <span class="money">总价：<b>￥12.0</b></span>
         </p>
     </div>
+    -->
     <!-- 已取消 -->
-    <div class="order">
+   <!-- <div class="order">
         <p class="number">订单号：M1790378T1<i class="cancel">已取消</i></p>
         <p class="detail">
             <img src="${basePath }media/weixin/main/image/thumb-tea1.jpg" alt="奶茶1">
@@ -52,6 +55,42 @@
             <img src="${basePath }media/weixin/main/image/thumb-tea2.jpg" alt="奶茶2">
             <span class="name">玛奇朵<i>2</i></span>
             <span class="price">单价：￥14.0</span>
+        </p>
+        <p class="result">
+            <span class="time">2016/06/21 9:30:25</span>
+            <span class="count">总计<b>3</b>杯</span>
+            <span class="money">总价：<b>￥40.0</b></span>
+        </p>
+        <p class="tool">
+            <a href="javascript:;" class="btn">继续支付</a>
+        </p>
+    </div>
+    -->
+    <!-- 待收货 -->
+    <div class="order">
+        <p class="number">订单号：M1790378T1<i class="todo">待收货</i></p>
+        <p class="detail">
+            <img src="${basePath }media/weixin/main/image/thumb-tea1.jpg" alt="奶茶1">
+            <span class="name">奶茶<i>￥12.0</i></span>
+            <a href="javascript:;" class="btn">再次购买</a>
+        </p>
+        <p class="result">
+            <span class="time">2016/06/21 9:30:25</span>
+            <span class="count">总计<b>1</b>杯</span>
+            <span class="money">总价：<b>￥12.0</b></span>
+        </p>
+    </div>
+    <!-- 已取消 -->
+    <div class="order">
+        <p class="number">订单号：M1790378T1<i class="cancel">已取消</i></p>
+        <p class="detail">
+            <img src="${basePath }media/weixin/main/image/thumb-tea1.jpg" alt="奶茶1">
+            <span class="name">奶茶<i>￥12.0</i></span>          
+            <span class="option">四季春茶|去冰|大杯|红豆、仙草、波霸、珍珠、椰果</span>
+        </p>
+        <p class="detail">
+            <img src="${basePath }media/weixin/main/image/thumb-tea2.jpg" alt="奶茶2">
+            <span class="name">玛奇朵<i>￥14.0</i></span>         
         </p>
         <p class="result">
             <span class="time">2016/06/21 9:30:25</span>
