@@ -46,6 +46,7 @@
             <img src="${basePath }media/weixin/main/image/thumb-tea1.jpg" alt="奶茶1">
             <span class="name">奶茶<i>1</i></span>
             <span class="price">单价：￥12.0</span>
+            <span class="option">红茶|去冰|大杯|红豆、仙草</span>
         </p>
         <p class="detail">
             <img src="${basePath }media/weixin/main/image/thumb-tea2.jpg" alt="奶茶2">
