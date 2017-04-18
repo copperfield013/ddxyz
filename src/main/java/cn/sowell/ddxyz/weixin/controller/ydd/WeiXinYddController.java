@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import cn.sowell.copframe.common.UserIdentifier;
 import cn.sowell.copframe.dto.ajax.JsonResponse;
 import cn.sowell.copframe.weixin.authentication.WxUserPrincipal;
 import cn.sowell.copframe.weixin.common.utils.WxUtils;
@@ -39,7 +40,7 @@ public class WeiXinYddController {
 	
 	@RequestMapping("/order")
 	public String order(Model model){
-		WxUserPrincipal user = WxUtils.getCurrentUser();
+		WxUserPrincipal user = WxUtils.getCurrentUser(WxUserPrincipal.class);
 		long waresId = 1l;
 		//获得当天的所有配送
 		Map<DeliveryTimePoint, List<PlainDelivery>> deliveryMap = dService.getTodayDeliveries(waresId);
@@ -63,6 +64,7 @@ public class WeiXinYddController {
 	
 	@RequestMapping("/orderList")
 	public String orderList(){
+		UserIdentifier user = WxUtils.getCurrentUser(UserIdentifier.class);
 		return WeiXinConstants.PATH_YDD + "/ydd_order_list.jsp";
 	}
 	

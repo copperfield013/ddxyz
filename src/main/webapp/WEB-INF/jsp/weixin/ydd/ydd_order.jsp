@@ -146,32 +146,12 @@
                     <li>单价</li>
                     <li>操作</li>
                 </ul>
-                <!-- <ul class="data-row">
-                    <li>金吉柠檬</li>
-                    <li>
-                        <p>绿茶|中杯|3分甜|常温</p>
-                        <p>加料：珍珠、波霸、烧仙草、椰果、红豆绿茶</p>
-                    </li>
-                    <li>1</li>
-                    <li>￥12.0</li>
-                    <li><a href="javascript:;">删除</a></li>
-                </ul>
-                <ul>
-                    <li>金吉柠檬</li>
-                    <li>
-                        <p>绿茶|中杯|3分甜|常温</p>
-                        <p>加料：珍珠、波霸、烧仙草、椰果、红豆绿茶</p>
-                    </li>
-                    <li>1</li>
-                    <li>￥12.0</li>
-                    <li><a href="javascript:;">删除</a></li>
-                </ul> -->
             </div>
         </div>
     </div>
     <div class="total-price">
-        <span class="count">总杯数：4</span>
-        <span class="price">总价：<b>￥40.0</b></span>
+        <span class="count">总杯数：<b>0</b></span>
+        <span class="price">总价：<b>￥0</b></span>
     </div>
 </main>
 <footer>
@@ -184,98 +164,6 @@ $(function(){
 	$('input[type="radio"],input[type="checkbox"]').xcheck();
 	$('input[type="number"]').xnumber();
 	seajs.use('ydd/ydd-order.js');
-	/* seajs.use(['ajax'], function(Ajax){
-		var cupRemain = -1;
-		$('#timePoint').change(function(){
-			var key = $('option[value="' + $(this).val() + '"]', this).attr('data-key');
-			if(key){
-				var $dLocation = $('.delivery-location');
-				var $targetLocation = $dLocation.filter('[data-key="' + key + '"]');
-				$dLocation.removeClass('cview').val('');
-				$targetLocation.addClass('cview');
-			}
-		}).trigger('change');
-		
-		$('.delivery-location').change(function(){
-			var deliveryId = $(this).val();
-			if(deliveryId){
-				Ajax.ajax('weixin/ydd/getDeliveryRemain', {
-					deliveryId	: deliveryId
-				}, function(json){
-					if(!json.error){
-						if(json.remain == 'unlimited'){
-							cupRemain = Number.MAX_VALUE;
-							$('#cup-remain').text('不限');
-						}else{
-							cupRemain = json.remain;
-							$('#cup-remain').text(json.remain);
-						}
-					}
-				});
-			}
-		});
-		
-		
-		$('#drink-type').change(function(){
-			var drinkTypeId = $(this).val();
-			$('.tea-addition-type-wrapper')
-				.removeClass('cview')
-				.filter('[data-key="' + drinkTypeId + '"]')
-				.addClass('cview');
-			$('.addition-type-wrapper')
-				.removeClass('cview')
-				.filter('[data-key="' + drinkTypeId + '"]')
-				.addClass('cview');
-		});
-		
-		var drinks=[];
-		function addDrink(){
-			var type = $('select#type option:selected').val(); //饮料类型
-			var name = $('input[name="type"]:checked').val(); //奶茶名称
-			var count = $("#count").val(); //数量
-			var size = $('input[name="size"]:checked').val(); //奶茶规格
-			var sweet = $('input[name="sweet"]:checked').val(); //奶茶甜度
-			var temperature = $('input[name="temperature"]:checked').val(); //奶茶冰度
-			var additions = [];
-			$('input[name="other"]:checked').each(function(){
-				additions.push({
-					additionId : $(this).val(),
-					additionName : $(this).next().text()
-				})
-			});
-			var data ={
-		            	type : type,
-		            	name : name,
-		            	count : count,
-		            	size : size,
-		            	sweet : sweet,
-		            	temperature : temperature,
-		            	additions : additions
-			            };
-			drinks.push(data);
-			console.log(drinks);
-			
-		}
-		function payment(){
-			var time = $('select#time option:selected').val(); //时间档
-			var address = $('select#address option:selected').val(); //配送地点
-			var telphone = $("#telphone").val(); //时间档
-			var remarks = $("#remarks").val();//备注
-			var data = {
-					time: time,
-					address:address,
-					telphone:telphone,
-					remarks:remarks,
-					drinks:drinks
-					};
-			console.log(data);
-			Ajax.postJson('weixinBuy/testJson',data,function(json){
-				console.log(json);
-			});
-		}
-		$("#addDrink").click(addDrink);
-		$("#payment").click(payment);
-	}) */
 });
 </script>
 </body>
