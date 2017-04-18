@@ -4,9 +4,12 @@ import java.math.BigInteger;
 import java.net.URLDecoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Collection;
 import java.util.UUID;
 
 import org.apache.log4j.Logger;
+
+import cn.sowell.copframe.dto.format.FormatUtils;
 
 public class TextUtils {
 	static Logger logger = Logger.getLogger(TextUtils.class);
@@ -92,6 +95,15 @@ public class TextUtils {
 			 return str.matches(regexDouble);
 		 }
 		 return true;
+	 }
+	 
+	 public static boolean isInteger(String str) {
+		 try {
+			Integer.valueOf(str);
+			return true;
+		} catch (NumberFormatException e) {
+			return false;
+		}
 	 }
 	 
 	 
@@ -199,5 +211,55 @@ public class TextUtils {
 		SHA1 sha1 = new SHA1();
 		return sha1.Digest(upperCase);
 	}
+
+	/**
+	 * 将字符串按spliter分割成数组之后，转换并放到target内作为元素
+	 * @param sourceStr 待分割的字符串
+	 * @param target 最终将会把分割后的元素放到这个集合内
+	 * @param itemClass 转换后的类型，也就是集合的元素类型
+	 * @param spliter 用于分割字符串的标识
+	 */
+	public static <T> void splitToCollection(String sourceStr, Collection<T> target, Class<T> itemClass, String spliter) {
+		if(sourceStr != null && target != null){
+			String[] keyArray = sourceStr.split(spliter);
+			for (String key : keyArray) {
+				T value = FormatUtils.toClass(itemClass, key);
+				if(value != null){
+					target.add(value);
+				}
+			}
+		}
+		
+	}
+
+	private static char[] CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".toCharArray();
+	/**
+	 * 
+	 * @param num
+	 * @param carry
+	 * @param length
+	 * @return
+	 */
+	public static String convert(long num, Integer carry, int length) {
+		Integer division = carry;
+		if(carry == null || carry > CHARS.length){
+			division = CHARS.length;
+		}
+		StringBuffer buffer = new StringBuffer();
+		long div = num;
+		int mod = 0;
+		do {
+			mod = (int) (div % division);
+			buffer.insert(0, CHARS[mod]);
+			div = div / division;
+		} while (div > 0);
+		if(buffer.length() < length){
+			buffer.insert(0, "0");
+		}
+		return buffer.toString();
+	}
+
+
+	
 	
 }

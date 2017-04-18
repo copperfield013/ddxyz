@@ -70,7 +70,7 @@ public class AdminUser implements UserDetails{
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		Set<GrantedAuthority> set = new LinkedHashSet<GrantedAuthority>();
 		if(this.authorityChain != null){
-			String[] split = this.authorityChain.split(DdxyzConstants.REGEX_SPLIT);
+			String[] split = this.authorityChain.split(DdxyzConstants.COMMON_SPLITER);
 			for (String str : split) {
 				if(!str.isEmpty()){
 					set.add(new SimpleGrantedAuthority(str));

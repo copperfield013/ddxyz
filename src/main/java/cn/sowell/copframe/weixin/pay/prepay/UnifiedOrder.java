@@ -11,7 +11,7 @@ import cn.sowell.copframe.xml.XMLTag;
  * @author Copperfield Zhang
  * @date 2017年3月9日 下午9:13:57
  */
-public class UnifiedOrder {
+public class UnifiedOrder implements SignSetable{
 	//$微信支付分配的公众账号ID（企业号corpid即为此appId）
 	@XMLTag(required=true, lengthLimit=32)
 	private String appid;

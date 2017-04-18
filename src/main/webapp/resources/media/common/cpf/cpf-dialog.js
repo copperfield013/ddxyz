@@ -344,24 +344,32 @@ define(function(require, exports, module){
 		/**
 		 * 弹出确认框
 		 */
-		confirm		: function(msg, callback){
+		confirm		: function(msg, callback, _param){
+			var defaultParam = {
+				domHandler	: $.noop,
+				width		: '300px',
+				height		: '200px',
+				top			: '100px'
+			};
+			var param = $.extend({}, defaultParam, _param)
 			var confirmId = utils.uuid(5, 62),
 				title = '操作提示',
 				confirmModel = 
 					'<div>' +
-						'<div>' + msg + '</div>' + 
+						'<div class="dialog-confirm-msg">' + msg + '</div>' + 
 						'<div class="' + CLASS_FOOTER + '">' +
 							'<button class="confirm-btn-yes btn btn-default"> 是 </button>' +
 							'<button class="confirm-btn-no btn btn-primary"> 否 </button>' +
 						'</div>' + 
-						
+						    
 					'</div>',
 				$confirm = $(confirmModel)
 					;
+			param.domHandler.apply(this, [$('div.dialog-confirm-msg:first', $confirm), $confirm]);
 			var dialog = Dialog.openDialog($confirm, title, confirmId, {
-				width	: '300px',
-				height	: '200px',
-				top		: '100px'
+				width	: param.width,
+				height	: param.height,
+				top		: param.top
 			});
 			dialog.getFooter().find('button.confirm-btn-yes,button.confirm-btn-no').click(function(){
 				var isYes = $(this).is('.confirm-btn-yes');

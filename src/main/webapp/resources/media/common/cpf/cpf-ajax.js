@@ -3,8 +3,6 @@
  */
 define(function(require, exports, module){
 	var $CPF = require('$CPF'),
-		Page = require('page'),
-		Dialog = require('dialog'),
 		utils = require('utils')
 		;
 	
@@ -16,9 +14,10 @@ define(function(require, exports, module){
 	});
 	
 	/**
-	 * 返回json数据时，将其转换成JsonResponse类对象
+	 * 返回json数据时，将其转换成AjaxPageResponse类对象
 	 */
-	function JsonResponse(_data){
+	function AjaxPageResponse(_data){
+		var Page = require('page');
 		var defaultResponseData = {
 			//当前页面的处理方式(close:关闭;refresh:重新加载;redirect:url：跳转)
 			localPageAction	: '',
@@ -88,7 +87,10 @@ define(function(require, exports, module){
 				noticeType = this.getNoticeType()
 				;
 			if(notice && noticeType){
-				Dialog.notice(notice, noticeType);
+				var Dialog = require('dialog');
+				if(Dialog){
+					Dialog.notice(notice, noticeType);
+				}
 			}
 		}
 		
@@ -155,10 +157,14 @@ define(function(require, exports, module){
 		    			if(typeof json === 'string'){
 		    				json = $.parseJSON(json)
 		    			}
-		    			var jRes = new JsonResponse(json);
-		    			var result = param.whenSuc(jRes, 'json');
-		    			if(result !== false){
-		    				jRes.doAction(param.page);
+		    			if(json && json['AJAX_PAGE_RESPONSE'] === 'cpf'){
+		    				var jRes = new AjaxPageResponse(json);
+		    				var result = param.whenSuc(jRes, 'json');
+		    				if(result !== false){
+		    					jRes.doAction(param.page);
+		    				}
+		    			}else{
+		    				param.whenSuc(json, 'json');
 		    			}
 		    		}catch(e){
 		    			console.error(e);
@@ -171,8 +177,13 @@ define(function(require, exports, module){
 		    error		: function(jqXHR, textStatus, errorThrown){
 		    	console.error(textStatus);
 		    	var errResult = param.whenErr();
+		    	var Dialog = require('dialog');
 		    	if(errResult !== false){
-		    		Dialog.notice('请求时发生错误', 'error');
+		    		if(Dialog){
+		    			Dialog.notice('请求时发生错误', 'error');
+		    		}else{
+		    			console.error('请求时发生错误');
+		    		}
 		    	}
 		    }
 		}).always(function(res) {
@@ -192,6 +203,7 @@ define(function(require, exports, module){
 			//提交的地址
 			url		: url,
 			method	: 'POST',
+			dataType: 'json',
 			headers	: {
 				'content-type'	: 'application/json;charset=utf-8'
 			},

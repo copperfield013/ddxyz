@@ -15,7 +15,6 @@
     <link rel="stylesheet" href="${basePath }media/weixin/main/css/templete.css">
     <link rel="stylesheet" href="${basePath }media/weixin/main/css/common.css">
     <link rel="stylesheet" href="${basePath }media/weixin/main/css/order.css">
-    <script src="${basePath }media/weixin/main/js/jquery-3.1.1.min.js"></script>
     <script src="${basePath }media/weixin/main/js/ix.js"></script>
     <script>
     $(function() {

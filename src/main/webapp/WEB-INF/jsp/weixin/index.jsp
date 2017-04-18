@@ -10,6 +10,7 @@
 	<div data-role="page">
 		<div data-role="content">
 			微信主页
+			${a.bbStr }
 			<div class="order-dest">
 			</div>
 			<div class="order-product">
@@ -23,6 +24,9 @@
 	<script type="text/javascript">
 		$(function(){
 			seajs.use(['wxconfig', 'wxpay', 'console'], function(wx, WxPay, cls){
+				$('#').on('click', function(){
+					
+				});
 				var pay = new WxPay({
 					strategy	: {
 						createOrder	: function(Order){

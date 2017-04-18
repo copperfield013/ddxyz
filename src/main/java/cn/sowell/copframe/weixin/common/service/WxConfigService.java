@@ -65,4 +65,9 @@ public interface WxConfigService {
 	 */
 	String getSha1Signature(Map<String, String> signParam);
 	
+	/**
+	 * 当前系统是否是处于调试模式
+	 * @return
+	 */
+	boolean isDebug();
 }

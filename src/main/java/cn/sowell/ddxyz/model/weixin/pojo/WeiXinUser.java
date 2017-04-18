@@ -14,12 +14,13 @@ import javax.persistence.Table;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import cn.sowell.copframe.common.UserIdentifier;
 import cn.sowell.copframe.weixin.authentication.WxUserPrincipal;
 import cn.sowell.ddxyz.DdxyzConstants;
 
 @Entity
 @Table(name="t_weixin_user")
-public class WeiXinUser implements WxUserPrincipal{
+public class WeiXinUser implements WxUserPrincipal, UserIdentifier{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -224,7 +225,7 @@ public class WeiXinUser implements WxUserPrincipal{
 	public Set<GrantedAuthority> getAuthorities() {
 		Set<GrantedAuthority> set = new LinkedHashSet<GrantedAuthority>();
 		if(this.authorityChain != null){
-			String[] split = this.authorityChain.split(DdxyzConstants.REGEX_SPLIT);
+			String[] split = this.authorityChain.split(DdxyzConstants.COMMON_SPLITER);
 			for (String str : split) {
 				if(!str.isEmpty()){
 					set.add(new SimpleGrantedAuthority(str));

@@ -11,4 +11,11 @@ public interface WeiXinUserService {
 	Long saveUser(WeiXinUser wxUser);
 
 	WxUserPrincipal buildFromJsonObject(JSONObject userJson);
+
+	/**
+	 * 根据id获得微信用户
+	 * @param userId
+	 * @return
+	 */
+	WeiXinUser getWeiXinUserById(Long userId);
 }

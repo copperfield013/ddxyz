@@ -9,4 +9,8 @@ public interface SystemConstants {
 	 * 微信统一下单接口
 	 */
 	String WXPAY_UNIFIED_ORDER_URL = "https://api.mch.weixin.qq.com/pay/unifiedorder";
+	/**
+	 * 微信退款接口
+	 */
+	String WXPAY_REFUND_URL = "https://api.mch.weixin.qq.com/secapi/pay/refund";
 }

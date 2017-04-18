@@ -27,6 +27,8 @@ public class AjaxPageResponse {
 	private String notice;
 	//响应提示语类型
 	private NoticeType noticeType;
+	//标识
+	private final String AJAX_PAGE_RESPONSE = "cpf";
 	public String getTargetPageId() {
 		return targetPageId;
 	}
@@ -111,6 +113,9 @@ public class AjaxPageResponse {
 	}
 	public void setNoticeType(NoticeType noticeType) {
 		this.noticeType = noticeType;
+	}
+	public String getAJAX_PAGE_RESPONSE() {
+		return AJAX_PAGE_RESPONSE;
 	}
 	
 	

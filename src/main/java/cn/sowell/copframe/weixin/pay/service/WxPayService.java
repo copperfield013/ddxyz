@@ -1,9 +1,15 @@
 package cn.sowell.copframe.weixin.pay.service;
 
+import cn.sowell.copframe.weixin.pay.exception.WeiXinPayException;
+import cn.sowell.copframe.weixin.pay.prepay.H5PayParameter;
 import cn.sowell.copframe.weixin.pay.prepay.JsApiPrepayParameter;
 import cn.sowell.copframe.weixin.pay.prepay.PrepayParameter;
 import cn.sowell.copframe.weixin.pay.prepay.PrepayResult;
 import cn.sowell.copframe.weixin.pay.prepay.UnifiedOrder;
+import cn.sowell.copframe.weixin.pay.refund.RefundRequest;
+import cn.sowell.copframe.weixin.pay.refund.RefundResult;
+import cn.sowell.ddxyz.model.common.core.Order;
+import cn.sowell.ddxyz.model.common.core.OrderRefundParameter;
 
 /**
  * 
@@ -35,5 +41,33 @@ public interface WxPayService {
 	 * @return
 	 */
 	PrepayResult sendPrepay(PrepayParameter parameter);
+	
+	/**
+	 * 根据订单对象构造一个微信预付款的参数对象
+	 * @param order 订单对象
+	 * @return
+	 * @throws WeiXinPayException 
+	 */
+	PrepayParameter buildPrepayParameter(Order order) throws WeiXinPayException;
+	
+	/**
+	 * 根据预付款订单的id，构造一个可以用于前端h5调用微信接口的参数对象
+	 * @param prepayId
+	 * @return
+	 */
+	H5PayParameter buildPayParameter(String prepayId);
+	
+	
+	RefundResult sendRefund(RefundRequest refundReq, boolean replaceSignature);
+	
+	/**
+	 * 构造订单退款请求对象
+	 * @param refundParam
+	 * @param order
+	 * @return
+	 */
+	RefundRequest buildRefundRequest(OrderRefundParameter refundParam,
+			Order order);
+	
 	
 }

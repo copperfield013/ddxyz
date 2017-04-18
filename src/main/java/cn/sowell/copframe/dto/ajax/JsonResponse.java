@@ -3,7 +3,7 @@ package cn.sowell.copframe.dto.ajax;
 import com.alibaba.fastjson.JSONObject;
 
 public class JsonResponse {
-	private JSONObject jsonObject;
+	private JSONObject jsonObject = new JSONObject();
 
 	public JsonResponse() {
 		jsonObject = new JSONObject();
@@ -18,6 +18,10 @@ public class JsonResponse {
 		return this;
 	}
 	
+	public JsonResponse put(String key, Object value){
+		jsonObject.put(key, value);
+		return this;
+	}
 	
 	@Override
 	public String toString() {

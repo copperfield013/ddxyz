@@ -53,7 +53,7 @@ public class WeiXinUserServiceImpl implements WeiXinUserService{
 		StringBuffer buffer = new StringBuffer();
 		JSONArray array = userJson.getJSONArray("privilege");
 		for (Object item : array) {
-			buffer.append(item + DdxyzConstants.REGEX_SPLIT);
+			buffer.append(item + DdxyzConstants.COMMON_SPLITER);
 		}
 		wxUser.setPrivilege(buffer.toString());
 		
@@ -65,4 +65,9 @@ public class WeiXinUserServiceImpl implements WeiXinUserService{
 		return wxUser;
 	}
 
+	
+	@Override
+	public WeiXinUser getWeiXinUserById(Long userId) {
+		return wxUserDao.getUser(userId);
+	}
 }

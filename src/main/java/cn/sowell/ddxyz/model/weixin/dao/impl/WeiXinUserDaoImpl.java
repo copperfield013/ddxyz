@@ -33,5 +33,10 @@ public class WeiXinUserDaoImpl implements WeiXinUserDao{
 		return (Long) session.save(wxUser);
 	}
 
+	
+	@Override
+	public WeiXinUser getUser(long userId) {
+		return sFactory.getCurrentSession().get(WeiXinUser.class, userId);
+	}
 
 }

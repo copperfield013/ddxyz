@@ -117,4 +117,9 @@ public class WxConfigServiceImpl implements WxConfigService{
 	}
 	
 	
+	@Override
+	public boolean isDebug() {
+		return "true".equals(PropertyPlaceholder.getProperty("debug"));
+	}
+	
 }

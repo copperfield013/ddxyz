@@ -3,17 +3,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="utf-8"/>
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Cache-Control" content="no-cache">
-    <meta http-equiv="Expires" content="-1">
-    <meta name="format-detection" content="telephone=no"><!-- 禁止iphone修改数字样式 -->
-    <meta name="viewport" content="minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,width=device-width,user-scalable=no">
-    <title>点点新意</title>
-    <!--<link rel="stylesheet/less" href="less/index.less">-->
-    <!--<script src="js/less.min.js"></script>-->
-    <link rel="stylesheet" href="${basePath }media/weixin/main/css/templete.css">
-    <link rel="stylesheet" href="${basePath }media/weixin/main/css/common.css">
+	<title>点点新意</title>
+	<jsp:include page="/WEB-INF/jsp/weixin/common/weixin-include.jsp"></jsp:include>
+	
     <link rel="stylesheet" href="${basePath }media/weixin/main/css/index.css">
     <script src="${basePath }media/weixin/main/js/jquery-3.1.1.min.js"></script>
     <script src="${basePath }media/weixin/main/js/ix.js"></script>
@@ -84,8 +76,8 @@
         </div>
     </main>
     <footer>
-        <a href="order" class="order">订单</a>
-        <a href="toBuy" class="main">立即下单</a>
+        <a href="weixin/ydd/orderList" class="order">订单</a>
+        <a href="weixin/ydd/order" class="main">立即下单</a>
     </footer>
 </body>
 </html>

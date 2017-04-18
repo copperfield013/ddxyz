@@ -1,9 +1,17 @@
 package cn.sowell.ddxyz.weixin;
 
 public interface WeiXinConstants {
+	static final String URI_BASE = "/weixin";
+	
+	
+	
+	static final String PATH_BASE = "/weixin";
 
-	/*String APPID = "wx0e4bec62d4d4420e";
-	String WXSECRET = "65bb55f623c8d4e5d089cbbd4d3bdc61";
-	String DOMAIN = "http://rg6ath2bai.proxy.qqbrowser.cc/ddxyz";*/
+
+
+	static final String PATH_YDD = PATH_BASE + "/ydd"; 
+	
+	
+	
 	
 }

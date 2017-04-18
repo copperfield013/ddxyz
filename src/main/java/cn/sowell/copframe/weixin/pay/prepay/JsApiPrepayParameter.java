@@ -28,6 +28,7 @@ public class JsApiPrepayParameter implements PrepayParameter{
 	 * 商品详情
 	 */
 	private OrderDetail orderDetail;
+	
 	public String getOpenId() {
 		return openId;
 	}

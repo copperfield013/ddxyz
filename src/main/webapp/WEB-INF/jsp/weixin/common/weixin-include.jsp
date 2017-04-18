@@ -2,13 +2,23 @@
 <base href="${basePath }" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
-<link href="${basePath }media/weixin/plugins/jquery.mobile-1.4.5/jquery.mobile-1.4.5.css" rel="stylesheet" />
 
-<link href="${basePath }media/weixin/main/css/weixin-main.css" rel="stylesheet" />
 
-<script src="${basePath }media/jquery-1.11.3.js"></script>
-<script src="${basePath }media/jquery-1.11.3.js"></script>
-<script src="${basePath }media/weixin/plugins/jquery.mobile-1.4.5/jquery.mobile-1.4.5.js"></script>
+<!-- fromXu Start -->
+<meta charset="utf-8"/>
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta http-equiv="Expires" content="-1">
+<meta name="format-detection" content="telephone=no"><!-- 禁止iphone修改数字样式 -->
+<meta name="viewport" content="minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,width=device-width,user-scalable=no">
+
+<link rel="stylesheet" href="${basePath }media/weixin/main/css/templete.css">
+<link rel="stylesheet" href="${basePath }media/weixin/main/css/common.css">
+
+<!-- fromXu End -->
+
+<script src="${basePath }media/weixin/main/js/jquery-3.1.1.min.js"></script>
+<%--<script src="${basePath }media/weixin/plugins/jquery.mobile-1.4.5/jquery.mobile-1.4.5.js"></script> --%>
 <!-- SeaJS -->
 <script src="${basePath }media/sea-debug.js"></script>
 
@@ -27,8 +37,8 @@
 				'console'	: 'COMMON/cpf/cpf-console.js',
 				'wxpay'		: 'COMMON/cpf/cpf-wxpay.js',
 				'ajax'		: 'COMMON/cpf/cpf-ajax.js',
-				'page'		: 'COMMON/cpf/cpf-page.js',
-				'dialog'	: 'COMMON/cpf/cpf-dialog.js',
+				'page'		: 'COMMON/cpf/cpf-refer-test.js',
+				'dialog'	: 'COMMON/cpf/cpf-refer-test.js',
 				'wxconfig'	: 'MAIN/weixin-sdkconfig.js'
 				//..其他模块
 		  	}

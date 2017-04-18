@@ -1,10 +1,12 @@
 package cn.sowell.copframe.messageConverter;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
@@ -46,8 +48,10 @@ public class JsonResponseConverter implements HttpMessageConverter<JsonResponse>
 	public void write(JsonResponse t, MediaType contentType,
 			HttpOutputMessage outputMessage) throws IOException,
 			HttpMessageNotWritableException {
-		StreamUtils.copy(t.toString(), defaultCharset, outputMessage.getBody());
-		outputMessage.getBody().close();
+		outputMessage.getHeaders().set(HttpHeaders.CONTENT_TYPE, "text/json");
+		OutputStream body = outputMessage.getBody();
+		StreamUtils.copy(t.toString(), defaultCharset, body);
+		body.close();
 	}
 	
 }

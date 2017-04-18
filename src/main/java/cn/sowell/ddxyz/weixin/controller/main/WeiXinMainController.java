@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.sowell.copframe.weixin.pay.service.WxPayService;
+import cn.sowell.ddxyz.weixin.WeiXinConstants;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -25,6 +26,12 @@ public class WeiXinMainController {
 	@RequestMapping({"/", ""})
 	public String index(){
 		return "/weixin/index.jsp";
+	}
+	
+	
+	@RequestMapping("/home")
+	public String home(){
+		return WeiXinConstants.PATH_BASE + "/home";
 	}
 
 	@ResponseBody
