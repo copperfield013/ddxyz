@@ -50,6 +50,7 @@ body {
 .order .detail .option {
 	font-size:12px;
 	line-height:17.5px;
+	width:80%;
 }
 .order .detail .name i {
   font-weight:bold;
