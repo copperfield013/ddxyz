@@ -210,7 +210,13 @@ public interface Order {
 	 * 订单已取消，该动作由用户主动发起，
 	 */
 	final String CAN_STATUS_CANCELED = "canceled";
+	/**
+	 * 订单关闭状态
+	 */
 	final String CAN_STATUS_CLOSED  = "closed";
+	/**
+	 * 订单退款状态
+	 */
 	final String CAN_STATUS_REFUNDED = "refunded";
 	
 	/**
