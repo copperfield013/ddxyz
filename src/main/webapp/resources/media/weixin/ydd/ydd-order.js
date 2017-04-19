@@ -99,6 +99,7 @@ define(function(require, exports, module){
 					price	: Number($drinkTypeOption.attr('data-price'))
 				}));
 			}else{
+				alertMsg('请选择饮料类型');
 				$.error('没有选择饮料');
 			}
 			if($('p.tea-addition-type-wrapper[data-key="' + drinkTypeId + '"]').length > 0){
@@ -112,6 +113,7 @@ define(function(require, exports, module){
 						type	: 'teaAdditionType'
 					}));
 				}else{
+					alertMsg('请选择添加茶类');
 					$.error('没有选择加茶');
 				}
 			}
@@ -122,6 +124,7 @@ define(function(require, exports, module){
 			if(cupSizeKey){
 				orderItem.setCupSize(cupSizeKey);
 			}else{
+				alertMsg('请选择饮料是中杯还是大杯');
 				$.error('没有选择饮料规格')
 			}
 			
@@ -131,6 +134,7 @@ define(function(require, exports, module){
 			if(sweetnessKey){
 				orderItem.setSweetness(sweetnessKey);
 			}else{
+				alertMsg('请选择饮料甜度');
 				$.error('没有选择甜度');
 			}
 			
@@ -140,6 +144,7 @@ define(function(require, exports, module){
 			if(heatKey){
 				orderItem.setHeat(heatKey);
 			}else{
+				alertMsg('请选择饮料温度');
 				$.error('没有选择热度');
 			}
 			
@@ -169,84 +174,127 @@ define(function(require, exports, module){
 			utils.scrollTo($('main'));
 		});
 		
-	};
-	/**
-	 * 显示订单内的所有订单条目
-	 */
-	function refreshOrderItems(order){
-		var items = order.getItems();
-		var $rows = [];
-		var totalCupCount = 0,
-			totalPrice = 0;
-		for(var i in items){
-			var item = items[i];
-			//总杯数
-			totalCupCount += item.getCupCount();
-			//总价格
-			totalPrice += (item.getPerPrice() * item.getCupCount());
-			var $row = $('<ul class="data-row">');
-			//饮料名
-			$row.append('<li>' + item.getDrinkTypeName() + '</li>');
-			var $descCell = $('<li>');
-			//普通选项
-			var teaAdditionTypeName = item.getTeaAdditionTypeName();
-			$descCell.append('<p>'  
-					+ (teaAdditionTypeName? (teaAdditionTypeName + '|'): '')
-					+ item.getCupSizeName() 
-					+ '|' + item.getSweetnessName()
-					+ '|' + item.getHeatName() + '</p>');
-			//加料
-			var additionText = '';
-			var additions = item.getAdditions();
-			for(var j in additions){
-				var addition = additions[j];
-				additionText += '、' + addition.getName();
+		//提交并支付订单
+		$('#pay-order').click(function(){
+			//检查订单配送信息
+			if(!order.getDelivery().getTimePoint()){
+				return alertMsg('请选择配送时间档');
 			}
-			if(additionText !== ''){
-				$descCell.append($('<p>').text('加料：' + additionText.substr(1)));
+			if(!order.getDelivery().getLocation()){
+				return alertMsg('请选择配送地点');
 			}
-			$row.append($descCell);
-			//杯数
-			$row.append('<li>' + item.getCupCount() + '</li>');
-			//单价
-			$row.append('<li>￥' + (item.getPerPrice() / 100).toFixed(0) + '</li>')
-			//操作
-			var $removeBtn = $('<a href="javascript:;" class="remove-item-btn">删除</a>');
-			$removeBtn.click(function(){
-				order.removeOrderItem(item);
-				refreshOrderItems(order);
+			var contactNum = $('#telphone').val();
+			//检查订单收货人信息
+			if(!contactNum){
+				return alertMsg('请输入联系号码');
+			}else{
+				order.getReceiver().setContact(contactNum);
+			}
+			//检查订单内条目信息
+			if(order.getItems().length == 0){
+				return alertMsg('请至少选择一杯饮料');
+			}
+			//生成提交后台的JSON
+			var reqJSON = order.toObject();
+			//提交订单到后台
+			require('ajax').postJson('weixin/ydd/submitOrder', reqJSON, function(json){
+				console.log(json);
+				if(json != null){
+					if(json.payParam){
+						//后台创建订单成功，返回订单，包含预付款单号
+						//调用微信jsApi，发起付款
+						var WxPay = require('wxpay');
+						WxPay.pay(json.payParam, function(res){
+							console.log(res);
+						});
+						//调用结束，无论成功或者失败，都跳转到订单付款详情页面中
+						return;
+					}
+				}
+				//后台创建订单失败，显示错误信息
+				alertMsg('创建订单失败');
 			});
-			$row.append($('<li>').append($removeBtn));
-			$rows.push($row);
-		}
-		$('.table-detail .data-row').remove();
-		for(var i in $rows){
-			$('.table-detail').append($rows[i]);
-		}
+		});
 		
-		$('.total-price')
-			.find('.count b').text(totalCupCount)
-			.end()
-			.find('.price b').text((totalPrice / 100).toFixed(0))
-			;
-		console.log(order.toObject());
-	}
-	
-	function reInitForm(){
-		$('#drink-type').val('').trigger('change');
-		$('#cupCount').val(1);
-		$(':radio[name="teaAdditionType"]').each(removeCheck);
-		$(':radio[name="cupSize"]').each(removeCheck);
-		$(':radio[name="sweetness"]').each(removeCheck);
-		$(':radio[name="heat"]').each(removeCheck);
-		$(':checkbox.addition-type').each(removeCheck);
-	}
-	function removeCheck(){
-		$(this).prop('checked', false)
-				.next('label').removeClass('checked')
+		
+		/**
+		 * 显示订单内的所有订单条目
+		 */
+		function refreshOrderItems(order){
+			var items = order.getItems();
+			var $rows = [];
+			for(var i in items){
+				var item = items[i];
+				var $row = $('<ul class="data-row">');
+				//饮料名
+				$row.append('<li>' + item.getDrinkTypeName() + '</li>');
+				var $descCell = $('<li>');
+				//普通选项
+				var teaAdditionTypeName = item.getTeaAdditionTypeName();
+				$descCell.append('<p>'  
+						+ (teaAdditionTypeName? (teaAdditionTypeName + '|'): '')
+						+ item.getCupSizeName() 
+						+ '|' + item.getSweetnessName()
+						+ '|' + item.getHeatName() + '</p>');
+				//加料
+				var additionText = '';
+				var additions = item.getAdditions();
+				for(var j in additions){
+					var addition = additions[j];
+					additionText += '、' + addition.getName();
+				}
+				if(additionText !== ''){
+					$descCell.append($('<p>').text('加料：' + additionText.substr(1)));
+				}
+				$row.append($descCell);
+				//杯数
+				$row.append('<li>' + item.getCupCount() + '</li>');
+				//单价
+				$row.append('<li>￥' + (item.getPerPrice() / 100).toFixed(0) + '</li>')
+				//操作
+				var $removeBtn = $('<a href="javascript:;" class="remove-item-btn">删除</a>');
+				$removeBtn.click(function(){
+					order.removeOrderItem(item);
+					refreshOrderItems(order);
+				});
+				$row.append($('<li>').append($removeBtn));
+				$rows.push($row);
+			}
+			$('.table-detail .data-row').remove();
+			for(var i in $rows){
+				$('.table-detail').append($rows[i]);
+			}
+			
+			$('.total-price')
+				.find('.count b').text(order.getTotalCupCount())
+				.end()
+				.find('.price b').text((order.getTotalPrice() / 100).toFixed(0))
 				;
+			console.log(order.toObject());
+		}
 		
-	}
+		function reInitForm(){
+			$('#drink-type').val('').trigger('change');
+			$('#cupCount').val(1);
+			$(':radio[name="teaAdditionType"]').each(removeCheck);
+			$(':radio[name="cupSize"]').each(removeCheck);
+			$(':radio[name="sweetness"]').each(removeCheck);
+			$(':radio[name="heat"]').each(removeCheck);
+			$(':checkbox.addition-type').each(removeCheck);
+		}
+		function removeCheck(){
+			$(this).prop('checked', false)
+					.next('label').removeClass('checked')
+					;
+			
+		}
+		
+		function alertMsg(msg){
+			alert(msg);
+		}
+		
+	};
+	
 	
 	/**
 	 * 配送信息
@@ -268,6 +316,11 @@ define(function(require, exports, module){
 				param.timePoint = dateTime;
 			}
 		};
+		
+		this.getTimePoint = function(){
+			return param.timePoint;
+		};
+		
 		/**
 		 * 设置配送地点
 		 */
@@ -276,6 +329,10 @@ define(function(require, exports, module){
 				param.location = location;
 			}
 		};
+		
+		this.getLocation = function(){
+			return param.location;
+		}
 		/**
 		 * 将当前配送对象转换成简单对象
 		 */
@@ -391,12 +448,29 @@ define(function(require, exports, module){
 		 * 计算订单总价
 		 */
 		this.getTotalPrice = function(){
-			
+			var totalPrice = 0;
+			for(var i in orderItems){
+				var item = orderItems[i];
+				totalPrice += item.getPerPrice() * item.getCupCount();
+			}
+			return totalPrice;
 		};
+		/**
+		 * 计算订单总杯数
+		 */
+		this.getTotalCupCount = function(){
+			var totalCupCount = 0;
+			for(var i in orderItems){
+				var item = orderItems[i];
+				totalCupCount += item.getCupCount();
+			}
+			return totalCupCount;
+		}
 		
 		this.toObject = function(){
 			var obj = this.getDelivery().toObject();
 			obj.receiver = this.getReceiver().toObject();
+			obj.totalPrice = this.getTotalPrice();
 			obj.items = [];
 			for(var i in orderItems){
 				obj.items.push(orderItems[i].toObject());

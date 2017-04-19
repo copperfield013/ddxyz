@@ -74,9 +74,9 @@
     </div>
     <!-- 奶茶详情 -->
     <div class="good-info">
-        <h4>奶茶详情<span class="tit-desc">当前可供余量：<span id="cup-remain">50</span>杯</span></h4>
+        <h4>饮料详情<span class="tit-desc">当前可供余量：<span id="cup-remain">50</span>杯</span></h4>
         <dl class="select">
-            <dt>奶茶种类</dt>
+            <dt>饮料种类</dt>
             <dd><select id="drink-type">
                 <option value="">请选择</option>
                 <c:forEach items="${drinkTypes }" var="dType">
@@ -91,7 +91,7 @@
             </dd>
         </dl>
         <div class="box">
-            <h5>奶茶详情<pre>每行单选</pre></h5>
+            <h5>饮料详情</h5>
             <c:forEach items="${teaAdditionMap }" var="teaAdditionTypeEntry">
 	            <p data-key="${teaAdditionTypeEntry.key }" class="tea-addition-type-wrapper">
 	            	<c:forEach items="${teaAdditionTypeEntry.value }" var="teaAdditionType">
@@ -156,7 +156,7 @@
 </main>
 <footer>
     <a href="weixin/ydd/orderList" class="order">订单</a>
-    <a id="payment" href="javascript:;" class="main">结账付款</a>
+    <a id="pay-order" href="javascript:;" class="main">结账付款</a>
 </footer>
 </form>
 <script>

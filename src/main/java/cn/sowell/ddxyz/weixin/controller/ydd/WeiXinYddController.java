@@ -1,27 +1,44 @@
 package cn.sowell.ddxyz.weixin.controller.ydd;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSONObject;
+
 import cn.sowell.copframe.common.UserIdentifier;
+import cn.sowell.copframe.dto.ajax.JsonRequest;
 import cn.sowell.copframe.dto.ajax.JsonResponse;
+import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.copframe.weixin.authentication.WxUserPrincipal;
+import cn.sowell.copframe.weixin.common.service.WxConfigService;
 import cn.sowell.copframe.weixin.common.utils.WxUtils;
+import cn.sowell.copframe.weixin.pay.prepay.H5PayParameter;
+import cn.sowell.copframe.weixin.pay.service.WxPayService;
 import cn.sowell.ddxyz.DdxyzConstants;
+import cn.sowell.ddxyz.model.common.core.DeliveryManager;
 import cn.sowell.ddxyz.model.common.core.DeliveryTimePoint;
+import cn.sowell.ddxyz.model.common.core.Order;
+import cn.sowell.ddxyz.model.common.core.OrderToken;
+import cn.sowell.ddxyz.model.common.core.exception.OrderException;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
+import cn.sowell.ddxyz.model.common.service.OrderService;
 import cn.sowell.ddxyz.model.drink.pojo.PlainDrinkAdditionType;
 import cn.sowell.ddxyz.model.drink.pojo.PlainDrinkTeaAdditionType;
 import cn.sowell.ddxyz.model.drink.pojo.PlainDrinkType;
 import cn.sowell.ddxyz.model.drink.service.DrinkService;
+import cn.sowell.ddxyz.model.drink.term.OrderTerm;
 import cn.sowell.ddxyz.model.merchant.service.DeliveryService;
+import cn.sowell.ddxyz.model.weixin.pojo.WeiXinUser;
 import cn.sowell.ddxyz.weixin.WeiXinConstants;
 
 @Controller
@@ -32,6 +49,20 @@ public class WeiXinYddController {
 	
 	@Resource
 	DrinkService drinkService;
+	
+	@Resource
+	OrderService oService;
+
+	@Resource
+	DeliveryManager dManager;
+	
+	@Resource
+	WxConfigService configService;
+	
+	@Resource
+	WxPayService payService;
+	
+	Logger logger = Logger.getLogger(WeiXinYddController.class);
 	
 	@RequestMapping({"", "/"})
 	public String index(){
@@ -82,5 +113,26 @@ public class WeiXinYddController {
 		}
 		return jRes;
 	}
+	
+	@ResponseBody
+	@RequestMapping("/submitOrder")
+	public JsonResponse submitOrder(@RequestBody JsonRequest jReq){
+		JsonResponse jRes = new JsonResponse();
+		try {
+			OrderTerm term = OrderTerm.fromJson(dManager, jReq.getJsonObject());
+			WeiXinUser user = WxUtils.getCurrentUser(WeiXinUser.class);
+			Order order = oService.applyForOrder(term.createOrderParameter(), user, OrderToken.getAnonymousToken());
+			if(order != null){
+				//订单创建成功
+				//构造用于前台调用微信支付窗口的参数
+				H5PayParameter payParam = payService.buildPayParameter(order.getPrepayId());
+				jRes.put("payParam", payParam);
+			}
+		} catch (OrderException e) {
+			logger.error("创建支付订单时失败", e);
+		}
+		return jRes;
+	}
+	
 	
 }

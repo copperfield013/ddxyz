@@ -1,7 +1,7 @@
 package cn.sowell.copframe.utils;
 
-import java.math.BigInteger;
 import java.net.URLDecoder;
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import org.apache.log4j.Logger;
 
+import cn.sowell.copframe.common.property.PropertyPlaceholder;
 import cn.sowell.copframe.dto.format.FormatUtils;
 
 public class TextUtils {
@@ -195,8 +196,24 @@ public class TextUtils {
 		;
 		try {
 			MessageDigest md = MessageDigest.getInstance("MD5");
-			md.update(string.getBytes());
-			return new BigInteger(1, md.digest()).toString(16);
+			Charset charset = null;
+			String c = PropertyPlaceholder.getProperty("charset");
+			if(Charset.isSupported(c)){
+				charset = Charset.forName(c);
+			}else{
+				charset = Charset.defaultCharset();
+			}
+			md.update(string.getBytes(charset));
+			byte[] b = md.digest();
+			StringBuffer buffer = new StringBuffer();
+			for (int i = 0; i < b.length; i++) {
+	           String hex = Integer.toHexString(b[i] & 0xFF);
+	           if (hex.length() == 1) {
+	              hex = '0' + hex;
+	           }
+	           buffer.append(hex);
+	       }
+			return buffer.toString();
 		} catch (NoSuchAlgorithmException e) {
 		}
 		return null;

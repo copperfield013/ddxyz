@@ -1,4 +1,4 @@
-define(function(require, exports){
+define(function(require, exports, module){
 	var 
 		$CPF = require('$CPF'),
 		//获得默认参数
@@ -21,9 +21,11 @@ define(function(require, exports){
 			            'chooseWXPay'
 			            ] 
 		});
+		$CPF.data('wxConfigFlag', true);
 	}else{
 		$.error('已经初始化过wx.config，不能再次初始化');
 	}
 	
+	module.exports = wx;
 	
 });

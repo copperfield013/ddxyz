@@ -46,7 +46,7 @@ public class CommonRequestAttributeSetInterceptor implements WebRequestIntercept
 			String path = HttpRequestUtils.getURI(req);
 			
 			String basePath = req.getScheme()+"://" + req.getServerName() + ":" + req.getServerPort() + req.getContextPath()+"/";
-			if(matcher.match("/weixin*", path)){
+			if(matcher.match("/weixin", path) || matcher.match("/weixin/**", path)){
 				basePath = configService.getProjectURL();
 				//匹配微信端的请求
 				String appid = configService.getAppid(),

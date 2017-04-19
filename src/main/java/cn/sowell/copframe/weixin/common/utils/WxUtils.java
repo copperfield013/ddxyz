@@ -5,6 +5,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import cn.sowell.copframe.common.UserIdentifier;
 import cn.sowell.copframe.weixin.authentication.WxUserPrincipal;
+import cn.sowell.ddxyz.model.weixin.pojo.WeiXinUser;
 
 /**
  * 
@@ -32,6 +33,7 @@ public class WxUtils {
 	 * 当前支持类型
 	 * 1.{@link WxUserPrincipal}
 	 * 2.{@link UserIdentifier}
+	 * 3.{@link WeiXinUser}
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")

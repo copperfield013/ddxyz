@@ -15,6 +15,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
+import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.ddxyz.model.common.core.DefaultOrderPayParameter;
 import cn.sowell.ddxyz.model.common.core.DeliveryLocation;
 import cn.sowell.ddxyz.model.common.core.DeliveryManager;
@@ -33,8 +34,8 @@ import cn.sowell.ddxyz.model.drink.term.OrderTerm;
 import cn.sowell.ddxyz.model.weixin.pojo.WeiXinUser;
 import cn.sowell.ddxyz.model.weixin.service.WeiXinUserService;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath*:spring-config/spring-junit.xml")
+/*@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = "classpath*:spring-config/spring-junit.xml")*/
 public class OrderServiceTest {
 	@Resource
 	DeliveryManager dManager;
@@ -160,6 +161,12 @@ public class OrderServiceTest {
 		} catch (OrderException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@Test
+	public void md5Test(){
+		String str = "appid=wx044790c2cb35fd68&body=点点新意-一点点奶茶&detail={\"goods_detail\":[{\"goods_name\":\"饮料\",\"price\":1000,\"quantity\":1}]}&fee_type=CNY&mch_id=1338312901&nonce_str=4248d0a8c5a44ad9a5d39ee9b2e9871a&notify_url=http://copperfield.s1.natapp.cc/ddxyz//pay/notify&openid=ovZxms3dvkaZR2aFpmkWh2SxmCTY&out_trade_no=23306ca6d21d45f681d914f758726c16&sign_type=MD5&spbill_create_ip=14.23.150.211&total_fee=1000&trade_type=JSAPI&key=sowellyidiandiannaicha1234567890";
+		System.out.println(TextUtils.md5Encode(str));
 	}
 	
 	

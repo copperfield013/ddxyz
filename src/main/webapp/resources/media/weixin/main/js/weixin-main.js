@@ -7,5 +7,6 @@ define(function(require){
 	});
 	//初始化当前页面
 	$CPF.initPage(document);
+	
 	cnsl.log('-----weixin-main------');
 });
