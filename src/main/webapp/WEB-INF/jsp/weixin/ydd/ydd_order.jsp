@@ -5,9 +5,7 @@
 <head>
     <title>下单</title>
     <jsp:include page="/WEB-INF/jsp/weixin/common/weixin-include.jsp"></jsp:include>
-    <link rel="stylesheet" href="${basePath }media/weixin/main/css/templete.css">
-    <link rel="stylesheet" href="${basePath }media/weixin/main/css/common.css">
-    <link rel="stylesheet" href="${basePath }media/weixin/main/css/buy.css">
+    <link rel="stylesheet" href="${basePath }media/weixin/main/css/buy.css?${RES_STAMP}">
     <style type="text/css">
     	.delivery-location{
     		display: none;
@@ -28,9 +26,9 @@
     	}
     </style>
     <%-- <script src="${basePath }media/weixin/main/js/jquery-3.1.1.min.js"></script> --%>
-    <script src="${basePath }media/weixin/main/js/ix.js"></script>
-    <script src="${basePath }media/weixin/plugins/xcheck/xcheck.js"></script>
-    <script src="${basePath }media/weixin/plugins/xnumber/xnumber.js"></script>
+    <script src="${basePath }media/weixin/main/js/ix.js?${RES_STAMP}"></script>
+    <script src="${basePath }media/weixin/plugins/xcheck/xcheck.js?${RES_STAMP}"></script>
+    <script src="${basePath }media/weixin/plugins/xnumber/xnumber.js?${RES_STAMP}"></script>
     <script>
     $(function() {
         ix.init();
@@ -163,7 +161,7 @@
 $(function(){
 	$('input[type="radio"],input[type="checkbox"]').xcheck();
 	$('input[type="number"]').xnumber();
-	seajs.use('ydd/ydd-order.js');
+	seajs.use('ydd/ydd-order.js?${RES_STAMP}');
 });
 </script>
 </body>

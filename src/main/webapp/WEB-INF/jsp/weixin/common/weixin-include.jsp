@@ -12,8 +12,8 @@
 <meta name="format-detection" content="telephone=no"><!-- 禁止iphone修改数字样式 -->
 <meta name="viewport" content="minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,width=device-width,user-scalable=no">
 
-<link rel="stylesheet" href="${basePath }media/weixin/main/css/templete.css">
-<link rel="stylesheet" href="${basePath }media/weixin/main/css/common.css">
+<link rel="stylesheet" href="${basePath }media/weixin/main/css/templete.css?${RES_STAMP}">
+<link rel="stylesheet" href="${basePath }media/weixin/main/css/common.css?${RES_STAMP}">
 
 <!-- fromXu End -->
 
@@ -32,14 +32,14 @@
 				MAIN	: '${basePath}media/weixin/main/js/'
 			},
 		  	alias	: {
-		    	'$CPF'		: 'COMMON/cpf/cpf-core.js',
-				'utils'		: 'COMMON/cpf/cpf-utils.js',
-				'console'	: 'COMMON/cpf/cpf-console.js',
-				'wxpay'		: 'COMMON/cpf/cpf-wxpay.js',
-				'ajax'		: 'COMMON/cpf/cpf-ajax.js',
-				'page'		: 'COMMON/cpf/cpf-refer-test.js',
-				'dialog'	: 'COMMON/cpf/cpf-refer-test.js',
-				'wxconfig'	: 'MAIN/weixin-sdkconfig.js'
+		    	'$CPF'		: 'COMMON/cpf/cpf-core.js?${RES_STAMP}',
+				'utils'		: 'COMMON/cpf/cpf-utils.js?${RES_STAMP}',
+				'console'	: 'COMMON/cpf/cpf-console.js?${RES_STAMP}',
+				'wxpay'		: 'COMMON/cpf/cpf-wxpay.js?${RES_STAMP}',
+				'ajax'		: 'COMMON/cpf/cpf-ajax.js?${RES_STAMP}',
+				'page'		: 'COMMON/cpf/cpf-refer-test.js?${RES_STAMP}',
+				'dialog'	: 'COMMON/cpf/cpf-refer-test.js?${RES_STAMP}',
+				'wxconfig'	: 'MAIN/weixin-sdkconfig.js?${RES_STAMP}'
 				//..其他模块
 		  	}
 		});
@@ -48,7 +48,7 @@
 				$.extend(exports, $.parseJSON('${$paramMapJson}'));
 			}catch(e){}
 		});
-		seajs.use('MAIN/weixin-main.js');
+		seajs.use('MAIN/weixin-main.js?${RES_STAMP}');
 	});
 	
 </script>

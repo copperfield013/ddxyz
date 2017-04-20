@@ -47,26 +47,29 @@ body {
 .order .detail .name {
   font-size: 16px;
 }
+.order .detail .option {
+	font-size:12px;
+	line-height:17.5px;
+	width:80%;
+}
 .order .detail .name i {
-  font-size: 15px;
+  font-weight:bold;
+  font-size: 12px;
   font-style: normal;
   float: right;
+  margin-right: 10px;
 }
-.order .detail .name i:before {
-  content: "X";
-}
-.order .detail .price {
-  font-weight: bold;
-}
+
 .order .detail .btn {
   float: right;
-  margin-top: -33px;
+  margin-top: 3px;
 }
 .order .detail:nth-child(2) {
   margin-top: 0;
 }
 .order .result {
   text-align: right;
+  font-size:12px;
 }
 .order .result .time {
   float: left;

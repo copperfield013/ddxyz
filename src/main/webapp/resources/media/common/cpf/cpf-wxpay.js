@@ -5,15 +5,14 @@ define(function(require, exports, module){
 		
 	}
 	
-	WxPay.pay = function(_param, success){
+	WxPay.pay = function(_param, callback){
+		alert('pay');
 		var wxConfig = require('wxconfig');
+		callback = callback || $.noop;
 		wxConfig.ready(function(){
 			wxConfig.chooseWXPay($.extend({
-				'success'	: function(res){
-					// 支付成功后的回调函数
-					if(typeof success === 'function'){
-						success(res);
-					}
+				'complete'	: function(res){
+					callback.apply(this, [res]);
 				}
 			}, _param));
 		});

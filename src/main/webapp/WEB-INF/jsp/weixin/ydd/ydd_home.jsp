@@ -77,7 +77,7 @@
     </main>
     <footer>
         <a href="weixin/ydd/orderList" class="order">订单</a>
-        <a href="weixin/ydd/order" class="main">立即下单</a>
+        <a href="weixin/ydd/order?${resourceSuffix }" class="main">立即下单</a>
     </footer>
 </body>
 </html>

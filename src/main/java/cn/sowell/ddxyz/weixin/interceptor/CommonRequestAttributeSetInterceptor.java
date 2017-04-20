@@ -12,6 +12,8 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.context.request.WebRequestInterceptor;
 
+import cn.sowell.copframe.common.property.PropertyPlaceholder;
+import cn.sowell.copframe.dto.format.FormatUtils;
 import cn.sowell.copframe.utils.HttpRequestUtils;
 import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.copframe.weixin.common.service.WxConfigService;
@@ -64,11 +66,12 @@ public class CommonRequestAttributeSetInterceptor implements WebRequestIntercept
 				paramMap.put("timestamp", timeStamp);
 				paramMap.put("nonceStr", nonce);
 				paramMap.put("signature", signature);
-				
+				paramMap.put("wxDebug", FormatUtils.toBoolean(PropertyPlaceholder.getProperty("wxDebug")));
 				
 				request.setAttribute("$paramMap", paramMap, WebRequest.SCOPE_REQUEST);
 				request.setAttribute("$paramMapJson", JSON.toJSON(paramMap), WebRequest.SCOPE_REQUEST);
 			}
+			req.setAttribute("RES_STAMP", System.currentTimeMillis());
 			req.setAttribute("basePath", basePath);
 		}
 		

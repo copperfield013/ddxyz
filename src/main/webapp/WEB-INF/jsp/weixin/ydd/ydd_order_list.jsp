@@ -3,20 +3,10 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="utf-8"/>
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Cache-Control" content="no-cache">
-    <meta http-equiv="Expires" content="-1">
-    <meta name="format-detection" content="telephone=no"><!-- 禁止iphone修改数字样式 -->
-    <meta name="viewport" content="minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,width=device-width,user-scalable=no">
-    <title>点点新意</title>
-    <!--<link rel="stylesheet/less" href="less/order.less">-->
-    <!--<script src="js/less.min.js"></script>-->
-    <link rel="stylesheet" href="${basePath }media/weixin/main/css/templete.css">
-    <link rel="stylesheet" href="${basePath }media/weixin/main/css/common.css">
-    <!-- <link rel="stylesheet" href="${basePath }media/weixin/main/css/order.css"> -->
-    <link rel="stylesheet" href="${basePath }media/weixin/main/css/orderFix.css">
-    <script src="${basePath }media/weixin/main/js/ix.js"></script>
+    <title>下单</title>
+    <jsp:include page="/WEB-INF/jsp/weixin/common/weixin-include.jsp"></jsp:include>
+    <link rel="stylesheet" href="${basePath }media/weixin/main/css/order.css?${RES_STAMP}">
+    <script src="${basePath }media/weixin/main/js/ix.js?${RES_STAMP}"></script>
     <script>
     $(function() {
         ix.init();
