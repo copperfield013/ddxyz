@@ -205,7 +205,7 @@ define(function(require, exports, module){
 						//调用微信jsApi，发起付款
 						var WxPay = require('wxpay');
 						WxPay.pay(json.payParam, function(res){
-							console.log(res);
+							location.href = 'weixin/ydd/orderList';
 						});
 						//调用结束，无论成功或者失败，都跳转到订单付款详情页面中
 						return;

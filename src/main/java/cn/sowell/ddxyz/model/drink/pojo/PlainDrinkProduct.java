@@ -38,6 +38,10 @@ public class PlainDrinkProduct {
 
 	@Column(name="c_heat")
 	private Integer heat;
+	
+	@Column(name="c_cup_size")
+	private Integer cupSize;
+	
 
 	public Long getId() {
 		return id;
@@ -101,6 +105,14 @@ public class PlainDrinkProduct {
 
 	public void setTeaAdditionName(String teaAdditionName) {
 		this.teaAdditionName = teaAdditionName;
+	}
+
+	public Integer getCupSize() {
+		return cupSize;
+	}
+
+	public void setCupSize(Integer cupSize) {
+		this.cupSize = cupSize;
 	}
 
 

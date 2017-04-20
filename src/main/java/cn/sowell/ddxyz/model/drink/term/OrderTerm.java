@@ -142,6 +142,7 @@ public class OrderTerm {
 				productPersistHandler.getDrink().setDrinkTypeId(oItem.getDrinkTypeId());
 				productPersistHandler.getDrink().setDrinkTypeName(oItem.getDrinkTypeName());
 				productPersistHandler.getDrink().setHeat(oItem.getHeat());
+				productPersistHandler.getDrink().setCupSize(oItem.getCupSize());
 				productPersistHandler.getDrink().setSweetness(oItem.getSweetness());
 				productPersistHandler.getDrink().setTeaAdditionId(oItem.getTeaAdditionId());
 				productPersistHandler.getDrink().setTeaAdditionName(oItem.getTeaAdditionName());

@@ -135,4 +135,13 @@ public class WeiXinYddController {
 	}
 	
 	
+	@RequestMapping("/pay-result")
+	public String payResult(Long orderId, String status, Model model){
+		model.addAttribute("orderId", orderId);
+		model.addAttribute("status", status);
+		return WeiXinConstants.PATH_YDD + "/ydd_pay_result.jsp";
+	}
+	
+	
+	
 }
