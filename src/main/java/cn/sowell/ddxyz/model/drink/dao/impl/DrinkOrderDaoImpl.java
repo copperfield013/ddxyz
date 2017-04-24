@@ -12,6 +12,8 @@ import org.springframework.stereotype.Repository;
 
 import cn.sowell.copframe.dao.deferedQuery.ColumnMapResultTransformer;
 import cn.sowell.copframe.dao.deferedQuery.SimpleMapWrapper;
+import cn.sowell.copframe.dao.utils.QueryUtils;
+import cn.sowell.copframe.dto.page.CommonPageInfo;
 import cn.sowell.ddxyz.model.common.pojo.PlainOrder;
 import cn.sowell.ddxyz.model.drink.dao.DrinkOrderDao;
 import cn.sowell.ddxyz.model.drink.pojo.item.PlainOrderDrinkItem;
@@ -58,6 +60,17 @@ public class DrinkOrderDaoImpl implements DrinkOrderDao {
 		String hql = "from PlainOrder where orderUserId = :userId order by createTime desc";
 		Query query = session.createQuery(hql);
 		query.setLong("userId", userId);
+		return query.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PlainOrder> getOrderList(Long userId, CommonPageInfo pageInfo) {
+		Session session = sFactory.getCurrentSession();
+		String hql = "from PlainOrder where orderUserId = :userId order by createTime desc";
+		Query query = session.createQuery(hql);
+		query.setLong("userId", userId);
+		QueryUtils.setPagingParamWithCriteria(query, pageInfo);
 		return query.list();
 	}
 

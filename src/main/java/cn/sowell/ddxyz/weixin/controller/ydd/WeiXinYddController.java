@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import cn.sowell.copframe.common.UserIdentifier;
 import cn.sowell.copframe.dto.ajax.JsonRequest;
 import cn.sowell.copframe.dto.ajax.JsonResponse;
+import cn.sowell.copframe.dto.page.CommonPageInfo;
 import cn.sowell.copframe.weixin.common.service.WxConfigService;
 import cn.sowell.copframe.weixin.common.utils.WxUtils;
 import cn.sowell.copframe.weixin.pay.prepay.H5PayParameter;
@@ -108,13 +109,18 @@ public class WeiXinYddController {
 	
 	@RequestMapping("/orderList")
 	public String orderList(Model model){
+		return WeiXinConstants.PATH_YDD + "/ydd_order_list.jsp";
+	}
+	
+	@RequestMapping("/orderData")
+	public String load(CommonPageInfo pageInfo, Model model){
 		UserIdentifier user =  WxUtils.getCurrentUser(UserIdentifier.class);
-		List<PlainDrinkOrder> drinkList = drinkOrderService.getDrinkList(user);
+		List<PlainDrinkOrder> drinkList = drinkOrderService.getDrinkPageList(user, pageInfo);
 		model.addAttribute("orderDrinkList", drinkList);
 		model.addAttribute("sweetnessMap", DdxyzConstants.SWEETNESS_MAP);
 		model.addAttribute("heatMap", DdxyzConstants.HEAT_MAP);
 		model.addAttribute("cupSizeMap", DdxyzConstants.CUP_SIZE_MAP);
-		return WeiXinConstants.PATH_YDD + "/ydd_order_list.jsp";
+		return WeiXinConstants.PATH_YDD + "/ydd_order_data.jsp";
 	}
 	
 	@ResponseBody

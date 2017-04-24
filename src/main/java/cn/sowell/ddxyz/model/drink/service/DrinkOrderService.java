@@ -3,6 +3,7 @@ package cn.sowell.ddxyz.model.drink.service;
 import java.util.List;
 
 import cn.sowell.copframe.common.UserIdentifier;
+import cn.sowell.copframe.dto.page.CommonPageInfo;
 import cn.sowell.ddxyz.model.common.pojo.PlainOrder;
 import cn.sowell.ddxyz.model.drink.pojo.PlainDrinkAddition;
 import cn.sowell.ddxyz.model.drink.pojo.PlainDrinkOrder;
@@ -32,4 +33,6 @@ public interface DrinkOrderService {
 	List<PlainDrinkAddition> getDrinkAdditionList(Long productId);
 	
 	List<PlainDrinkOrder> getDrinkList(UserIdentifier user);
+	
+	List<PlainDrinkOrder> getDrinkPageList(UserIdentifier user, CommonPageInfo pageInfo);
 }

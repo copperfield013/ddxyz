@@ -8,8 +8,11 @@
 var defaults = {},
     files = [
 //        '../css/ix.css',
+		'../css/ix.list.css',
         'ix.util.js',
-        'ix.scroll.js'
+        'ix.scroll.js',
+        'ix.ajax.js',
+        'ix.list.js'
     ],
     jsfiles = document.scripts,
     jsPath = jsfiles[jsfiles.length - 1].src,

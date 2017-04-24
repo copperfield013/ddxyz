@@ -1,0 +1,19 @@
+@charset "utf-8";
+/* 分页列表  */
+.page-list:before, .page-list:after {
+    display: block;
+    text-align: center;
+    line-height: 3em;
+}
+.page-list.loading:after {
+    content: "正在加载...";
+}
+.page-list:not(:empty).nomore:after {
+    content: "没有更多";
+}
+.page-list:empty:before {
+    content: "暂无数据";
+}
+.page-list.loading:empty:before {
+    content: "";
+}
