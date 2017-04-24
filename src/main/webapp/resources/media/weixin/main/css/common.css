@@ -112,12 +112,12 @@ footer {
   text-align: center;
   border-top: 1px solid #efefef;
 }
-footer .order {
+footer .order-link {
   width: 130px;
   background-color: #fefefe;
   color: #004621;
 }
-footer .order:before {
+footer .order-link:before {
   font-family: icon;
   content: '\e6f8';
   margin-right: .5em;

@@ -11,20 +11,26 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import cn.sowell.copframe.common.UserIdentifier;
 import cn.sowell.copframe.weixin.pay.exception.WeiXinPayException;
 import cn.sowell.copframe.weixin.pay.prepay.PrepayParameter;
 import cn.sowell.copframe.weixin.pay.prepay.PrepayResult;
 import cn.sowell.copframe.weixin.pay.service.WxPayService;
+import cn.sowell.ddxyz.model.common.core.DefaultOrderPayParameter;
 import cn.sowell.ddxyz.model.common.core.Delivery;
 import cn.sowell.ddxyz.model.common.core.DeliveryManager;
 import cn.sowell.ddxyz.model.common.core.Order;
 import cn.sowell.ddxyz.model.common.core.OrderLog;
 import cn.sowell.ddxyz.model.common.core.OrderManager;
+import cn.sowell.ddxyz.model.common.core.OrderOperateResult;
 import cn.sowell.ddxyz.model.common.core.OrderParameter;
+import cn.sowell.ddxyz.model.common.core.OrderPayParameter;
 import cn.sowell.ddxyz.model.common.core.OrderToken;
 import cn.sowell.ddxyz.model.common.core.ProductManager;
 import cn.sowell.ddxyz.model.common.core.exception.OrderException;
 import cn.sowell.ddxyz.model.common.core.result.CheckResult;
+import cn.sowell.ddxyz.model.common.dao.CommonOrderDao;
+import cn.sowell.ddxyz.model.common.pojo.PlainOrderReceiver;
 import cn.sowell.ddxyz.model.common.service.OrderService;
 import cn.sowell.ddxyz.model.weixin.pojo.WeiXinUser;
 
@@ -42,6 +48,8 @@ public class OrderServiceImpl implements OrderService{
 	@Resource
 	WxPayService payService;
 	
+	@Resource
+	CommonOrderDao oDao;
 	
 	Logger logger = Logger.getLogger(OrderServiceImpl.class);
 	
@@ -66,6 +74,8 @@ public class OrderServiceImpl implements OrderService{
 						order.setPrepayId(prepayResult.getPrepayId());
 						//将订单对象同步到数据库
 						oManager.persistOrder(order);
+						//更新该微信用户的常用收货信息
+						oDao.updateReceiverInfo(user.getId(), orderParameter.getReceiver());
 						//订单和产品对象缓存到内存中
 						oManager.cacheOrder(order);
 						oManager.doLog(order, user, "订单创建成功，订单描述[" + order.getDescription() + "]", OrderLog.TYPE_ORDER_CREATE);
@@ -98,6 +108,42 @@ public class OrderServiceImpl implements OrderService{
 	public Set<Delivery> generateDeliveries(Date theDay) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	
+	@Override
+	public PlainOrderReceiver getLastReceiverInfo(Serializable userId) {
+		return oDao.getOrderReceiver((long) userId);
+	}
+	
+	@Transactional
+	@Override
+	public void payOrder(Long orderId, WeiXinUser user) throws Exception {
+		Order order = getOrder(orderId);
+		OrderPayParameter payParam = new DefaultOrderPayParameter(user);
+		order.pay(payParam);
+	}
+	
+	@Override
+	public OrderOperateResult operateOrder(Long orderId, String operateType,
+			UserIdentifier operateUser) throws Exception {
+		Order order = getOrder(orderId);
+		OrderOperateResult result = new OrderOperateResult();
+		if(order != null){
+			switch (operateType) {
+				case OrderOperateResult.OPERATE_PAY:
+					//支付
+					payOrder(orderId, (WeiXinUser) operateUser);
+					result.setStatus("suc");
+					break;
+				case OrderOperateResult.OPERATE_CONFIRM:
+					//确认收货
+					break;
+				default:
+					throw new UnsupportedOperationException("不支持的操作类型[" + operateType + "]");
+				}
+		}
+		return result;
 	}
 	
 }

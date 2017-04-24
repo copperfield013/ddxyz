@@ -13,6 +13,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 
+import cn.sowell.copframe.dao.deferedQuery.DeferedParamQuery;
 import cn.sowell.ddxyz.model.common.core.Order;
 import cn.sowell.ddxyz.model.common.core.OrderDetail;
 import cn.sowell.ddxyz.model.common.core.Product;
@@ -200,6 +201,20 @@ public class DataPersistenceDaoImpl implements DataPersistenceDao{
 		query.setString("canStatus", canStatus)
 			.setLong("orderId", orderId)
 			.executeUpdate();
-		
+	}
+	
+	@Override
+	public void updateOrderActualPaied(long orderId, Integer actualPay) {
+		String sql = "update t_order_base set c_actual_pay = @actualPay where id = :orderId";
+		DeferedParamQuery dQuery = new DeferedParamQuery(sql);
+		dQuery.setParam("orderId", orderId);
+		if(actualPay != null){
+			dQuery.setSnippet("actualPay", ":actualPay");
+			dQuery.setParam("actualPay", actualPay);
+		}else{
+			dQuery.setSnippet("actualPay", "c_total_price");
+		}
+		Query query = dQuery.createSQLQuery(sFactory.getCurrentSession(), false, null);
+		query.executeUpdate();
 	}
 }

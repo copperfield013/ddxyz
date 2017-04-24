@@ -1,7 +1,5 @@
 package cn.sowell.ddxyz.weixin.controller.ydd;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,39 +12,31 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.fastjson.JSONObject;
-
 import cn.sowell.copframe.common.UserIdentifier;
 import cn.sowell.copframe.dto.ajax.JsonRequest;
 import cn.sowell.copframe.dto.ajax.JsonResponse;
-import cn.sowell.copframe.utils.TextUtils;
-import cn.sowell.copframe.weixin.authentication.WxUserPrincipal;
 import cn.sowell.copframe.weixin.common.service.WxConfigService;
 import cn.sowell.copframe.weixin.common.utils.WxUtils;
 import cn.sowell.copframe.weixin.pay.prepay.H5PayParameter;
 import cn.sowell.copframe.weixin.pay.service.WxPayService;
 import cn.sowell.ddxyz.DdxyzConstants;
-import cn.sowell.ddxyz.admin.AdminConstants;
 import cn.sowell.ddxyz.model.common.core.DeliveryManager;
 import cn.sowell.ddxyz.model.common.core.DeliveryTimePoint;
 import cn.sowell.ddxyz.model.common.core.Order;
+import cn.sowell.ddxyz.model.common.core.OrderOperateResult;
 import cn.sowell.ddxyz.model.common.core.OrderToken;
 import cn.sowell.ddxyz.model.common.core.exception.OrderException;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
-import cn.sowell.ddxyz.model.common.pojo.PlainOrder;
-import cn.sowell.ddxyz.model.drink.pojo.PlainDrinkAddition;
+import cn.sowell.ddxyz.model.common.pojo.PlainLocation;
+import cn.sowell.ddxyz.model.common.pojo.PlainOrderReceiver;
 import cn.sowell.ddxyz.model.common.service.OrderService;
 import cn.sowell.ddxyz.model.drink.pojo.PlainDrinkAdditionType;
+import cn.sowell.ddxyz.model.drink.pojo.PlainDrinkOrder;
 import cn.sowell.ddxyz.model.drink.pojo.PlainDrinkTeaAdditionType;
 import cn.sowell.ddxyz.model.drink.pojo.PlainDrinkType;
-import cn.sowell.ddxyz.model.drink.pojo.PlainOrderDrink;
-import cn.sowell.ddxyz.model.drink.pojo.item.PlainOrderDrinkItem;
+import cn.sowell.ddxyz.model.drink.service.DrinkOrderService;
 import cn.sowell.ddxyz.model.drink.service.DrinkService;
-import cn.sowell.ddxyz.model.drink.service.OrderDrinkService;
-import cn.sowell.ddxyz.model.drink.service.PlainDrinkAdditionService;
-import cn.sowell.ddxyz.model.drink.service.PlainOrderService;
 import cn.sowell.ddxyz.model.drink.term.OrderTerm;
-import cn.sowell.ddxyz.model.main.AdminMainConstants;
 import cn.sowell.ddxyz.model.merchant.service.DeliveryService;
 import cn.sowell.ddxyz.model.weixin.pojo.WeiXinUser;
 import cn.sowell.ddxyz.weixin.WeiXinConstants;
@@ -61,13 +51,7 @@ public class WeiXinYddController {
 	DrinkService drinkService;
 	
 	@Resource
-	PlainOrderService plainOrderService;
-	
-	@Resource
-	OrderDrinkService orderDrinkService;
-	
-	@Resource
-	PlainDrinkAdditionService drinkAdditionService;
+	DrinkOrderService drinkOrderService;
 	
 	@Resource
 	OrderService oService;
@@ -84,13 +68,21 @@ public class WeiXinYddController {
 	Logger logger = Logger.getLogger(WeiXinYddController.class);
 	
 	@RequestMapping({"", "/"})
-	public String index(){
+	public String index(Model model){
+		long waresId = 1l;
+		long merchantId = 1l;
+		List<DeliveryTimePoint> timePointItems = dService.getTodayDeliveryTimePoints(waresId);
+		List<PlainDrinkType> drinkTypes = drinkService.getAllDrinkTypes(waresId);
+		List<PlainLocation> deliveryLocations = dService.getAllDeliveryLocation(merchantId);
+		model.addAttribute("timePointItems", timePointItems);
+		model.addAttribute("drinkTypes", drinkTypes);
+		model.addAttribute("deliveryLocations", deliveryLocations);
 		return WeiXinConstants.PATH_YDD + "/ydd_home.jsp";
 	}
 	
 	@RequestMapping("/order")
-	public String order(Model model){
-		WxUserPrincipal user = WxUtils.getCurrentUser(WxUserPrincipal.class);
+	public String order(Integer deliveryHour, Model model){
+		UserIdentifier user = WxUtils.getCurrentUser(UserIdentifier.class);
 		long waresId = 1l;
 		//获得当天的所有配送
 		Map<DeliveryTimePoint, List<PlainDelivery>> deliveryMap = dService.getTodayDeliveries(waresId);
@@ -100,7 +92,7 @@ public class WeiXinYddController {
 		Map<Long, List<PlainDrinkTeaAdditionType>> teaAdditionMap = drinkService.getTeaAdditionMap(waresId);
 		//获得饮料的所有可用加料
 		Map<Long, List<PlainDrinkAdditionType>> additionMap = drinkService.getAdditionMap(waresId);
-		
+		PlainOrderReceiver receiverInfo = oService.getLastReceiverInfo(user.getId());
 		model.addAttribute("deliveryMap", deliveryMap);
 		model.addAttribute("drinkTypes", drinkTypes);
 		model.addAttribute("teaAdditionMap", teaAdditionMap);
@@ -108,6 +100,8 @@ public class WeiXinYddController {
 		model.addAttribute("cupSizeMap", DdxyzConstants.CUP_SIZE_MAP);
 		model.addAttribute("sweetnessMap", DdxyzConstants.SWEETNESS_MAP);
 		model.addAttribute("heatMap", DdxyzConstants.HEAT_MAP);
+		model.addAttribute("deliveryHour", deliveryHour);
+		model.addAttribute("receiverInfo", receiverInfo);
 		
 		return WeiXinConstants.PATH_YDD + "/ydd_order.jsp";
 	}
@@ -115,30 +109,8 @@ public class WeiXinYddController {
 	@RequestMapping("/orderList")
 	public String orderList(Model model){
 		UserIdentifier user =  WxUtils.getCurrentUser(UserIdentifier.class);
-		List<PlainOrder> orderList = plainOrderService.getOrderList((Long)user.getId());
-		List<PlainOrderDrink> orderDrinkList = new ArrayList<PlainOrderDrink>();
-		if(orderList != null && orderList.size() > 0){
-			for(PlainOrder plainOrder : orderList){
-				List<PlainOrderDrinkItem> orderDrinkItemList = orderDrinkService.getOrderDrinkItemList(plainOrder.getId());
-				PlainOrderDrink plainOrderDrink = new PlainOrderDrink();
-				plainOrderDrink.setOrderCode(plainOrder.getOrderCode());
-				plainOrderDrink.setCanceledStatus(plainOrder.getCanceledStatus());
-				plainOrderDrink.setOrderStatus(plainOrder.getOrderStatus());
-				plainOrderDrink.setTotalPrice(plainOrder.getTotalPrice());
-				plainOrderDrink.setOrderTime(plainOrder.getUpdateTime());
-				plainOrderDrink.setOrderDrinkItems(orderDrinkItemList);
-				plainOrderDrink.setCupCount(0);
-				if(orderDrinkItemList != null && orderDrinkItemList.size() > 0){
-					for(PlainOrderDrinkItem item : orderDrinkItemList){
-						List<PlainDrinkAddition> additions = drinkAdditionService.getDrinkAdditionList(item.getDrinkProductId());
-						item.setAdditions(additions);
-					}
-					plainOrderDrink.setCupCount(orderDrinkItemList.size());
-				}
-				orderDrinkList.add(plainOrderDrink);
-			}
-		}
-		model.addAttribute("orderDrinkList", orderDrinkList);
+		List<PlainDrinkOrder> drinkList = drinkOrderService.getDrinkList(user);
+		model.addAttribute("orderDrinkList", drinkList);
 		model.addAttribute("sweetnessMap", DdxyzConstants.SWEETNESS_MAP);
 		model.addAttribute("heatMap", DdxyzConstants.HEAT_MAP);
 		model.addAttribute("cupSizeMap", DdxyzConstants.CUP_SIZE_MAP);
@@ -173,6 +145,7 @@ public class WeiXinYddController {
 				//构造用于前台调用微信支付窗口的参数
 				H5PayParameter payParam = payService.buildPayParameter(order.getPrepayId());
 				jRes.put("payParam", payParam);
+				jRes.put("orderId", order.getKey());
 			}
 		} catch (OrderException e) {
 			logger.error("创建支付订单时失败", e);
@@ -181,13 +154,44 @@ public class WeiXinYddController {
 	}
 	
 	
-	@RequestMapping("/pay-result")
-	public String payResult(Long orderId, String status, Model model){
-		model.addAttribute("orderId", orderId);
-		model.addAttribute("status", status);
-		return WeiXinConstants.PATH_YDD + "/ydd_pay_result.jsp";
+	@ResponseBody
+	@RequestMapping("/order-paied")
+	public JsonResponse orderPaid(Long orderId){
+		JsonResponse jRes = new JsonResponse();
+		try {
+			WeiXinUser user = WxUtils.getCurrentUser(WeiXinUser.class);
+			oService.payOrder(orderId, user );
+			jRes.put("status", "suc");
+		} catch (Exception e) {
+			logger.error("订单修改支付状态失败[orderId=" + orderId + "]");
+			logger.error("更改订单状态为已支付时发生异常", e);
+			jRes.put("status", "error");
+		}
+		return jRes;
 	}
 	
+	@ResponseBody
+	@RequestMapping("operateOrder")
+	public JsonResponse operateOrder(Long orderId, String operateType){
+		JsonResponse jRes = new JsonResponse();
+		UserIdentifier operateUser = WxUtils.getCurrentUser(UserIdentifier.class);
+		try {
+			OrderOperateResult result = oService.operateOrder(orderId, operateType, operateUser);
+			jRes.put("status", result.getStatus());
+		} catch (Exception e) {
+			logger.error("订单操作时出现异常", e);
+		}
+		return jRes;
+	}
 	
+	/**
+	 * 微信支付状态返回
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/notify")
+	public String paiedNotify(){
+		return null;
+	}
 	
 }

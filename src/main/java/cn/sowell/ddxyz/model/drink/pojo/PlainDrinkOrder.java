@@ -6,7 +6,9 @@ import java.util.List;
 
 import cn.sowell.ddxyz.model.drink.pojo.item.PlainOrderDrinkItem;
 
-public class PlainOrderDrink {
+public class PlainDrinkOrder {
+	
+	private Long id;
 	
 	private String orderCode;
 	
@@ -77,5 +79,14 @@ public class PlainOrderDrink {
 	public void setOrderDrinkItems(List<PlainOrderDrinkItem> orderDrinkItems) {
 		this.orderDrinkItems = orderDrinkItems;
 	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 
 }

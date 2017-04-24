@@ -4,7 +4,7 @@ package cn.sowell.ddxyz.model.common.core.exception;
 public class OrderException extends Exception {
 
 	public OrderException(String msg) {
-		// TODO Auto-generated constructor stub
+		super(msg);
 	}
 
 	public OrderException(String msg, Throwable e) {

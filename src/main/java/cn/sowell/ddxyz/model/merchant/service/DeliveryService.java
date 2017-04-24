@@ -5,6 +5,7 @@ import java.util.List;
 
 import cn.sowell.ddxyz.model.common.core.DeliveryTimePoint;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
+import cn.sowell.ddxyz.model.common.pojo.PlainLocation;
 
 public interface DeliveryService {
 	/**
@@ -24,6 +25,20 @@ public interface DeliveryService {
 	 * 如果配送对象不限制配送量，那么返回{@link Integer#MAX_VALUE}
 	 */
 	Integer getDeliveryRemain(Long deliveryId);
+
+	/**
+	 * 根据商品id获得对应的所有可用配送时间点
+	 * @param waresId
+	 * @return
+	 */
+	List<DeliveryTimePoint> getTodayDeliveryTimePoints(long waresId);
+
+	/**
+	 * 根据门店id获得所有可用的配送点
+	 * @param merchantId
+	 * @return
+	 */
+	List<PlainLocation> getAllDeliveryLocation(long merchantId);
 	
 	
 	

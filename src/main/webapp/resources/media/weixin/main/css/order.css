@@ -99,3 +99,21 @@ body {
 .order:first-child {
   border-top: none;
 }
+
+
+
+
+p.operate {
+    text-align: right;
+    height: 3em;
+    line-height: 3em;
+    border-top: 1px solid #eee;
+}
+
+span.operate-button {
+    border: #FF6347 solid 1px;
+    border-radius: 1em;
+    padding: 0.3em 1em;
+    color: #FF6347;
+}
+

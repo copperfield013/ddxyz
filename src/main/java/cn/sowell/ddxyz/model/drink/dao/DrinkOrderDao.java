@@ -3,8 +3,15 @@ package cn.sowell.ddxyz.model.drink.dao;
 import java.util.List;
 
 import cn.sowell.ddxyz.model.common.pojo.PlainOrder;
+import cn.sowell.ddxyz.model.drink.pojo.item.PlainOrderDrinkItem;
 
-public interface OrderDao {
+public interface DrinkOrderDao {
+	/**
+	 * 根据订单id获取订单详情列表
+	 * @param orderId
+	 * @return
+	 */
+	List<PlainOrderDrinkItem> getOrderDrinkItemList(Long orderId);
 
 	/**
 	 * 根据用户id获取订单列表
@@ -12,4 +19,5 @@ public interface OrderDao {
 	 * @return
 	 */
 	List<PlainOrder> getOrderList(Long userId);
+	
 }

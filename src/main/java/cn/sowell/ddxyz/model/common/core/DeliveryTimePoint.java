@@ -16,13 +16,19 @@ import cn.sowell.copframe.utils.TextUtils;
  */
 public class DeliveryTimePoint {
 	private Calendar timePoint;
+	private Date closeTime;
 	
-	public DeliveryTimePoint(Date dateTime) {
+	public DeliveryTimePoint(Date dateTime){
+		this(dateTime, null);
+	}
+	
+	public DeliveryTimePoint(Date dateTime, Date closeTime) {
 		timePoint = Calendar.getInstance();
 		timePoint.setTime(dateTime);
 		timePoint.set(Calendar.MINUTE, 0);
 		timePoint.set(Calendar.SECOND, 0);
 		timePoint.set(Calendar.MILLISECOND, 0);
+		this.closeTime = closeTime;
 	}
 	
 	public Integer getYear(){
@@ -44,7 +50,10 @@ public class DeliveryTimePoint {
 	public Date getDatetime(){
 		return timePoint.getTime();
 	}
-	
+	/**
+	 * 根据当前日期和小时构造一个唯一字符串
+	 * @return
+	 */
 	public String getKey(){
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(TextUtils.convert(getYear(), null, 2));
@@ -54,7 +63,14 @@ public class DeliveryTimePoint {
 		return buffer.toString();
 	}
 	
-	
+	public boolean getClosed(){
+		if(this.closeTime != null){
+			return (new Date()).compareTo(this.closeTime) > 0;
+		}else{
+			throw new UnsupportedOperationException("无法查看该时间点的关闭状态，因为关闭时间参数为空");
+		}
+		
+	}
 	
 	/**
 	 * 比较两个时间点，如果两个时间点年月日小时都一致的话，那么

@@ -64,6 +64,7 @@ public class OrderTerm {
 						receiver.setContact(recJo.getString("contact"));
 						receiver.setName(recJo.getString("name"));
 						receiver.setAddress(recJo.getString("address"));
+						ot.receiver = receiver;
 					}else{
 						throw new OrderException("没有传入收货人信息参数");
 					}

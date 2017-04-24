@@ -23,10 +23,22 @@ public class PlainLocation {
 	private String name;
 	
 	@Column(name="c_address")
-	private String adddress;
+	private String address;
 	
 	@Column(name="c_coordinate")
 	private String coordinate;
+	
+	@Column(name="c_pic_uri")
+	private String pictureUri;
+	
+	@Column(name="c_pic_url")
+	private String pictureUrl;
+	
+	@Column(name="merchant_id")
+	private Long merchantId;
+	
+	@Column(name="c_disabled")
+	private Integer disabled;
 	
 	@Column(name="create_time")
 	private Date createTime;
@@ -70,10 +82,34 @@ public class PlainLocation {
 	public void setCode(String code) {
 		this.code = code;
 	}
-	public String getAdddress() {
-		return adddress;
+	public String getAddress() {
+		return address;
 	}
-	public void setAdddress(String adddress) {
-		this.adddress = adddress;
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	public String getPictureUri() {
+		return pictureUri;
+	}
+	public void setPictureUri(String pictureUri) {
+		this.pictureUri = pictureUri;
+	}
+	public String getPictureUrl() {
+		return pictureUrl;
+	}
+	public void setPictureUrl(String pictureUrl) {
+		this.pictureUrl = pictureUrl;
+	}
+	public Long getMerchantId() {
+		return merchantId;
+	}
+	public void setMerchantId(Long merchantId) {
+		this.merchantId = merchantId;
+	}
+	public Integer getDisabled() {
+		return disabled;
+	}
+	public void setDisabled(Integer disabled) {
+		this.disabled = disabled;
 	}
 }

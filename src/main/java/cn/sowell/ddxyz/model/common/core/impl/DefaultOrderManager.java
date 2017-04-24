@@ -287,8 +287,11 @@ public class DefaultOrderManager implements OrderManager, InitializingBean {
 					resource.releaseResource();
 					//回滚所有持久化事务
 					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+					throw new OrderException("更新订单支付状态时出现异常", e);
 				}
 			}
+		}else{
+			throw new OrderException("没有找到订单对应的配送");
 		}
 	}
 	

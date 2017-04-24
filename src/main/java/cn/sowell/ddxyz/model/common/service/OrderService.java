@@ -4,11 +4,14 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
+import cn.sowell.copframe.common.UserIdentifier;
 import cn.sowell.ddxyz.model.common.core.Delivery;
 import cn.sowell.ddxyz.model.common.core.Order;
 import cn.sowell.ddxyz.model.common.core.OrderManager;
+import cn.sowell.ddxyz.model.common.core.OrderOperateResult;
 import cn.sowell.ddxyz.model.common.core.OrderParameter;
 import cn.sowell.ddxyz.model.common.core.OrderToken;
+import cn.sowell.ddxyz.model.common.pojo.PlainOrderReceiver;
 import cn.sowell.ddxyz.model.weixin.pojo.WeiXinUser;
 /**
  * 
@@ -55,5 +58,31 @@ public interface OrderService {
 	 * @see OrderManager#getOrder(Serializable)
 	 */
 	Order getOrder(Serializable orderKey);
+
+	/**
+	 * 根据用户的id获得其最近的收货信息
+	 * @param userId
+	 * @return
+	 */
+	PlainOrderReceiver getLastReceiverInfo(Serializable userId);
+
+	/**
+	 * 
+	 * @param orderId
+	 */
+	void payOrder(Long orderId, WeiXinUser user) throws Exception;
+
+	/**
+	 * 订单操作的Service
+	 * @param orderId 订单id
+	 * @param operateType 操作类型
+	 * @param operateUser 操作的用户
+	 * @return
+	 * @throws Exception 
+	 */
+	OrderOperateResult operateOrder(Long orderId, String operateType, UserIdentifier operateUser) throws Exception;
+
+
+	
 
 }

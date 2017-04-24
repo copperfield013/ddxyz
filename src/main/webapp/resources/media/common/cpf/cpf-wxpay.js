@@ -11,7 +11,14 @@ define(function(require, exports, module){
 		callback = callback || $.noop;
 		wxConfig.ready(function(){
 			wxConfig.chooseWXPay($.extend({
+				'success'	: function(){
+					alert('suc');
+				},
+				'fail'		: function(){
+					alert('fail');
+				},
 				'complete'	: function(res){
+					alert('complete');
 					callback.apply(this, [res]);
 				}
 			}, _param));

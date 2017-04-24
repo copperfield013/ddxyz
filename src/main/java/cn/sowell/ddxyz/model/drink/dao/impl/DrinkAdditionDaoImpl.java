@@ -11,11 +11,11 @@ import org.springframework.stereotype.Repository;
 
 import cn.sowell.copframe.dao.deferedQuery.ColumnMapResultTransformer;
 import cn.sowell.copframe.dao.deferedQuery.SimpleMapWrapper;
-import cn.sowell.ddxyz.model.drink.dao.PlainDrinkAdditionDao;
+import cn.sowell.ddxyz.model.drink.dao.DrinkAdditionDao;
 import cn.sowell.ddxyz.model.drink.pojo.PlainDrinkAddition;
 
 @Repository
-public class PlainDrinkAdditionDaoImpl implements PlainDrinkAdditionDao {
+public class DrinkAdditionDaoImpl implements DrinkAdditionDao {
 
 	@Resource
 	SessionFactory sFactory;

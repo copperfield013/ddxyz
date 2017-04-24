@@ -130,6 +130,13 @@ public interface DataPersistenceService {
 	 */
 	void setOrderRefund(PlainOrderRefund refund) throws OrderException;
 
+	/**
+	 * 持久化订单的支付金额
+	 * @param orderId 订单主键
+	 * @param actualPay 真实支付金额
+	 */
+	void updateOrderActualPaied(Serializable orderId, Integer actualPay);
+
 	
 
 }

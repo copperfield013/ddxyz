@@ -24,6 +24,17 @@
     	.addition-type-wrapper{
     		display: none;
     	}
+    	.screen-shade{
+    	    top: 0;
+		    left: 0;
+		    right: 0;
+		    bottom: 0;
+		    position: absolute;
+		    z-index: 100;
+		    opacity: 0.50;
+		    background-color: #777;
+    	}
+    	
     </style>
     <%-- <script src="${basePath }media/weixin/main/js/jquery-3.1.1.min.js"></script> --%>
     <script src="${basePath }media/weixin/main/js/ix.js?${RES_STAMP}"></script>
@@ -57,7 +68,7 @@
             		<select class="delivery-location" data-key="${item.key.key }" >
             			<option value="">请选择</option>
             			<c:forEach items="${item.value }" var="delivery">
-            				<option value="${delivery.id }">${delivery.locationName }</option>
+            				<option value="${delivery.locationId }" data-did="${delivery.id }">${delivery.locationName }</option>
             			</c:forEach>
 	            	</select>
             	</c:forEach>
@@ -66,7 +77,7 @@
         <dl class="text">
             <dt>联系号码</dt>
             <dd>
-                <input id="telphone" type="text" name="telphone" placeholder="请输入">
+                <input id="telphone" type="text" name="telphone" placeholder="请输入" value="${receiverInfo.receiverContact }">
             </dd>
         </dl>
     </div>
@@ -89,7 +100,6 @@
             </dd>
         </dl>
         <div class="box">
-            <h5>饮料详情</h5>
             <c:forEach items="${teaAdditionMap }" var="teaAdditionTypeEntry">
 	            <p data-key="${teaAdditionTypeEntry.key }" class="tea-addition-type-wrapper">
 	            	<c:forEach items="${teaAdditionTypeEntry.value }" var="teaAdditionType">
@@ -153,7 +163,7 @@
     </div>
 </main>
 <footer>
-    <a href="weixin/ydd/orderList" class="order">订单</a>
+    <a href="weixin/ydd/orderList" class="order-link">订单</a>
     <a id="pay-order" href="javascript:;" class="main">结账付款</a>
 </footer>
 </form>
@@ -162,6 +172,7 @@ $(function(){
 	$('input[type="radio"],input[type="checkbox"]').xcheck();
 	$('input[type="number"]').xnumber();
 	seajs.use('ydd/ydd-order.js?${RES_STAMP}');
+	$('#timePoint').val('${deliveryHour}');
 });
 </script>
 </body>

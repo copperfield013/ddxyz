@@ -31,9 +31,10 @@ public class WxUtils {
 	 * 
 	 * @param <T>
 	 * 当前支持类型
-	 * 1.{@link WxUserPrincipal}
-	 * 2.{@link UserIdentifier}
-	 * 3.{@link WeiXinUser}
+	 * <ul>
+	 * <li>1.{@link WxUserPrincipal}</li>
+	 * <li>2.{@link UserIdentifier}</li>
+	 * <li>3.{@link WeiXinUser}</li>
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")

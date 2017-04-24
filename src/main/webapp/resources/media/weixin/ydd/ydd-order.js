@@ -41,11 +41,12 @@ define(function(require, exports, module){
 		
 		//选择配送地点
 		$('.delivery-location').change(function(){
-			var deliveryId = $(this).val();
-			if(deliveryId){
+			var locationId = $(this).val();
+			var deliveryId = $('option[value="' + locationId + '"]', this).attr('data-did')
+			if(locationId && deliveryId){
 				//构造配送地址选项对象
 				var locationOpt = new OrderOption({
-					key		: deliveryId,
+					key		: locationId,
 					name	: $(this).text(),
 					type	: 'location'
 				});
@@ -194,18 +195,26 @@ define(function(require, exports, module){
 			if(order.getItems().length == 0){
 				return alertMsg('请至少选择一杯饮料');
 			}
+			showShade();
 			//生成提交后台的JSON
 			var reqJSON = order.toObject();
+			var Ajax = require('ajax');
 			//提交订单到后台
-			require('ajax').postJson('weixin/ydd/submitOrder', reqJSON, function(json){
-				console.log(json);
+			Ajax.postJson('weixin/ydd/submitOrder', reqJSON, function(json){
 				if(json != null){
 					if(json.payParam){
 						//后台创建订单成功，返回订单，包含预付款单号
 						//调用微信jsApi，发起付款
 						var WxPay = require('wxpay');
 						WxPay.pay(json.payParam, function(res){
-							location.href = 'weixin/ydd/orderList';
+							if(res['errMsg'] == "chooseWXPay:ok" ) {
+								alert(json.orderId);
+								//支付成功，发送请求到后台，更改订单状态
+								sendOrderPaiedReq(json.orderId, 0);
+							}else{
+								alert('没有支付');
+								location.href = 'weixin/ydd/orderList';
+							}
 						});
 						//调用结束，无论成功或者失败，都跳转到订单付款详情页面中
 						return;
@@ -213,9 +222,30 @@ define(function(require, exports, module){
 				}
 				//后台创建订单失败，显示错误信息
 				alertMsg('创建订单失败');
+				showShade(false);
 			});
 		});
 		
+		function sendOrderPaiedReq(orderId, counter){
+			if(counter < 3){
+				alert('支付成功1');
+				require('ajax').ajax('weixin/ydd/order-paied', {
+					orderId		: orderId
+				}, function(setOrderPaiedRes){
+					//订单状态更改情况
+					if(setOrderPaiedRes.status === 'suc'){
+						//后台支付成功
+						alert('支付成功');
+						location.href = 'weixin/ydd/orderList';
+					}else{
+						//后台状态更新失败时，重新提交
+						sendOrderPaiedReq(orderId, ++counter);
+					}
+				});
+			}else{
+				location.href = 'weixin/ydd/orderList';
+			}
+		}
 		
 		/**
 		 * 显示订单内的所有订单条目
@@ -293,6 +323,15 @@ define(function(require, exports, module){
 			alert(msg);
 		}
 		
+		var $shade = $('<div class="screen-shade">');
+		function showShade(show){
+			if(show === false){
+				$shade.remove();
+			}else{
+				$shade.appendTo($('body'));
+			}
+		}
+		
 	};
 	
 	
@@ -301,7 +340,7 @@ define(function(require, exports, module){
 	 */
 	function Delivery(_param){
 		var defaultParam = {
-			location	: new OrderOption(),
+			location	: null,
 			timePoint	: null
 		};
 		

@@ -28,6 +28,10 @@ public class PlainDelivery {
 	@Column(name="c_time_point")
 	private Date timePoint;
 	
+	//配送关闭时间
+	@Column(name="c_close_time")
+	private Date closeTime;
+	
 	//最多配送量
 	@Column(name="c_max_count")
 	private Integer maxCount;
@@ -117,6 +121,12 @@ public class PlainDelivery {
 	}
 	public void setWaresId(Long waresId) {
 		this.waresId = waresId;
+	}
+	public Date getCloseTime() {
+		return closeTime;
+	}
+	public void setCloseTime(Date closeTime) {
+		this.closeTime = closeTime;
 	}
 	
 	

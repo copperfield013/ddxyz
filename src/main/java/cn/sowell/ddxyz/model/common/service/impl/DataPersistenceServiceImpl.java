@@ -205,5 +205,10 @@ public class DataPersistenceServiceImpl implements DataPersistenceService{
 			throw new OrderException("持久化订单的退款时发生错误", e);
 		}
 	}
+	
+	@Override
+	public void updateOrderActualPaied(Serializable orderId, Integer actualPay) {
+		dpDao.updateOrderActualPaied((long) orderId, actualPay);
+	}
 
 }

@@ -123,6 +123,12 @@ public interface DataPersistenceDao {
 	 * @param canStatusAbandon 
 	 */
 	void updateProductCanceledStatusInOrder(long orderId, String canStatus);
+	/**
+	 * 更新订单的真实支付金额。如果传入的actualPay参数为null，那么就用订单的总价作为实付金额
+	 * @param orderId 订单id
+	 * @param actualPay 实付金额，单位为分
+	 */
+	void updateOrderActualPaied(long orderId, Integer actualPay);
 	
 	
 

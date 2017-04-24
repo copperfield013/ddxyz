@@ -24,60 +24,50 @@
         <!-- 时间档 -->
         <div class="block timeline">
             <h4>时间档<pre>高亮表示该时段有奶茶供应</pre></h4>
-            <p>
-                <a href="javascript:;" class="no">11点</a>
-                <a href="javascript:;" class="yes">12点</a>
-                <a href="javascript:;" class="yes">13点</a>
-            </p>
-            <p>
-                <a href="javascript:;" class="yes">14点</a>
-                <a href="javascript:;" class="yes">15点</a>
-                <a href="javascript:;" class="yes">16点</a>
-            </p>
+            <c:forEach items="${timePointItems }" var="timePoint" varStatus="i">
+            	${i.index % 3 == 0? '<p>':'' }
+                <a href="javascript:;" data-value="${timePoint.hour }" class="time-point ${timePoint.closed? 'no': 'yes' }">${timePoint.hour }点</a>
+            	${i.index % 3 == 2 || i.last? '</p>' : '' }
+            </c:forEach>
         </div>
         <!-- 奶茶种类 -->
         <div class="block milktea">
             <h4>奶茶种类</h4>
-            <p>
-                <img src="${basePath }media/weixin/main/image/thumb-tea1.jpg" alt="奶茶1">
-                <span class="name">奶茶</span>
-                <span class="price">
-                    <b>￥10.0/杯</b><i>（大杯+￥3）</i>
-                </span>
-            </p>
-            <p>
-                <img src="${basePath }media/weixin/main/image/thumb-tea2.jpg" alt="奶茶2">
-                <span class="name">焦糖玛奇朵</span>
-                <span class="price">
-                    <b>￥12.0/杯</b><i>（大杯+￥3）</i>
-                </span>
-            </p>
-            <p>
-                <img src="${basePath }media/weixin/main/image/thumb-tea3.jpg" alt="奶茶3">
-                <span class="name">金桔柠檬</span>
-                <span class="price">
-                    <b>￥12.0/杯</b><i>（大杯+￥3）</i>
-                </span>
-            </p>
+            <c:forEach items="${drinkTypes }" var="drinkType" >
+	            <p>
+	                <img src="${basePath }${drinkType.pictureUri }" alt="奶茶1">
+	                <span class="name">${drinkType.name }</span>
+	                <span class="price">
+	                    <b>￥<fmt:formatNumber value="${drinkType.basePrice / 100}" pattern="0.0" />元/杯</b><i>（大杯+￥3）</i>
+	                </span>
+	            </p>
+            </c:forEach>
         </div>
         <!-- 奶茶领取地址 -->
         <div class="block address">
             <h4>奶茶领取地址<pre>请您在所选时间到所选地址领取奶茶</pre></h4>
-            <p>
-                <img src="${basePath }media/weixin/main/image/thumb-shop1.jpg" alt="地址1">
-                <span class="name">天虹商场</span>
-                <span class="addr">地址：天虹红商场A座南大门内</span>
-            </p>
-            <p>
-                <img src="${basePath }media/weixin/main/image/thumb-shop2.jpg" alt="地址2">
-                <span class="name">杭钻大厦</span>
-                <span class="addr">地址：杭钻大厦5A楼食堂内</span>
-            </p>
+           	<c:forEach items="${deliveryLocations }" var="deliveryLocation">
+	            <p>
+	                <img src="${basePath }${deliveryLocation.pictureUri}" alt="${deliveryLocation.name }">
+	                <span class="name">${deliveryLocation.name }</span>
+	                <span class="addr">地址：${deliveryLocation.address }</span>
+	            </p>
+           	</c:forEach>
         </div>
     </main>
     <footer>
-        <a href="weixin/ydd/orderList" class="order">订单</a>
-        <a href="weixin/ydd/order?${resourceSuffix }" class="main">立即下单</a>
+        <a href="weixin/ydd/orderList?${RES_STAMP }" class="order-link">订单</a>
+        <a href="weixin/ydd/order?${RES_STAMP }" class="main">立即下单</a>
     </footer>
+    <script type="text/javascript">
+    	$(function(){
+    		seajs.use([], function(){
+    			$('.time-point.yes').click(function(){
+    				var hour = $(this).attr('data-value');
+    				location.href = 'weixin/ydd/order?${RES_STAMP }&deliveryHour=' + hour;
+    			});
+    		});
+    	});
+    </script>
 </body>
 </html>

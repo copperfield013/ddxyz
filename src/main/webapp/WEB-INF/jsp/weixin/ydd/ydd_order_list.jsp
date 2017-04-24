@@ -3,7 +3,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title>下单</title>
+    <title>订单列表</title>
     <jsp:include page="/WEB-INF/jsp/weixin/common/weixin-include.jsp"></jsp:include>
     <link rel="stylesheet" href="${basePath }media/weixin/main/css/order.css?${RES_STAMP}">
     <script src="${basePath }media/weixin/main/js/ix.js?${RES_STAMP}"></script>
@@ -106,6 +106,24 @@
    				<span class="count">总计<b>${orderDrink.cupCount }</b>杯</span>
    				<span class="money">总价：<b>￥${orderDrink.totalPrice/100 }</b></span>
    			</p>
+   			<p class="operate" data-oid="${orderDrink.id }">
+   				<c:if test="${orderDrink.canceledStatus == null }">
+   					<c:choose>
+	    				<c:when test="${orderDrink.orderStatus == 0}">
+	    					<span class="operate-button pay" data-opr="pay">继续支付</span>
+	    				</c:when>
+	    				<c:when test="${orderDrink.orderStatus == 1}">
+	    					<span class="operate-button" data-opr="confirm">确认收货</span>
+	    				</c:when>
+	    				<c:when test="${orderDrink.orderStatus == 2}">
+	    					<span class="operate-button" data-opr="appraise">评价</span>
+	    				</c:when>
+	    				<c:when test="${orderDrink.orderStatus == 3}">
+	    					
+	    				</c:when>
+	    			</c:choose>
+   				</c:if>
+   			</p>
     	</div>
     </c:forEach>
     <!-- 待收货 -->
@@ -144,5 +162,14 @@
         </p>
     </div> --%>
 </main>
+	<footer>
+	    <a href="weixin/ydd?${RES_STAMP }" class="order-link">首页</a>
+	    <a href="weixin/ydd/order?${RES_STAMP }" class="main">立即下单</a>
+	</footer>
+	<script type="text/javascript">
+		$(function(){
+			seajs.use('ydd/ydd-order-list');
+		});
+	</script>
 </body>
 </html>

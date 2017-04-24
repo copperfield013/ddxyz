@@ -50,7 +50,8 @@ public class DefaultDelivery implements Delivery{
 	@Override
 	public DeliveryTimePoint getTimePoint() {
 		Date timepoint = pDelivery.getTimePoint();
-		DeliveryTimePoint point = new DeliveryTimePoint(timepoint);
+		Date closeTime = pDelivery.getCloseTime();
+		DeliveryTimePoint point = new DeliveryTimePoint(timepoint, closeTime);
 		return point;
 	}
 	@Override

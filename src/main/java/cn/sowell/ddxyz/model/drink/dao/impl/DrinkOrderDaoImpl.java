@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -11,11 +12,12 @@ import org.springframework.stereotype.Repository;
 
 import cn.sowell.copframe.dao.deferedQuery.ColumnMapResultTransformer;
 import cn.sowell.copframe.dao.deferedQuery.SimpleMapWrapper;
-import cn.sowell.ddxyz.model.drink.dao.OrderDrinkDao;
+import cn.sowell.ddxyz.model.common.pojo.PlainOrder;
+import cn.sowell.ddxyz.model.drink.dao.DrinkOrderDao;
 import cn.sowell.ddxyz.model.drink.pojo.item.PlainOrderDrinkItem;
 
 @Repository
-public class OrderDrinkDaoImpl implements OrderDrinkDao {
+public class DrinkOrderDaoImpl implements DrinkOrderDao {
 	
 	@Resource
 	SessionFactory sFactory;
@@ -46,6 +48,16 @@ public class OrderDrinkDaoImpl implements OrderDrinkDao {
 				return item;
 			}
 		});
+		return query.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PlainOrder> getOrderList(Long userId) {
+		Session session = sFactory.getCurrentSession();
+		String hql = "from PlainOrder where orderUserId = :userId order by createTime desc";
+		Query query = session.createQuery(hql);
+		query.setLong("userId", userId);
 		return query.list();
 	}
 

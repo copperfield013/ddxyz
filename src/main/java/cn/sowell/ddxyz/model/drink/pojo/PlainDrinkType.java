@@ -42,6 +42,13 @@ public class PlainDrinkType {
 	@Column(name="wares_id")
 	private Long waresId;
 	
+	@Column(name="c_pic_uri")
+	private String pictureUri;
+	
+	@Column(name="c_pic_url")
+	private String pictureUrl;
+	
+	
 	@Column(name="create_time")
 	private Date createTime;
 	
@@ -104,5 +111,17 @@ public class PlainDrinkType {
 	}
 	public void setWaresId(Long waresId) {
 		this.waresId = waresId;
+	}
+	public String getPictureUri() {
+		return pictureUri;
+	}
+	public void setPictureUri(String pictureUri) {
+		this.pictureUri = pictureUri;
+	}
+	public String getPictureUrl() {
+		return pictureUrl;
+	}
+	public void setPictureUrl(String pictureUrl) {
+		this.pictureUrl = pictureUrl;
 	}
 }

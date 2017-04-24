@@ -138,6 +138,8 @@ public class DefaultOrder implements Order{
 		if(checkResult.isSuc()){
 			//持久化订单为已支付
 			dpService.setOrderPayed(this);
+			//更新订单的支付金额
+			dpService.updateOrderActualPaied(this.getKey(), payParameter.getActualPay());
 			try {
 				//修改产品状态
 				productManager.orderProducts(this, true);
