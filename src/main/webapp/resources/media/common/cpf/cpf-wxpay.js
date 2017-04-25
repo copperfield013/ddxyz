@@ -6,19 +6,19 @@ define(function(require, exports, module){
 	}
 	
 	WxPay.pay = function(_param, callback){
-		alert('pay');
+		//alert('pay');
 		var wxConfig = require('wxconfig');
 		callback = callback || $.noop;
 		wxConfig.ready(function(){
 			wxConfig.chooseWXPay($.extend({
 				'success'	: function(){
-					alert('suc');
+					//alert('suc');
 				},
 				'fail'		: function(){
-					alert('fail');
+					//alert('fail');
 				},
 				'complete'	: function(res){
-					alert('complete');
+					//alert('complete');
 					callback.apply(this, [res]);
 				}
 			}, _param));

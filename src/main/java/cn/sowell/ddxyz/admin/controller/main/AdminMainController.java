@@ -26,7 +26,7 @@ public class AdminMainController {
 	
 	@RequestMapping({"/", ""})
 	public String index(){
-		return "/admin/common/index.jsp";
+		return "/admin/index.jsp";
 	}
 	
 }

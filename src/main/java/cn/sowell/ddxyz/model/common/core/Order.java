@@ -228,9 +228,10 @@ public interface Order {
 	
 	/**
 	 * 订单完成
+	 * @param user 
 	 * @throws OrderException
 	 */
-	void complete() throws OrderException;
+	void complete(UserIdentifier user) throws OrderException;
 	
 	/**
 	 * 取消订单，用户主动取消

@@ -115,5 +115,9 @@ span.operate-button {
     border-radius: 1em;
     padding: 0.3em 1em;
     color: #FF6347;
+    cursor: pointer;
 }
-
+.operate-button.simple-btn {
+    border-color: #999;
+    color: #777;
+}

@@ -26,64 +26,58 @@ define(function(require, exports, module){
 	function operateOrder(orderId, operateType){
 		var Ajax = require('ajax');
 		if(operateType === 'pay'){
+			var OrderPay = require('order/order-pay');
 			//从后台获得订单的预付款订单号
-			
-		}
-		
-		
-		Ajax.ajax('weixin/ydd/operateOrder', {
-			orderId		: orderId,
-			operateType	: operateType
-		}, function(data){
-			if(data.status === 'suc'){
-				alert('操作成功');
+			OrderPay.pay(orderId, function(){
+				alert('支付成功');
 				location.reload();
-			}else{
-				alert('操作失败');
-			}
-		});
-	}
-	
-	function payOrder(orderId){
-		var Ajax = require('ajax');
-		//从后台获得订单的预付款订单号
-		Ajax.ajax('weixin/order/getPrepayCode', {
-			orderId		: orderId
-		}, function(data){
-			if(data.payParam){
-				var WxPay = require('wxpay');
-				WxPay.pay(data.payParam, function(res){
-					if(res['errMsg'] == "chooseWXPay:ok" ) {
-						alert(json.orderId);
-						//支付成功，发送请求到后台，更改订单状态
-						sendOrderPaiedReq(json.orderId, 0);
+			});
+		}else if(operateType === 'complete'){
+			if(confirm('确认收货？')){
+				Ajax.ajax('weixin/order/complete', {
+					orderId		: orderId,
+				}, function(res){
+					if(res.status === 'suc'){
+						alert('操作成功');
+						location.reload();
 					}else{
-						alert('没有支付');
-						location.href = 'weixin/ydd/orderList';
+						alert('操作失败');
+					}
+				});
+				
+			}
+		}else if(operateType === 'refund'){
+			//申请退款
+			Ajax.ajax('weixin/order/checkRefund', {
+				orderId		: orderId
+			}, function(res){
+				if(res.untreated === true){
+					if(confirm('检测到当前订单的产品还没有开始制作，将直接进行退款。继续？')){
+						Ajax.ajax('weixin/order/applyRefund', {
+							orderId		: orderId
+						}, function(refundRes){
+							if(refundRes.result === true){
+								alert('退款成功');
+							}
+						});
+					}
+				}
+			});
+			
+			if(confirm('确认申请退款？')){
+				Ajax.ajax('weixin/order/applyRefund', {
+					orderId		: orderId
+				}, function(res){
+					if(res.refundSuc === true){
+						//退款成功
+						alert('检测到当前订单的产品还没有开始制作，将直接进行退款');
+						location.reload();
+					}else if(res.goRefundPage === true){
+						//跳转到申请退款的界面
+						
 					}
 				});
 			}
-		});
-	}
-	
-	function sendOrderPaiedReq(orderId, counter){
-		if(counter < 3){
-			alert('支付成功1');
-			require('ajax').ajax('weixin/ydd/order-paied', {
-				orderId		: orderId
-			}, function(setOrderPaiedRes){
-				//订单状态更改情况
-				if(setOrderPaiedRes.status === 'suc'){
-					//后台支付成功
-					alert('支付成功');
-					location.href = 'weixin/ydd/orderList';
-				}else{
-					//后台状态更新失败时，重新提交
-					sendOrderPaiedReq(orderId, ++counter);
-				}
-			});
-		}else{
-			location.href = 'weixin/ydd/orderList';
 		}
 	}
 	

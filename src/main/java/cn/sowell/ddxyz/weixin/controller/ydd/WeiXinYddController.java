@@ -166,7 +166,7 @@ public class WeiXinYddController {
 		JsonResponse jRes = new JsonResponse();
 		try {
 			WeiXinUser user = WxUtils.getCurrentUser(WeiXinUser.class);
-			oService.payOrder(orderId, user );
+			oService.payOrder(orderId, user);
 			jRes.put("status", "suc");
 		} catch (Exception e) {
 			logger.error("订单修改支付状态失败[orderId=" + orderId + "]");

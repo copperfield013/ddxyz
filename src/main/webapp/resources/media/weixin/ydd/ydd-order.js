@@ -201,51 +201,25 @@ define(function(require, exports, module){
 			var Ajax = require('ajax');
 			//提交订单到后台
 			Ajax.postJson('weixin/ydd/submitOrder', reqJSON, function(json){
-				if(json != null){
-					if(json.payParam){
-						//后台创建订单成功，返回订单，包含预付款单号
-						//调用微信jsApi，发起付款
-						var WxPay = require('wxpay');
-						WxPay.pay(json.payParam, function(res){
-							if(res['errMsg'] == "chooseWXPay:ok" ) {
-								alert(json.orderId);
-								//支付成功，发送请求到后台，更改订单状态
-								sendOrderPaiedReq(json.orderId, 0);
-							}else{
-								alert('没有支付');
-								location.href = 'weixin/ydd/orderList';
-							}
-						});
-						//调用结束，无论成功或者失败，都跳转到订单付款详情页面中
-						return;
-					}
-				}
-				//后台创建订单失败，显示错误信息
-				alertMsg('创建订单失败');
-				showShade(false);
-			});
-		});
-		
-		function sendOrderPaiedReq(orderId, counter){
-			if(counter < 3){
-				alert('支付成功1');
-				require('ajax').ajax('weixin/ydd/order-paied', {
-					orderId		: orderId
-				}, function(setOrderPaiedRes){
-					//订单状态更改情况
-					if(setOrderPaiedRes.status === 'suc'){
+				if(json != null && json.orderId){
+					var OrderPay = require('order/order-pay');
+					OrderPay.pay(json.orderId, function(){
 						//后台支付成功
 						alert('支付成功');
 						location.href = 'weixin/ydd/orderList';
-					}else{
-						//后台状态更新失败时，重新提交
-						sendOrderPaiedReq(orderId, ++counter);
-					}
-				});
-			}else{
-				location.href = 'weixin/ydd/orderList';
-			}
-		}
+					}, function(){
+						alert('没有支付');
+						location.href = 'weixin/ydd/orderList';
+					}, function(){
+						location.href = 'weixin/ydd/orderList';
+					});
+				}else{
+					//后台创建订单失败，显示错误信息
+					alertMsg('创建订单失败');
+					showShade(false);
+				}
+			});
+		});
 		
 		/**
 		 * 显示订单内的所有订单条目
@@ -280,7 +254,7 @@ define(function(require, exports, module){
 				//杯数
 				$row.append('<li>' + item.getCupCount() + '</li>');
 				//单价
-				$row.append('<li>￥' + (item.getPerPrice() / 100).toFixed(0) + '</li>')
+				$row.append('<li>￥' + (item.getPerPrice() / 100).toFixed(2) + '</li>')
 				//操作
 				var $removeBtn = $('<a href="javascript:;" class="remove-item-btn">删除</a>');
 				$removeBtn.click(function(){
@@ -298,7 +272,7 @@ define(function(require, exports, module){
 			$('.total-price')
 				.find('.count b').text(order.getTotalCupCount())
 				.end()
-				.find('.price b').text((order.getTotalPrice() / 100).toFixed(0))
+				.find('.price b').text((order.getTotalPrice() / 100).toFixed(2))
 				;
 			console.log(order.toObject());
 		}

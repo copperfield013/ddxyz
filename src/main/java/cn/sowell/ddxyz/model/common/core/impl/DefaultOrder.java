@@ -154,7 +154,7 @@ public class DefaultOrder implements Order{
 	}
 	
 	@Override
-	public synchronized void complete() throws OrderException {
+	public synchronized void complete(UserIdentifier user) throws OrderException {
 		CheckResult result = Order.checkOrderToStatus(this, Order.STATUS_COMPLETED);
 		if(result.isSuc()){
 			try {
@@ -162,6 +162,7 @@ public class DefaultOrder implements Order{
 				dpService.setOrderCompleted(this);
 				//移除订单以及订单下所有产品的对象
 				oManager.removeOrderFromCache(this);
+				oManager.doLog(this, user, "订单确认成功", OrderLog.TYPE_COMPLETE);
 			} catch (Exception e) {
 				throw new OrderException("订单完成状态持久化时出现异常", e);
 			}

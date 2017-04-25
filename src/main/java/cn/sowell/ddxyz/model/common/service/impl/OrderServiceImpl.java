@@ -124,6 +124,14 @@ public class OrderServiceImpl implements OrderService{
 		order.pay(payParam);
 	}
 	
+	
+	@Transactional
+	@Override
+	public void completeOrder(Order order, UserIdentifier user) throws OrderException {
+		order.complete(user);
+	}
+	
+	
 	@Override
 	public OrderOperateResult operateOrder(Long orderId, String operateType,
 			UserIdentifier operateUser) throws Exception {

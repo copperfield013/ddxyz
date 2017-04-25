@@ -11,6 +11,7 @@ import cn.sowell.ddxyz.model.common.core.OrderManager;
 import cn.sowell.ddxyz.model.common.core.OrderOperateResult;
 import cn.sowell.ddxyz.model.common.core.OrderParameter;
 import cn.sowell.ddxyz.model.common.core.OrderToken;
+import cn.sowell.ddxyz.model.common.core.exception.OrderException;
 import cn.sowell.ddxyz.model.common.pojo.PlainOrderReceiver;
 import cn.sowell.ddxyz.model.weixin.pojo.WeiXinUser;
 /**
@@ -81,6 +82,15 @@ public interface OrderService {
 	 * @throws Exception 
 	 */
 	OrderOperateResult operateOrder(Long orderId, String operateType, UserIdentifier operateUser) throws Exception;
+
+	/**
+	 * 确认订单
+	 * @param order
+	 * @param user
+	 * @throws OrderException 
+	 */
+	void completeOrder(Order order, UserIdentifier user) throws OrderException;
+
 
 
 	
