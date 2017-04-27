@@ -1,6 +1,7 @@
 package cn.sowell.ddxyz.model.common.core;
 
 import java.io.Serializable;
+import java.util.List;
 
 import cn.sowell.ddxyz.model.common.core.result.CheckResult;
 
@@ -24,7 +25,7 @@ public interface DeliveryManager {
 	 * @param location
 	 * @return
 	 */
-	Delivery getDelivery(DeliveryTimePoint date, DeliveryLocation location);
+	Delivery getDelivery(Long waresId, DeliveryTimePoint date, DeliveryLocation location);
 	
 	/**
 	 * 根据标识获得配送信息对象
@@ -48,5 +49,11 @@ public interface DeliveryManager {
 	 * @return 
 	 */
 	DeliveryLocation getDeliveryLocation(long locationId);
+	/**
+	 * 根据配送计划构造并持久化当天所有的配送
+	 * @return
+	 */
+	List<Delivery> loadTodayDeliveries();
+
 
 }

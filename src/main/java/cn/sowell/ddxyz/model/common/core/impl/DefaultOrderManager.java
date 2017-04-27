@@ -18,6 +18,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.util.Assert;
 
 import cn.sowell.copframe.common.UserIdentifier;
+import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.copframe.weixin.common.service.WxConfigService;
 import cn.sowell.copframe.weixin.pay.refund.RefundRequest;
 import cn.sowell.copframe.weixin.pay.refund.RefundResult;
@@ -152,7 +153,7 @@ public class DefaultOrderManager implements OrderManager, InitializingBean {
 		Assert.notNull(orderToken);
 		logger.debug("处理已经分配的订单");
 		orderParameter.setDeliveryLocation(dManager.getDeliveryLocation((long) orderParameter.getDeliveryLocation().getId()));
-		Delivery delivery = dManager.getDelivery(orderParameter.getTimePoint(), orderParameter.getDeliveryLocation());
+		Delivery delivery = dManager.getDelivery(orderParameter.getWaresId(), orderParameter.getTimePoint(), orderParameter.getDeliveryLocation());
 		if(delivery != null){
 			//构造订单对象
 			Order order = buildOrder(orderParameter);
@@ -178,8 +179,9 @@ public class DefaultOrderManager implements OrderManager, InitializingBean {
 	
 
 	private String generateOrderCode(DeliveryLocation deliveryLocation) {
-		StringBuffer buffer = new StringBuffer(deliveryLocation.getCode());
+		StringBuffer buffer = new StringBuffer();
 		buffer.append((new SimpleDateFormat("yyMMddHHmmss")).format(new Date()));
+		buffer.append(TextUtils.randomStr(5, 10));
 		return buffer.toString();
 	}
 
@@ -308,10 +310,8 @@ public class DefaultOrderManager implements OrderManager, InitializingBean {
 				//退款请求成功
 				//退款成功时设置订单的退款金额，同时设置订单下的所有产品状态为已退款
 				order.doRefunded(refundParam.getRefundFee());
-				
-				
 			}else if("FAIL".equals(result.getResultCode())){
-				throw new OrderException("调用微信退款接口时返回失败，原因是[" + result.getReturnMsg() + "]");
+				throw new OrderException("调用微信退款接口时返回失败，原因是[" + result.getErrorCodeDesc() + "]");
 			}else{
 				throw new OrderException("微信退款接口返回未知状态码【" + result.getResultCode() + "】");
 			}

@@ -147,7 +147,7 @@ public class TextUtils {
 		case 62:
 			return randomStr(length, CharacterScope.Regular);
 		default:
-			if(radix > 0 && radix < 10){
+			if(radix > 0 && radix <= 10){
 				char[] scope = new char[radix];
 				for(int i=0; i < radix; i++){scope[i] = (char)(i + 48);}
 				randomStr(length, scope);

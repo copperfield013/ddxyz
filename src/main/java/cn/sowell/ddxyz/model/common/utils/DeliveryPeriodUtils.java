@@ -1,4 +1,4 @@
-package cn.sowell.copframe.utils;
+package cn.sowell.ddxyz.model.common.utils;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -6,7 +6,9 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
-public class DateTimeUtil {
+import cn.sowell.copframe.dto.format.FormatUtils;
+
+public class DeliveryPeriodUtils {
 
 	/**
 	 * 
@@ -16,15 +18,13 @@ public class DateTimeUtil {
 	 * @return
 	 * @throws ParseException
 	 */
-	@SuppressWarnings("rawtypes")
-	public static List getTimeList(String dateString) throws ParseException{
+	public static List<Integer> getHourList(String dateString) throws ParseException{
 		Calendar cal = Calendar.getInstance();
-		List timeList = getTimeList(dateString, cal);
+		List<Integer> timeList = getHourList(dateString, cal);
 		return timeList;
 	}
 	
-	@SuppressWarnings("rawtypes")
-	public static List getTimeList(String dateString,Calendar cal) throws ParseException{
+	public static List<Integer> getHourList(String dateString, Calendar cal) throws ParseException{
 		
 		//一周第一天是否为星期天
 		boolean isFirstSunday = (cal.getFirstDayOfWeek() == Calendar.SUNDAY);
@@ -77,14 +77,18 @@ public class DateTimeUtil {
 			}
 		}
 		if(dateY == null || !Arrays.asList(dateY).contains(String.valueOf(year))){
-			return new ArrayList();
+			return new ArrayList<Integer>();
 		}
 		if(dateM == null || !Arrays.asList(dateM).contains(String.valueOf(month))){
-			return new ArrayList();
+			return new ArrayList<Integer>();
 		}
 		if((dateD != null && !Arrays.asList(dateD).contains(String.valueOf(day))) || (dateW != null && !Arrays.asList(dateW).contains(String.valueOf(day_of_week)))){
-			return new ArrayList();
+			return new ArrayList<Integer>();
 		}
-		return Arrays.asList(dateT);
+		ArrayList<Integer> result = new ArrayList<Integer>();
+		for (String hour : dateT) {
+			result.add(FormatUtils.toInteger(hour));
+		}
+		return result;
 	}
 }

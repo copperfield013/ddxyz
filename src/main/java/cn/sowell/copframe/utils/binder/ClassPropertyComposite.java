@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 
+import org.apache.log4j.Logger;
 import org.springframework.util.Assert;
 
 import cn.sowell.copframe.dto.format.FormatUtils;
@@ -14,6 +15,8 @@ public class ClassPropertyComposite {
 	private Field field;
 	private Method getter;
 	private Method setter;
+	
+	Logger logger = Logger.getLogger(ClassPropertyComposite.class);
 	
 	public ClassPropertyComposite(Field field, Method getter, Method setter) {
 		super();
@@ -49,6 +52,8 @@ public class ClassPropertyComposite {
 		} catch (IllegalAccessException
 				| InvocationTargetException e) {
 			throw new PropertyMethodException(e);
+		} catch (IllegalArgumentException e) {
+			logger.error("方法[" + setter + "],设置属性值[" + value + "]", e);
 		}
 		return this;
 	}

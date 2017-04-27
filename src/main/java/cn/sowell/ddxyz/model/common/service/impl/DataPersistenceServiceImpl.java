@@ -2,14 +2,24 @@ package cn.sowell.ddxyz.model.common.service.impl;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
+
+
 
 import javax.annotation.Resource;
 
+
+
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+
+
 
 import cn.sowell.ddxyz.model.common.core.Delivery;
 import cn.sowell.ddxyz.model.common.core.DeliveryKey;
@@ -24,10 +34,12 @@ import cn.sowell.ddxyz.model.common.core.ProductManager;
 import cn.sowell.ddxyz.model.common.core.exception.OrderException;
 import cn.sowell.ddxyz.model.common.core.exception.ProductException;
 import cn.sowell.ddxyz.model.common.core.impl.DefaultDelivery;
+import cn.sowell.ddxyz.model.common.core.impl.DefaultDispenseCode;
 import cn.sowell.ddxyz.model.common.core.impl.DefaultOrder;
 import cn.sowell.ddxyz.model.common.core.impl.DefaultProduct;
 import cn.sowell.ddxyz.model.common.dao.DataPersistenceDao;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
+import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlan;
 import cn.sowell.ddxyz.model.common.pojo.PlainLocation;
 import cn.sowell.ddxyz.model.common.pojo.PlainOrder;
 import cn.sowell.ddxyz.model.common.pojo.PlainOrderLog;
@@ -132,13 +144,13 @@ public class DataPersistenceServiceImpl implements DataPersistenceService{
 	}
 
 	@Override
-	public Delivery getDelivery(DeliveryTimePoint timePoint,
+	public Delivery getDelivery(long waresId, DeliveryTimePoint timePoint,
 			DeliveryLocation location) {
 		Assert.notNull(timePoint);
 		Assert.notNull(location);
-		PlainDelivery pDelivery = dpDao.getDelivery(timePoint.getDatetime(), (long) location.getId());
+		PlainDelivery pDelivery = dpDao.getDelivery(waresId, timePoint.getDatetime(), (long) location.getId());
 		if(pDelivery != null){
-			return new DefaultDelivery(pDelivery, dManager);
+			return new DefaultDelivery(pDelivery, dManager, this);
 		}
 		return null;
 	}
@@ -161,14 +173,14 @@ public class DataPersistenceServiceImpl implements DataPersistenceService{
 		PlainDelivery pDelivery = null;
 		if(deliveryKey.getDeliveryId() != null){
 			pDelivery = dpDao.getDelivery((long) deliveryKey.getDeliveryId());
-		}else if(deliveryKey.getLocation() != null && deliveryKey.getTimePoint() != null){
+		}else if(deliveryKey.getLocation() != null && deliveryKey.getTimePoint() != null && deliveryKey.getWaresId() != null){
 			Date deliveryDate = deliveryKey.getTimePoint().getDatetime();
 			if(deliveryDate != null){
-				pDelivery = dpDao.getDelivery(deliveryKey.getTimePoint().getDatetime(), (long) deliveryKey.getLocation().getId());
+				pDelivery = dpDao.getDelivery(deliveryKey.getWaresId(), deliveryKey.getTimePoint().getDatetime(), (long) deliveryKey.getLocation().getId());
 			}
 		}
 		if(pDelivery != null){
-			return new DefaultDelivery(pDelivery, dManager);
+			return new DefaultDelivery(pDelivery, dManager, this);
 		}
 		return null;
 	}
@@ -210,5 +222,61 @@ public class DataPersistenceServiceImpl implements DataPersistenceService{
 	public void updateOrderActualPaied(Serializable orderId, Integer actualPay) {
 		dpDao.updateOrderActualPaied((long) orderId, actualPay);
 	}
-
+	
+	
+	@Override
+	public List<PlainDeliveryPlan> getTheDayUsablePlan() {
+		return dpDao.getTheDayUsablePlan(new Date());
+	}
+	
+	
+	@Override
+	public Map<DeliveryKey, Delivery> mergeDeliveries(Map<DeliveryKey, PlainDelivery> map) {
+		Map<DeliveryKey, Delivery> result = new LinkedHashMap<DeliveryKey, Delivery>();
+		//根据所有map的key，从数据库查看其配送记录是否存在，如果存在，则不添加，并将其数据库中对应的id放到key中
+		Set<PlainDelivery> existsDeliveries = dpDao.getDeliveries(map.keySet());
+		for (PlainDelivery pDelivery : existsDeliveries) {
+			DeliveryKey key = new DeliveryKey(pDelivery.getWaresId(), new DeliveryTimePoint(pDelivery.getTimePoint()), new DeliveryLocation(pDelivery.getLocationId()));
+			map.remove(key);
+			key.setDeliveryId(pDelivery.getId());
+			result.put(key, new DefaultDelivery(pDelivery, dManager, this));
+		}
+		//将剩下的不存在的配送持久化
+		for (Entry<DeliveryKey, PlainDelivery> entry : map.entrySet()) {
+			PlainDelivery pDelivery = entry.getValue();
+			pDelivery.setCreateTime(new Date());
+			dpDao.saveDelivery(pDelivery);
+			DeliveryKey key = new DeliveryKey(pDelivery.getId());
+			result.put(key, new DefaultDelivery(pDelivery, dManager, this));
+		}
+		return result;
+	}
+	
+	@Override
+	public void updateDispensedCount(Serializable deliveryId, int currentCount) {
+		dpDao.updateDeliveryDispensedCount((long) deliveryId, currentCount);
+	}
+	@Override
+	public Map<Integer, DispenseCode> getDispenseCodeTree(Delivery delivery) {
+		Assert.notNull(delivery);
+		List<PlainProduct> products = dpDao.getAllUsableProducts((long) delivery.getId());
+		Map<Integer, DispenseCode> result = new HashMap<Integer, DispenseCode>();
+		products.forEach(product -> {
+			Integer key = product.getDispenseKey();
+			DefaultDispenseCode code = new DefaultDispenseCode();
+			code.setBelong(delivery);
+			code.setCode(product.getDispenseCode());
+			code.setKey(key);
+			if(key != null){
+				result.put(key, code);
+			}
+		});
+		return result;
+	}
+	
+	@Override
+	public PlainOrder getPlainOrder(long orderId) {
+		return dpDao.getOrder(orderId);
+	}
+	
 }

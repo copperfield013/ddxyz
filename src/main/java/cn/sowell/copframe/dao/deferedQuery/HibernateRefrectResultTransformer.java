@@ -1,22 +1,35 @@
 package cn.sowell.copframe.dao.deferedQuery;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Column;
 
+import org.hibernate.Query;
 import org.hibernate.transform.ResultTransformer;
 import org.springframework.beans.BeanUtils;
 
 import cn.sowell.copframe.utils.binder.FieldRefectUtils;
-
+/**
+ * 
+ * <p>Title: HibernateRefrectResultTransformer</p>
+ * <p>Description: </p><p>
+ * 用于hibernate的{@linkplain Query}类在执行{@linkplain Query#list() list}等查询方法之前，
+ * 将查询的结果映射成pojo对象
+ * 当前对象只支持单层的字段映射。默认字段名是字段的名称。
+ * </p>
+ * @author Copperfield Zhang
+ * @date 2017年4月26日 上午9:57:02
+ * @param <T>
+ */
 public class HibernateRefrectResultTransformer<T> implements ResultTransformer{
 
 	private static final long serialVersionUID = 4246893639652328864L;
 	
 	private ColumnMapResultTransformer<T> cTrans;
 	
-	
-	public HibernateRefrectResultTransformer(Class<T> clazz) {
+	HibernateRefrectResultTransformer(Class<T> clazz) {
 		FieldRefectUtils<T> refectUtils = new FieldRefectUtils<T>(clazz, composite -> {
 			Column anno = composite.getFieldAnno(Column.class);
 			if(anno != null){
@@ -63,6 +76,19 @@ public class HibernateRefrectResultTransformer<T> implements ResultTransformer{
 	@Override
 	public List transformList(List collection) {
 		return cTrans.transformList(collection);
+	}
+	
+	private static Map<Class<?>, HibernateRefrectResultTransformer<?>> instanceMap = new HashMap<Class<?>, HibernateRefrectResultTransformer<?>>();
+	@SuppressWarnings("unchecked")
+	public static <C> HibernateRefrectResultTransformer<C> getInstance(Class<C> clazz){
+		synchronized (instanceMap) {
+			HibernateRefrectResultTransformer<C> value = (HibernateRefrectResultTransformer<C>) instanceMap.get(clazz);
+			if(value == null){
+				value = new HibernateRefrectResultTransformer<C>(clazz);
+				instanceMap.put(clazz, value);
+			}
+			return value;
+		}
 	}
 
 }

@@ -1,17 +1,23 @@
 package cn.sowell.ddxyz.model.common.service;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import cn.sowell.ddxyz.model.common.core.Delivery;
 import cn.sowell.ddxyz.model.common.core.DeliveryKey;
 import cn.sowell.ddxyz.model.common.core.DeliveryLocation;
 import cn.sowell.ddxyz.model.common.core.DeliveryTimePoint;
+import cn.sowell.ddxyz.model.common.core.DispenseCode;
 import cn.sowell.ddxyz.model.common.core.Order;
 import cn.sowell.ddxyz.model.common.core.Product;
 import cn.sowell.ddxyz.model.common.core.exception.OrderException;
 import cn.sowell.ddxyz.model.common.core.exception.ProductException;
+import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
+import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlan;
 import cn.sowell.ddxyz.model.common.pojo.PlainLocation;
+import cn.sowell.ddxyz.model.common.pojo.PlainOrder;
 import cn.sowell.ddxyz.model.common.pojo.PlainOrderLog;
 import cn.sowell.ddxyz.model.common.pojo.PlainOrderRefund;
 import cn.sowell.ddxyz.model.weixin.pojo.WeiXinUser;
@@ -88,7 +94,7 @@ public interface DataPersistenceService {
 	 * @param location
 	 * @return
 	 */
-	Delivery getDelivery(DeliveryTimePoint timePoint, DeliveryLocation location);
+	Delivery getDelivery(long waresId, DeliveryTimePoint timePoint, DeliveryLocation location);
 
 	/**
 	 * 持久化日志信息
@@ -136,6 +142,37 @@ public interface DataPersistenceService {
 	 * @param actualPay 真实支付金额
 	 */
 	void updateOrderActualPaied(Serializable orderId, Integer actualPay);
+
+	/**
+	 * 获得当天所有的有效配送计划
+	 * @return
+	 */
+	List<PlainDeliveryPlan> getTheDayUsablePlan();
+	/**
+	 * 将所有配送合并到数据库中
+	 * @param map
+	 * @return 
+	 */
+	Map<DeliveryKey, Delivery> mergeDeliveries(Map<DeliveryKey, PlainDelivery> map);
+	
+	/**
+	 * 更新配送的分发号
+	 * @param id
+	 * @param currentCount
+	 */
+	void updateDispensedCount(Serializable id, int currentCount);
+	/**
+	 * 从数据库中获取配送对应的所有分发号
+	 * @param delivery
+	 * @return
+	 */
+	Map<Integer, DispenseCode> getDispenseCodeTree(Delivery delivery);
+	/**
+	 * 从数据库中查找订单
+	 * @param orderId
+	 * @return
+	 */
+	PlainOrder getPlainOrder(long orderId);
 
 	
 

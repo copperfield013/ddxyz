@@ -21,6 +21,7 @@ import cn.sowell.ddxyz.model.common.core.DispenseCode;
 import cn.sowell.ddxyz.model.common.core.DispenseResourceRequest;
 import cn.sowell.ddxyz.model.common.core.OrderDispenseResource;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
+import cn.sowell.ddxyz.model.common.service.DataPersistenceService;
 
 public class DefaultDelivery implements Delivery{
 
@@ -30,10 +31,13 @@ public class DefaultDelivery implements Delivery{
 	private TreeMap<Integer, DispenseCode> usableDispenseCodeMap = new TreeMap<Integer, DispenseCode>();
 	
 	private DeliveryManager dManager;
+	private DataPersistenceService dpService;
 	
-	public DefaultDelivery(PlainDelivery pDelivery, DeliveryManager dManager) {
+	public DefaultDelivery(PlainDelivery pDelivery, DeliveryManager dManager, DataPersistenceService dpService) {
 		this.pDelivery = pDelivery;
 		this.dManager = dManager;
+		this.dpService = dpService;
+		usableDispenseCodeMap = new TreeMap<Integer, DispenseCode>(dpService.getDispenseCodeTree(this));
 	}
 	@Override
 	public Serializable getId() {
@@ -114,6 +118,7 @@ public class DefaultDelivery implements Delivery{
 					resource.addDispenseCode(code);
 					usableDispenseCodeMap.put(no, code);
 				}
+				dpService.updateDispensedCount(this.getId(), getCurrentCount());
 				resource.setLocked(true);
 			}
 		}

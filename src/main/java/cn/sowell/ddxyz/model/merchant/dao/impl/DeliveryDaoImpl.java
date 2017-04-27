@@ -13,6 +13,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
+import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlan;
 import cn.sowell.ddxyz.model.common.pojo.PlainLocation;
 import cn.sowell.ddxyz.model.merchant.dao.DeliveryDao;
 
@@ -48,6 +49,11 @@ public class DeliveryDaoImpl implements DeliveryDao{
 		Query query = sFactory.getCurrentSession().createQuery(hql);
 		query.setLong("merchantId", merchantId);
 		return new LinkedHashSet<PlainLocation>(query.list());
+	}
+	
+	@Override
+	public void savePlan(PlainDeliveryPlan plan) {
+		sFactory.getCurrentSession().save(plan);
 	}
 
 }

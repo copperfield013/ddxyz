@@ -145,6 +145,10 @@ public class DefaultOrder implements Order{
 				productManager.orderProducts(this, true);
 				//修改订单状态
 				pOrder.setOrderStatus(Order.STATUS_PAYED);
+				PlainOrder persistedOrder = dpService.getPlainOrder((long) getKey());
+				if(persistedOrder != null){
+					pOrder.setActualPay(persistedOrder.getActualPay());
+				}
 			} catch (ProductException e) {
 				throw new OrderException("订单的产品修改时发生异常", e);
 			}
@@ -241,17 +245,41 @@ public class DefaultOrder implements Order{
 	
 	@Override
 	public void refund(OrderRefundParameter refundParam) throws OrderException {
+		CheckResult cResult = checkRefundable(refundParam);
+		if(cResult.isSuc()){
+			oManager.refundOrder(this, refundParam);
+		}else{
+			throw new OrderException(cResult.getReason());
+		}
+		
+		
+	}
+	
+	private CheckResult checkRefundable(OrderRefundParameter refundParam){
+		CheckResult result = new CheckResult(true, "检测成功");
 		//订单退款只要是在订单支付完成之后都可以操作
 		//退款的金额只要小于等于原本订单支付的总价即可
 		Integer actualPaied = pOrder.getActualPay();
 		Integer refundAmount = refundParam.getRefundFee();
 		if(actualPaied != null && refundAmount != null && actualPaied >= refundAmount){
-			oManager.refundOrder(this, refundParam);
+			if(getCancelStatus() != null){
+				return result.setResult(false, "订单已经被取消，不能退款");
+			}
+			if(getOrderStatus() != Order.STATUS_PAYED){
+				return result.setResult(false, "当前订单状态[" + getOrderStatus() + "]禁止退款");
+			}
+			Set<Product> products = getProductSet();
+			for (Product product : products) {
+				if(product.getStatus() != Product.STATUS_ORDERED){
+					return result.setResult(false, "订单内存在产品[" + product.getId() + "]的状态为[" + product.getStatus() + "]禁止退款");
+				}
+			}
 		}else{
-			throw new OrderException("退款时检测到异常，退款金额为[" + refundAmount + "]，原支付金额为[" + actualPaied + "]");
+			result.setResult(false, "退款时检测到异常，退款金额为[" + refundAmount + "]，原支付金额为[" + actualPaied + "]");
 		}
-		
+		return result;
 	}
+	
 	/**
 	 * 持久化退款金额，并且修改订单下所有产品的状态为退款
 	 * @param refundFee
@@ -431,7 +459,27 @@ public class DefaultOrder implements Order{
 	public void setReceiverAddress(String address) {
 		pOrder.setReceiverAddress(address);
 	}
-	
 
+	@Override
+	public void setOutTradeNo(String outTradeNo) {
+		pOrder.setOutTradeNo(outTradeNo);
+	}
+
+	@Override
+	public String getOutTradeNo() {
+		return pOrder.getOutTradeNo();
+	}
+
+	@Override
+	public void setTransactionId(String transactionId) {
+		pOrder.setTransactionId(transactionId);
+	}
+
+	@Override
+	public String getTransactionId() {
+		return pOrder.getTransactionId();
+	}
+	
+	
 
 }

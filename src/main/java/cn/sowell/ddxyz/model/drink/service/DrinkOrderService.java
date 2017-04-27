@@ -1,6 +1,7 @@
 package cn.sowell.ddxyz.model.drink.service;
 
 import java.util.List;
+import java.util.Map;
 
 import cn.sowell.copframe.common.UserIdentifier;
 import cn.sowell.copframe.dto.page.CommonPageInfo;
@@ -35,4 +36,11 @@ public interface DrinkOrderService {
 	List<PlainDrinkOrder> getDrinkList(UserIdentifier user);
 	
 	List<PlainDrinkOrder> getDrinkPageList(UserIdentifier user, CommonPageInfo pageInfo);
+
+	/**
+	 * 根据订单的主键集合，查询这些订单内有哪些订单是允许退款的
+	 * @param drinkList
+	 * @return
+	 */
+	Map<Long, Boolean> getRefundableMap(List<Long> orderIdList);
 }

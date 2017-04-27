@@ -13,6 +13,7 @@ import cn.sowell.copframe.weixin.common.utils.WxUtils;
 import cn.sowell.copframe.weixin.pay.prepay.H5PayParameter;
 import cn.sowell.copframe.weixin.pay.service.WxPayService;
 import cn.sowell.ddxyz.model.common.core.Order;
+import cn.sowell.ddxyz.model.common.core.OrderRefundParameter;
 import cn.sowell.ddxyz.model.common.core.exception.OrderException;
 import cn.sowell.ddxyz.model.common.service.OrderService;
 import cn.sowell.ddxyz.weixin.WeiXinConstants;
@@ -60,6 +61,34 @@ public class WeiXinOrderController {
 		return response;
 	}
 	
-	
-	
+	@ResponseBody
+	@RequestMapping("/applyRefund")
+	public JsonResponse doOrderRefund(Long orderId){
+		JsonResponse jRes = new JsonResponse();
+		Order order = oService.getOrder(orderId);
+		if(order != null){
+			OrderRefundParameter refundParam = new OrderRefundParameter();
+			UserIdentifier operateUser = WxUtils.getCurrentUser(UserIdentifier.class);
+			refundParam.setOperateUser(operateUser);
+			refundParam.setRefundFee(order.getTotalPrice());
+			try {
+				oService.refundOrder(order, refundParam);
+				jRes.setStatus("suc");
+			} catch (OrderException e) {
+				logger.error("", e);
+				jRes.setStatus("error");
+			}
+		}
+		
+		return jRes;
+	}
+	/**
+	 * 微信支付状态返回
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/notify")
+	public String paiedNotify(){
+		return null;
+	}
 }

@@ -11,4 +11,8 @@ public class PropertyMethodException extends Exception {
 		super(e);
 	}
 
+	public PropertyMethodException(String msg, IllegalArgumentException e) {
+		super(msg, e);
+	}
+
 }

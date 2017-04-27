@@ -1,7 +1,11 @@
 package cn.sowell.ddxyz.model.drink.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -9,7 +13,12 @@ import org.springframework.stereotype.Service;
 
 import cn.sowell.copframe.common.UserIdentifier;
 import cn.sowell.copframe.dto.page.CommonPageInfo;
+import cn.sowell.copframe.utils.CollectionUtils;
+import cn.sowell.ddxyz.model.common.core.Product;
+import cn.sowell.ddxyz.model.common.dao.CommonProductDao;
 import cn.sowell.ddxyz.model.common.pojo.PlainOrder;
+import cn.sowell.ddxyz.model.common.pojo.PlainProduct;
+import cn.sowell.ddxyz.model.common.pojo.criteria.ProductCriteria;
 import cn.sowell.ddxyz.model.drink.dao.DrinkAdditionDao;
 import cn.sowell.ddxyz.model.drink.dao.DrinkOrderDao;
 import cn.sowell.ddxyz.model.drink.pojo.PlainDrinkAddition;
@@ -25,6 +34,9 @@ public class DrinkOrderServiceImpl implements DrinkOrderService{
 	
 	@Resource
 	DrinkAdditionDao drinkAdditionDao;
+	
+	@Resource
+	CommonProductDao productDao;
 	
 	@Override
 	public List<PlainOrderDrinkItem> getOrderDrinkItemList(Long orderId) {
@@ -87,6 +99,23 @@ public class DrinkOrderServiceImpl implements DrinkOrderService{
 		return drinkList;
 	}
 	
-	
+	@Override
+	public Map<Long, Boolean> getRefundableMap(List<Long> orderIdList) {
+		HashMap<Long, Boolean> result = new HashMap<Long, Boolean>();
+		ProductCriteria criteria = new ProductCriteria();
+		criteria.setOrderIdRange(new HashSet<Long>(orderIdList));
+		//设置产品状态范围条件
+		criteria.setProductStatusRangeMin(Product.STATUS_MAKING);
+		criteria.setProductStatusRangeMax(Product.STATUS_DEFAULT);
+		List<PlainProduct> unRefundableProducts = productDao.getProducts(criteria);
+		Set<Long> unrefundableOrderIds= new HashSet<Long>();
+		CollectionUtils.appendTo(unRefundableProducts, unrefundableOrderIds, product->product.getOrderId());
+		orderIdList.forEach(orderId -> {
+			if(!unrefundableOrderIds.contains(orderId)){
+				result.put(orderId, true);
+			}
+		});
+		return result;
+	}
 	
 }

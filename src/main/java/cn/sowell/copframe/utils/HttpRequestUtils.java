@@ -187,7 +187,7 @@ public class HttpRequestUtils {
 		try {
 			return new Dom4jNode(result);
 		} catch (XMLException e) {
-			logger.error(e);
+			logger.error("解析xml时发生错误" + result, e);
 		}
 		return null;
 	}

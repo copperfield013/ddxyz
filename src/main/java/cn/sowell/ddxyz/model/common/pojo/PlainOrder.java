@@ -51,6 +51,12 @@ public class PlainOrder implements OrderDetail{
 	@Column(name="c_prepay_id")
 	private String prepayId;
 	
+	@Column(name="c_out_trade_no")
+	private String outTradeNo;
+	
+	@Column(name="c_transaction_id")
+	private String transactionId;
+	
 	@Column(name="c_total_price")
 	private Integer totalPrice;
 	
@@ -194,6 +200,18 @@ public class PlainOrder implements OrderDetail{
 	}
 	public void setReceiverName(String receiverName) {
 		this.receiverName = receiverName;
+	}
+	public String getOutTradeNo() {
+		return outTradeNo;
+	}
+	public void setOutTradeNo(String outTradeNo) {
+		this.outTradeNo = outTradeNo;
+	}
+	public String getTransactionId() {
+		return transactionId;
+	}
+	public void setTransactionId(String transactionId) {
+		this.transactionId = transactionId;
 	}
 	
 	

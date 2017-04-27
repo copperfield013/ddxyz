@@ -30,4 +30,21 @@
 	<!-- 预付款订单号生成器 -->
 	<bean id="prepayTradeNoGenerator" class="cn.sowell.ddxyz.weixin.common.PrepayTradeNoGenerator"/>
 	
+	<!--  -->
+	<bean id="springContextListener" class="cn.sowell.copframe.common.SpringContextListener" />
+	
+	<!-- 定时加载当天配送任务 -->
+	<bean id="deliveryGenerateSchedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="defaultDeliveryManager" />
+		<property name="targetMethod" value="loadTodayDeliveries" />
+	</bean>
+	<!-- 定时动作触发器 -->
+	<bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="deliveryGenerateSchedule" />
+		<property name="cronExpression" value="0 0 0 * * ? *" />
+	</bean>
+	<!-- 定时器工厂 -->
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">  
+	    <property name="triggers" ref="cronTrigger" />  
+	</bean>  
 </beans>

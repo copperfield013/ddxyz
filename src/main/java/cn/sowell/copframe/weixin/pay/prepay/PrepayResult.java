@@ -27,7 +27,7 @@ public class PrepayResult {
 	@XMLTag(tagName="return_msg")
 	private String returnMsg;
 	
-	
+	private UnifiedOrder submitUOrder;
 	
 	/*************************************************
 	 * 下面这些字段仅在return_code为SUCCESS的时候会返回
@@ -250,5 +250,15 @@ public class PrepayResult {
 	@Override
 	public String toString() {
 		return JSON.toJSONString(this);
+	}
+
+
+	public UnifiedOrder getSubmitUOrder() {
+		return submitUOrder;
+	}
+
+
+	public void setSubmitUOrder(UnifiedOrder submitUOrder) {
+		this.submitUOrder = submitUOrder;
 	}
 }

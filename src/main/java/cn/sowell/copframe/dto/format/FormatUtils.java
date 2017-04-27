@@ -125,15 +125,15 @@ public class FormatUtils {
 	public static <T> T toClass(Class<T> formatClass, Object value){
 		if(String.class.equals(formatClass)){
 			return (T) toString(value);
-		}else if(Integer.class == formatClass){
+		}else if(Integer.class == formatClass || Integer.TYPE == formatClass){
 			return (T) toInteger(value);
-		}else if(Long.class == formatClass){
+		}else if(Long.class == formatClass || Long.TYPE == formatClass){
 			return (T) toLong(value);
-		}else if(Double.class == formatClass){
+		}else if(Double.class == formatClass || Double.TYPE == formatClass){
 			return (T) toDouble(value);
 		}else if(BigDecimal.class == formatClass){
 			return (T) toBigDecimal(value);
-		}else if(Boolean.class == formatClass){
+		}else if(Boolean.class == formatClass || Boolean.TYPE == formatClass){
 			return (T) toBoolean(value);
 		}
 		return null;

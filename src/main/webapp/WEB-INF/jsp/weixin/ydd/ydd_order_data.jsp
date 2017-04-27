@@ -55,10 +55,13 @@
 			   				<c:if test="${orderDrink.canceledStatus == null }">
 			   					<c:choose>
 				    				<c:when test="${orderDrink.orderStatus == 0}">
-				    					<span class="operate-button pay" data-opr="pay">继续支付</span>
+				    					<span class="operate-button" data-opr="pay">继续支付</span>
 				    				</c:when>
 				    				<c:when test="${orderDrink.orderStatus == 1}">
-				    					<span class="operate-button" data-opr="confirm">确认收货</span>
+				    					<c:if test="${refundableMap[orderDrink.id] == true }">
+					   						<span class="operate-button simple-btn" data-opr="refund">申请退款</span>
+					   					</c:if>
+				    					<span class="operate-button" data-opr="complete">确认收货</span>
 				    				</c:when>
 				    				<c:when test="${orderDrink.orderStatus == 2}">
 				    					<span class="operate-button" data-opr="appraise">评价</span>

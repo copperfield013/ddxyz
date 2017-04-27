@@ -70,6 +70,7 @@ public class DefaultProduct implements Product{
 			pProduct.setDispenseCode(null);
 		}else{
 			pProduct.setDispenseCode(dispenseCode.getCode());
+			pProduct.setDispenseKey((Integer) dispenseCode.getKey());
 		}
 	}
 

@@ -89,4 +89,30 @@ public class CollectionUtils {
 		return toChain(source, ",");
 	}
 	
+	/**
+	 * 从集合source的元素中抽取属性，添加到另一个集合中作为元素
+	 * @param source
+	 * @param target
+	 * @param itemGetter
+	 */
+	public static <T, R> void appendTo(Collection<T> source, Collection<R> target, Function<T, R> itemGetter) {
+		if(source != null && target != null && itemGetter != null){
+			source.forEach(item -> {
+				R r = itemGetter.apply(item);
+				target.add(r);
+			});
+		}
+	}
+	/**
+	 * 从集合source中抽取属性，放到一个新的list中作为元素
+	 * @param source 集合
+	 * @param itemGetter 获得属性的方法
+	 * @return
+	 */
+	public static <T, R> ArrayList<R> toList(Collection<T> source, Function<T, R> itemGetter){
+		ArrayList<R> result = new ArrayList<R>();
+		appendTo(source, result, itemGetter);
+		return result;
+	}
+	
 }

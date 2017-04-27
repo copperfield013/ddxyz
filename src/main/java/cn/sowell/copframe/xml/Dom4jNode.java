@@ -38,7 +38,7 @@ public class Dom4jNode implements XmlNode{
 		try {
 			ByteArrayInputStream i = new ByteArrayInputStream(xmlStr.getBytes(charset));
 			document = reader.read(i);
-		} catch (UnsupportedEncodingException | DocumentException e) {
+		} catch (UnsupportedEncodingException | DocumentException | NullPointerException e) {
 			throw new XMLException(e);
 		}
 		return document.getRootElement();

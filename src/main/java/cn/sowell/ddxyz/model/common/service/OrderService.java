@@ -10,6 +10,7 @@ import cn.sowell.ddxyz.model.common.core.Order;
 import cn.sowell.ddxyz.model.common.core.OrderManager;
 import cn.sowell.ddxyz.model.common.core.OrderOperateResult;
 import cn.sowell.ddxyz.model.common.core.OrderParameter;
+import cn.sowell.ddxyz.model.common.core.OrderRefundParameter;
 import cn.sowell.ddxyz.model.common.core.OrderToken;
 import cn.sowell.ddxyz.model.common.core.exception.OrderException;
 import cn.sowell.ddxyz.model.common.pojo.PlainOrderReceiver;
@@ -90,6 +91,9 @@ public interface OrderService {
 	 * @throws OrderException 
 	 */
 	void completeOrder(Order order, UserIdentifier user) throws OrderException;
+
+
+	void refundOrder(Order order, OrderRefundParameter refundParam) throws OrderException;
 
 
 

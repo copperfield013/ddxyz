@@ -36,7 +36,7 @@ public class DrinkDaoImpl implements DrinkDao{
 			long waresId) {
 		String sql = "select tat.* from t_drink_tea_addition_type tat left join t_drink_type t on tat.drink_type_id = t.id where t.wares_id = :waresId order by tat.c_order asc";
 		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
-		query.setResultTransformer(new HibernateRefrectResultTransformer<PlainDrinkTeaAdditionType>(PlainDrinkTeaAdditionType.class));
+		query.setResultTransformer(HibernateRefrectResultTransformer.getInstance(PlainDrinkTeaAdditionType.class));
 		return query.setLong("waresId", waresId)
 			.list();
 	}
@@ -47,7 +47,7 @@ public class DrinkDaoImpl implements DrinkDao{
 		String sql = "select dat.* from t_drink_addition_type dat left join t_drink_type t on dat.drink_type_id = t.id where t.wares_id = :waresId order by dat.c_order asc";
 		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
 		query.setLong("waresId", waresId);
-		query.setResultTransformer(new HibernateRefrectResultTransformer<PlainDrinkAdditionType>(PlainDrinkAdditionType.class));
+		query.setResultTransformer(HibernateRefrectResultTransformer.getInstance(PlainDrinkAdditionType.class));
 		return query.setLong("waresId", waresId)
 			.list();
 	}

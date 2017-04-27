@@ -25,6 +25,7 @@ import cn.sowell.ddxyz.model.common.core.OrderManager;
 import cn.sowell.ddxyz.model.common.core.OrderOperateResult;
 import cn.sowell.ddxyz.model.common.core.OrderParameter;
 import cn.sowell.ddxyz.model.common.core.OrderPayParameter;
+import cn.sowell.ddxyz.model.common.core.OrderRefundParameter;
 import cn.sowell.ddxyz.model.common.core.OrderToken;
 import cn.sowell.ddxyz.model.common.core.ProductManager;
 import cn.sowell.ddxyz.model.common.core.exception.OrderException;
@@ -72,6 +73,7 @@ public class OrderServiceImpl implements OrderService{
 					if(prepayResult.getPrepayId() != null){
 						//将预付款订单的id放到订单对象中
 						order.setPrepayId(prepayResult.getPrepayId());
+						order.setOutTradeNo(prepayResult.getSubmitUOrder().getOutTradeNo());
 						//将订单对象同步到数据库
 						oManager.persistOrder(order);
 						//更新该微信用户的常用收货信息
@@ -154,4 +156,9 @@ public class OrderServiceImpl implements OrderService{
 		return result;
 	}
 	
+	@Override
+	public void refundOrder(Order order, OrderRefundParameter refundParam)
+			throws OrderException {
+		order.refund(refundParam);
+	}
 }

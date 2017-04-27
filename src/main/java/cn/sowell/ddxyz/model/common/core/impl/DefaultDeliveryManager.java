@@ -1,13 +1,16 @@
 package cn.sowell.ddxyz.model.common.core.impl;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Repository;
 
 import cn.sowell.ddxyz.model.common.core.Delivery;
@@ -16,37 +19,88 @@ import cn.sowell.ddxyz.model.common.core.DeliveryLocation;
 import cn.sowell.ddxyz.model.common.core.DeliveryManager;
 import cn.sowell.ddxyz.model.common.core.DeliveryTimePoint;
 import cn.sowell.ddxyz.model.common.core.DispenseResourceRequest;
-import cn.sowell.ddxyz.model.common.core.OrderDispenseResource;
 import cn.sowell.ddxyz.model.common.core.OrderManager;
 import cn.sowell.ddxyz.model.common.core.OrderParameter;
 import cn.sowell.ddxyz.model.common.core.OrderToken;
 import cn.sowell.ddxyz.model.common.core.result.CheckResult;
+import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
+import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlan;
 import cn.sowell.ddxyz.model.common.pojo.PlainLocation;
 import cn.sowell.ddxyz.model.common.service.DataPersistenceService;
+import cn.sowell.ddxyz.model.common.utils.DeliveryPeriodUtils;
+import cn.sowell.ddxyz.model.merchant.service.DeliveryService;
 
-@Repository
-public class DefaultDeliveryManager implements DeliveryManager, InitializingBean{
+@Repository("defaultDeliveryManager")
+public class DefaultDeliveryManager implements DeliveryManager{
 	@Resource
 	private OrderManager odrManage;
 	
 	@Resource
 	DataPersistenceService dpService;
 	
+	@Resource
+	DeliveryService dService;
+	
 	private Map<DeliveryKey, Delivery> deliveryMap = new LinkedHashMap<DeliveryKey, Delivery>();
 	
 	Logger logger = Logger.getLogger(DeliveryManager.class);
 	
-	
 	@Override
-	public void afterPropertiesSet() throws Exception {
-		logger.info("初始化配送管理器");
-		//TODO: 从持久化数据中获取配送对象或者根据配送计划生成配送对象
-		synchronized (deliveryMap) {
-			
-		}
-		logger.info("配送管理器初始化完成");
+	public List<Delivery> loadTodayDeliveries(){
+		List<PlainDeliveryPlan> plans = dpService.getTheDayUsablePlan();
+		Map<DeliveryKey, PlainDelivery> map = generateDelivery(plans, Calendar.getInstance());
+		Map<DeliveryKey, Delivery> dMap = dpService.mergeDeliveries(map);
+		dMap.forEach((key, delivery) -> {
+			if(!deliveryMap.containsKey(key)){
+				deliveryMap.putAll(dMap);
+			}
+		});
+		return new ArrayList<Delivery>(dMap.values());
 	}
 	
+	
+	private Map<DeliveryKey, PlainDelivery> generateDelivery(List<PlainDeliveryPlan> plans, Calendar theDay) {
+		Map<DeliveryKey, PlainDelivery> map = new LinkedHashMap<DeliveryKey, PlainDelivery>();
+		for (PlainDeliveryPlan plan : plans) {
+			try {
+				List<Integer> hourList = DeliveryPeriodUtils.getHourList(plan.getPeriod(), theDay);
+				if(!hourList.isEmpty()){
+					for (Integer hour : hourList) {
+						PlainDelivery pDelivery = new PlainDelivery();
+						//配送地点的id
+						pDelivery.setLocationId(plan.getLocationId());
+						if(plan.getLocation() != null){
+							//配送地点名称
+							pDelivery.setLocationName(plan.getLocation().getName());
+						}
+						//配送最大数量
+						pDelivery.setMaxCount(plan.getMaxCount());
+						//绑定的商品id
+						pDelivery.setWaresId(plan.getWaresId());
+						//配送计划id
+						pDelivery.setDeliveryPlanId(plan.getId());
+						//生成配送时间
+						Calendar cal = Calendar.getInstance();
+						cal.set(Calendar.HOUR_OF_DAY, hour);
+						cal.set(Calendar.MINUTE, 0);
+						cal.set(Calendar.SECOND, 0);
+						cal.set(Calendar.MILLISECOND, 0);
+						pDelivery.setTimePoint(cal.getTime());
+						//配送关闭时间
+						cal.add(Calendar.MINUTE, -plan.getLeadMinutes());
+						pDelivery.setCloseTime(cal.getTime());
+						
+						DeliveryKey key = new DeliveryKey(plan.getWaresId(), new DeliveryTimePoint(pDelivery.getTimePoint()), new DeliveryLocation(pDelivery.getLocationId()));
+						map.put(key, pDelivery);
+					}
+				}
+			} catch (ParseException e) {
+				logger.error("根据配送计划[id=" + plan.getId() + ",period=" + plan.getPeriod() + "]生成配送时，规则转换错误", e);
+			}
+		}
+		return map;
+	}
+
 	private Delivery getDelivery(DeliveryKey deliveryKey){
 		synchronized (deliveryMap) {
 			//从内存中获得配送对象
@@ -64,10 +118,10 @@ public class DefaultDeliveryManager implements DeliveryManager, InitializingBean
 	}
 	
 	@Override
-	public Delivery getDelivery(DeliveryTimePoint timePoint,
+	public Delivery getDelivery(Long waresId, DeliveryTimePoint timePoint,
 			DeliveryLocation location) {
 		//配送的标识
-		DeliveryKey deliveryKey = new DeliveryKey(timePoint, location);
+		DeliveryKey deliveryKey = new DeliveryKey(waresId, timePoint, location);
 		return getDelivery(deliveryKey);
 	}
 	
@@ -78,16 +132,6 @@ public class DefaultDeliveryManager implements DeliveryManager, InitializingBean
 		return getDelivery(deliveryKey);
 	}
 	
-	/**
-	 * 构造分配资源对象
-	 * @return
-	 */
-	OrderDispenseResource buildDispenseResource() {
-		// TODO： 构造分配的资源对象
-		return null;
-	}
-
-	
 	
 	
 	@Override
@@ -97,7 +141,7 @@ public class DefaultDeliveryManager implements DeliveryManager, InitializingBean
 		//判断请求对应的配送是否存在
 		if(orderParameter.getDeliveryLocation() != null && orderParameter.getTimePoint() != null){
 			//获得对应的配送独享
-			Delivery delivery = getDelivery(orderParameter.getTimePoint(), orderParameter.getDeliveryLocation());
+			Delivery delivery = getDelivery(orderParameter.getWaresId(), orderParameter.getTimePoint(), orderParameter.getDeliveryLocation());
 			if(delivery != null){
 				if(!delivery.isEnabled()){
 					return result.setResult(false, "时间点[" + orderParameter.getTimePoint() + "]和地点[" + orderParameter.getDeliveryLocation() + "]对应的配送对象[" + delivery.getId() + "]当前被禁用");
@@ -126,10 +170,11 @@ public class DefaultDeliveryManager implements DeliveryManager, InitializingBean
 		return result;
 	}
 	
+	
 	@Override
 	public DeliveryLocation getDeliveryLocation(long locationId) {
 		PlainLocation location = dpService.getDeliveryLocation(locationId);
 		return new DeliveryLocation(location);
 	}
-	
+
 }

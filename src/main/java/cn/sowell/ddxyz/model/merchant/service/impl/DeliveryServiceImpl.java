@@ -16,11 +16,12 @@ import cn.sowell.ddxyz.model.common.core.Delivery;
 import cn.sowell.ddxyz.model.common.core.DeliveryManager;
 import cn.sowell.ddxyz.model.common.core.DeliveryTimePoint;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
+import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlan;
 import cn.sowell.ddxyz.model.common.pojo.PlainLocation;
 import cn.sowell.ddxyz.model.merchant.dao.DeliveryDao;
 import cn.sowell.ddxyz.model.merchant.service.DeliveryService;
 
-@Service
+@Service("deliveryServiceImpl")
 public class DeliveryServiceImpl implements DeliveryService{
 
 	@Resource
@@ -65,6 +66,13 @@ public class DeliveryServiceImpl implements DeliveryService{
 	public List<PlainLocation> getAllDeliveryLocation(long merchantId) {
 		Set<PlainLocation> locations = deliveryDao.getAllLocation(merchantId);
 		return new ArrayList<PlainLocation>(locations);
+	}
+	
+	
+	@Override
+	public void addPlan(PlainDeliveryPlan plan) {
+		plan.setCreateTime(new Date());
+		deliveryDao.savePlan(plan);
 	}
 
 }

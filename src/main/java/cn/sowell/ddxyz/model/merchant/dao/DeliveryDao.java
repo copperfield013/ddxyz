@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
+import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlan;
 import cn.sowell.ddxyz.model.common.pojo.PlainLocation;
 
 public interface DeliveryDao {
@@ -22,5 +23,11 @@ public interface DeliveryDao {
 	 * @return
 	 */
 	Set<PlainLocation> getAllLocation(long merchantId);
+	
+	/**
+	 * 持久化配送计划
+	 * @param plan
+	 */
+	void savePlan(PlainDeliveryPlan plan);
 
 }

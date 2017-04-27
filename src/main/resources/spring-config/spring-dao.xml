@@ -70,7 +70,10 @@
     <!-- 通用事务的AOP配置， -->
 	<aop:config>
 		<aop:pointcut id="interceptorPointCuts"
-			expression="execution(* cn.sowell.ddxyz.model.*.service.*.*(..))" />
+			expression="(execution(* cn.sowell.ddxyz.model.*.service.*.*(..)) 
+			or execution(* cn.sowell.ddxyz.model.common.core.impl.*Manager.*(..)))
+			and !execution(* cn.sowell.ddxyz.model.common.service.impl.DataPersistenceServiceImpl.*(..))
+			" />
 		<aop:advisor advice-ref="commonAdvice" pointcut-ref="interceptorPointCuts" />
 	</aop:config>
     

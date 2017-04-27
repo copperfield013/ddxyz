@@ -16,6 +16,7 @@ import cn.sowell.copframe.common.UserIdentifier;
 import cn.sowell.copframe.dto.ajax.JsonRequest;
 import cn.sowell.copframe.dto.ajax.JsonResponse;
 import cn.sowell.copframe.dto.page.CommonPageInfo;
+import cn.sowell.copframe.utils.CollectionUtils;
 import cn.sowell.copframe.weixin.common.service.WxConfigService;
 import cn.sowell.copframe.weixin.common.utils.WxUtils;
 import cn.sowell.copframe.weixin.pay.prepay.H5PayParameter;
@@ -116,6 +117,8 @@ public class WeiXinYddController {
 	public String load(CommonPageInfo pageInfo, Model model){
 		UserIdentifier user =  WxUtils.getCurrentUser(UserIdentifier.class);
 		List<PlainDrinkOrder> drinkList = drinkOrderService.getDrinkPageList(user, pageInfo);
+		Map<Long, Boolean> refundableMap = drinkOrderService.getRefundableMap(CollectionUtils.toList(drinkList, (order) -> order.getId()));
+		model.addAttribute("refundableMap", refundableMap);
 		model.addAttribute("orderDrinkList", drinkList);
 		model.addAttribute("sweetnessMap", DdxyzConstants.SWEETNESS_MAP);
 		model.addAttribute("heatMap", DdxyzConstants.HEAT_MAP);
@@ -142,8 +145,9 @@ public class WeiXinYddController {
 	@RequestMapping("/submitOrder")
 	public JsonResponse submitOrder(@RequestBody JsonRequest jReq){
 		JsonResponse jRes = new JsonResponse();
+		long waresId = 1l;
 		try {
-			OrderTerm term = OrderTerm.fromJson(dManager, jReq.getJsonObject());
+			OrderTerm term = OrderTerm.fromJson(dManager, waresId, jReq.getJsonObject());
 			WeiXinUser user = WxUtils.getCurrentUser(WeiXinUser.class);
 			Order order = oService.applyForOrder(term.createOrderParameter(), user, OrderToken.getAnonymousToken());
 			if(order != null){
@@ -190,14 +194,6 @@ public class WeiXinYddController {
 		return jRes;
 	}
 	
-	/**
-	 * 微信支付状态返回
-	 * @return
-	 */
-	@ResponseBody
-	@RequestMapping("/notify")
-	public String paiedNotify(){
-		return null;
-	}
+	
 	
 }

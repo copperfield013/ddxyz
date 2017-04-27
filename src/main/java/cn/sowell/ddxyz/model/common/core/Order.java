@@ -258,6 +258,30 @@ public interface Order {
 	 * @throws OrderException 
 	 */
 	void refundTotal(UserIdentifier user) throws OrderException;
+	
+	/**
+	 * 提交预付款订单时，当前系统生成的交易号
+	 * @param outTradeNo
+	 */
+	void setOutTradeNo(String outTradeNo);
+	/**
+	 * 提交预付款订单时，当前系统生成的交易号
+	 * @return
+	 */
+	String getOutTradeNo();
+	
+	/**
+	 * 订单支付完成之后，微信推送的状态返回的订单号
+	 * @param transactionId
+	 */
+	void setTransactionId(String transactionId);
+	/**
+	 * 订单支付完成之后，微信推送的状态返回的订单号
+	 * @return
+	 */
+	String getTransactionId();
+	
+	
 	/**
 	 * 检测订单是否能够修改为toStatus状态
 	 * @param order
@@ -333,6 +357,7 @@ public interface Order {
 		}
 		return result;
 	}
+	
 	
 	
 }

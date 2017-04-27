@@ -11,6 +11,7 @@ package cn.sowell.ddxyz.model.common.core;
  * @date 2017年3月29日 上午10:10:21
  */
 public class OrderParameter {
+	private final long waresId;
 	private DeliveryTimePoint timePoint;
 	private DeliveryLocation deliveryLocation;
 
@@ -23,6 +24,10 @@ public class OrderParameter {
 	private ProductsParameter productParameter;
 	
 	private String comment;
+	
+	public OrderParameter(long waresId) {
+		this.waresId = waresId;
+	}
 	
 	/**
 	 * 获得订单请求的时间点
@@ -90,10 +95,9 @@ public class OrderParameter {
 	public void setReceiver(ReceiverInfo receiver) {
 		this.receiver = receiver;
 	}
-	
-	
-	
-	
-	
+
+	public long getWaresId() {
+		return waresId;
+	}
 	
 }

@@ -21,6 +21,7 @@ import cn.sowell.ddxyz.model.common.core.impl.DefaultProductItemParameter;
 import cn.sowell.ddxyz.model.common.core.impl.DrinkDataHandler;
 
 public class OrderTerm {
+	final long waresId;
 	DeliveryLocation deliveryLocation;
 	Integer year;
 	Integer month;
@@ -32,14 +33,20 @@ public class OrderTerm {
 	
 	ArrayList<OrderItem> items = new ArrayList<OrderItem>();  
 	
-	public static OrderTerm fromJson(DeliveryManager dManager, JSONObject jo) throws OrderException{
+	
+	OrderTerm(long waresId) {
+		super();
+		this.waresId = waresId;
+	}
+
+	public static OrderTerm fromJson(DeliveryManager dManager, long waresId, JSONObject jo) throws OrderException{
 		Assert.notNull(dManager);
 		Assert.notNull(jo);
 		Long locationId = jo.getLong("deliveryLocationId");
 		if(locationId != null){
 			DeliveryLocation location = dManager.getDeliveryLocation(locationId);
 			if(location != null){
-				OrderTerm ot = new OrderTerm();
+				OrderTerm ot = new OrderTerm(waresId);
 				ot.deliveryLocation = location;
 				
 				JSONObject timePoint = jo.getJSONObject("timePoint");
@@ -115,7 +122,7 @@ public class OrderTerm {
 	
 	public OrderParameter createOrderParameter(){
 		//创建订单参数
-		OrderParameter oParameter = new OrderParameter();
+		OrderParameter oParameter = new OrderParameter(this.waresId);
 		//设置配送点
 		oParameter.setDeliveryLocation(deliveryLocation);
 		//设置配送时间点

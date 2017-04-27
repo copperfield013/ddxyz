@@ -5,6 +5,7 @@ import java.util.List;
 
 import cn.sowell.ddxyz.model.common.core.DeliveryTimePoint;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
+import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlan;
 import cn.sowell.ddxyz.model.common.pojo.PlainLocation;
 
 public interface DeliveryService {
@@ -40,7 +41,10 @@ public interface DeliveryService {
 	 */
 	List<PlainLocation> getAllDeliveryLocation(long merchantId);
 	
+	/**
+	 * 添加一条配送计划到系统中
+	 * @param plan
+	 */
+	void addPlan(PlainDeliveryPlan plan);
 	
-	
-
 }

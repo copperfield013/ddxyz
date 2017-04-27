@@ -2,10 +2,13 @@ package cn.sowell.ddxyz.model.common.dao;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
+import cn.sowell.ddxyz.model.common.core.DeliveryKey;
 import cn.sowell.ddxyz.model.common.core.Order;
 import cn.sowell.ddxyz.model.common.core.exception.OrderException;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
+import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlan;
 import cn.sowell.ddxyz.model.common.pojo.PlainLocation;
 import cn.sowell.ddxyz.model.common.pojo.PlainOrder;
 import cn.sowell.ddxyz.model.common.pojo.PlainOrderLog;
@@ -64,11 +67,12 @@ public interface DataPersistenceDao {
 	void updateOrder(Order order);
 	/**
 	 * 根据时间和配送地点的id获得配送对象
+	 * @param waresId 
 	 * @param datetime 配送时间点
 	 * @param locationId 配送地点的id
 	 * @return
 	 */
-	PlainDelivery getDelivery(Date datetime, long locationId);
+	PlainDelivery getDelivery(long waresId, Date datetime, long locationId);
 	
 	/**
 	 * 持久化日志
@@ -130,6 +134,34 @@ public interface DataPersistenceDao {
 	 */
 	void updateOrderActualPaied(long orderId, Integer actualPay);
 	
+	/**
+	 * 获得当天所有有效的配送计划
+	 * @param instance
+	 * @return
+	 */
+	List<PlainDeliveryPlan> getTheDayUsablePlan(Date theDay);
+	/**
+	 * 根据配送的key的配送地址、配送时间点和商品id，找到对应的所有配送
+	 * @param keySet
+	 * @return
+	 */
+	Set<PlainDelivery> getDeliveries(Set<DeliveryKey> keySet);
+	/**
+	 * 将配送信息对象保存到数据库当中，保存完成后同步配送信息对象的主键
+	 * @param pDelivery
+	 */
+	void saveDelivery(PlainDelivery pDelivery);
+	/**
+	 * 更新配送的已分发数量
+	 * @param deliveryId
+	 * @param currentCount
+	 */
+	void updateDeliveryDispensedCount(long deliveryId, int currentCount);
+	/**
+	 * 根据配送id获得对应的所有有效的产品
+	 * @param id
+	 * @return
+	 */
+	List<PlainProduct> getAllUsableProducts(long deliveryId);
 	
-
 }

@@ -31,6 +31,9 @@ public class PlainProduct{
 	@Column(name="c_dispense_code")
 	private String dispenseCode;
 	
+	@Column(name="c_dispense_key")
+	private Integer dispenseKey;
+	
 	@Column(name="c_status")
 	private int status;
 	
@@ -112,6 +115,12 @@ public class PlainProduct{
 	}
 	public void setCanceledStatus(String canceledStatus) {
 		this.canceledStatus = canceledStatus;
+	}
+	public Integer getDispenseKey() {
+		return dispenseKey;
+	}
+	public void setDispenseKey(Integer dispenseKey) {
+		this.dispenseKey = dispenseKey;
 	}
 	
 }

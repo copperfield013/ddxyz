@@ -15,13 +15,21 @@ public class DeliveryKey{
 	Serializable deliveryId;
 	DeliveryTimePoint timePoint;
 	DeliveryLocation location;
-	public DeliveryKey(DeliveryTimePoint timePoint,
+	Long waresId;
+	public DeliveryKey(Long waresId, DeliveryTimePoint timePoint,
 			DeliveryLocation location) {
+		this.waresId = waresId;
 		this.timePoint = timePoint;
 		this.location = location;
 	}
 	public DeliveryKey(Serializable deliveryId){
 		this.deliveryId = deliveryId;
+	}
+	
+	
+	@Override
+	public int hashCode() {
+		return 0;
 	}
 	
 	/**
@@ -43,9 +51,12 @@ public class DeliveryKey{
 			//判断时间点和配送地点是否相同
 			if(timePoint != null){
 				if(location != null){
-					return timePoint.equals(key.location)
-					&& location.equals(key.location)
-					;
+					if(waresId != null){
+						return timePoint.equals(key.timePoint)
+								&& location.equals(key.location) 
+								&& waresId.equals(key.waresId)
+								;
+					}
 				}
 			}
 		}
@@ -68,5 +79,11 @@ public class DeliveryKey{
 	}
 	public void setLocation(DeliveryLocation location) {
 		this.location = location;
+	}
+	public Long getWaresId() {
+		return waresId;
+	}
+	public void setWaresId(Long waresId) {
+		this.waresId = waresId;
 	}
 }

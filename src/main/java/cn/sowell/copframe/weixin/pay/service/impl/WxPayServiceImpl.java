@@ -1,13 +1,27 @@
 package cn.sowell.copframe.weixin.pay.service.impl;
 
+import java.io.InputStream;
+import java.security.KeyStore;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Resource;
+import javax.net.ssl.SSLContext;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContexts;
+import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -15,6 +29,7 @@ import org.springframework.util.StringUtils;
 import cn.sowell.copframe.SystemConstants;
 import cn.sowell.copframe.common.UserIdentifier;
 import cn.sowell.copframe.dto.format.FormatUtils;
+import cn.sowell.copframe.dto.format.FrameDateFormat;
 import cn.sowell.copframe.exception.XMLException;
 import cn.sowell.copframe.utils.HttpRequestUtils;
 import cn.sowell.copframe.utils.TextUtils;
@@ -32,6 +47,7 @@ import cn.sowell.copframe.weixin.pay.prepay.UnifiedOrder;
 import cn.sowell.copframe.weixin.pay.refund.RefundRequest;
 import cn.sowell.copframe.weixin.pay.refund.RefundResult;
 import cn.sowell.copframe.weixin.pay.service.WxPayService;
+import cn.sowell.copframe.xml.Dom4jNode;
 import cn.sowell.copframe.xml.XMLConvertConfig;
 import cn.sowell.copframe.xml.XMLConverter;
 import cn.sowell.copframe.xml.XmlNode;
@@ -48,6 +64,9 @@ public class WxPayServiceImpl implements WxPayService{
 	
 	@Resource
 	PrepayOrderFactory prepayOrderFactory;
+	
+	@Resource
+	FrameDateFormat dateFormat;
 	
 	XMLConverter<UnifiedOrder> unifiedOrderConverter = new XMLConverter<UnifiedOrder>();
 	XMLConverter<PrepayResult> prepayResultConverter = new XMLConverter<PrepayResult>();
@@ -73,7 +92,9 @@ public class WxPayServiceImpl implements WxPayService{
 				if(returnXML != null){
 					logger.info("微信支付预支付接口返回数据：" + returnXML);
 					logger.info("返回数据签名验证结果：" + configService.checkSignature(null, returnXML));
-					return prepayResultConverter.parse(returnXML, new PrepayResult());
+					PrepayResult result = prepayResultConverter.parse(returnXML, new PrepayResult());
+					result.setSubmitUOrder(order);
+					return result;
 				}
 			} catch (XMLException e) {
 				logger.error(e);
@@ -180,7 +201,13 @@ public class WxPayServiceImpl implements WxPayService{
 			//判断计算覆盖签名
 			replaceSignature(replaceSignature, xml, refundReq);
 			//请求并返回结果对象
-			XmlNode returnXML = HttpRequestUtils.postXMLAndReturnXML(SystemConstants.WXPAY_REFUND_URL, xml);
+			//XmlNode returnXML = HttpRequestUtils.postXMLAndReturnXML(SystemConstants.WXPAY_REFUND_URL, xml);
+			XmlNode returnXML = null;
+			try {
+				returnXML = doRefund(xml);
+			} catch (Exception e) {
+				logger.error("", e);
+			}
 			//将结果对象转换成Java对象
 			if(returnXML != null){
 				logger.info("微信退款接口返回数据：" + returnXML);
@@ -200,7 +227,9 @@ public class WxPayServiceImpl implements WxPayService{
 			request.setAppid(configService.getAppid());
 			request.setMerchantId(configService.getMerchantId());
 			request.setNonceStr(TextUtils.uuid());
-			request.setOutTradeNo(order.getOrderCode());
+			request.setOutTradeNo(order.getOutTradeNo());
+			request.setOutRefundNo(generateOutRefundNo());
+			request.setTotalFee(order.getTotalPrice());
 			UserIdentifier operateUser = refundParam.getOperateUser();
 			if(operateUser != null){
 				request.setOperateUserId(String.valueOf(operateUser.getId()));
@@ -210,6 +239,69 @@ public class WxPayServiceImpl implements WxPayService{
 		}
 		return null;
 	}
+
+	private String generateOutRefundNo() {
+		StringBuffer buffer = new StringBuffer();
+		buffer.append(dateFormat.format(new Date(), "yyMMddHHmmss"));
+		buffer.append(TextUtils.randomStr(5, 10));
+		return buffer.toString();
+	}
 	
+	
+	public XmlNode doRefund(XmlNode xmlNode) throws Exception {
+		/**
+		 * 注意PKCS12证书 是从微信商户平台-》账户设置-》 API安全 中下载的
+		 */
+
+		KeyStore keyStore = KeyStore.getInstance("PKCS12");
+		ClassPathResource resFile = new ClassPathResource("wxcert/apiclient_cert.p12");
+		InputStream instream = resFile.getInputStream();
+		String merchantId = configService.getMerchantId();
+		try {
+			keyStore.load(instream, merchantId.toCharArray());// 这里写密码..默认是你的MCHID
+		} finally {
+			instream.close();
+		}
+
+		
+		SSLContext sslcontext = 
+				SSLContexts.custom()
+					.loadKeyMaterial(keyStore, merchantId.toCharArray())// 这里也是写密码的
+					.build();
+		@SuppressWarnings("deprecation")
+		SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
+				sslcontext, new String[] { "TLSv1" }, null,
+				SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
+
+		CloseableHttpClient httpclient = HttpClients.custom()
+				.setSSLSocketFactory(sslsf).build();
+		try {
+			HttpPost httpost = new HttpPost(SystemConstants.WXPAY_REFUND_URL); // 设置响应头信息
+			httpost.addHeader("Connection", "keep-alive");
+			httpost.addHeader("Accept", "*/*");
+			httpost.addHeader("Content-Type",
+					"application/x-www-form-urlencoded; charset=UTF-8");
+			httpost.addHeader("Host", "api.mch.weixin.qq.com");
+			httpost.addHeader("X-Requested-With", "XMLHttpRequest");
+			httpost.addHeader("Cache-Control", "max-age=0");
+			httpost.addHeader("User-Agent",
+					"Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.0) ");
+			httpost.setEntity(new StringEntity(xmlNode.asXML(), "UTF-8"));
+			CloseableHttpResponse response = httpclient.execute(httpost);
+			try {
+				HttpEntity entity = response.getEntity();
+
+				String jsonStr = EntityUtils.toString(response.getEntity(),
+						"UTF-8");
+				EntityUtils.consume(entity);
+				System.out.println(jsonStr);
+				return new Dom4jNode(jsonStr);
+			} finally {
+				response.close();
+			}
+		} finally {
+			httpclient.close();
+		}
+	}
 	
 }
