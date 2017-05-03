@@ -59,7 +59,7 @@
   			</p>
   			<p class="operate" data-oid="${orderItem.id }">
   				<c:if test="${orderItem.orderStatus != 0 || orderExpired }">
-  					<span class="operate-button" data-opt="buy-again">再次购买</span>
+  					<span class="operate-button" data-opr="buy-again">再次购买</span>
   				</c:if>
   				<c:if test="${orderItem.canceledStatus == null }">
 	  				<c:choose>

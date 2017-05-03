@@ -204,4 +204,10 @@ public class WeiXinYddController {
 		return jRes;
 	}
 	
+	@RequestMapping("/deliverySelection")
+	public String deliverySelection(){
+		return WeiXinConstants.PATH_YDD + "/delivery_selection.jsp";
+	}
+	
+	
 }

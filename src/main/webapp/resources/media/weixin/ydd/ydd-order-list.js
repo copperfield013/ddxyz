@@ -75,8 +75,26 @@ define(function(require, exports, module){
 			//从后台获取再次购买该订单的产品的所有当天可用配送
 			//弹出页面显示所有可用配送
 			//选择配送后跳转到下单页面
-			location.href = 'weixin/ydd/order?orderId=' + orderId;
+			showDeliverySelection(orderId);
+			
+			
+			//location.href = 'weixin/ydd/order?orderId=' + orderId;
 		}
+	}
+	
+	
+	var $dialog = null;
+	function showDeliverySelection(orderId){
+		var Ajax = require('ajax');
+		Ajax.ajax('weixin/ydd/deliverySelection', {
+			orderId		: orderId
+		}, function(html){
+			if($dialog instanceof $){
+				$dialog.remove();
+			}
+			$dialog = $(html);
+			$('main').append($dialog);
+		});
 	}
 	
 	/**
