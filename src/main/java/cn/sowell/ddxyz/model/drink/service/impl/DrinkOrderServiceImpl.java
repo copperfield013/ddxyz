@@ -19,6 +19,7 @@ import cn.sowell.ddxyz.model.common.dao.CommonProductDao;
 import cn.sowell.ddxyz.model.common.pojo.PlainOrder;
 import cn.sowell.ddxyz.model.common.pojo.PlainProduct;
 import cn.sowell.ddxyz.model.common.pojo.criteria.ProductCriteria;
+import cn.sowell.ddxyz.model.common.service.OrderService;
 import cn.sowell.ddxyz.model.drink.dao.DrinkAdditionDao;
 import cn.sowell.ddxyz.model.drink.dao.DrinkOrderDao;
 import cn.sowell.ddxyz.model.drink.pojo.PlainDrinkAddition;
@@ -37,6 +38,9 @@ public class DrinkOrderServiceImpl implements DrinkOrderService{
 	
 	@Resource
 	CommonProductDao productDao;
+	
+	@Resource
+	OrderService oService;
 	
 	@Override
 	public List<PlainOrderDrinkItem> getOrderDrinkItemList(Long orderId) {
@@ -73,32 +77,40 @@ public class DrinkOrderServiceImpl implements DrinkOrderService{
 	}
 	
 	private List<PlainDrinkOrder> getNewDrinkOrderList(List<PlainOrder> orderList){
-		List<PlainDrinkOrder> drinkList = new ArrayList<PlainDrinkOrder>();
+		List<PlainDrinkOrder> orderItemList = new ArrayList<PlainDrinkOrder>();
 		if(orderList != null && orderList.size() > 0){
 			for(PlainOrder plainOrder : orderList){
-				List<PlainOrderDrinkItem> orderDrinkItemList = getOrderDrinkItemList(plainOrder.getId());
-				PlainDrinkOrder plainOrderDrink = new PlainDrinkOrder();
-				plainOrderDrink.setId(plainOrder.getId());
-				plainOrderDrink.setOrderCode(plainOrder.getOrderCode());
-				plainOrderDrink.setCanceledStatus(plainOrder.getCanceledStatus());
-				plainOrderDrink.setOrderStatus(plainOrder.getOrderStatus());
-				plainOrderDrink.setTotalPrice(plainOrder.getTotalPrice());
-				plainOrderDrink.setOrderTime(plainOrder.getCreateTime());
-				plainOrderDrink.setOrderDrinkItems(orderDrinkItemList);
-				plainOrderDrink.setCupCount(0);
-				if(orderDrinkItemList != null && orderDrinkItemList.size() > 0){
-					for(PlainOrderDrinkItem item : orderDrinkItemList){
-						List<PlainDrinkAddition> additions = getDrinkAdditionList(item.getDrinkProductId());
-						item.setAdditions(additions);
-					}
-					plainOrderDrink.setCupCount(orderDrinkItemList.size());
-				}
-				drinkList.add(plainOrderDrink);
+				orderItemList.add(toDrinkOrderItem(plainOrder));
 			}
 		}
-		return drinkList;
+		return orderItemList;
 	}
 	
+	private PlainDrinkOrder toDrinkOrderItem(PlainOrder pOrder) {
+		List<PlainOrderDrinkItem> orderDrinkItemList = getOrderDrinkItemList(pOrder.getId());
+		PlainDrinkOrder plainOrderDrink = new PlainDrinkOrder();
+		plainOrderDrink.setId(pOrder.getId());
+		plainOrderDrink.setOrderCode(pOrder.getOrderCode());
+		plainOrderDrink.setCanceledStatus(pOrder.getCanceledStatus());
+		plainOrderDrink.setOrderStatus(pOrder.getOrderStatus());
+		plainOrderDrink.setTotalPrice(pOrder.getTotalPrice());
+		plainOrderDrink.setOrderTime(pOrder.getCreateTime());
+		plainOrderDrink.setOrderDrinkItems(orderDrinkItemList);
+		plainOrderDrink.setCupCount(0);
+		plainOrderDrink.setTimePoint(pOrder.getTimePoint());
+		plainOrderDrink.setLocationName(pOrder.getLocationName());
+		plainOrderDrink.setPayExpireTime(pOrder.getPayExpireTime());
+		if(orderDrinkItemList != null && orderDrinkItemList.size() > 0){
+			for(PlainOrderDrinkItem item : orderDrinkItemList){
+				List<PlainDrinkAddition> additions = getDrinkAdditionList(item.getDrinkProductId());
+				item.setAdditions(additions);
+			}
+			plainOrderDrink.setCupCount(orderDrinkItemList.size());
+		}
+		return plainOrderDrink;
+	}
+
+
 	@Override
 	public Map<Long, Boolean> getRefundableMap(List<Long> orderIdList) {
 		HashMap<Long, Boolean> result = new HashMap<Long, Boolean>();
@@ -116,6 +128,13 @@ public class DrinkOrderServiceImpl implements DrinkOrderService{
 			}
 		});
 		return result;
+	}
+	
+	@Override
+	public PlainDrinkOrder getOrderItem(Long orderId) {
+		PlainOrder pOrder = oService.getPlainOrder(orderId);
+		return toDrinkOrderItem(pOrder);
+		
 	}
 	
 }

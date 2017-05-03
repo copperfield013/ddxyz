@@ -20,12 +20,14 @@ import org.springframework.util.Assert;
 import cn.sowell.copframe.common.UserIdentifier;
 import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.copframe.weixin.common.service.WxConfigService;
+import cn.sowell.copframe.weixin.pay.paied.WxPayStatus;
 import cn.sowell.copframe.weixin.pay.refund.RefundRequest;
 import cn.sowell.copframe.weixin.pay.refund.RefundResult;
 import cn.sowell.copframe.weixin.pay.service.WxPayService;
 import cn.sowell.ddxyz.model.common.core.Delivery;
 import cn.sowell.ddxyz.model.common.core.DeliveryLocation;
 import cn.sowell.ddxyz.model.common.core.DeliveryManager;
+import cn.sowell.ddxyz.model.common.core.DeliveryTimePoint;
 import cn.sowell.ddxyz.model.common.core.Order;
 import cn.sowell.ddxyz.model.common.core.OrderDispenseResource;
 import cn.sowell.ddxyz.model.common.core.OrderLog;
@@ -156,7 +158,7 @@ public class DefaultOrderManager implements OrderManager, InitializingBean {
 		Delivery delivery = dManager.getDelivery(orderParameter.getWaresId(), orderParameter.getTimePoint(), orderParameter.getDeliveryLocation());
 		if(delivery != null){
 			//构造订单对象
-			Order order = buildOrder(orderParameter);
+			Order order = buildOrder(orderParameter, delivery);
 			if(order != null){
 				//设置常用属性
 				order.setDeliveryId(delivery.getId());
@@ -165,6 +167,8 @@ public class DefaultOrderManager implements OrderManager, InitializingBean {
 				order.setTotalPrice(orderParameter.getTotalPrice());
 				order.setOrderCode(generateOrderCode(orderParameter.getDeliveryLocation()));
 				order.setOrderUser(user);
+				DeliveryTimePoint timePoint = delivery.getTimePoint();
+				order.setPayExpireTime(timePoint.getCloseTime());
 				//调用order的方法来设置或者覆盖属性
 				order.fromOrderParameter(orderParameter);
 				//产品管理器创建产品对象并且将产品对象放到订单对象中
@@ -210,11 +214,11 @@ public class DefaultOrderManager implements OrderManager, InitializingBean {
 	 * @param resource
 	 * @return
 	 */
-	private Order buildOrder(OrderParameter orderParameter) {
+	private Order buildOrder(OrderParameter orderParameter, Delivery delivery) {
 		PlainOrder pOrder = new PlainOrder();
 		pOrder.setCreateTime(new Date());
 		pOrder.setUpdateTime(pOrder.getCreateTime());
-		DefaultOrder order = new DefaultOrder(pOrder, this, productManager, dpService);
+		DefaultOrder order = new DefaultOrder(pOrder, delivery, this, productManager, dpService);
 		pOrder.setOrderStatus(Order.STATUS_DEFAULT);
 		pOrder.setCommment(orderParameter.getComment());
 		order.setDispenseResourceRequest(orderParameter.getDispenseResourceRequest());
@@ -336,6 +340,9 @@ public class DefaultOrderManager implements OrderManager, InitializingBean {
 		dpService.saveLog(log);
 	}
 
-	
+	@Override
+	public WxPayStatus checkWxPayStatus(DefaultOrder order) {
+		return payService.checkPayStatus(order.getOutTradeNo());
+	}
 	
 }

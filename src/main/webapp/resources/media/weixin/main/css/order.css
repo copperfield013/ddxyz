@@ -11,7 +11,7 @@ body {
 }
 .order p {
   padding: 0 15px;
-  line-height: 40px;
+  line-height: 30px;
   position: relative;
 }
 .order p:after {
@@ -71,6 +71,12 @@ body {
   text-align: right;
   font-size:12px;
 }
+.order .timePoint{
+	float: left;
+}
+.order .location{
+	float: right;
+}
 .order .result .time {
   float: left;
 }
@@ -111,13 +117,20 @@ p.operate {
 }
 
 span.operate-button {
-    border: #FF6347 solid 1px;
+    border: #999 solid 1px;
     border-radius: 1em;
     padding: 0.3em 1em;
-    color: #FF6347;
+    color: #777;
     cursor: pointer;
 }
-.operate-button.simple-btn {
-    border-color: #999;
-    color: #777;
+.operate-button.light-btn {
+    border-color: #FF6347;
+    color: #FF6347;
+}
+
+i.operate-tip{
+	font-size: 0.5em;
+    float: left;
+    color: #700;
+    font-weight: bold;
 }

@@ -2,6 +2,7 @@ package cn.sowell.ddxyz.model.common.dao;
 
 import cn.sowell.ddxyz.model.common.core.ReceiverInfo;
 import cn.sowell.ddxyz.model.common.core.exception.OrderException;
+import cn.sowell.ddxyz.model.common.pojo.PlainOrder;
 import cn.sowell.ddxyz.model.common.pojo.PlainOrderReceiver;
 
 public interface CommonOrderDao {
@@ -18,5 +19,12 @@ public interface CommonOrderDao {
 	 * @param receiver
 	 */
 	void updateReceiverInfo(long id, ReceiverInfo receiver) throws OrderException;
+	
+	/**
+	 * 根据订单id获得订单信息
+	 * @param orderId
+	 * @return
+	 */
+	PlainOrder getPlainOrder(long orderId);
 
 }

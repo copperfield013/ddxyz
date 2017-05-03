@@ -5,6 +5,7 @@ import java.io.Serializable;
 import org.springframework.util.Assert;
 
 import cn.sowell.copframe.dto.format.FormatUtils;
+import cn.sowell.ddxyz.model.common.core.DeliveryManager;
 import cn.sowell.ddxyz.model.common.core.DispenseCode;
 import cn.sowell.ddxyz.model.common.core.Product;
 import cn.sowell.ddxyz.model.common.core.ProductDataHandler;
@@ -18,12 +19,14 @@ public class DefaultProduct implements Product{
 	private PlainProduct pProduct;
 	private DataPersistenceService dpService;
 	private ProductDataHandler optionHandler;
+	private DeliveryManager dManager;
 	
 	
 	public DefaultProduct(PlainProduct pProduct, DataPersistenceService dpService) {
 		Assert.notNull(pProduct);
 		this.pProduct = pProduct;
 		this.dpService = dpService;
+		this.dManager = dManager;
 	}
 	@Override
 	public Serializable getId() {
@@ -60,6 +63,7 @@ public class DefaultProduct implements Product{
 		String code = pProduct.getDispenseCode();
 		DefaultDispenseCode dCode = new DefaultDispenseCode();
 		dCode.setCode(code);
+		dCode.setKey(pProduct.getDispenseKey());
 		return dCode;
 		
 	}

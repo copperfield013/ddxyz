@@ -1,41 +1,44 @@
 package test.sowell.ddxyz.common.core;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.aspectj.weaver.ast.Or;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-
-import cn.sowell.copframe.utils.TextUtils;
+import cn.sowell.copframe.weixin.pay.paied.WxPayStatus;
 import cn.sowell.ddxyz.model.common.core.DefaultOrderPayParameter;
 import cn.sowell.ddxyz.model.common.core.DeliveryLocation;
 import cn.sowell.ddxyz.model.common.core.DeliveryManager;
 import cn.sowell.ddxyz.model.common.core.DeliveryTimePoint;
 import cn.sowell.ddxyz.model.common.core.Order;
 import cn.sowell.ddxyz.model.common.core.OrderParameter;
-import cn.sowell.ddxyz.model.common.core.OrderPayParameter;
 import cn.sowell.ddxyz.model.common.core.OrderToken;
 import cn.sowell.ddxyz.model.common.core.ProductItemParameter;
 import cn.sowell.ddxyz.model.common.core.ProductsParameter;
 import cn.sowell.ddxyz.model.common.core.exception.OrderException;
 import cn.sowell.ddxyz.model.common.core.impl.DefaultProductItemParameter;
 import cn.sowell.ddxyz.model.common.core.impl.DrinkDataHandler;
+import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlan;
 import cn.sowell.ddxyz.model.common.service.OrderService;
 import cn.sowell.ddxyz.model.drink.term.OrderTerm;
+import cn.sowell.ddxyz.model.merchant.service.DeliveryService;
 import cn.sowell.ddxyz.model.weixin.pojo.WeiXinUser;
 import cn.sowell.ddxyz.model.weixin.service.WeiXinUserService;
 
-/*@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath*:spring-config/spring-junit.xml")*/
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = "classpath*:spring-config/spring-junit.xml")
 public class OrderServiceTest {
 	@Resource
 	DeliveryManager dManager;
@@ -46,12 +49,13 @@ public class OrderServiceTest {
 	@Resource
 	WeiXinUserService userService;
 	
-	
+	@Resource
+	DeliveryService dService;
 	
 	@Test
 	public void applyOrderTest(){
 		//创建订单参数
-		OrderParameter orderParameter = new OrderParameter();
+		OrderParameter orderParameter = new OrderParameter(1l);
 		//设置下单的地址
 		orderParameter.setDeliveryLocation(new DeliveryLocation(1l));
 		//设置下单的时间点
@@ -149,7 +153,7 @@ public class OrderServiceTest {
 		JSONObject jo = JSON.parseObject("{\"deliveryLocationId\":1,\"timePoint\":{\"year\":2017,\"month\":3,\"hour\":13,\"date\":5},\"totalPrice\":5000,\"receiver\":{\"contact\":\"12345678\",\"name\":\"Copperfield\",\"address\":\"临时地址\"},\"items\":[{\"waresId\":1,\"waresName\":\"饮品\",\"drinkTypeId\":1,\"drinkTypeName\":\"奶茶\",\"cupCount\":5,\"sweetness\":1,\"heat\":1,\"cupSize\":2,\"perPrice\":1000,\"additions\":[{\"typeId\":1,\"name\":\"红豆\"},{\"typeId\":2,\"name\":\"珍珠\"}]},{\"waresId\":1,\"waresName\":\"饮品\",\"drinkTypeId\":2,\"drinkTypeName\":\"玛奇朵\",\"cupCount\":2,\"sweetness\":2,\"heat\":2,\"cupSize\":2,\"perPrice\":1200,\"additions\":[{\"typeId\":1,\"name\":\"波霸\"},{\"typeId\":2,\"name\":\"燕麦\"}]}]}");
 		
 		try {
-			OrderTerm term = OrderTerm.fromJson(dManager, jo);
+			OrderTerm term = OrderTerm.fromJson(dManager, 1l, jo);
 			WeiXinUser user = userService.getWeiXinUserByOpenid("ovZxms3dvkaZR2aFpmkWh2SxmCTY");
 			OrderToken orderToken = new OrderToken() {
 			};
@@ -165,11 +169,37 @@ public class OrderServiceTest {
 	
 	@Test
 	public void md5Test(){
-		String str = "appid=wx044790c2cb35fd68&body=点点新意-一点点奶茶&detail={\"goods_detail\":[{\"goods_name\":\"饮料\",\"price\":1000,\"quantity\":1}]}&fee_type=CNY&mch_id=1338312901&nonce_str=4248d0a8c5a44ad9a5d39ee9b2e9871a&notify_url=http://copperfield.s1.natapp.cc/ddxyz//pay/notify&openid=ovZxms3dvkaZR2aFpmkWh2SxmCTY&out_trade_no=23306ca6d21d45f681d914f758726c16&sign_type=MD5&spbill_create_ip=14.23.150.211&total_fee=1000&trade_type=JSAPI&key=sowellyidiandiannaicha1234567890";
-		System.out.println(TextUtils.md5Encode(str));
+		DateFormat df = new SimpleDateFormat("yyMMdd");
+		System.out.println(df.format(new Date()));
 	}
 	
 	
+	@Test
+	public void addPlan(){
+		PlainDeliveryPlan plan = new PlainDeliveryPlan();
+		plan.setMaxCount(50);
+		plan.setLeadMinutes(30);
+		plan.setWaresId(1l);
+		plan.setLocationId(1l);
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, 2014);
+		plan.setStartDate(cal.getTime());
+		cal.set(Calendar.YEAR, 2018);
+		plan.setEndDate(cal.getTime());
+		
+		plan.setPeriod("Y2017,2018。M3,4,5。W1,2,3。T13,16,18。");
+		dService.addPlan(plan);
+	}
 	
+	@Test
+	public void getDeliveries(){
+	}
+	
+	@Test
+	public void checkOrderPayStatus(){
+		Order order = orderService.getOrder(189l);
+		WxPayStatus status = order.checkWxPayStatus();
+		System.out.println(status);
+	}
 	
 }

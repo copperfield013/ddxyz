@@ -67,7 +67,8 @@ public class DataPersistenceServiceImpl implements DataPersistenceService{
 	public Order getOrder(Serializable orderKey) {
 		PlainOrder pOrder =  dpDao.getOrder((Long) orderKey);
 		if(pOrder != null){
-			DefaultOrder order = new DefaultOrder(pOrder, oManage, pManager, this);
+			Delivery delivery = dManager.getDelivery(pOrder.getDeliveryId());
+			DefaultOrder order = new DefaultOrder(pOrder, delivery, oManage, pManager, this);
 			//从数据库拿到这个订单的所有产品对象
 			List<PlainProduct> productList = dpDao.getProductsOfOrder((Long) orderKey);
 			Set<Product> productSet = new LinkedHashSet<Product>();
@@ -198,7 +199,7 @@ public class DataPersistenceServiceImpl implements DataPersistenceService{
 			for (Product product : productSet) {
 				//遍历所有产品，获得产品分发号，并且更新所有产品的分发号
 				DispenseCode dispenseCode = product.getDispenseCode();
-				dpDao.updateProductDispenseCodeAndOrdered((long) product.getId(), dispenseCode.getCode());
+				dpDao.updateProductDispenseCodeAndOrdered((long) product.getId(), dispenseCode);
 			}
 		} catch (Exception e) {
 			throw new ProductException("持久化产品下单状态时发生异常", e);

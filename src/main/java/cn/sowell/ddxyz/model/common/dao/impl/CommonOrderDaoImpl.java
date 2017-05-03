@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import cn.sowell.ddxyz.model.common.core.ReceiverInfo;
 import cn.sowell.ddxyz.model.common.core.exception.OrderException;
 import cn.sowell.ddxyz.model.common.dao.CommonOrderDao;
+import cn.sowell.ddxyz.model.common.pojo.PlainOrder;
 import cn.sowell.ddxyz.model.common.pojo.PlainOrderReceiver;
 
 @Service
@@ -54,6 +55,10 @@ public class CommonOrderDaoImpl implements CommonOrderDao{
 		} catch (HibernateException e) {
 			throw new OrderException("更新数据库中用户的收货人信息时出现异常", e);
 		}
+	}
+	@Override
+	public PlainOrder getPlainOrder(long orderId) {
+		return sFactory.getCurrentSession().get(PlainOrder.class, orderId);
 	}
 
 }

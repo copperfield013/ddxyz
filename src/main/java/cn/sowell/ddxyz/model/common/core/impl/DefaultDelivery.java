@@ -7,10 +7,12 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.apache.commons.collections.list.TreeList;
 import org.springframework.util.Assert;
 
 import cn.sowell.ddxyz.model.common.core.Delivery;
@@ -91,6 +93,7 @@ public class DefaultDelivery implements Delivery{
 	public void removeDispenseCode(DispenseCode dispenseCode) {
 		Assert.notNull(dispenseCode);
 		usableDispenseCodeMap.remove(dispenseCode.getKey());
+		dpService.updateDispensedCount(getId(), usableDispenseCodeMap.size());
 	}
 	
 	@Override
@@ -147,25 +150,28 @@ public class DefaultDelivery implements Delivery{
 	 * @return
 	 */
 	private List<Integer> getCanceledNos(int maxCount) {
-		List<Integer> result = new ArrayList<Integer>();
+		List<Integer> result = new LinkedList<Integer>();
 		Set<Integer> keySet = usableDispenseCodeMap.keySet();
-		Integer[] keys = keySet.toArray(new Integer[keySet.size()]);
-		for (int i = 0; i < keys.length - 1; i++) {
-			int c = keys[i], next = keys[i + 1];
-			for(int j = 1; j < next - c; i++){
-				if(maxCount-- <= 0) return result;
-				result.add(i + j);
+		int last = getLastNo();
+		int i = DISPENSE_START;
+		while(maxCount > 0 && i < last){
+			if(!keySet.contains(i)){
+				result.add(i);
+				maxCount--;
 			}
+			i++;
 		}
 		return result;
 	}
+	
+	private static int DISPENSE_START = 1;
 	/**
 	 * 获得最后一个编号的号码，无论这个编号对象是否取消状态
 	 * @return
 	 */
 	private int getLastNo() {
 		if(usableDispenseCodeMap.isEmpty()){
-			return 0;
+			return DISPENSE_START - 1;
 		}else{
 			return usableDispenseCodeMap.lastKey();
 		}

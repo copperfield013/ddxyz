@@ -35,7 +35,6 @@ public class PlainOrder implements OrderDetail{
 	@Column(name="order_user_id")
 	private Long orderUserId;
 	
-	
 	@Column(name="c_dispense_resource_req")
 	private String dispenseResourceRequest;
 	
@@ -74,6 +73,12 @@ public class PlainOrder implements OrderDetail{
 	
 	@Column(name="c_comment")
 	private String commment;
+	
+	@Column(name="c_pay_time")
+	private Date payTime;
+	
+	@Column(name="c_pay_expire_time")
+	private Date payExpireTime;
 	
 	@Column(name="create_time")
 	private Date createTime;
@@ -212,6 +217,18 @@ public class PlainOrder implements OrderDetail{
 	}
 	public void setTransactionId(String transactionId) {
 		this.transactionId = transactionId;
+	}
+	public Date getPayExpireTime() {
+		return payExpireTime;
+	}
+	public void setPayExpireTime(Date payExpireTime) {
+		this.payExpireTime = payExpireTime;
+	}
+	public Date getPayTime() {
+		return payTime;
+	}
+	public void setPayTime(Date payTime) {
+		this.payTime = payTime;
 	}
 	
 	

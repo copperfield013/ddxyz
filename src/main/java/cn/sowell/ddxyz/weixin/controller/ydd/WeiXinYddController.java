@@ -1,5 +1,7 @@
 package cn.sowell.ddxyz.weixin.controller.ydd;
 
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +27,6 @@ import cn.sowell.ddxyz.DdxyzConstants;
 import cn.sowell.ddxyz.model.common.core.DeliveryManager;
 import cn.sowell.ddxyz.model.common.core.DeliveryTimePoint;
 import cn.sowell.ddxyz.model.common.core.Order;
-import cn.sowell.ddxyz.model.common.core.OrderOperateResult;
 import cn.sowell.ddxyz.model.common.core.OrderToken;
 import cn.sowell.ddxyz.model.common.core.exception.OrderException;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
@@ -82,8 +83,9 @@ public class WeiXinYddController {
 		return WeiXinConstants.PATH_YDD + "/ydd_home.jsp";
 	}
 	
+	
 	@RequestMapping("/order")
-	public String order(Integer deliveryHour, Model model){
+	public String order(Integer deliveryHour, Long orderId, Model model){
 		UserIdentifier user = WxUtils.getCurrentUser(UserIdentifier.class);
 		long waresId = 1l;
 		//获得当天的所有配送
@@ -95,6 +97,15 @@ public class WeiXinYddController {
 		//获得饮料的所有可用加料
 		Map<Long, List<PlainDrinkAdditionType>> additionMap = drinkService.getAdditionMap(waresId);
 		PlainOrderReceiver receiverInfo = oService.getLastReceiverInfo(user.getId());
+		//如果传入订单主键，那么找到这个订单
+		if(orderId != null){
+			Order order = oService.getOrder(orderId);
+			Long userId = order.getOrderUser().getId();
+			if(user.getId().equals(userId)){
+				model.addAttribute("order", order);
+			}
+		}
+		model.addAttribute("isDebug", configService.isDebug());
 		model.addAttribute("deliveryMap", deliveryMap);
 		model.addAttribute("drinkTypes", drinkTypes);
 		model.addAttribute("teaAdditionMap", teaAdditionMap);
@@ -120,6 +131,19 @@ public class WeiXinYddController {
 		Map<Long, Boolean> refundableMap = drinkOrderService.getRefundableMap(CollectionUtils.toList(drinkList, (order) -> order.getId()));
 		model.addAttribute("refundableMap", refundableMap);
 		model.addAttribute("orderDrinkList", drinkList);
+		model.addAttribute("sweetnessMap", DdxyzConstants.SWEETNESS_MAP);
+		model.addAttribute("heatMap", DdxyzConstants.HEAT_MAP);
+		model.addAttribute("cupSizeMap", DdxyzConstants.CUP_SIZE_MAP);
+		model.addAttribute("currentTime", new Date());
+		return WeiXinConstants.PATH_YDD + "/ydd_order_data.jsp";
+	}
+	
+	@RequestMapping("/loadOrderItem")
+	public String loadOrderItem(Long orderId, Model model){
+		PlainDrinkOrder dOrder = drinkOrderService.getOrderItem(orderId);
+		Map<Long, Boolean> refundableMap = drinkOrderService.getRefundableMap(Arrays.asList(orderId));
+		model.addAttribute("refundableMap", refundableMap);
+		model.addAttribute("orderDrinkList", Arrays.asList(dOrder));
 		model.addAttribute("sweetnessMap", DdxyzConstants.SWEETNESS_MAP);
 		model.addAttribute("heatMap", DdxyzConstants.HEAT_MAP);
 		model.addAttribute("cupSizeMap", DdxyzConstants.CUP_SIZE_MAP);
@@ -179,21 +203,5 @@ public class WeiXinYddController {
 		}
 		return jRes;
 	}
-	
-	@ResponseBody
-	@RequestMapping("operateOrder")
-	public JsonResponse operateOrder(Long orderId, String operateType){
-		JsonResponse jRes = new JsonResponse();
-		UserIdentifier operateUser = WxUtils.getCurrentUser(UserIdentifier.class);
-		try {
-			OrderOperateResult result = oService.operateOrder(orderId, operateType, operateUser);
-			jRes.put("status", result.getStatus());
-		} catch (Exception e) {
-			logger.error("订单操作时出现异常", e);
-		}
-		return jRes;
-	}
-	
-	
 	
 }

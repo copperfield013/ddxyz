@@ -13,6 +13,7 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
+import cn.sowell.copframe.weixin.common.service.WxConfigService;
 import cn.sowell.ddxyz.model.common.core.Delivery;
 import cn.sowell.ddxyz.model.common.core.DeliveryKey;
 import cn.sowell.ddxyz.model.common.core.DeliveryLocation;
@@ -41,6 +42,9 @@ public class DefaultDeliveryManager implements DeliveryManager{
 	@Resource
 	DeliveryService dService;
 	
+	@Resource
+	WxConfigService configService;
+	
 	private Map<DeliveryKey, Delivery> deliveryMap = new LinkedHashMap<DeliveryKey, Delivery>();
 	
 	Logger logger = Logger.getLogger(DeliveryManager.class);
@@ -52,7 +56,7 @@ public class DefaultDeliveryManager implements DeliveryManager{
 		Map<DeliveryKey, Delivery> dMap = dpService.mergeDeliveries(map);
 		dMap.forEach((key, delivery) -> {
 			if(!deliveryMap.containsKey(key)){
-				deliveryMap.putAll(dMap);
+				deliveryMap.put(key, delivery);
 			}
 		});
 		return new ArrayList<Delivery>(dMap.values());
@@ -140,12 +144,18 @@ public class DefaultDeliveryManager implements DeliveryManager{
 		CheckResult result = new CheckResult(true, "检验成功");
 		//判断请求对应的配送是否存在
 		if(orderParameter.getDeliveryLocation() != null && orderParameter.getTimePoint() != null){
-			//获得对应的配送独享
 			Delivery delivery = getDelivery(orderParameter.getWaresId(), orderParameter.getTimePoint(), orderParameter.getDeliveryLocation());
 			if(delivery != null){
 				if(!delivery.isEnabled()){
 					return result.setResult(false, "时间点[" + orderParameter.getTimePoint() + "]和地点[" + orderParameter.getDeliveryLocation() + "]对应的配送对象[" + delivery.getId() + "]当前被禁用");
 				}
+				
+				DeliveryTimePoint timePoint = delivery.getTimePoint();
+				//获得对应的配送对象
+				if(timePoint.getClosed() && !configService.isDebug()){
+					return result.setResult(false, "配送时间点的关闭时间为[" + timePoint.getCloseTime() + "]，已过期");
+				}
+			
 				//检查请求中的资源是否足够
 				DispenseResourceRequest resourceReq = orderParameter.getDispenseResourceRequest();
 				int dispenseCount = resourceReq.getDispenseCount();

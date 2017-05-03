@@ -25,13 +25,22 @@ define(function(require, exports, module){
 				alert('页面已过期，请重新刷新');
 				return false;
 			}
+			if(order.getItems().length > 0){
+				if(!confirm('更改配送时间点，将会移除所有已选的饮料，是否继续？')){
+					//还原
+					$(this).val(order.getDelivery().getTimePoint().getHours());
+					return false;
+				}
+			}
 			var value = $(this).val();
 			var key = $('option[value="' + value + '"]', this).attr('data-key');
+			var $dLocation = $('.delivery-location');
+			$dLocation.removeClass('cview').val('').trigger('change', [true]);
+			$('.cup-remain-wrapper').hide();
+			cupRemain = -1;
 			if(key){
 				//根据配送时间点，显示对应的配送地点
-				var $dLocation = $('.delivery-location');
 				var $targetLocation = $dLocation.filter('[data-key="' + key + '"]');
-				$dLocation.removeClass('cview').val('');
 				$targetLocation.addClass('cview');
 				//设置对象的信息
 				date.setHours(Number(value));
@@ -40,7 +49,22 @@ define(function(require, exports, module){
 		}).trigger('change');
 		
 		//选择配送地点
-		$('.delivery-location').change(function(){
+		$('.delivery-location').change(function(e, ignoreConfirm){
+			if(!ignoreConfirm && order.getItems().length > 0){
+				if(!confirm('更改配送地点，将会移除所有已选的饮料，是否继续？')){
+					//还原
+					$(this).val(order.getDelivery().getLocation().getKey());
+					return false;
+				}
+			}
+			//重置饮料表单和订单
+			reInitForm();
+			$('.table-detail .data-row').remove();
+			order.removeAllOrderItem();
+			refreshOrderItems(order);
+			$('.cup-remain-wrapper').hide();
+			
+			cupRemain = -1;
 			var locationId = $(this).val();
 			var deliveryId = $('option[value="' + locationId + '"]', this).attr('data-did')
 			if(locationId && deliveryId){
@@ -64,6 +88,7 @@ define(function(require, exports, module){
 							cupRemain = json.remain;
 							$('#cup-remain').text(json.remain);
 						}
+						$('.cup-remain-wrapper').show();
 					}
 				});
 			}
@@ -193,7 +218,10 @@ define(function(require, exports, module){
 			}
 			//检查订单内条目信息
 			if(order.getItems().length == 0){
-				return alertMsg('请至少选择一杯饮料');
+				return alertMsg('请至少添加一杯饮料后再提交订单');
+			}
+			if(order.getTotalCupCount() > cupRemain){
+				return alertMsg('选择饮料总杯数大于该配送的当前可供余量');
 			}
 			showShade();
 			//生成提交后台的JSON
@@ -274,7 +302,6 @@ define(function(require, exports, module){
 				.end()
 				.find('.price b').text((order.getTotalPrice() / 100).toFixed(2))
 				;
-			console.log(order.toObject());
 		}
 		
 		function reInitForm(){
@@ -305,6 +332,7 @@ define(function(require, exports, module){
 				$shade.appendTo($('body'));
 			}
 		}
+		
 		
 	};
 	
@@ -434,6 +462,12 @@ define(function(require, exports, module){
 				orderItems.splice(index, 1);
 			}
 		}
+		/**
+		 * 移除订单所有条目
+		 */
+		this.removeAllOrderItem = function(){
+			orderItems.splice(0, orderItems.length);
+		};
 		
 		/**
 		 * 获得配送对象

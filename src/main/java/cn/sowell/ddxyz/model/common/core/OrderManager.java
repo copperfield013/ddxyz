@@ -3,6 +3,7 @@ package cn.sowell.ddxyz.model.common.core;
 import java.io.Serializable;
 
 import cn.sowell.copframe.common.UserIdentifier;
+import cn.sowell.copframe.weixin.pay.paied.WxPayStatus;
 import cn.sowell.ddxyz.model.common.core.exception.OrderException;
 import cn.sowell.ddxyz.model.common.core.impl.DefaultOrder;
 import cn.sowell.ddxyz.model.weixin.pojo.WeiXinUser;
@@ -97,4 +98,13 @@ public interface OrderManager {
 	 * @param refundParam
 	 */
 	void refundOrder(DefaultOrder defaultOrder, OrderRefundParameter refundParam) throws OrderException;
+
+
+
+	/**
+	 * 调用微信接口查询支付订单的付款状态
+	 * @param defaultOrder
+	 * @return
+	 */
+	WxPayStatus checkWxPayStatus(DefaultOrder defaultOrder);
 }

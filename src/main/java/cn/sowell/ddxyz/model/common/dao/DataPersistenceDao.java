@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import cn.sowell.ddxyz.model.common.core.DeliveryKey;
+import cn.sowell.ddxyz.model.common.core.DispenseCode;
 import cn.sowell.ddxyz.model.common.core.Order;
 import cn.sowell.ddxyz.model.common.core.exception.OrderException;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
@@ -94,9 +95,9 @@ public interface DataPersistenceDao {
 	/**
 	 * 更新产品的分发号
 	 * @param serializable 
-	 * @param code
+	 * @param dispenseCode
 	 */
-	void updateProductDispenseCodeAndOrdered(long productId, String code);
+	void updateProductDispenseCodeAndOrdered(long productId, DispenseCode dispenseCode);
 	/**
 	 * 持久化订单的退款状态和退款金额
 	 * @param orderId 订单主键

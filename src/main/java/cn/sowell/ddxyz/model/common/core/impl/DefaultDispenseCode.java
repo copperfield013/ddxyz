@@ -76,5 +76,4 @@ public class DefaultDispenseCode implements DispenseCode, Comparable<DispenseCod
 			throw new IllegalArgumentException("比较的dispenseCode的key类型不一致，对比的两个key的类型分别是[" + thisKey.getClass() + "]和[" + otherKey.getClass() + "]");
 		}
 	}
-
 }

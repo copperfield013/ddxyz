@@ -6,7 +6,8 @@ define(function(require, exports, module){
 	function bindPageEvent(){
 		console.log('cls');
 		$(document).on('click', '.operate-button', function(e){
-			var $this = $(this);
+			var $this = $(this),
+				$target = $(this).closest('.order');
 			var 
 				//订单id
 				orderId = $this.closest('[data-oid]').attr('data-oid'),
@@ -14,7 +15,7 @@ define(function(require, exports, module){
 				operateType = $this.attr('data-opr');
 			if(orderId && operateType){
 				//执行操作订单
-				operateOrder(orderId, operateType);
+				operateOrder(orderId, operateType, $target);
 			}
 			return false;
 		});
@@ -23,14 +24,14 @@ define(function(require, exports, module){
 	/**
 	 * 执行操作
 	 */
-	function operateOrder(orderId, operateType){
+	function operateOrder(orderId, operateType, $target){
 		var Ajax = require('ajax');
 		if(operateType === 'pay'){
 			var OrderPay = require('order/order-pay');
 			//从后台获得订单的预付款订单号
 			OrderPay.pay(orderId, function(){
 				alert('支付成功');
-				location.reload();
+				reloadOrder(orderId, $target);
 			});
 		}else if(operateType === 'complete'){
 			if(confirm('确认收货？')){
@@ -39,7 +40,7 @@ define(function(require, exports, module){
 				}, function(res){
 					if(res.status === 'suc'){
 						alert('操作成功');
-						location.reload();
+						reloadOrder(orderId, $target);
 					}else{
 						alert('操作失败');
 					}
@@ -51,35 +52,48 @@ define(function(require, exports, module){
 			Ajax.ajax('weixin/order/checkRefund', {
 				orderId		: orderId
 			}, function(res){
-				if(res.untreated === true){
-					if(confirm('检测到当前订单的产品还没有开始制作，将直接进行退款。继续？')){
+				if(res.canRefund === true){
+					if(confirm('检测到当前订单可以直接进行退款。继续？')){
 						Ajax.ajax('weixin/order/applyRefund', {
 							orderId		: orderId
 						}, function(refundRes){
-							if(refundRes.result === true){
+							if(refundRes.status === 'suc'){
 								alert('退款成功');
+								reloadOrder(orderId, $target);
+							}else{
+								alert('退款失败');
 							}
 						});
 					}
+				}else{
+					alert(res.errorReason);
 				}
 			});
-			
-			if(confirm('确认申请退款？')){
-				Ajax.ajax('weixin/order/applyRefund', {
-					orderId		: orderId
-				}, function(res){
-					if(res.refundSuc === true){
-						//退款成功
-						alert('检测到当前订单的产品还没有开始制作，将直接进行退款');
-						location.reload();
-					}else if(res.goRefundPage === true){
-						//跳转到申请退款的界面
-						
-					}
-				});
-			}
+		}else if(operateType === 'buy-again'){
+			//再次购买
+			//传递订单号到下单页面
+			//从后台获取再次购买该订单的产品的所有当天可用配送
+			//弹出页面显示所有可用配送
+			//选择配送后跳转到下单页面
+			location.href = 'weixin/ydd/order?orderId=' + orderId;
 		}
 	}
+	
+	/**
+	 * 异步重新从后台加载订单
+	 */
+	function reloadOrder(orderId, $target){
+		var Ajax = require('ajax');
+		Ajax.ajax('weixin/ydd/loadOrderItem', {
+			orderId	: orderId
+		}, function(res, resType){
+			if(resType === 'html'){
+				var $replace = $(res);
+				$target.replaceWith($replace);
+			}
+		});
+	}
+	
 	
 	bindPageEvent();
 });

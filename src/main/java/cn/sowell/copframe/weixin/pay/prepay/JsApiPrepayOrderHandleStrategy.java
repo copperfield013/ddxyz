@@ -1,9 +1,13 @@
 package cn.sowell.copframe.weixin.pay.prepay;
 
+import java.util.Date;
+
 import javax.annotation.Resource;
 
+import cn.sowell.copframe.dto.format.FrameDateFormat;
 import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.copframe.weixin.common.service.WxConfigService;
+import cn.sowell.copframe.weixin.pay.service.WxPayService;
 
 /**
  * 
@@ -21,6 +25,12 @@ public class JsApiPrepayOrderHandleStrategy implements PrepayOrderProcessStrateg
 	
 	@Resource(name="prepayTradeNoGenerator")
 	TradeNoGenerator tradeNoGenerator; 
+	
+	@Resource
+	FrameDateFormat dateFormat;
+	
+	@Resource
+	WxPayService payService;
 	
 	@Override
 	public boolean support(JsApiPrepayParameter parameter) {
@@ -46,6 +56,10 @@ public class JsApiPrepayOrderHandleStrategy implements PrepayOrderProcessStrateg
 		order.setDetail(parameter.getOrderDetail());
 		order.setOutTradeNo(tradeNoGenerator.generate(order, parameter));
 		order.setSpbillCreateIp("14.23.150.211");
+		Date expireTime = parameter.getExpireTime();
+		if(expireTime != null && expireTime.after(new Date())){
+			order.setTimeExpire(dateFormat.format(expireTime, "yyyyMMddHHmmss"));
+		}
 		return order;
 	}
 

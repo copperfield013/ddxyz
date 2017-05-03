@@ -92,5 +92,9 @@ public class DeliveryTimePoint {
 	public String toString() {
 		return getDatetime().toString();
 	}
+
+	public Date getCloseTime() {
+		return (Date) this.closeTime.clone();
+	}
 	
 }

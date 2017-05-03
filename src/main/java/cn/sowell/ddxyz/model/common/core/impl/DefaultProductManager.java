@@ -218,6 +218,7 @@ public class DefaultProductManager implements ProductManager, InitializingBean{
 	 * @param statusOrdered
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private CheckResult checkOrderProductsToCancelStatus(Order order, String toCancelStatus) {
 		CheckResult result = new CheckResult(true, "检测成功");
 		Set<Product> products = order.getProductSet();

@@ -35,6 +35,8 @@ import cn.sowell.copframe.utils.HttpRequestUtils;
 import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.copframe.weixin.common.service.WxConfigService;
 import cn.sowell.copframe.weixin.pay.exception.WeiXinPayException;
+import cn.sowell.copframe.weixin.pay.paied.WxPayStatus;
+import cn.sowell.copframe.weixin.pay.paied.WxPayStatusParam;
 import cn.sowell.copframe.weixin.pay.prepay.GoodsDetail;
 import cn.sowell.copframe.weixin.pay.prepay.H5PayParameter;
 import cn.sowell.copframe.weixin.pay.prepay.JsApiPrepayParameter;
@@ -71,7 +73,9 @@ public class WxPayServiceImpl implements WxPayService{
 	XMLConverter<UnifiedOrder> unifiedOrderConverter = new XMLConverter<UnifiedOrder>();
 	XMLConverter<PrepayResult> prepayResultConverter = new XMLConverter<PrepayResult>();
 	XMLConverter<RefundRequest> refundReqConverter = new XMLConverter<RefundRequest>();
-	private XMLConverter<RefundResult> refundResultConverter = new XMLConverter<RefundResult>();
+	XMLConverter<RefundResult> refundResultConverter = new XMLConverter<RefundResult>();
+	XMLConverter<WxPayStatusParam> wxPayStatusParamConverter = new XMLConverter<WxPayStatusParam>();
+	XMLConverter<WxPayStatus> wxPayStatusConverter = new XMLConverter<WxPayStatus>();
 	
 	Logger logger = Logger.getLogger(WxPayService.class);
 
@@ -165,6 +169,8 @@ public class WxPayServiceImpl implements WxPayService{
 				}
 				orderDetail.setGoodsDetail(goodsDetails);
 				parameter.setOrderDetail(orderDetail);
+				
+				parameter.setExpireTime(order.getPayExpireTime());
 				return parameter;
 			}else{
 				throw new WeiXinPayException("订单对象中OrderUser的open为空");
@@ -201,7 +207,6 @@ public class WxPayServiceImpl implements WxPayService{
 			//判断计算覆盖签名
 			replaceSignature(replaceSignature, xml, refundReq);
 			//请求并返回结果对象
-			//XmlNode returnXML = HttpRequestUtils.postXMLAndReturnXML(SystemConstants.WXPAY_REFUND_URL, xml);
 			XmlNode returnXML = null;
 			try {
 				returnXML = doRefund(xml);
@@ -303,5 +308,41 @@ public class WxPayServiceImpl implements WxPayService{
 			httpclient.close();
 		}
 	}
+	
+	@Override
+	public WxPayStatus checkPayStatus(String outTradeNo){
+		Assert.hasText(outTradeNo);
+		WxPayStatus status = new WxPayStatus();
+		XmlNode paramXML;
+		try {
+			paramXML = buildCheckPayStatusParam(outTradeNo);
+		} catch (XMLException e) {
+			logger.error("微信支付订单查询参数构造时出现异常", e);
+			return null;
+		}
+		XmlNode returnXML = HttpRequestUtils.postXMLAndReturnXML(SystemConstants.WXPAY_ORDER_QUERY, paramXML);
+		if(returnXML != null){
+			return wxPayStatusConverter.parse(returnXML, status);
+		}else{
+			logger.error("微信支付订单查询返回数据有误");
+			return null;
+		}
+	}
+
+	private XmlNode buildCheckPayStatusParam(String outTradeNo) throws XMLException {
+		WxPayStatusParam param = new WxPayStatusParam();
+		param.setAppid(configService.getAppid());
+		param.setMerchantId(configService.getMerchantId());
+		param.setOutTradeNo(outTradeNo);
+		param.setNonceStr(TextUtils.uuid());
+		XMLConvertConfig config = new XMLConvertConfig();
+		config.addRequiredIgnored("sign");
+		//将请求参数转换为xml对象
+		XmlNode xml = wxPayStatusParamConverter.doConvert(param, config);
+		//判断计算覆盖签名
+		replaceSignature(true, xml, param);
+		return xml;
+	}
+
 	
 }

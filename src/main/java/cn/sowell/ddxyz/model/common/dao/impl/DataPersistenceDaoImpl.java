@@ -24,6 +24,7 @@ import cn.sowell.copframe.dao.deferedQuery.HibernateRefrectResultTransformer;
 import cn.sowell.ddxyz.model.common.core.DeliveryKey;
 import cn.sowell.ddxyz.model.common.core.DeliveryLocation;
 import cn.sowell.ddxyz.model.common.core.DeliveryTimePoint;
+import cn.sowell.ddxyz.model.common.core.DispenseCode;
 import cn.sowell.ddxyz.model.common.core.Order;
 import cn.sowell.ddxyz.model.common.core.OrderDetail;
 import cn.sowell.ddxyz.model.common.core.Product;
@@ -159,10 +160,11 @@ public class DataPersistenceDaoImpl implements DataPersistenceDao{
 	}
 	
 	@Override
-	public void updateProductDispenseCodeAndOrdered(long productId, String code) {
-		String sql = "update t_product_base set c_dispense_code = :dispenseCode, c_status = :status where id = :productId";
+	public void updateProductDispenseCodeAndOrdered(long productId, DispenseCode code) {
+		String sql = "update t_product_base set c_dispense_code = :dispenseCode, c_dispense_key = :dispenseKey, c_status = :status where id = :productId";
 		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
-		query.setString("dispenseCode", code)
+		query.setString("dispenseCode", code.getCode())
+			.setInteger("dispenseKey", (int) code.getKey())
 			.setInteger("status", Product.STATUS_ORDERED)
 			.setLong("productId", productId);
 		query.executeUpdate();

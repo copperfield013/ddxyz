@@ -13,6 +13,8 @@ import cn.sowell.ddxyz.model.common.core.OrderParameter;
 import cn.sowell.ddxyz.model.common.core.OrderRefundParameter;
 import cn.sowell.ddxyz.model.common.core.OrderToken;
 import cn.sowell.ddxyz.model.common.core.exception.OrderException;
+import cn.sowell.ddxyz.model.common.core.result.CheckResult;
+import cn.sowell.ddxyz.model.common.pojo.PlainOrder;
 import cn.sowell.ddxyz.model.common.pojo.PlainOrderReceiver;
 import cn.sowell.ddxyz.model.weixin.pojo.WeiXinUser;
 /**
@@ -62,6 +64,12 @@ public interface OrderService {
 	Order getOrder(Serializable orderKey);
 
 	/**
+	 * 根据订单id从数据库中查询订单信息
+	 * @param orderId
+	 * @return
+	 */
+	PlainOrder getPlainOrder(long orderId);
+	/**
 	 * 根据用户的id获得其最近的收货信息
 	 * @param userId
 	 * @return
@@ -94,6 +102,14 @@ public interface OrderService {
 
 
 	void refundOrder(Order order, OrderRefundParameter refundParam) throws OrderException;
+
+	/**
+	 * 检查
+	 * @param order
+	 * @param refundParam
+	 * @return
+	 */
+	CheckResult checkOrderRefund(Order order, OrderRefundParameter refundParam);
 
 
 

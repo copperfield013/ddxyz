@@ -22,6 +22,12 @@ public class PlainDrinkOrder {
 	
 	private String canceledStatus;
 	
+	private Date timePoint;
+	
+	private String locationName;
+	
+	private Date payExpireTime;
+	
 	private List<PlainOrderDrinkItem> orderDrinkItems = new ArrayList<PlainOrderDrinkItem>();
 	
 	public String getOrderCode() {
@@ -86,6 +92,30 @@ public class PlainDrinkOrder {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public Date getTimePoint() {
+		return timePoint;
+	}
+
+	public void setTimePoint(Date timePoint) {
+		this.timePoint = timePoint;
+	}
+
+	public String getLocationName() {
+		return locationName;
+	}
+
+	public void setLocationName(String locationName) {
+		this.locationName = locationName;
+	}
+
+	public Date getPayExpireTime() {
+		return payExpireTime;
+	}
+
+	public void setPayExpireTime(Date payExpireTime) {
+		this.payExpireTime = payExpireTime;
 	}
 
 

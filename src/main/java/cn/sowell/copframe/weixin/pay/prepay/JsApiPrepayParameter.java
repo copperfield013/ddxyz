@@ -1,5 +1,7 @@
 package cn.sowell.copframe.weixin.pay.prepay;
 
+import java.util.Date;
+
 /**
  * 
  * <p>Title: JsApiPrepayParameter</p>
@@ -29,6 +31,11 @@ public class JsApiPrepayParameter implements PrepayParameter{
 	 */
 	private OrderDetail orderDetail;
 	
+	/**
+	 * 设置过期时间
+	 */
+	private Date expireTime;
+	
 	public String getOpenId() {
 		return openId;
 	}
@@ -52,6 +59,12 @@ public class JsApiPrepayParameter implements PrepayParameter{
 	}
 	public void setOrderDetail(OrderDetail orderDetail) {
 		this.orderDetail = orderDetail;
+	}
+	public Date getExpireTime() {
+		return expireTime;
+	}
+	public void setExpireTime(Date expireTime) {
+		this.expireTime = expireTime;
 	}
 
 }

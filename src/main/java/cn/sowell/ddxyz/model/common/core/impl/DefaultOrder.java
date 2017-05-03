@@ -1,6 +1,7 @@
 package cn.sowell.ddxyz.model.common.core.impl;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -10,6 +11,8 @@ import java.util.Set;
 import org.springframework.util.Assert;
 
 import cn.sowell.copframe.common.UserIdentifier;
+import cn.sowell.copframe.weixin.pay.paied.WxPayStatus;
+import cn.sowell.ddxyz.model.common.core.Delivery;
 import cn.sowell.ddxyz.model.common.core.DeliveryLocation;
 import cn.sowell.ddxyz.model.common.core.DeliveryTimePoint;
 import cn.sowell.ddxyz.model.common.core.DispenseResourceRequest;
@@ -45,9 +48,11 @@ public class DefaultOrder implements Order{
 	private DataPersistenceService dpService;
 	private ProductManager productManager;
 	private OrderManager oManager;
+	private Delivery delivery;
 	
-	public DefaultOrder(PlainOrder pOrder, OrderManager oManager, ProductManager productManager, DataPersistenceService dpService) {
+	public DefaultOrder(PlainOrder pOrder, Delivery delivery, OrderManager oManager, ProductManager productManager, DataPersistenceService dpService) {
 		Assert.notNull(pOrder);
+		Assert.notNull(delivery);
 		Assert.notNull(oManager);
 		Assert.notNull(productManager);
 		Assert.notNull(dpService);
@@ -55,6 +60,7 @@ public class DefaultOrder implements Order{
 		this.oManager = oManager;
 		this.productManager = productManager;
 		this.dpService = dpService;
+		this.delivery = delivery;
 	}
 	
 	@Override
@@ -129,7 +135,17 @@ public class DefaultOrder implements Order{
 
 	@Override
 	public synchronized void pay(OrderPayParameter payParam) throws OrderException{
-		oManager.payOrder(this, payParam);
+		if(!getPayExpired()){
+			WxPayStatus payStatus = checkWxPayStatus();
+			//调用微信支付查询订单接口，检查付款是否完成
+			if("SUCCESS".equals(payStatus.getTradeState())){
+				oManager.payOrder(this, payParam);
+			}else{
+				throw new OrderException("该订单尚未成功支付，不可设置订单状态。该订单微信交易状态[" + payStatus.getTradeState() + ":" + payStatus.getTradeStateDesc() + "]");
+			}
+		}else{
+			throw new OrderException("订单已超出可支付时间，订单的最晚支付时间为[" + getPayExpireTime() + "]");
+		}
 	}
 	
 	public void doPay(OrderPayParameter payParameter) throws OrderException {
@@ -254,8 +270,8 @@ public class DefaultOrder implements Order{
 		
 		
 	}
-	
-	private CheckResult checkRefundable(OrderRefundParameter refundParam){
+	@Override
+	public CheckResult checkRefundable(OrderRefundParameter refundParam){
 		CheckResult result = new CheckResult(true, "检测成功");
 		//订单退款只要是在订单支付完成之后都可以操作
 		//退款的金额只要小于等于原本订单支付的总价即可
@@ -295,6 +311,7 @@ public class DefaultOrder implements Order{
 		for (Product product : productSet) {
 			//将产品的退款设置为当前价格
 			product.setRefundFeeWithoutPersistence(-1);
+			delivery.removeDispenseCode(product.getDispenseCode());
 		}
 		pOrder.setRefundFee(refundFee);
 	}
@@ -434,6 +451,12 @@ public class DefaultOrder implements Order{
 		}
 		return this.dispenseResourceRequest;
 	}
+	
+	@Override
+	public WxPayStatus checkWxPayStatus(){
+		return oManager.checkWxPayStatus(this);
+	}
+	
 
 	@Override
 	public void setActualPay(Integer actualPay) {
@@ -481,5 +504,19 @@ public class DefaultOrder implements Order{
 	}
 	
 	
+	@Override
+	public Date getPayExpireTime() {
+		return pOrder.getPayExpireTime();
+	}
+	
+	@Override
+	public void setPayExpireTime(Date payExpireTime) {
+		pOrder.setPayExpireTime(payExpireTime);
+	}
+	
+	@Override
+	public boolean getPayExpired() {
+		return (new Date()).compareTo(getPayExpireTime()) > 0;
+	}
 
 }

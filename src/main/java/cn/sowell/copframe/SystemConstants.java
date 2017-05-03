@@ -13,4 +13,13 @@ public interface SystemConstants {
 	 * 微信退款接口
 	 */
 	String WXPAY_REFUND_URL = "https://api.mch.weixin.qq.com/secapi/pay/refund";
+	
+	/**
+	 * 微信订单查询接口
+	 */
+	String WXPAY_ORDER_QUERY = "https://api.mch.weixin.qq.com/pay/orderquery";
+	/**
+	 * 微信支付的预付款订单的可支付的最长时间（单位：秒）
+	 */
+	Integer WX_PAY_MAX_INTERVAL = 2 * 60 * 60;
 }

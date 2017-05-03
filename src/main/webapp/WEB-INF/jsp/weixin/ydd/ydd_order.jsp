@@ -18,6 +18,9 @@
 		    color: #f00;
 		    margin-left: 5%;
     	}
+    	.cup-remain-wrapper{
+    		display: none;
+    	}
     	.tea-addition-type-wrapper{
     		display: none;
     	}
@@ -57,7 +60,9 @@
             <dd><select id="timePoint">
             	<option value="">请选择</option>
             	<c:forEach items="${deliveryMap }" var="item">
-            		<option data-key="${item.key.key }" value="${item.key.hour }">${item.key.hour }点</option>
+            		<c:if test="${isDebug || item.key.closed }">
+	            		<option data-key="${item.key.key }" value="${item.key.hour }">${item.key.hour }点</option>
+            		</c:if>
             	</c:forEach>
             </select></dd>
         </dl>
@@ -65,25 +70,27 @@
             <dt>配送地址</dt>
             <dd>
             	<c:forEach items="${deliveryMap }" var="item">
-            		<select class="delivery-location" data-key="${item.key.key }" >
-            			<option value="">请选择</option>
-            			<c:forEach items="${item.value }" var="delivery">
-            				<option value="${delivery.locationId }" data-did="${delivery.id }">${delivery.locationName }</option>
-            			</c:forEach>
-	            	</select>
+            		<c:if test="${isDebug || item.key.closed }">
+	            		<select class="delivery-location" data-key="${item.key.key }" >
+	            			<option value="">请选择</option>
+	            			<c:forEach items="${item.value }" var="delivery">
+	            				<option value="${delivery.locationId }" data-did="${delivery.id }">${delivery.locationName }</option>
+	            			</c:forEach>
+		            	</select>
+            		</c:if>
             	</c:forEach>
             </dd>
         </dl>
         <dl class="text">
             <dt>联系号码</dt>
             <dd>
-                <input id="telphone" type="text" name="telphone" placeholder="请输入" value="${receiverInfo.receiverContact }">
+                <input id="telphone" type="number" name="telphone" placeholder="请输入" value="${receiverInfo.receiverContact }">
             </dd>
         </dl>
     </div>
     <!-- 奶茶详情 -->
     <div class="good-info">
-        <h4>饮料详情<span class="tit-desc">当前可供余量：<span id="cup-remain">50</span>杯</span></h4>
+        <h4>饮料详情<span class="tit-desc cup-remain-wrapper">当前可供余量：<span id="cup-remain">50</span>杯</span></h4>
         <dl class="select">
             <dt>饮料种类</dt>
             <dd><select id="drink-type">
@@ -170,7 +177,7 @@
 <script>
 $(function(){
 	$('input[type="radio"],input[type="checkbox"]').xcheck();
-	$('input[type="number"]').xnumber();
+	$('#cupCount').xnumber();
 	seajs.use('ydd/ydd-order.js?${RES_STAMP}');
 	$('#timePoint').val('${deliveryHour}');
 });

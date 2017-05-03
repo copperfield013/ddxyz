@@ -1,11 +1,13 @@
 package cn.sowell.ddxyz.model.common.core;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Set;
 
 import org.springframework.util.Assert;
 
 import cn.sowell.copframe.common.UserIdentifier;
+import cn.sowell.copframe.weixin.pay.paied.WxPayStatus;
 import cn.sowell.ddxyz.model.common.core.exception.OrderException;
 import cn.sowell.ddxyz.model.common.core.result.CheckResult;
 import cn.sowell.ddxyz.model.weixin.pojo.WeiXinUser;
@@ -191,6 +193,12 @@ public interface Order {
 	DispenseResourceRequest getDispenseResourceRequest();
 	
 	/**
+	 * 检查订单是否可以退款
+	 * @param refundParam
+	 * @return
+	 */
+	CheckResult checkRefundable(OrderRefundParameter refundParam);
+	/**
 	 * 订单默认状态
 	 */
 	final int STATUS_DEFAULT = 0;
@@ -280,7 +288,22 @@ public interface Order {
 	 * @return
 	 */
 	String getTransactionId();
+	/**
+	 * 获得支付订单的过期时间
+	 * @return
+	 */
+	public Date getPayExpireTime();
+	/**
+	 * 判断当前是否已经超出支付订单的过期时间
+	 * @return
+	 */
+	public boolean getPayExpired();
 	
+	/**
+	 * 设置支付订单的过期时间
+	 * @param payExpireTime
+	 */
+	public void setPayExpireTime(Date payExpireTime);
 	
 	/**
 	 * 检测订单是否能够修改为toStatus状态
@@ -358,6 +381,10 @@ public interface Order {
 		return result;
 	}
 	
+	/**
+	 * 检查微信订单的支付状态
+	 */
+	WxPayStatus checkWxPayStatus();
 	
 	
 }

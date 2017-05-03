@@ -15,6 +15,7 @@ import cn.sowell.copframe.weixin.pay.service.WxPayService;
 import cn.sowell.ddxyz.model.common.core.Order;
 import cn.sowell.ddxyz.model.common.core.OrderRefundParameter;
 import cn.sowell.ddxyz.model.common.core.exception.OrderException;
+import cn.sowell.ddxyz.model.common.core.result.CheckResult;
 import cn.sowell.ddxyz.model.common.service.OrderService;
 import cn.sowell.ddxyz.weixin.WeiXinConstants;
 
@@ -61,6 +62,27 @@ public class WeiXinOrderController {
 		return response;
 	}
 	
+	
+	@ResponseBody
+	@RequestMapping("/checkRefund")
+	public JsonResponse checkRefund(Long orderId){
+		JsonResponse jRes = new JsonResponse();
+		Order order = oService.getOrder(orderId);
+		if(order != null){
+			OrderRefundParameter refundParam = new OrderRefundParameter();
+			UserIdentifier operateUser = WxUtils.getCurrentUser(UserIdentifier.class);
+			refundParam.setOperateUser(operateUser);
+			refundParam.setRefundFee(order.getTotalPrice());
+			CheckResult cResult = oService.checkOrderRefund(order, refundParam);
+			if(cResult.isSuc()){
+				jRes.put("canRefund", true);
+			}else{
+				jRes.put("errorReason", cResult.getReason());
+			}
+		}
+		return jRes;
+	}
+	
 	@ResponseBody
 	@RequestMapping("/applyRefund")
 	public JsonResponse doOrderRefund(Long orderId){
@@ -91,4 +113,7 @@ public class WeiXinOrderController {
 	public String paiedNotify(){
 		return null;
 	}
+	
+	
+	
 }

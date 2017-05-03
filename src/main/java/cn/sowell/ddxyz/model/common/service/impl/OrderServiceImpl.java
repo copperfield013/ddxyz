@@ -31,6 +31,7 @@ import cn.sowell.ddxyz.model.common.core.ProductManager;
 import cn.sowell.ddxyz.model.common.core.exception.OrderException;
 import cn.sowell.ddxyz.model.common.core.result.CheckResult;
 import cn.sowell.ddxyz.model.common.dao.CommonOrderDao;
+import cn.sowell.ddxyz.model.common.pojo.PlainOrder;
 import cn.sowell.ddxyz.model.common.pojo.PlainOrderReceiver;
 import cn.sowell.ddxyz.model.common.service.OrderService;
 import cn.sowell.ddxyz.model.weixin.pojo.WeiXinUser;
@@ -160,5 +161,16 @@ public class OrderServiceImpl implements OrderService{
 	public void refundOrder(Order order, OrderRefundParameter refundParam)
 			throws OrderException {
 		order.refund(refundParam);
+	}
+
+	@Override
+	public PlainOrder getPlainOrder(long orderId) {
+		return oDao.getPlainOrder(orderId);
+	}
+	
+	@Override
+	public CheckResult checkOrderRefund(Order order,
+			OrderRefundParameter refundParam) {
+		return order.checkRefundable(refundParam);
 	}
 }

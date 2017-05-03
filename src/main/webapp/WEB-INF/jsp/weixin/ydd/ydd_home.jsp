@@ -38,7 +38,7 @@
 	                <img src="${basePath }${drinkType.pictureUri }" alt="奶茶1">
 	                <span class="name">${drinkType.name }</span>
 	                <span class="price">
-	                    <b>￥<fmt:formatNumber value="${drinkType.basePrice / 100}" pattern="0.0" />元/杯</b><i>（大杯+￥3）</i>
+	                    <b>￥<fmt:formatNumber value="${drinkType.basePrice / 100}" pattern="0.00" />元/杯</b><i>（大杯+3元）</i>
 	                </span>
 	            </p>
             </c:forEach>

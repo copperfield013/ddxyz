@@ -43,4 +43,11 @@ public interface DrinkOrderService {
 	 * @return
 	 */
 	Map<Long, Boolean> getRefundableMap(List<Long> orderIdList);
+
+	/**
+	 * 根据订单号获得
+	 * @param orderId
+	 * @return
+	 */
+	PlainDrinkOrder getOrderItem(Long orderId);
 }

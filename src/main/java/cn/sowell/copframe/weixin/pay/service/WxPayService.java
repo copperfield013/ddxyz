@@ -1,6 +1,7 @@
 package cn.sowell.copframe.weixin.pay.service;
 
 import cn.sowell.copframe.weixin.pay.exception.WeiXinPayException;
+import cn.sowell.copframe.weixin.pay.paied.WxPayStatus;
 import cn.sowell.copframe.weixin.pay.prepay.H5PayParameter;
 import cn.sowell.copframe.weixin.pay.prepay.JsApiPrepayParameter;
 import cn.sowell.copframe.weixin.pay.prepay.PrepayParameter;
@@ -69,5 +70,10 @@ public interface WxPayService {
 	RefundRequest buildRefundRequest(OrderRefundParameter refundParam,
 			Order order);
 	
+	/**
+	 * 从微信服务器检查订单的支付状态
+	 * @return
+	 */
+	WxPayStatus checkPayStatus(String outTrandeNo);
 	
 }

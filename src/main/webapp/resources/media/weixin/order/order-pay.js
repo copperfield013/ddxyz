@@ -12,8 +12,6 @@ define(function(require, exports, module){
 						sendOrderPaiedReq(orderId, 0, whenSuc, whenFail);
 					}else{
 						whenCancel();
-						//alert('支付失败');
-						//location.href = 'weixin/ydd/orderList';
 					}
 				});
 			}
@@ -29,10 +27,7 @@ define(function(require, exports, module){
 			}, function(setOrderPaiedRes){
 				//订单状态更改情况
 				if(setOrderPaiedRes.status === 'suc'){
-					//后台支付成功
-					//alert('支付成功');
 					whenSuc();
-					//location.href = 'weixin/ydd/orderList';
 				}else{
 					//后台状态更新失败时，重新提交
 					sendOrderPaiedReq(orderId, ++counter, whenSuc, whenFail);
@@ -40,7 +35,6 @@ define(function(require, exports, module){
 			});
 		}else{
 			whenFail();
-			//location.href = 'weixin/ydd/orderList';
 		}
 	}
 	
