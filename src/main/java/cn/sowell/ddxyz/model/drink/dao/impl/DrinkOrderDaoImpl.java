@@ -73,5 +73,35 @@ public class DrinkOrderDaoImpl implements DrinkOrderDao {
 		QueryUtils.setPagingParamWithCriteria(query, pageInfo);
 		return query.list();
 	}
+	
+	
+	@SuppressWarnings({ "serial", "unchecked" })
+	public List<PlainOrderDrinkItem> getOrderDrinkItemList(){
+		Session session = sFactory.getCurrentSession();
+		String sql = "SELECT "
+				+ "p.c_price, d.id, d.c_drink_type_name,d.c_tea_addition_name, d.c_sweetness, d.c_heat, d.c_cup_size "
+				+ "FROM "
+				+ "t_product_base p, t_drink_product d, t_order_base o "
+				+ "WHERE p.id = d.product_id "
+				+ "AND o.c_status <> 0 "
+				+ "AND o.c_canceled_status is null"
+				+ "AND p.c_status = '1'";
+		SQLQuery query = session.createSQLQuery(sql);
+		query.setResultTransformer(new ColumnMapResultTransformer<PlainOrderDrinkItem>() {
+			@Override
+			protected PlainOrderDrinkItem build(SimpleMapWrapper mapWrapper) {
+				PlainOrderDrinkItem item = new PlainOrderDrinkItem();
+				item.setDrinkProductId(mapWrapper.getLong("id"));
+				item.setDrinkName(mapWrapper.getString("c_drink_type_name"));
+				item.setPrice(mapWrapper.getInteger("c_price"));
+				item.setTeaAdditionName(mapWrapper.getString("c_tea_addition_name"));
+				item.setSweetness(mapWrapper.getInteger("c_sweetness"));
+				item.setHeat(mapWrapper.getInteger("c_heat"));
+				item.setCupSize(mapWrapper.getInteger("c_cup_size"));
+				return item;
+			}
+		});
+		return query.list();
+	}
 
 }

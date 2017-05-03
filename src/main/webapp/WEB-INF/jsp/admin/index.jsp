@@ -82,6 +82,12 @@
                                	</li>
 							</ul>
 	                    </li>
+	                    <li>
+	                        <a href="admin/production/product-list" class="menu-dropdown tab" target="product_list" title="生产管理">
+	                        	<i class="menu-icon fa fa-desktop"></i>
+	                            <span class="menu-text">生产管理</span>
+	                        </a>
+	                    </li>
 					</ul>
 				</div>
 				<div class="page-content">

@@ -156,3 +156,26 @@ li.main-tab-title>a{
 	left: 35%;
 }
 
+/* 列表页模块 */
+th,td{
+	text-align: center;
+}
+label.form-control-title {
+	display: inline-block;
+    height: 2.5em;
+    line-height: 2.5em;
+    margin-bottom: 0;
+    margin-right: 0.5em;
+    margin-left: 1em;
+}
+
+.daterangepicker .ranges .range_inputs>div:nth-child(2) {
+    padding-left: 0;
+}
+.daterangepicker .ranges .input-mini {
+    width: 12em;
+}
+.daterangepicker select.hourselect, .daterangepicker select.minuteselect, .daterangepicker select.ampmselect {
+    width: 5em;
+    margin-bottom: 0;
+}
