@@ -7,6 +7,13 @@ define(function(require, exports){
 		isInteger	: function(o){
 			return (o | 0) == o;
 		},
+		isInt: function(str){
+			try{
+				return isInteger(Number(str));
+			}catch{
+				return false;
+			}
+		},
 		trim		: function(str){
 			if(typeof str === 'string'){
 				return str.trim();
@@ -168,12 +175,16 @@ define(function(require, exports){
 			var $position
 			if(position instanceof $){
 				$position = position;
+			}else if(position === 0){
+				$position = $container.children('div,span').first();
 			}else{
 				$position = $container.children().last()
 			}
-			$container.scrollTop(
-				$position.offset().top - $container.offset().top + $container.scrollTop()
-			);
+			if($container.offset() && $position.offset()){
+				$container.scrollTop(
+						$position.offset().top - $container.offset().top + $container.scrollTop()
+				);
+			}
 		},
 		createPrintTemp	: function(){
 			//创建打印模板，需要
