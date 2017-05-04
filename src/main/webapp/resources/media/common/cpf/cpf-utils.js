@@ -10,7 +10,7 @@ define(function(require, exports){
 		isInt: function(str){
 			try{
 				return exports.isInteger(Number(str));
-			}catch{
+			}catch(e){
 				return false;
 			}
 		},
