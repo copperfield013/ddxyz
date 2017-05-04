@@ -25,7 +25,7 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public List<ProductInfoItem> getProductInfoItemList(ProductionCriteria criteria) {
-		List<ProductInfoItem> list = productDao.getProductInfoItemList(criteria);
+		List<ProductInfoItem> list = productDao.getProductInfoItemPageList(criteria, null);
 		return setProductInfoItemAdditions(list);
 	}
 

@@ -30,14 +30,18 @@
 							</select>
 						</span>
 						<span>
-							<input id="check-all" type="button" value="勾选全部" >
-							<input id="uncheck-all" type="button" value="取消勾选"/>
-						</span>
-						<span>
-							<input id="print-checked" type="button" value="打印勾选" />
-						</span>
-						<span>
 							<input id="confirm" class="btn" style="width:4em;" type="submit" value="确定"/>
+						</span>
+						<span>
+							<input id="check-all" type="button" class="btn" style="width:6em;" type="submit" value="勾选全部" >
+							<input id="uncheck-all" type="button" class="btn" style="width:6em;" type="submit" value="取消勾选"/>
+						</span>
+						<span>
+							<input id="print-checked" type="button"class="btn" style="width:6em;" type="submit" value="打印勾选" />
+						</span>
+						<span>
+							选择打印前<input type="text" id="printCount"  name="printCount" css-width="3em"/>
+							<input id="print-count" type="button" class="btn" style="width:4em;" type="submit" value="打印">
 						</span>
 					</div>
 				</form>
@@ -79,34 +83,9 @@
 								</div>
 							</li>
 						</c:forEach>
-						<!-- <li class="product-item">
-							<div class="order-info">
-								<span class="order-code">订单编号:M12345678</span>
-								<span class="order-status">[已发货]</span>
-								<div class="order-time">
-									<span>下单时间：2017-04-25 11:00:03</span>
-									<span>付款时间：2017-04-25 11:01:10</span>
-									<span>预定时间：7点档</span>
-								</div>
-							</div>
-							<div class="product-info">
-								<ul>
-									<li>
-										<span>奶茶&nbsp;&nbsp;搭配：红茶&nbsp;规格：中杯&nbsp;甜度：3分甜&nbsp;冰度：5分&nbsp;加料：珍珠</span>
-									</li>
-									<li>
-										<span>奶茶&nbsp;&nbsp;搭配：绿茶&nbsp;规格：中杯&nbsp;甜度：5分甜&nbsp;冰度：5分&nbsp;加料：珍珠</span>
-									</li>
-								</ul>
-							</div>
-							<div class="receiver-info">
-								<span class="receiver-addr">配送地址：天虹商场</span>
-								<span class="receiver-phone">联系电话：1234567890</span>
-								<a href="#" >打印</a>
-							</div>
-						</li> -->
 					</ul>
-					<div class="cpf-paginator" pageNo="${pageInfo.pageNo }" pageSize="${pageInfo.pageSize }" count="${pageInfo.count }"></div>				</div>
+					<div class="cpf-paginator" pageNo="${pageInfo.pageNo }" pageSize="${pageInfo.pageSize }" count="${pageInfo.count }"></div>				
+				</div>
 			</div>
 		</div>
 	</div>
@@ -150,11 +129,29 @@
 			});
 			
 			$('.print-link-a').click(function(){
-				var aaa = $(this).closest("li");
-				var productId = aaa.find(".item-check").val();
-				console.log(aaa);
-				console.log(productId);
+				var link_a = $(this).closest("li");
+				var productId = link_a.find(".item-check").val();
 				printProduct(productId);
+			});
+			
+			$('#print-count').click(function(){
+				var printCount = $("#printCount").val();
+				var timeRange = '${criteria.timeRange}';
+				console.log(timeRange);
+				console.log(printCount);
+				Ajax.ajax('admin/production/print-specify-count-product',{
+					printCount: printCount,
+					timeRange:timeRange
+				},function(html){
+					var options = { 
+				    		mode 		: "iframe", 
+				    		extraHead 	: headElements,
+				    		extraCss	: $('base').attr('href') + 'media/admin/production/PrintArea_fac.css'
+				    	};
+					var headElements ='<meta charset="utf-8" />,<meta http-equiv="X-UA-Compatible" content="chrome=1"/>';
+					var $container = $('.print-page', html);
+					$container.printArea(options);
+				});
 			});
 			
 			function printProduct(productIds){

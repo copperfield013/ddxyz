@@ -12,6 +12,8 @@ public class ProductionCriteria {
 	
 	private String timePoint;
 	
+	private Integer printCount;
+	
 	/**
 	 * 时间范围字符串（用于从页面上传入，并且返回到页面中）
 	 */
@@ -65,5 +67,13 @@ public class ProductionCriteria {
 
 	public void setTimePoint(String timePoint) {
 		this.timePoint = timePoint;
+	}
+
+	public Integer getPrintCount() {
+		return printCount;
+	}
+
+	public void setPrintCount(Integer printCount) {
+		this.printCount = printCount;
 	}
 }
