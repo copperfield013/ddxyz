@@ -92,7 +92,7 @@
 </body>
 <script type="text/javascript">
 	$(function(){
-		seajs.use(['ajax','dialog'], function(Ajax, Dialog){
+		seajs.use(['ajax','dialog','utils'], function(Ajax, Dialog, utils){
 			$('#timeRange').daterangepicker({
 				format 				: 'YYYY-MM-DD HH:mm:ss',
 				timePicker			: true,
@@ -137,8 +137,17 @@
 			$('#print-count').click(function(){
 				var printCount = $("#printCount").val();
 				var timeRange = '${criteria.timeRange}';
-				console.log(timeRange);
-				console.log(printCount);
+				var count = '${pageInfo.count}';
+				if(printCount ==''){
+					Dialog.notice("请输入要打印的条数！","warning");
+					return;
+				}else if(!utils.isInteger(printCount)){
+					Dialog.notice("请输入整数！","warning");
+					return;
+				}else if(printCount > count){
+					Dialog.notice("您要打印的条数超出范围！","warning");
+					return;
+				}
 				Ajax.ajax('admin/production/print-specify-count-product',{
 					printCount: printCount,
 					timeRange:timeRange
