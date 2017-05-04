@@ -7,13 +7,6 @@ define(function(require, exports){
 		isInteger	: function(o){
 			return (o | 0) == o;
 		},
-		isInt: function(str){
-			try{
-				return exports.isInteger(Number(str));
-			}catch(e){
-				return false;
-			}
-		},
 		trim		: function(str){
 			if(typeof str === 'string'){
 				return str.trim();
