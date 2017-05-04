@@ -4,10 +4,11 @@
 <html>
 	<head>
 		<base href="${basePath }" />
-		<title>订单管理</title>
+		<title>点点新意管理系统</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
-		
+		<link rel="icon" href="favicon.ico" type="image/x-icon" />
+		<link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
 		
 		<!--Basic Styles-->
 	    <link href="media/admin/plugins/beyond/css/bootstrap.min.css" rel="stylesheet" />

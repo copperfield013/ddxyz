@@ -333,6 +333,57 @@ define(function(require, exports, module){
 			}
 		}
 		
+		/**
+		 * 根据数据初始化订单，并且显示在页面上
+		 */
+		function initOrder(_param){
+			var defaultParam = {
+				//配送时间点
+				deliveryTimePoint	: 13,
+				//配送地点
+				deliveryLocationId	: 1,
+				//订单条目
+				items				: [
+				     {
+				    	 //饮料类型id
+				    	 drinkTypeId		: 1,
+				    	 //加茶类型id
+				    	 teaAdditionTypeId	: 1,
+				    	 //规格
+				    	 cupSizeKey			: 2,
+				    	 //温度
+				    	 heatKey			: 1,
+				    	 //加料的id数组
+				    	 additionIds		: [1, 2, 3]
+				     },
+				     {
+				    	 //饮料类型id
+				    	 drinkTypeId		: 2,
+				    	 //加茶类型id
+				    	 teaAdditionTypeId	: 1,
+				    	 //规格
+				    	 cupSizeKey			: 2,
+				    	 //温度
+				    	 heatKey			: 1,
+				    	 //加料的id数组
+				    	 additionIds		: [1, 2, 3]
+				     }
+				]
+			};
+			var param = _param
+			var timePointKey = 
+				$('#timePoint').val(param.deliveryTimePoint).trigger('change')
+					.find('option[value="' + param.deliveryTimePoint + '"]').attr('data-key');
+			if(timePointKey){
+				$('.delivery-location[data-key="' + timePointKey + '"]').val(param.deliveryLocationId).trigger('change');
+				
+				
+			}
+			
+			
+		}
+		
+		
 		
 	};
 	

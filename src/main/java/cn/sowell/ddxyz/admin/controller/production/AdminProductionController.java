@@ -1,4 +1,4 @@
-package cn.sowell.ddxyz.admin.controller.order;
+package cn.sowell.ddxyz.admin.controller.production;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -32,7 +32,7 @@ import cn.sowell.ddxyz.model.drink.service.ProductService;
  */
 @Controller
 @RequestMapping(AdminConstants.URI_BASE + "/production")
-public class ProductionController {
+public class AdminProductionController {
 	
 	@Resource
 	ProductService productService;

@@ -51,6 +51,7 @@ define(function(require, exports, module){
 	 * CPF在加载页面的时候会第10个执行该函数
 	 */
 	$CPF.putPageInitSequeue(10, function($page){
+		require('utils').scrollTo($($page), 0);
 		bindPageTabEvent($page)
 	});
 	
@@ -131,7 +132,7 @@ define(function(require, exports, module){
 					page		: page,
 					whenSuc		: function(data, dataType){
 						if(dataType === 'html'){
-							_this.loadContent($('<div>').html(data))
+							_this.loadContent($('<div>').html(data));
 						}
 					},
 					afterLoad	: function(){
