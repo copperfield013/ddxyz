@@ -1,6 +1,7 @@
 @CHARSET "UTF-8";
 
 
+
 body,html{
     padding:0;
     margin:0;
@@ -63,20 +64,22 @@ ul,li,i,b,a{
 .dialog-content>li:last-child {
     margin-bottom:82px;
 }
-.dialog-content>li>div {
+.dialog-content>li>div.dialog-distribution-time{
     height:60px;
     line-height: 60px;
-    padding-left:48px;
-}
-.dialog-content>li>div.dialog-distribution-time {
     border-bottom:1px solid #999999;
     padding-left:0;
 }
-.dialog-content>li>div.dialog-distribution-address {
+.dialog-content>li>div.distribution-address-warp{
+    display: none;
+}
+.dialog-content>li>div.distribution-address-warp>div {
+    height:60px;
+    line-height: 60px;
+    padding-left:48px;
     position: relative;
 }
-
-.dialog-content>li>div.dialog-distribution-address>i {
+.dialog-content>li>div>div.dialog-distribution-address>i {
     display: block;
     width:24px;
     height:24px;
@@ -87,10 +90,10 @@ ul,li,i,b,a{
     top:50%;
     margin-top:-12px;
 }
-.dialog-content>li>div.dialog-distribution-address.active>i {
+.dialog-content>li>div>div.dialog-distribution-address.active>i {
     border-color:#004621;
 }
-.dialog-content>li>div.dialog-distribution-address.active>i>b {
+.dialog-content>li>div>div.dialog-distribution-address.active>i>b {
     display: inline-block;
     width:16px;
     height:16px;
