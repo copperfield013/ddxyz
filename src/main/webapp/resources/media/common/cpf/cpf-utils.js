@@ -9,7 +9,7 @@ define(function(require, exports){
 		},
 		isInt: function(str){
 			try{
-				return isInteger(Number(str));
+				return exports.isInteger(Number(str));
 			}catch{
 				return false;
 			}
