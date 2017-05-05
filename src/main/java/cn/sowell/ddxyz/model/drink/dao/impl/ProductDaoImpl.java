@@ -33,7 +33,7 @@ public class ProductDaoImpl implements ProductDao {
 	@Resource
 	FrameDateFormat fdFormat;
 	
-	@SuppressWarnings({ "unchecked" })
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<ProductInfoItem> getProductInfoItemPageList(ProductionCriteria criteria, CommonPageInfo pageInfo) {
 		Session session = sFactory.getCurrentSession();
@@ -44,17 +44,18 @@ public class ProductDaoImpl implements ProductDao {
 				+ "t_order_base o, t_drink_product d, t_product_base p "
 				+ "WHERE p.id = d.product_id "
 				+ "AND o.id = p.order_id "
+				+ "AND o.c_status <> 0 "
 				+ "AND o.c_canceled_status is null "
 				+ "AND p.c_status ='1' @mainWhere "
 				+ "order by o.c_pay_time asc";
 		DeferedParamQuery dQuery = new DeferedParamQuery(sql);
 		DeferedParamSnippet mainWhere = dQuery.createSnippet("mainWhere", null);
 		if(criteria.getStartTime() != null){
-			mainWhere.append("AND o.create_time >= :startTime");
+			mainWhere.append("AND o.c_pay_time >= :startTime");
 			dQuery.setParam("startTime", criteria.getStartTime(), StandardBasicTypes.TIMESTAMP);
 		}
 		if(criteria.getEndTime() != null){
-			mainWhere.append("AND o.create_time <= :endTime");
+			mainWhere.append("AND o.c_pay_time < :endTime");
 			dQuery.setParam("endTime", criteria.getEndTime(), StandardBasicTypes.TIMESTAMP);
 		}
 		if(criteria.getTimePoint() != null && !criteria.getTimePoint().equals("")){
@@ -88,7 +89,7 @@ public class ProductDaoImpl implements ProductDao {
 		}
 	}
 
-	@SuppressWarnings({ "unchecked" })
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<ProductInfoItem> getProductInfoItemListByProductIds(List<Long> productIdList) {
 		Session session  = sFactory.getCurrentSession();

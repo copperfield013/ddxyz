@@ -26,7 +26,9 @@ public class PlainDrinkOrder {
 	
 	private String locationName;
 	
-	private Date payExpireTime;
+	private Date payTime;
+	
+	private Date payExpireTime; //支付过期时间
 	
 	private List<PlainOrderDrinkItem> orderDrinkItems = new ArrayList<PlainOrderDrinkItem>();
 	
@@ -116,6 +118,14 @@ public class PlainDrinkOrder {
 
 	public void setPayExpireTime(Date payExpireTime) {
 		this.payExpireTime = payExpireTime;
+	}
+
+	public Date getPayTime() {
+		return payTime;
+	}
+
+	public void setPayTime(Date payTime) {
+		this.payTime = payTime;
 	}
 
 

@@ -89,6 +89,12 @@
 	                            <span class="menu-text">生产管理</span>
 	                        </a>
 	                    </li>
+	                     <li>
+	                        <a href="admin/delivery/delivery_list" class="menu-dropdown tab" target="delivery_list" title="配送管理">
+	                        	<i class="menu-icon fa fa-desktop"></i>
+	                            <span class="menu-text">配送管理</span>
+	                        </a>
+	                    </li>
 					</ul>
 				</div>
 				<div class="page-content">
