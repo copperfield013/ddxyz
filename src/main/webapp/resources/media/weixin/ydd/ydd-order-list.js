@@ -117,11 +117,15 @@ define(function(require, exports, module){
 		IX.unscroll($('main').get(0));
 		IX.scroll($('.dialog-content-wrapper').get(0));
 		//设置第一个地址栏展开    	
-    	$(".distribution-address-warp:first", $dialog).css("display","block");
+		$(".distribution-address-warp:first").addClass("active");
 		//绑定地址栏点击事件    	
         $(".dialog-distribution-time", $dialog).on("click",function(){
 			var address = $(this).next();
-			address.slideToggle("fast");
+			if(address.hasClass('active')){
+                address.removeClass("active");
+            }else{
+                address.addClass("active");
+            }
         })
 		//点击选择地址
         $(".dialog-content", $dialog).on("click", ".dialog-distribution-address", function(){
