@@ -86,9 +86,19 @@ div#dialog-cover {
     padding-left:0;
 }
 .dialog-content>li>div.distribution-address-warp{
-    display: none;
+    height:0;
+    overflow:hidden;
+    -webkit-transition: all 0.2s linear;
+    -moz-transition: all 0.2s linear;
+    -ms-transition: all 0.2s linear;
+    -o-transition: all 0.2s linear;
+    transition: all 0.2s linear;
+    transition: all 0.2s linear;
     -webkit-transform-style: preserve-3d;
     -webkit-backface-visibility: hidden;
+}
+.dialog-content>li>div.distribution-address-warp.active {
+    height:5em;
 }
 .dialog-content>li>div.distribution-address-warp>div {
     height:2.5em;
