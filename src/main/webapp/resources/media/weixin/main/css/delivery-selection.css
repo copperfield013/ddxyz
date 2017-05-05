@@ -87,6 +87,8 @@ div#dialog-cover {
 }
 .dialog-content>li>div.distribution-address-warp{
     display: none;
+    -webkit-transform-style: preserve-3d;
+    -webkit-backface-visibility: hidden;
 }
 .dialog-content>li>div.distribution-address-warp>div {
     height:2.5em;
