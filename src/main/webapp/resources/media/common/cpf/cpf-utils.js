@@ -7,6 +7,9 @@ define(function(require, exports){
 		isInteger	: function(o){
 			return (o | 0) == o;
 		},
+		/**
+		 * 清除字符串前后的空格
+		 */
 		trim		: function(str){
 			if(typeof str === 'string'){
 				return str.trim();
@@ -179,10 +182,6 @@ define(function(require, exports){
 				);
 			}
 		},
-		createPrintTemp	: function(){
-			//创建打印模板，需要
-			
-		},
 		/**
 		 * 验证联系号码的格式
 		 */
@@ -238,6 +237,16 @@ define(function(require, exports){
 				date = new Date(Date.parse(date) + incDay * 86400000);
 			}
 			return date;
+		},
+		/**
+		 * 获得选择框选择的选项option
+		 */
+		getCheckedOption: function(select){
+			var $select  = $(select);
+			if($select.is('select')){
+				var val = $select.val();
+				return $select.find('option[value="' + val + '"]');
+			}
 		}
 		
 	});

@@ -10,8 +10,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
-import cn.sowell.copframe.dao.deferedQuery.ColumnMapResultTransformer;
-import cn.sowell.copframe.dao.deferedQuery.SimpleMapWrapper;
+import cn.sowell.copframe.dao.deferedQuery.HibernateRefrectResultTransformer;
 import cn.sowell.copframe.dao.utils.QueryUtils;
 import cn.sowell.copframe.dto.page.CommonPageInfo;
 import cn.sowell.ddxyz.model.common.pojo.PlainOrder;
@@ -24,32 +23,27 @@ public class DrinkOrderDaoImpl implements DrinkOrderDao {
 	@Resource
 	SessionFactory sFactory;
 
-	@SuppressWarnings({ "unchecked", "serial" })
+	@SuppressWarnings({ "unchecked"})
 	@Override
 	public List<PlainOrderDrinkItem> getOrderDrinkItemList(Long orderId) {
 		Session session = sFactory.getCurrentSession();
 		String sql = "SELECT "
-				+ "p.c_price, d.id, d.c_drink_type_name,d.c_tea_addition_name, d.c_sweetness, d.c_heat, d.c_cup_size "
+				+ "d.id drink_product_id, "
+				+ "d.drink_type_id drink_type_id,"
+				+ "d.c_drink_type_name,"
+				+ "p.c_price, "
+				+ "d.tea_addition_id,"
+				+ "d.c_tea_addition_name, "
+				+ "d.c_sweetness, "
+				+ "d.c_heat, "
+				+ "d.c_cup_size "
 				+ "FROM "
 				+ "t_product_base p, t_drink_product d "
 				+ "WHERE p.id = d.product_id "
 				+ "AND p.order_id = :orderId";
 		SQLQuery query = session.createSQLQuery(sql);
 		query.setLong("orderId", orderId);
-		query.setResultTransformer(new ColumnMapResultTransformer<PlainOrderDrinkItem>() {
-			@Override
-			protected PlainOrderDrinkItem build(SimpleMapWrapper mapWrapper) {
-				PlainOrderDrinkItem item = new PlainOrderDrinkItem();
-				item.setDrinkProductId(mapWrapper.getLong("id"));
-				item.setDrinkName(mapWrapper.getString("c_drink_type_name"));
-				item.setPrice(mapWrapper.getInteger("c_price"));
-				item.setTeaAdditionName(mapWrapper.getString("c_tea_addition_name"));
-				item.setSweetness(mapWrapper.getInteger("c_sweetness"));
-				item.setHeat(mapWrapper.getInteger("c_heat"));
-				item.setCupSize(mapWrapper.getInteger("c_cup_size"));
-				return item;
-			}
-		});
+		query.setResultTransformer(HibernateRefrectResultTransformer.getInstance(PlainOrderDrinkItem.class));
 		return query.list();
 	}
 	
@@ -74,34 +68,4 @@ public class DrinkOrderDaoImpl implements DrinkOrderDao {
 		return query.list();
 	}
 	
-	
-	@SuppressWarnings({ "serial", "unchecked" })
-	public List<PlainOrderDrinkItem> getOrderDrinkItemList(){
-		Session session = sFactory.getCurrentSession();
-		String sql = "SELECT "
-				+ "p.c_price, d.id, d.c_drink_type_name,d.c_tea_addition_name, d.c_sweetness, d.c_heat, d.c_cup_size "
-				+ "FROM "
-				+ "t_product_base p, t_drink_product d, t_order_base o "
-				+ "WHERE p.id = d.product_id "
-				+ "AND o.c_status <> 0 "
-				+ "AND o.c_canceled_status is null"
-				+ "AND p.c_status = '1'";
-		SQLQuery query = session.createSQLQuery(sql);
-		query.setResultTransformer(new ColumnMapResultTransformer<PlainOrderDrinkItem>() {
-			@Override
-			protected PlainOrderDrinkItem build(SimpleMapWrapper mapWrapper) {
-				PlainOrderDrinkItem item = new PlainOrderDrinkItem();
-				item.setDrinkProductId(mapWrapper.getLong("id"));
-				item.setDrinkName(mapWrapper.getString("c_drink_type_name"));
-				item.setPrice(mapWrapper.getInteger("c_price"));
-				item.setTeaAdditionName(mapWrapper.getString("c_tea_addition_name"));
-				item.setSweetness(mapWrapper.getInteger("c_sweetness"));
-				item.setHeat(mapWrapper.getInteger("c_heat"));
-				item.setCupSize(mapWrapper.getInteger("c_cup_size"));
-				return item;
-			}
-		});
-		return query.list();
-	}
-
 }

@@ -29,6 +29,8 @@ import cn.sowell.ddxyz.model.common.core.impl.DefaultProductItemParameter;
 import cn.sowell.ddxyz.model.common.core.impl.DrinkDataHandler;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlan;
 import cn.sowell.ddxyz.model.common.service.OrderService;
+import cn.sowell.ddxyz.model.drink.pojo.item.PlainOrderDrinkItem;
+import cn.sowell.ddxyz.model.drink.service.DrinkOrderService;
 import cn.sowell.ddxyz.model.drink.term.OrderTerm;
 import cn.sowell.ddxyz.model.merchant.service.DeliveryService;
 import cn.sowell.ddxyz.model.weixin.pojo.WeiXinUser;
@@ -51,6 +53,9 @@ public class OrderServiceTest {
 	
 	@Resource
 	DeliveryService dService;
+	
+	@Resource
+	DrinkOrderService dOrderService;
 	
 	@Test
 	public void applyOrderTest(){
@@ -200,6 +205,12 @@ public class OrderServiceTest {
 		Order order = orderService.getOrder(189l);
 		WxPayStatus status = order.checkWxPayStatus();
 		System.out.println(status);
+	}
+	
+	@Test
+	public void testOrderDrinkService(){
+		List<PlainOrderDrinkItem> list = dOrderService.getOrderDrinkItemList(205l);
+		System.out.println(list);
 	}
 	
 }

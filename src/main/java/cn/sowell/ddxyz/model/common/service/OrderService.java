@@ -111,6 +111,13 @@ public interface OrderService {
 	 */
 	CheckResult checkOrderRefund(Order order, OrderRefundParameter refundParam);
 
+	/**
+	 * 
+	 * @param order
+	 * @return
+	 */
+	WeiXinUser getOrderUser(Order order);
+
 
 
 	

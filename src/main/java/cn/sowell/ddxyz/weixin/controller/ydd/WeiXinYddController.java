@@ -24,6 +24,7 @@ import cn.sowell.copframe.weixin.common.utils.WxUtils;
 import cn.sowell.copframe.weixin.pay.prepay.H5PayParameter;
 import cn.sowell.copframe.weixin.pay.service.WxPayService;
 import cn.sowell.ddxyz.DdxyzConstants;
+import cn.sowell.ddxyz.model.common.core.Delivery;
 import cn.sowell.ddxyz.model.common.core.DeliveryManager;
 import cn.sowell.ddxyz.model.common.core.DeliveryTimePoint;
 import cn.sowell.ddxyz.model.common.core.Order;
@@ -37,12 +38,15 @@ import cn.sowell.ddxyz.model.drink.pojo.PlainDrinkAdditionType;
 import cn.sowell.ddxyz.model.drink.pojo.PlainDrinkOrder;
 import cn.sowell.ddxyz.model.drink.pojo.PlainDrinkTeaAdditionType;
 import cn.sowell.ddxyz.model.drink.pojo.PlainDrinkType;
+import cn.sowell.ddxyz.model.drink.pojo.item.PlainOrderDrinkItem;
 import cn.sowell.ddxyz.model.drink.service.DrinkOrderService;
 import cn.sowell.ddxyz.model.drink.service.DrinkService;
 import cn.sowell.ddxyz.model.drink.term.OrderTerm;
 import cn.sowell.ddxyz.model.merchant.service.DeliveryService;
 import cn.sowell.ddxyz.model.weixin.pojo.WeiXinUser;
 import cn.sowell.ddxyz.weixin.WeiXinConstants;
+
+import com.alibaba.fastjson.JSONObject;
 
 @Controller
 @RequestMapping(WeiXinConstants.URI_BASE + "/ydd")
@@ -85,7 +89,7 @@ public class WeiXinYddController {
 	
 	
 	@RequestMapping("/order")
-	public String order(Integer deliveryHour, Long orderId, Model model){
+	public String order(Integer deliveryHour, Long deliveryId, Long orderId, Model model){
 		UserIdentifier user = WxUtils.getCurrentUser(UserIdentifier.class);
 		long waresId = 1l;
 		//获得当天的所有配送
@@ -98,13 +102,6 @@ public class WeiXinYddController {
 		Map<Long, List<PlainDrinkAdditionType>> additionMap = drinkService.getAdditionMap(waresId);
 		PlainOrderReceiver receiverInfo = oService.getLastReceiverInfo(user.getId());
 		//如果传入订单主键，那么找到这个订单
-		if(orderId != null){
-			Order order = oService.getOrder(orderId);
-			Long userId = order.getOrderUser().getId();
-			if(user.getId().equals(userId)){
-				model.addAttribute("order", order);
-			}
-		}
 		model.addAttribute("isDebug", configService.isDebug());
 		model.addAttribute("deliveryMap", deliveryMap);
 		model.addAttribute("drinkTypes", drinkTypes);
@@ -116,6 +113,8 @@ public class WeiXinYddController {
 		model.addAttribute("deliveryHour", deliveryHour);
 		model.addAttribute("receiverInfo", receiverInfo);
 		
+		model.addAttribute("deliveryId", deliveryId);
+		model.addAttribute("orderId", orderId);
 		return WeiXinConstants.PATH_YDD + "/ydd_order.jsp";
 	}
 	
@@ -209,5 +208,22 @@ public class WeiXinYddController {
 		return WeiXinConstants.PATH_YDD + "/delivery_selection.jsp";
 	}
 	
+	@ResponseBody
+	@RequestMapping("/loadOrderForInit")
+	public JsonResponse loadOrderForInit(long deliveryId, long orderId, Model model){
+		JsonResponse res = new JsonResponse();
+		UserIdentifier user =  WxUtils.getCurrentUser(UserIdentifier.class);
+		Delivery delivery = dManager.getDelivery(deliveryId);
+		if(delivery != null){
+			List<PlainOrderDrinkItem> dOrderList = drinkOrderService.getOrderDrinkItemList(orderId);
+			Order order = oService.getOrder(orderId);
+			UserIdentifier orderUser = oService.getOrderUser(order);
+			if(user.getId().equals(orderUser.getId())){
+				JSONObject initOrder = drinkOrderService.converteInitOrder(delivery, dOrderList);
+				res.put("initOrder", initOrder);
+			}
+		}
+		return res;
+	}
 	
 }

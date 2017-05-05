@@ -22,10 +22,4 @@ public interface DrinkOrderDao {
 	List<PlainOrder> getOrderList(Long userId);
 	
 	List<PlainOrder> getOrderList(Long userId, CommonPageInfo pageInfo);
-	
-	/**
-	 * 获取已支付并且未取消的订单
-	 * @return
-	 */
-	List<PlainOrderDrinkItem> getOrderDrinkItemList();
 }

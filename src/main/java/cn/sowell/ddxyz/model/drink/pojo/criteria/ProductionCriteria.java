@@ -1,4 +1,4 @@
-package cn.sowell.ddxyz.model.drink.pojo.criteira;
+package cn.sowell.ddxyz.model.drink.pojo.criteria;
 
 import java.util.Date;
 

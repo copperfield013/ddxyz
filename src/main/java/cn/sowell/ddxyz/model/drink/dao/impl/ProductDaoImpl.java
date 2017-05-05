@@ -21,7 +21,7 @@ import cn.sowell.copframe.dto.format.FormatUtils;
 import cn.sowell.copframe.dto.format.FrameDateFormat;
 import cn.sowell.copframe.dto.page.CommonPageInfo;
 import cn.sowell.ddxyz.model.drink.dao.ProductDao;
-import cn.sowell.ddxyz.model.drink.pojo.criteira.ProductionCriteria;
+import cn.sowell.ddxyz.model.drink.pojo.criteria.ProductionCriteria;
 import cn.sowell.ddxyz.model.drink.pojo.item.ProductInfoItem;
 
 @Repository
@@ -33,7 +33,7 @@ public class ProductDaoImpl implements ProductDao {
 	@Resource
 	FrameDateFormat fdFormat;
 	
-	@SuppressWarnings({ "unchecked", "serial" })
+	@SuppressWarnings({ "unchecked" })
 	@Override
 	public List<ProductInfoItem> getProductInfoItemPageList(ProductionCriteria criteria, CommonPageInfo pageInfo) {
 		Session session = sFactory.getCurrentSession();
@@ -88,9 +88,9 @@ public class ProductDaoImpl implements ProductDao {
 		}
 	}
 
-	@SuppressWarnings({ "serial", "unchecked" })
+	@SuppressWarnings({ "unchecked" })
 	@Override
-	public List<ProductInfoItem> getProductInfoItemListByProductIds(List productIdList) {
+	public List<ProductInfoItem> getProductInfoItemListByProductIds(List<Long> productIdList) {
 		Session session  = sFactory.getCurrentSession();
 		String sql = "SELECT "
 				+ "o.c_order_code, o.c_time_point, o.c_receiver_contact, o.c_location_name, o.create_time, "

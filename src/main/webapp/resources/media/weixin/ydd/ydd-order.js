@@ -110,7 +110,8 @@ define(function(require, exports, module){
 			
 		});
 		
-		$('#addDrink').click(function(){
+		$('#addDrink').click(function(e, ignoreAlert){
+			ignoreAlert = ignoreAlert || false;
 			var orderItem = new OrderItem();
 			var $drinkType = $('#drink-type');
 			var drinkTypeId = $drinkType.val(),
@@ -125,7 +126,7 @@ define(function(require, exports, module){
 					price	: Number($drinkTypeOption.attr('data-price'))
 				}));
 			}else{
-				alertMsg('请选择饮料类型');
+				alertMsg('请选择饮料类型', ignoreAlert);
 				$.error('没有选择饮料');
 			}
 			if($('p.tea-addition-type-wrapper[data-key="' + drinkTypeId + '"]').length > 0){
@@ -139,7 +140,7 @@ define(function(require, exports, module){
 						type	: 'teaAdditionType'
 					}));
 				}else{
-					alertMsg('请选择添加茶类');
+					alertMsg('请选择添加茶类', ignoreAlert);
 					$.error('没有选择加茶');
 				}
 			}
@@ -150,7 +151,7 @@ define(function(require, exports, module){
 			if(cupSizeKey){
 				orderItem.setCupSize(cupSizeKey);
 			}else{
-				alertMsg('请选择饮料是中杯还是大杯');
+				alertMsg('请选择饮料是中杯还是大杯', ignoreAlert);
 				$.error('没有选择饮料规格')
 			}
 			
@@ -160,7 +161,7 @@ define(function(require, exports, module){
 			if(sweetnessKey){
 				orderItem.setSweetness(sweetnessKey);
 			}else{
-				alertMsg('请选择饮料甜度');
+				alertMsg('请选择饮料甜度', ignoreAlert);
 				$.error('没有选择甜度');
 			}
 			
@@ -170,7 +171,7 @@ define(function(require, exports, module){
 			if(heatKey){
 				orderItem.setHeat(heatKey);
 			}else{
-				alertMsg('请选择饮料温度');
+				alertMsg('请选择饮料温度', ignoreAlert);
 				$.error('没有选择热度');
 			}
 			
@@ -320,8 +321,10 @@ define(function(require, exports, module){
 			
 		}
 		
-		function alertMsg(msg){
-			alert(msg);
+		function alertMsg(msg, ignoreAlert){
+			if(!ignoreAlert){
+				alert(msg);
+			}
 		}
 		
 		var $shade = $('<div class="screen-shade">');
@@ -336,54 +339,80 @@ define(function(require, exports, module){
 		/**
 		 * 根据数据初始化订单，并且显示在页面上
 		 */
-		function initOrder(_param){
-			var defaultParam = {
-				//配送时间点
-				deliveryTimePoint	: 13,
-				//配送地点
-				deliveryLocationId	: 1,
-				//订单条目
-				items				: [
-				     {
-				    	 //饮料类型id
-				    	 drinkTypeId		: 1,
-				    	 //加茶类型id
-				    	 teaAdditionTypeId	: 1,
-				    	 //规格
-				    	 cupSizeKey			: 2,
-				    	 //温度
-				    	 heatKey			: 1,
-				    	 //加料的id数组
-				    	 additionIds		: [1, 2, 3]
-				     },
-				     {
-				    	 //饮料类型id
-				    	 drinkTypeId		: 2,
-				    	 //加茶类型id
-				    	 teaAdditionTypeId	: 1,
-				    	 //规格
-				    	 cupSizeKey			: 2,
-				    	 //温度
-				    	 heatKey			: 1,
-				    	 //加料的id数组
-				    	 additionIds		: [1, 2, 3]
-				     }
-				]
-			};
-			var param = _param
-			var timePointKey = 
-				$('#timePoint').val(param.deliveryTimePoint).trigger('change')
-					.find('option[value="' + param.deliveryTimePoint + '"]').attr('data-key');
-			if(timePointKey){
-				$('.delivery-location[data-key="' + timePointKey + '"]').val(param.deliveryLocationId).trigger('change');
+		function initOrder(deliveryId, orderId){
+			if(deliveryId && orderId){
+				require('ajax').ajax('weixin/ydd/loadOrderForInit', {
+					deliveryId	: deliveryId,
+					orderId		: orderId
+				}, function(res){
+					if(res.initOrder){
+						initOrder(res.initOrder);
+					}
+				});
+				return;
+			}else if(typeof deliveryId === 'object'){
+				var _param = deliveryId;
+				var defaultParam = {
+						//配送时间点
+						deliveryTimePoint	: 13,
+						//配送地点
+						deliveryLocationId	: 1,
+						//订单条目
+						items				: [
+	     				   {
+	     					   //饮料类型id
+	     					   drinkTypeId		: 1,
+	     					   //加茶类型id
+	     					   teaAdditionTypeId	: 1,
+	     					   //规格
+	     					   cupSizeKey			: 2,
+	     					   //甜度
+	     					   sweetnessKey		: 3,
+	     					   //温度
+	     					   heatKey			: 1,
+	     					   //加料的id数组
+	     					   additionIds		: [1, 2, 3]
+	     				   }
+						 ]
+				};
+				var param = $.extend({}, defaultParam, _param),
+				utils = require('utils');
 				
-				
+				if(utils.isInteger(param.deliveryTimePoint)){
+					//初始化配送时间点并且返回配送时间点的key
+					var $timePoint = $('#timePoint').val(param.deliveryTimePoint).trigger('change');
+					var timePointKey = utils.getCheckedOption($timePoint).attr('data-key');
+					if(timePointKey){
+						//初始化配送地点
+						var $location = $('.delivery-location[data-key="' + timePointKey + '"]').val(param.deliveryLocationId).trigger('change');
+						if(order.getDelivery().getLocation().getKey() == param.deliveryLocationId){
+							try{
+								//遍历所有条目，加载到订单中
+								for(var i in param.items){
+									var item = param.items[i];
+									$('#drink-type').val(item.drinkTypeId);
+									$('#teaAdditionType_' + item.teaAdditionTypeId).prop('checked', true);
+									$('#size_' + item.cupSizeKey).prop('checked', true);
+									$('#sweetness_' + item.sweetnessKey).prop('checked', true);
+									$('#heat_' + item.heatKey).prop('checked', true);
+									for(var j in item.additionIds){
+										$('#addition_type_' + item.additionIds[j]).prop('checked', true);
+									}
+									$('#cupCount').val(1);
+									$('#addDrink').trigger('click', [true]);
+								}
+							}catch(e){
+								order.removeAllOrderItem();
+								refreshOrderItems(order);
+								alert('初始化订单数据失败，请手动选择订单');
+							}
+						}
+					}
+				}
 			}
-			
-			
 		}
 		
-		
+		exports.initOrder = initOrder;
 		
 	};
 	

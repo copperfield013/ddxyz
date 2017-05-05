@@ -10,7 +10,7 @@ import cn.sowell.copframe.dto.page.CommonPageInfo;
 import cn.sowell.ddxyz.model.drink.dao.DrinkAdditionDao;
 import cn.sowell.ddxyz.model.drink.dao.ProductDao;
 import cn.sowell.ddxyz.model.drink.pojo.PlainDrinkAddition;
-import cn.sowell.ddxyz.model.drink.pojo.criteira.ProductionCriteria;
+import cn.sowell.ddxyz.model.drink.pojo.criteria.ProductionCriteria;
 import cn.sowell.ddxyz.model.drink.pojo.item.ProductInfoItem;
 import cn.sowell.ddxyz.model.drink.service.ProductService;
 

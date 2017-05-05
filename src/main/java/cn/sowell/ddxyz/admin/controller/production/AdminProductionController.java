@@ -17,7 +17,7 @@ import cn.sowell.copframe.dto.format.OfDateFormat;
 import cn.sowell.copframe.dto.page.CommonPageInfo;
 import cn.sowell.ddxyz.DdxyzConstants;
 import cn.sowell.ddxyz.admin.AdminConstants;
-import cn.sowell.ddxyz.model.drink.pojo.criteira.ProductionCriteria;
+import cn.sowell.ddxyz.model.drink.pojo.criteria.ProductionCriteria;
 import cn.sowell.ddxyz.model.drink.pojo.item.ProductInfoItem;
 import cn.sowell.ddxyz.model.drink.service.ProductService;
 

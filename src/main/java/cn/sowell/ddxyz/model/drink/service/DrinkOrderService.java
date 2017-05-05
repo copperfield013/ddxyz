@@ -5,10 +5,13 @@ import java.util.Map;
 
 import cn.sowell.copframe.common.UserIdentifier;
 import cn.sowell.copframe.dto.page.CommonPageInfo;
+import cn.sowell.ddxyz.model.common.core.Delivery;
 import cn.sowell.ddxyz.model.common.pojo.PlainOrder;
 import cn.sowell.ddxyz.model.drink.pojo.PlainDrinkAddition;
 import cn.sowell.ddxyz.model.drink.pojo.PlainDrinkOrder;
 import cn.sowell.ddxyz.model.drink.pojo.item.PlainOrderDrinkItem;
+
+import com.alibaba.fastjson.JSONObject;
 
 public interface DrinkOrderService {
 
@@ -50,4 +53,13 @@ public interface DrinkOrderService {
 	 * @return
 	 */
 	PlainDrinkOrder getOrderItem(Long orderId);
+
+	/**
+	 * 配送和订单转换成前台可以初始化的订单对象
+	 * @param delivery
+	 * @param order
+	 * @return
+	 */
+	JSONObject converteInitOrder(Delivery delivery,
+			List<PlainOrderDrinkItem> orderItems);
 }

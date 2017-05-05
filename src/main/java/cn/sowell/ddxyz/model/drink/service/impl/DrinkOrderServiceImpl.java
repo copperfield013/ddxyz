@@ -10,10 +10,12 @@ import java.util.Set;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import cn.sowell.copframe.common.UserIdentifier;
 import cn.sowell.copframe.dto.page.CommonPageInfo;
 import cn.sowell.copframe.utils.CollectionUtils;
+import cn.sowell.ddxyz.model.common.core.Delivery;
 import cn.sowell.ddxyz.model.common.core.Product;
 import cn.sowell.ddxyz.model.common.dao.CommonProductDao;
 import cn.sowell.ddxyz.model.common.pojo.PlainOrder;
@@ -26,6 +28,9 @@ import cn.sowell.ddxyz.model.drink.pojo.PlainDrinkAddition;
 import cn.sowell.ddxyz.model.drink.pojo.PlainDrinkOrder;
 import cn.sowell.ddxyz.model.drink.pojo.item.PlainOrderDrinkItem;
 import cn.sowell.ddxyz.model.drink.service.DrinkOrderService;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 @Service
 public class DrinkOrderServiceImpl implements DrinkOrderService{
@@ -137,4 +142,33 @@ public class DrinkOrderServiceImpl implements DrinkOrderService{
 		
 	}
 	
+	
+	@Override
+	public JSONObject converteInitOrder(Delivery delivery, List<PlainOrderDrinkItem> orderItems) {
+		Assert.notNull(delivery);
+		Assert.notEmpty(orderItems);
+		JSONObject result = new JSONObject();
+		result.put("deliveryTimePoint", delivery.getTimePoint().getHour());
+		result.put("deliveryLocationId", delivery.getLocation().getId());
+		JSONArray items = new JSONArray();
+		result.put("items", items);
+		for (PlainOrderDrinkItem orderItem : orderItems) {
+			JSONObject item = new JSONObject();
+			item.put("drinkTypeId", orderItem.getDrinkTypeId());
+			item.put("teaAdditionTypeId", orderItem.getTeaAdditionId());
+			item.put("cupSizeKey", orderItem.getCupSize());
+			item.put("sweetnessKey", orderItem.getSweetness());
+			item.put("heatKey", orderItem.getHeat());
+			JSONArray additionIds = new JSONArray();
+			item.put("additionIds", additionIds);
+			List<PlainDrinkAddition> additions = orderItem.getAdditions();
+			if(additions != null){
+				for (PlainDrinkAddition plainDrinkAddition : additions) {
+					additionIds.add(plainDrinkAddition.getAdditionTypeId());
+				}
+			}
+			items.add(item);
+		}
+		return result;
+	}
 }

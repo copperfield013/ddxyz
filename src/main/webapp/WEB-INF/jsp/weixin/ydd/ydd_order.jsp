@@ -178,8 +178,17 @@
 $(function(){
 	$('input[type="radio"],input[type="checkbox"]').xcheck();
 	$('#cupCount').xnumber();
-	seajs.use('ydd/ydd-order.js?${RES_STAMP}');
-	$('#timePoint').val('${deliveryHour}');
+	var deliveryHour = '${deliveryHour}',
+		deliveryId = '${deliveryId}',
+		orderId = '${orderId}';
+	seajs.use(['ydd/ydd-order.js?${RES_STAMP}'], function(o){
+		if(deliveryId && orderId){
+			o.initOrder(deliveryId, orderId);
+		}
+	});
+	if(!(deliveryId && orderId) && deliveryHour){
+		$('#timePoint').val(deliveryHour).trigger('change');
+	}
 });
 </script>
 </body>

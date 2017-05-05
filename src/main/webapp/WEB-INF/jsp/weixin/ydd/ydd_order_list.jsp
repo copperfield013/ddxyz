@@ -6,6 +6,7 @@
     <title>订单列表</title>
     <jsp:include page="/WEB-INF/jsp/weixin/common/weixin-include.jsp"></jsp:include>
     <link rel="stylesheet" href="${basePath }media/weixin/main/css/order.css?${RES_STAMP}">
+    <link rel="stylesheet" href="${basePath }media/weixin/main/css/delivery-selection.css?${RES_STAMP}">
     <script src="${basePath }media/weixin/main/js/ix.js?${RES_STAMP}"></script>
 </head>
 <body class="ui-page">

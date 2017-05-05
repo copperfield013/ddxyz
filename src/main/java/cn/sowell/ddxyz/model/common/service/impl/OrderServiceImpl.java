@@ -173,4 +173,10 @@ public class OrderServiceImpl implements OrderService{
 			OrderRefundParameter refundParam) {
 		return order.checkRefundable(refundParam);
 	}
+	
+	
+	@Override
+	public WeiXinUser getOrderUser(Order order) {
+		return order.getOrderUser();
+	}
 }
