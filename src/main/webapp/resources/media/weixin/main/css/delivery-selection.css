@@ -56,15 +56,18 @@ div#dialog-cover {
     z-index: 99999;
 }
 
-
-.dialog-content {
-    overflow: auto;
+.dialog-content-wrapper{
+	overflow: auto;
     overflow-x: hidden;
     background-color: #ffffff;
     position: relative;
     height: 85%;
     padding-left: 1em;
     padding-right: 1em;
+}
+
+.dialog-content {
+    
 }
 .dialog-content>li {
     margin-bottom:0.5em;

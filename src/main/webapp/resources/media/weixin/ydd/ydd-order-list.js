@@ -114,10 +114,12 @@ define(function(require, exports, module){
 	}
 	
 	function bindDialogEvent(){
+		IX.unscroll($('main').get(0));
+		IX.scroll($('.dialog-content-wrapper').get(0));
 		//设置第一个地址栏展开    	
     	$(".distribution-address-warp:first", $dialog).css("display","block");
 		//绑定地址栏点击事件    	
-        /*$(".dialog-distribution-time", $dialog).on("click",function(){
+        $(".dialog-distribution-time", $dialog).on("click",function(){
 			var address = $(this).next();
 			address.slideToggle("fast");
 			$('.distribution-address-warp', $dialog).not(address).slideUp('fast');
@@ -126,7 +128,7 @@ define(function(require, exports, module){
         $(".dialog-content", $dialog).on("click", ".dialog-distribution-address", function(){
             $(".dialog-distribution-address").removeClass("active");
             $(this).addClass("active");
-        });*/
+        });
 		//确认按钮获取选择中的地址的外层div
 		$('.dialog-button-sure', $dialog).on("click", function(){
 			console.log($(".dialog-distribution-address").filter('.active')[0]);
