@@ -12,7 +12,7 @@ body,html{
 *{
     box-sizing: border-box;
 }
-ul{-webkit-tap-highlight-color:rgba(255,0,0,0);}
+ul,div{-webkit-tap-highlight-color:rgba(255,0,0,0);}
 ul,li,i,b,a{
     padding:0;
     margin:0;
