@@ -12,6 +12,7 @@ body,html{
 *{
     box-sizing: border-box;
 }
+ul{-webkit-tap-highlight-color:rgba(255,0,0,0);}
 ul,li,i,b,a{
     padding:0;
     margin:0;
@@ -67,11 +68,12 @@ div#dialog-cover {
 }
 
 .dialog-content {
-    
+    background-color: #ffffff;
 }
 .dialog-content>li {
     margin-bottom:0.5em;
     border-top:1px solid #999999;
+    background-color: #ffffff;
 }
 .dialog-content>li:first-child {
     border-top:none;
