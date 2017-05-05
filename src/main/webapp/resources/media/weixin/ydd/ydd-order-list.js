@@ -122,7 +122,6 @@ define(function(require, exports, module){
         $(".dialog-distribution-time", $dialog).on("click",function(){
 			var address = $(this).next();
 			address.slideToggle("fast");
-			$('.distribution-address-warp', $dialog).not(address).slideUp('fast');
         })
 		//点击选择地址
         $(".dialog-content", $dialog).on("click", ".dialog-distribution-address", function(){
