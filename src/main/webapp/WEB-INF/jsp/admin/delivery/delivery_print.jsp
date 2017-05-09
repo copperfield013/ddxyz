@@ -4,8 +4,8 @@
 <link type="text/css" rel="stylesheet" href="${basePath}media/admin/delivery/my.src.css">
 <link type="text/css" rel="stylesheet" href="${basePath}media/admin/delivery/PrintArea.css">
 <div style="display: none;">
-	<div class="PrintArea print-wrapper">
-		<c:forEach items="${orderDrinkItemMap[plainOrder] }" step="2" varStatus="i">
+	<c:forEach items="${orderDrinkItemMap[plainOrder] }" step="2" varStatus="i">
+		<div class="PrintArea print-wrapper">
 			<c:set var="index" value="${i.index }" />
 			<div class="print-content tttt">
 				<div class="print-title-area">
@@ -57,6 +57,6 @@
 					</div>
 				</div>
 			</div>
-		</c:forEach>
-	</div>
+		</div>
+	</c:forEach>
 </div>
