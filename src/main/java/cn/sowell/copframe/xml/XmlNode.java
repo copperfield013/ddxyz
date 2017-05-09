@@ -99,11 +99,17 @@ public interface XmlNode {
 	 */
 	XmlNode setText(String text);
 	/**
-	 * 为当前节点设置内容
+	 * 为当前节点添加内容
 	 * @param text
 	 * @return 返回自身
 	 */
 	XmlNode addCDATA(String text);
+	/**
+	 * 为当前节点设置内容
+	 * @param cdata
+	 * @return 返回自身
+	 */
+	XmlNode setCDATA(String cdata);
 	/**
 	 * 清空当前节点内的所有内容
 	 * @return 返回自身
@@ -124,4 +130,5 @@ public interface XmlNode {
 	 * @return
 	 */
 	LinkedHashMap<String, String> toTagTextMap();
+	
 }

@@ -3,6 +3,7 @@ package cn.sowell.ddxyz.model.common.core;
 import java.io.Serializable;
 
 import cn.sowell.copframe.common.UserIdentifier;
+import cn.sowell.copframe.utils.range.DateRange;
 import cn.sowell.copframe.weixin.pay.paied.WxPayStatus;
 import cn.sowell.ddxyz.model.common.core.exception.OrderException;
 import cn.sowell.ddxyz.model.common.core.impl.DefaultOrder;
@@ -107,4 +108,10 @@ public interface OrderManager {
 	 * @return
 	 */
 	WxPayStatus checkWxPayStatus(DefaultOrder defaultOrder);
+
+	/**
+	 * 清除最近操作时间在某个时间范围内的所有订单
+	 * @param range
+	 */
+	void clearCache(DateRange range);
 }

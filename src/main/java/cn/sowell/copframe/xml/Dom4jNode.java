@@ -195,6 +195,12 @@ public class Dom4jNode implements XmlNode{
 	}
 	
 	@Override
+	public XmlNode setCDATA(String cdata) {
+		this.empty().addCDATA(cdata);
+		return this;
+	}
+	
+	@Override
 	public XmlNode empty() {
 		_thisElement.clearContent();
 		return this;

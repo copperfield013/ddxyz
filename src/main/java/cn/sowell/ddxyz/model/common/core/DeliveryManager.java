@@ -3,6 +3,7 @@ package cn.sowell.ddxyz.model.common.core;
 import java.io.Serializable;
 import java.util.List;
 
+import cn.sowell.copframe.utils.range.DateRange;
 import cn.sowell.ddxyz.model.common.core.result.CheckResult;
 
 
@@ -54,6 +55,12 @@ public interface DeliveryManager {
 	 * @return
 	 */
 	List<Delivery> loadTodayDeliveries();
+
+	/**
+	 * 清除最近操作时间在某个时间范围捏的配送缓存
+	 * @param range
+	 */
+	void clearCache(DateRange range);
 
 
 }

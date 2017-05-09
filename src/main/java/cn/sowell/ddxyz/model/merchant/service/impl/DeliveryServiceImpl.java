@@ -1,10 +1,12 @@
 package cn.sowell.ddxyz.model.merchant.service.impl;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -15,9 +17,11 @@ import cn.sowell.copframe.utils.CollectionUtils;
 import cn.sowell.ddxyz.model.common.core.Delivery;
 import cn.sowell.ddxyz.model.common.core.DeliveryManager;
 import cn.sowell.ddxyz.model.common.core.DeliveryTimePoint;
+import cn.sowell.ddxyz.model.common.core.Order;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlan;
 import cn.sowell.ddxyz.model.common.pojo.PlainLocation;
+import cn.sowell.ddxyz.model.common.service.OrderService;
 import cn.sowell.ddxyz.model.merchant.dao.DeliveryDao;
 import cn.sowell.ddxyz.model.merchant.service.DeliveryService;
 
@@ -30,12 +34,20 @@ public class DeliveryServiceImpl implements DeliveryService{
 	@Resource
 	DeliveryManager dManager;
 	
+	@Resource
+	OrderService oService;
+	
 	@Override
 	public LinkedHashMap<DeliveryTimePoint, List<PlainDelivery>> getTodayDeliveries(
-			Long waresId) {
+			Long waresId, boolean usable) {
 		List<PlainDelivery> deliveris = deliveryDao.getAllDelivery(waresId, new Date());
+		Date current = new Date();
 		return (LinkedHashMap<DeliveryTimePoint, List<PlainDelivery>>) CollectionUtils.toListMap(deliveris, delivery -> {
-			return new DeliveryTimePoint(delivery.getTimePoint());
+			if(!usable || current.before(delivery.getCloseTime())){
+				return new DeliveryTimePoint(delivery.getTimePoint(), delivery.getCloseTime());
+			}else{
+				return null;
+			}
 		});
 	}
 	
@@ -74,5 +86,27 @@ public class DeliveryServiceImpl implements DeliveryService{
 		plan.setCreateTime(new Date());
 		deliveryDao.savePlan(plan);
 	}
-
+	
+	
+	@Override
+	public Map<DeliveryTimePoint, List<PlainDelivery>> getUsableDeliveryMap(
+			long orderId) {
+		Map<DeliveryTimePoint, List<PlainDelivery>> map = new LinkedHashMap<DeliveryTimePoint, List<PlainDelivery>>();
+		Order order = oService.getOrder(orderId);
+		if(order != null){
+			Serializable deliveryId = order.getDeliveryId();
+			PlainDelivery pDelivery = deliveryDao.getPlainDelivery((long) deliveryId);
+			Long waresId = pDelivery.getWaresId();
+			LinkedHashMap<DeliveryTimePoint, List<PlainDelivery>> allDeliveryMap = getTodayDeliveries(waresId, false);
+			Date current = new Date();
+			allDeliveryMap.forEach((timePoint, delivery) -> {
+				if(current.compareTo(timePoint.getCloseTime()) < 0){
+					map.put(timePoint, delivery);
+				}
+			});
+		}
+		return map;
+	}
+	
+	
 }

@@ -54,7 +54,7 @@ public class WxPayStatus {
 	@XMLTag(tagName="bank_type")
 	private String bankType;
 	
-	@XMLTag(tagName="tptal_fee")
+	@XMLTag(tagName="total_fee")
 	private Integer totalFee;
 	
 	@XMLTag(tagName="settlement_total_fee")

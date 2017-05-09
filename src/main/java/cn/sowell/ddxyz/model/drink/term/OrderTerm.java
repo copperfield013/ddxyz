@@ -30,6 +30,7 @@ public class OrderTerm {
 	Integer totalPrice;
 	ReceiverInfo receiver;
 	int dispenseCount = 0;
+	String comment;
 	
 	ArrayList<OrderItem> items = new ArrayList<OrderItem>();  
 	
@@ -75,6 +76,9 @@ public class OrderTerm {
 					}else{
 						throw new OrderException("没有传入收货人信息参数");
 					}
+					
+					String comment = jo.getString("comment");
+					ot.comment = comment;
 					
 					JSONArray items = jo.getJSONArray("items");
 					for (Object ele : items) {
@@ -133,6 +137,8 @@ public class OrderTerm {
 		oParameter.setTotalPrice(totalPrice);
 		//设置收货人信息
 		oParameter.setReceiver(receiver);
+		//设置备注
+		oParameter.setComment(comment);
 		//构造产品参数
 		ProductsParameter pParam = new ProductsParameter();
 		oParameter.setProductParameter(pParam);

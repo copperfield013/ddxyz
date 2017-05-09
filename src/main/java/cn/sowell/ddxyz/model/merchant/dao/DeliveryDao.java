@@ -29,5 +29,13 @@ public interface DeliveryDao {
 	 * @param plan
 	 */
 	void savePlan(PlainDeliveryPlan plan);
+	
+	/**
+	 * 根据配送id获得配送对象
+	 * @param deliveryId
+	 * @return
+	 */
+	PlainDelivery getPlainDelivery(long deliveryId);
+	
 
 }

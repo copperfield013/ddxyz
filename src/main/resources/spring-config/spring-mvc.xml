@@ -31,6 +31,8 @@ http://www.springframework.org/schema/context/spring-context-4.3.xsd">
         	<list>
         		<!-- 支持在application/json请求下，将请求主体转换为JsonRequest对象 -->
 				<bean class="cn.sowell.copframe.messageConverter.JsonRequestConverter" />
+				<!-- 支持在application/xml请求下，将请求主体转换为XmlRequest对象 -->
+				<bean class="cn.sowell.copframe.messageConverter.XmlRequestConverter" />
         		<!-- 用于将返回的Json字符串转化编码 -->
 				<bean class="cn.sowell.copframe.messageConverter.JsonStringConverter">
 					<property name="supportedMediaTypes">    
@@ -41,6 +43,8 @@ http://www.springframework.org/schema/context/spring-context-4.3.xsd">
 				</bean>
 				<!-- 用于将返回的jsonReponse对象写到响应正文中 -->
 				<bean class="cn.sowell.copframe.messageConverter.JsonResponseConverter"  />
+				<!-- 用于将返回的xmlReponse对象写到响应正文中 -->
+				<bean class="cn.sowell.copframe.messageConverter.XMLResponseConverter"  />
 				<!-- 用于将返回的纯字符串转换编码 -->
 				<bean class="org.springframework.http.converter.StringHttpMessageConverter">
 					<constructor-arg value="UTF-8" /> 

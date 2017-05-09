@@ -18,6 +18,8 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 
+import cn.sowell.copframe.utils.range.ComparableSingleRange;
+import cn.sowell.copframe.utils.range.DateRange;
 import cn.sowell.ddxyz.model.common.core.DispenseCode;
 import cn.sowell.ddxyz.model.common.core.Order;
 import cn.sowell.ddxyz.model.common.core.OrderDispenseResource;
@@ -41,6 +43,8 @@ public class DefaultProductManager implements ProductManager, InitializingBean{
 	
 	Map<Serializable, Product> productMap = new LinkedHashMap<Serializable, Product>();
 	Set<Serializable> invalidSet = new HashSet<Serializable>();
+	Map<Product, Long> lastOperateMap = new LinkedHashMap<Product, Long>(); 
+	
 	
 	Logger logger = Logger.getLogger(ProductManager.class);
 	
@@ -50,10 +54,16 @@ public class DefaultProductManager implements ProductManager, InitializingBean{
 		
 	}
 	
+	private synchronized Product getCacheProduct(Serializable key){
+		Product product = productMap.get(key);
+		lastOperateMap.put(product, System.currentTimeMillis());
+		return product;
+	}
+	
 	
 	@Override
 	public Product getProduct(Serializable productId) {
-		Product product = productMap.get(productId);
+		Product product = getCacheProduct(productId);
 		if(product == null){
 			//只当无效数组中不包含这个标识时
 			if(!invalidSet.contains(productId)){
@@ -76,6 +86,7 @@ public class DefaultProductManager implements ProductManager, InitializingBean{
 				}
 			}
 		}
+		lastOperateMap.put(product, System.currentTimeMillis());
 		return product;
 	}
 	
@@ -238,6 +249,7 @@ public class DefaultProductManager implements ProductManager, InitializingBean{
 		synchronized (productMap) {
 			for (Product product : productSet) {
 				productMap.remove(product.getId());
+				lastOperateMap.remove(product);
 			}
 		}
 	}
@@ -248,6 +260,7 @@ public class DefaultProductManager implements ProductManager, InitializingBean{
 			synchronized (productMap) {
 				for (Product product : products) {
 					productMap.put(product.getId(), product);
+					lastOperateMap.put(product, System.currentTimeMillis());
 				}
 				return true;
 			}
@@ -310,6 +323,21 @@ public class DefaultProductManager implements ProductManager, InitializingBean{
 			}else{
 				//检测不通过，直接抛出异常
 				throw new ProductException(checkResult.getReason());
+			}
+		}
+	}
+
+	@Override
+	public synchronized void clearCache(DateRange range) {
+		if(range != null){
+			ComparableSingleRange<Long> timeRange = range.toLongRange();
+			Set<Product> products = new LinkedHashSet<Product>(lastOperateMap.keySet());
+			for (Product product : products) {
+				Long time = lastOperateMap.get(product);
+				if(timeRange.inRange(time)){
+					lastOperateMap.remove(product);
+					productMap.remove(product.getId());
+				}
 			}
 		}
 	}

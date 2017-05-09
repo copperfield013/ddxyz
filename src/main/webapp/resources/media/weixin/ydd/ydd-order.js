@@ -112,6 +112,13 @@ define(function(require, exports, module){
 		
 		$('#addDrink').click(function(e, ignoreAlert){
 			ignoreAlert = ignoreAlert || false;
+			//检查订单配送信息
+			if(!order.getDelivery().getTimePoint()){
+				return alertMsg('请选择配送时间档');
+			}
+			if(!order.getDelivery().getLocation()){
+				return alertMsg('请选择配送地点');
+			}
 			var orderItem = new OrderItem();
 			var $drinkType = $('#drink-type');
 			var drinkTypeId = $drinkType.val(),
@@ -224,6 +231,8 @@ define(function(require, exports, module){
 			if(order.getTotalCupCount() > cupRemain){
 				return alertMsg('选择饮料总杯数大于该配送的当前可供余量');
 			}
+			var comment = $('#comment').val();
+			order.setComment(comment);
 			showShade();
 			//生成提交后台的JSON
 			var reqJSON = order.toObject();
@@ -598,6 +607,7 @@ define(function(require, exports, module){
 			var obj = this.getDelivery().toObject();
 			obj.receiver = this.getReceiver().toObject();
 			obj.totalPrice = this.getTotalPrice();
+			obj.comment = this.getComment();
 			obj.items = [];
 			for(var i in orderItems){
 				obj.items.push(orderItems[i].toObject());

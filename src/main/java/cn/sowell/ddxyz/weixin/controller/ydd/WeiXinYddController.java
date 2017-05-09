@@ -93,7 +93,7 @@ public class WeiXinYddController {
 		UserIdentifier user = WxUtils.getCurrentUser(UserIdentifier.class);
 		long waresId = 1l;
 		//获得当天的所有配送
-		Map<DeliveryTimePoint, List<PlainDelivery>> deliveryMap = dService.getTodayDeliveries(waresId);
+		Map<DeliveryTimePoint, List<PlainDelivery>> deliveryMap = dService.getTodayDeliveries(waresId, true);
 		//获得所有饮料种类
 		List<PlainDrinkType> drinkTypes = drinkService.getAllDrinkTypes(waresId);
 		//获得所有饮料的可用加茶
@@ -191,20 +191,33 @@ public class WeiXinYddController {
 	@RequestMapping("/order-paied")
 	public JsonResponse orderPaid(Long orderId){
 		JsonResponse jRes = new JsonResponse();
-		try {
-			WeiXinUser user = WxUtils.getCurrentUser(WeiXinUser.class);
-			oService.payOrder(orderId, user);
+		Order order = oService.getOrder(orderId);
+		
+		if(order.getCancelStatus() != null){
+			jRes.put("status", "fail");
+			jRes.put("msg", "订单已取消");
+		}else if(order.getOrderStatus() >= Order.STATUS_PAYED){
 			jRes.put("status", "suc");
-		} catch (Exception e) {
-			logger.error("订单修改支付状态失败[orderId=" + orderId + "]");
-			logger.error("更改订单状态为已支付时发生异常", e);
-			jRes.put("status", "error");
+			jRes.put("paied", true);
+			jRes.put("msg", "订单已支付，当前状态为[" + DdxyzConstants.ORDER_STATUS_CNAME.get(order.getOrderStatus()) + "]");
+		}else{
+			try {
+				WeiXinUser user = WxUtils.getCurrentUser(WeiXinUser.class);
+				oService.payOrder(orderId, user);
+				jRes.put("status", "suc");
+			} catch (Exception e) {
+				logger.error("订单修改支付状态失败[orderId=" + orderId + "]");
+				logger.error("更改订单状态为已支付时发生异常", e);
+				jRes.put("status", "error");
+			}
 		}
 		return jRes;
 	}
 	
 	@RequestMapping("/deliverySelection")
-	public String deliverySelection(){
+	public String deliverySelection(long orderId, Model model){
+		Map<DeliveryTimePoint, List<PlainDelivery>> deliveryMap = dService.getUsableDeliveryMap(orderId);
+		model.addAttribute("deliveryMap", deliveryMap);
 		return WeiXinConstants.PATH_YDD + "/delivery_selection.jsp";
 	}
 	

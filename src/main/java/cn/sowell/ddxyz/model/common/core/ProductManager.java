@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Set;
 
+import cn.sowell.copframe.utils.range.DateRange;
 import cn.sowell.ddxyz.model.common.core.exception.OrderException;
 import cn.sowell.ddxyz.model.common.core.exception.ProductException;
 
@@ -75,6 +76,12 @@ public interface ProductManager {
 	 * @throws OrderException 
 	 */
 	void appendToProduct(OrderDispenseResource resource, Order order) throws OrderException;
+
+	/**
+	 * 清除最近操作时间为某个时间范围内的的所有产品
+	 * @param range
+	 */
+	void clearCache(DateRange range);
 
 	
 	

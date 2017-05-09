@@ -55,5 +55,10 @@ public class DeliveryDaoImpl implements DeliveryDao{
 	public void savePlan(PlainDeliveryPlan plan) {
 		sFactory.getCurrentSession().save(plan);
 	}
+	
+	@Override
+	public PlainDelivery getPlainDelivery(long deliveryId) {
+		return sFactory.getCurrentSession().get(PlainDelivery.class, deliveryId);
+	}
 
 }

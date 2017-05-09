@@ -60,5 +60,12 @@ public class CommonOrderDaoImpl implements CommonOrderDao{
 	public PlainOrder getPlainOrder(long orderId) {
 		return sFactory.getCurrentSession().get(PlainOrder.class, orderId);
 	}
+	
+	@Override
+	public PlainOrder getPlainOrder(String outTradeNo) {
+		String hql = "from PlainOrder o where o.outTradeNo = :outTradeNo";
+		Query query = sFactory.getCurrentSession().createQuery(hql);
+		return (PlainOrder) query.setString("outTradeNo", outTradeNo).uniqueResult();
+	}
 
 }

@@ -18,6 +18,7 @@ define(function(require, exports, module){
 			signature: $paramMap.signature,// 必填，签名，见附录1
 			jsApiList: [
 			            'onMenuShareTimeline',
+			            'onMenuShareAppMessage',
 			            'chooseWXPay'
 			            ] 
 		});

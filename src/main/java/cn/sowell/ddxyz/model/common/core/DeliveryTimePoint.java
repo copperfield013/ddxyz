@@ -65,7 +65,7 @@ public class DeliveryTimePoint {
 	
 	public boolean getClosed(){
 		if(this.closeTime != null){
-			return (new Date()).compareTo(this.closeTime) > 0;
+			return !(new Date()).before(this.closeTime);
 		}else{
 			throw new UnsupportedOperationException("无法查看该时间点的关闭状态，因为关闭时间参数为空");
 		}

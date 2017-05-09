@@ -28,6 +28,9 @@ public class WeiXinUser implements WxUserPrincipal, UserIdentifier{
 	@Column(name="c_openid")
 	private String openid;
 	
+	@Column(name="c_appid")
+	private String appid;
+	
 	@Column(name="c_subscribe")
 	private Integer subscribe;
 	
@@ -239,6 +242,12 @@ public class WeiXinUser implements WxUserPrincipal, UserIdentifier{
 	}
 	public void setPrivilege(String privilege) {
 		this.privilege = privilege;
+	}
+	public String getAppid() {
+		return appid;
+	}
+	public void setAppid(String appid) {
+		this.appid = appid;
 	}
 	
 }

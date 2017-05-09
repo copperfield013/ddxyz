@@ -179,4 +179,10 @@ public class OrderServiceImpl implements OrderService{
 	public WeiXinUser getOrderUser(Order order) {
 		return order.getOrderUser();
 	}
+	
+	@Override
+	public Order getOrderByOutTradeNo(String outTradeNo) {
+		PlainOrder order = oDao.getPlainOrder(outTradeNo);
+		return oManager.getOrder(order.getId());
+	}
 }

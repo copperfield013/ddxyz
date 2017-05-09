@@ -118,6 +118,13 @@ public interface OrderService {
 	 */
 	WeiXinUser getOrderUser(Order order);
 
+	/**
+	 * 根据微信的outTradeNo获得系统内的订单
+	 * @param outTradeNo
+	 * @return
+	 */
+	Order getOrderByOutTradeNo(String outTradeNo);
+
 
 
 	

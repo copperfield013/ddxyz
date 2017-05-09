@@ -26,5 +26,12 @@ public interface CommonOrderDao {
 	 * @return
 	 */
 	PlainOrder getPlainOrder(long orderId);
+	
+	/**
+	 * 从数据库根据outTradeNo获得订单对象
+	 * @param outTradeNo
+	 * @return
+	 */
+	PlainOrder getPlainOrder(String outTradeNo);
 
 }

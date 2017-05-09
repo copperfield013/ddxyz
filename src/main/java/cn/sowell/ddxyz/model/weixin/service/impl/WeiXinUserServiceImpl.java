@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import cn.sowell.copframe.common.property.PropertyPlaceholder;
 import cn.sowell.copframe.weixin.authentication.WxUserPrincipal;
+import cn.sowell.copframe.weixin.common.service.WxConfigService;
 import cn.sowell.ddxyz.DdxyzConstants;
 import cn.sowell.ddxyz.model.weixin.dao.WeiXinUserDao;
 import cn.sowell.ddxyz.model.weixin.pojo.WeiXinUser;
@@ -20,6 +21,9 @@ import com.alibaba.fastjson.JSONObject;
 public class WeiXinUserServiceImpl implements WeiXinUserService{
 	@Resource
 	WeiXinUserDao wxUserDao;
+	
+	@Resource
+	WxConfigService configService;
 	
 	@Override
 	public WeiXinUser getWeiXinUserByOpenid(String openid) {
@@ -35,12 +39,8 @@ public class WeiXinUserServiceImpl implements WeiXinUserService{
 	@Override
 	public WxUserPrincipal buildFromJsonObject(JSONObject userJson) {
 		WeiXinUser wxUser = new WeiXinUser();
-		/*wxUser.setSubscribe(userJson.getInteger("subscribe"));
-		wxUser.setSubscribeTime(new Date(userJson.getLong("subscribe_time") * 1000));
-		wxUser.setGroupId(userJson.getString("groupid"));;
-		wxUser.setLanguage(userJson.getString("language"));
-		wxUser.setRemark(userJson.getString("remark"));*/
 		
+		wxUser.setAppid(configService.getAppid());
 		wxUser.setOpenid(userJson.getString("openid"));
 		wxUser.setNickname(userJson.getString("nickname"));
 		int intSex = userJson.getIntValue("sex");

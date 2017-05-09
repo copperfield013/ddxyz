@@ -135,7 +135,14 @@ public class DefaultOrder implements Order{
 
 	@Override
 	public synchronized void pay(OrderPayParameter payParam) throws OrderException{
+		if(this.getCancelStatus() != null){
+			throw new OrderException("订单已取消，无法支付。当前订单取消状态不为空，为[" + this.getCancelStatus() + "]");
+		}
+		if(this.getOrderStatus() >= Order.STATUS_PAYED){
+			throw new OrderException("订单已经支付，无需再次支付，当前订单状态为[" + this.getOrderStatus() + "]");
+		}
 		if(!getPayExpired()){
+			//从微信服务器获取当前订单的支付状态
 			WxPayStatus payStatus = checkWxPayStatus();
 			//调用微信支付查询订单接口，检查付款是否完成
 			if("SUCCESS".equals(payStatus.getTradeState())){

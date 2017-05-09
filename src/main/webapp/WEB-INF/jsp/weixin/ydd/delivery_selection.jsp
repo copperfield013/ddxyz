@@ -6,165 +6,22 @@
 		<div class="dialog-title">请选择要再次购买的配送</div>
 		<div class="dialog-content-wrapper">
 			<ul class="dialog-content">
-				<li>
-					<div class="dialog-distribution-time">
-						配送时间档： <i class="dialog-distribution-time">13点档</i>
-					</div>
-					<div class="distribution-address-warp">
-						<div class="dialog-distribution-address TH-market">
-							天虹商场 <i> <b></b>
-							</i>
+				<c:forEach items="${deliveryMap }" var="deliveryEntry">
+					<c:set var="timePoint" value="${deliveryEntry.key }" />
+					<li>
+						<div class="dialog-distribution-time">
+							配送时间档： <i class="dialog-distribution-time">${timePoint.hour }点档</i>
 						</div>
-						<div class="dialog-distribution-address HZ-mansion">
-							杭钻大厦 <i> <b></b>
-							</i>
+						<div class="distribution-address-warp">
+							<c:forEach items="${deliveryEntry.value }" var="delivery">
+								<div class="dialog-distribution-address TH-market" data-id="${delivery.id }">
+									${delivery.locationName }<i> <b></b>
+									</i>
+								</div>
+							</c:forEach>
 						</div>
-					</div>
-				</li>
-				<li>
-					<div class="dialog-distribution-time">
-						配送时间档： <i class="dialog-distribution-time">13点档</i>
-					</div>
-					<div class="distribution-address-warp">
-						<div class="dialog-distribution-address TH-market">
-							天虹商场 <i> <b></b>
-							</i>
-						</div>
-	
-						<div class="dialog-distribution-address HZ-mansion">
-							杭钻大厦 <i> <b></b>
-							</i>
-						</div>
-					</div>
-				</li>
-				<li>
-					<div class="dialog-distribution-time">
-						配送时间档： <i class="dialog-distribution-time">13点档</i>
-					</div>
-					<div class="distribution-address-warp">
-						<div class="dialog-distribution-address TH-market">
-							天虹商场 <i> <b></b>
-							</i>
-						</div>
-	
-						<div class="dialog-distribution-address HZ-mansion">
-							杭钻大厦 <i> <b></b>
-							</i>
-						</div>
-					</div>
-				</li>
-				<li>
-					<div class="dialog-distribution-time">
-						配送时间档： <i class="dialog-distribution-time">13点档</i>
-					</div>
-					<div class="distribution-address-warp">
-						<div class="dialog-distribution-address TH-market">
-							天虹商场 <i> <b></b>
-							</i>
-						</div>
-	
-						<div class="dialog-distribution-address HZ-mansion">
-							杭钻大厦 <i> <b></b>
-							</i>
-						</div>
-					</div>
-				</li>
-				<li>
-					<div class="dialog-distribution-time">
-						配送时间档： <i class="dialog-distribution-time">13点档</i>
-					</div>
-					<div class="distribution-address-warp">
-						<div class="dialog-distribution-address TH-market">
-							天虹商场 <i> <b></b>
-							</i>
-						</div>
-	
-						<div class="dialog-distribution-address HZ-mansion">
-							杭钻大厦 <i> <b></b>
-							</i>
-						</div>
-					</div>
-				</li>
-				<li>
-					<div class="dialog-distribution-time">
-						配送时间档： <i class="dialog-distribution-time">13点档</i>
-					</div>
-					<div class="distribution-address-warp">
-						<div class="dialog-distribution-address TH-market">
-							天虹商场 <i> <b></b>
-							</i>
-						</div>
-	
-						<div class="dialog-distribution-address HZ-mansion">
-							杭钻大厦 <i> <b></b>
-							</i>
-						</div>
-					</div>
-				</li>
-				<li>
-					<div class="dialog-distribution-time">
-						配送时间档： <i class="dialog-distribution-time">13点档</i>
-					</div>
-					<div class="distribution-address-warp">
-						<div class="dialog-distribution-address TH-market">
-							天虹商场 <i> <b></b>
-							</i>
-						</div>
-	
-						<div class="dialog-distribution-address HZ-mansion">
-							杭钻大厦 <i> <b></b>
-							</i>
-						</div>
-					</div>
-				</li>
-				<li>
-					<div class="dialog-distribution-time">
-						配送时间档： <i class="dialog-distribution-time">13点档</i>
-					</div>
-					<div class="distribution-address-warp">
-						<div class="dialog-distribution-address TH-market">
-							天虹商场 <i> <b></b>
-							</i>
-						</div>
-	
-						<div class="dialog-distribution-address HZ-mansion">
-							杭钻大厦 <i> <b></b>
-							</i>
-						</div>
-					</div>
-				</li>
-				<li>
-					<div class="dialog-distribution-time">
-						配送时间档： <i class="dialog-distribution-time">13点档</i>
-					</div>
-					<div class="distribution-address-warp">
-						<div class="dialog-distribution-address TH-market">
-							天虹商场 <i> <b></b>
-							</i>
-						</div>
-	
-						<div class="dialog-distribution-address HZ-mansion">
-							杭钻大厦 <i> <b></b>
-							</i>
-						</div>
-					</div>
-				</li>
-				<li>
-					<div class="dialog-distribution-time">
-						配送时间档： <i class="dialog-distribution-time">13点档</i>
-					</div>
-					<div class="distribution-address-warp">
-						<div class="dialog-distribution-address TH-market">
-							天虹商场 <i> <b></b>
-							</i>
-						</div>
-	
-						<div class="dialog-distribution-address HZ-mansion">
-							杭钻大厦 <i> <b></b>
-							</i>
-						</div>
-					</div>
-				</li>
+					</li>
+				</c:forEach>
 			</ul>
 		</div>
 		<div class="dialog-button">

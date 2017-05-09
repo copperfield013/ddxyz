@@ -3,6 +3,7 @@ package cn.sowell.ddxyz.model.common.core.impl;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -19,6 +20,8 @@ import org.springframework.util.Assert;
 
 import cn.sowell.copframe.common.UserIdentifier;
 import cn.sowell.copframe.utils.TextUtils;
+import cn.sowell.copframe.utils.range.ComparableSingleRange;
+import cn.sowell.copframe.utils.range.DateRange;
 import cn.sowell.copframe.weixin.common.service.WxConfigService;
 import cn.sowell.copframe.weixin.pay.paied.WxPayStatus;
 import cn.sowell.copframe.weixin.pay.refund.RefundRequest;
@@ -71,6 +74,8 @@ public class DefaultOrderManager implements OrderManager, InitializingBean {
 	 */
 	byte[] keyLock = new byte[0];
 	Map<Serializable, Order> orderMap = new LinkedHashMap<Serializable, Order>();
+	Map<Order, Long> lastOperateMap = new LinkedHashMap<Order, Long>();
+	
 	/**
 	 * 经验证无效的key，如果key被放在这里面，那么不需要再去持久化层访问
 	 */
@@ -89,6 +94,15 @@ public class DefaultOrderManager implements OrderManager, InitializingBean {
 		
 	}
 	
+	private synchronized Order getCachedOrder(Serializable key){
+		Order order = orderMap.get(key);
+		if(order != null){
+			lastOperateMap.put(order, System.currentTimeMillis());
+		}
+		return order;
+	}
+	
+	
 	/**
 	 * 私有方法，将order放到当前订单管理器中进行维护
 	 * 但是不放到内存中
@@ -101,6 +115,7 @@ public class DefaultOrderManager implements OrderManager, InitializingBean {
 				if(!orderMap.containsKey(key)){
 					orderMap.put(key, order);
 					invalidKeySet.remove(key);
+					lastOperateMap.put(order, System.currentTimeMillis());
 				}
 			}
 		}
@@ -109,7 +124,7 @@ public class DefaultOrderManager implements OrderManager, InitializingBean {
 	@Override
 	public Order getOrder(Serializable orderKey) {
 		Assert.notNull(orderKey);
-		Order order = orderMap.get(orderKey);
+		Order order = getCachedOrder(orderKey);
 		if(order == null){
 			//只当无效数组中不包含这个标识时
 			if(!invalidKeySet.contains(orderKey)){
@@ -124,6 +139,7 @@ public class DefaultOrderManager implements OrderManager, InitializingBean {
 						}else{
 							//将订单放到map中
 							orderMap.put(orderKey, order);
+							lastOperateMap.put(order, System.currentTimeMillis());
 						}
 					}
 				}else{
@@ -142,6 +158,7 @@ public class DefaultOrderManager implements OrderManager, InitializingBean {
 	public void removeOrderFromCache(Order order){
 		synchronized (orderMap) {
 			orderMap.remove(order.getKey());
+			lastOperateMap.remove(order);
 			//调用产品管理的方法，在map中移除产品
 			productManager.removeProductFromMap(order.getProductSet());
 		}
@@ -202,6 +219,7 @@ public class DefaultOrderManager implements OrderManager, InitializingBean {
 			dpService.updateOrder(order);
 			synchronized (orderMap) {
 				orderMap.put(order.getKey(), order);
+				lastOperateMap.put(order, System.currentTimeMillis());
 			}
 		}
 	}
@@ -258,6 +276,7 @@ public class DefaultOrderManager implements OrderManager, InitializingBean {
 			if(productManager.cacheProducts(order.getProductSet())){
 				synchronized (orderMap) {
 					orderMap.put(order.getKey(), order);
+					lastOperateMap.put(order, System.currentTimeMillis());
 				}
 			}
 		}
@@ -345,4 +364,18 @@ public class DefaultOrderManager implements OrderManager, InitializingBean {
 		return payService.checkPayStatus(order.getOutTradeNo());
 	}
 	
+	@Override
+	public void clearCache(DateRange range) {
+		if(range != null){
+			ComparableSingleRange<Long> timeRange = range.toLongRange();
+			Set<Order> orders = new HashSet<Order>(lastOperateMap.keySet());
+			for (Order order : orders) {
+				Long time = lastOperateMap.get(order);
+				if(timeRange.inRange(time)){
+					lastOperateMap.remove(order);
+					orderMap.remove(order.getKey());
+				}
+			}
+		}
+	}
 }

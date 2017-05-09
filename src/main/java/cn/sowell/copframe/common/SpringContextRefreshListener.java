@@ -8,11 +8,11 @@ import org.springframework.context.event.ContextRefreshedEvent;
 
 import cn.sowell.ddxyz.model.common.core.DeliveryManager;
 
-public class SpringContextListener implements ApplicationListener<ContextRefreshedEvent>{
+public class SpringContextRefreshListener implements ApplicationListener<ContextRefreshedEvent>{
 
 	@Resource
 	DeliveryManager dManager;
-	private Logger logger = Logger.getLogger(SpringContextListener.class);
+	private Logger logger = Logger.getLogger(SpringContextRefreshListener.class);
 	
 	//需要执行的逻辑代码，当spring容器初始化完成后就会执行该方法。  
 	@Override

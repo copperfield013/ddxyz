@@ -48,6 +48,9 @@ public class CommonRequestAttributeSetInterceptor implements WebRequestIntercept
 			String path = HttpRequestUtils.getURI(req);
 			
 			String basePath = req.getScheme()+"://" + req.getServerName() + ":" + req.getServerPort() + req.getContextPath()+"/";
+			long resStamp = System.currentTimeMillis();
+			req.setAttribute("RES_STAMP", resStamp);
+			req.setAttribute("basePath", basePath);
 			if(matcher.match("/weixin", path) || matcher.match("/weixin/**", path)){
 				basePath = configService.getProjectURL();
 				//匹配微信端的请求
@@ -68,11 +71,14 @@ public class CommonRequestAttributeSetInterceptor implements WebRequestIntercept
 				paramMap.put("signature", signature);
 				paramMap.put("wxDebug", FormatUtils.toBoolean(PropertyPlaceholder.getProperty("wxDebug")));
 				
+				paramMap.put("RES_STAMP", resStamp);
+				paramMap.put("basePath", basePath);
+				
+				
 				request.setAttribute("$paramMap", paramMap, WebRequest.SCOPE_REQUEST);
 				request.setAttribute("$paramMapJson", JSON.toJSON(paramMap), WebRequest.SCOPE_REQUEST);
 			}
-			req.setAttribute("RES_STAMP", System.currentTimeMillis());
-			req.setAttribute("basePath", basePath);
+			
 		}
 		
 	}

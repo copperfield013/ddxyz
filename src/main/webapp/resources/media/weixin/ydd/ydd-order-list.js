@@ -94,7 +94,11 @@ define(function(require, exports, module){
 			}
 			$dialog = $(html);
 			$('body').append($dialog);
-			bindDialogEvent();
+			bindDialogEvent(function(deliveryId){
+				if(deliveryId){
+					location.href = 'weixin/ydd/order?orderId=' + orderId + '&deliveryId=' + deliveryId;
+				}
+			});
 		});
 	}
 	
@@ -113,11 +117,11 @@ define(function(require, exports, module){
 		});
 	}
 	
-	function bindDialogEvent(){
+	function bindDialogEvent(onSelected){
 		IX.unscroll($('main').get(0));
 		IX.scroll($('.dialog-content-wrapper').get(0));
 		//设置第一个地址栏展开    	
-		$(".distribution-address-warp:first").addClass("active");
+    	$(".distribution-address-warp:first", $dialog).addClass('active');
 		//绑定地址栏点击事件    	
         $(".dialog-distribution-time", $dialog).on("click",function(){
 			var address = $(this).next();
@@ -134,11 +138,13 @@ define(function(require, exports, module){
         });
 		//确认按钮获取选择中的地址的外层div
 		$('.dialog-button-sure', $dialog).on("click", function(){
-			console.log($(".dialog-distribution-address").filter('.active')[0]);
+			var $selected = $(".dialog-distribution-address").filter('.active');
+			var deliveryId = $selected.attr('data-id');
+			(onSelected || $.noop).apply($selected, [deliveryId]);
 		});
 		//取消按钮
        	$('.dialog-button-cancel', $dialog).on("click",function(){
-    	   
+    	   $dialog.remove();
 		})
 	}
 	

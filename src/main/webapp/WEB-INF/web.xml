@@ -8,7 +8,10 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<!-- 加载所有spring-开头的xml文件 -->
-		<param-value>classpath*:spring-config/spring-mvc.xml</param-value>
+		<param-value>
+			classpath*:spring-config/spring-mvc.xml,
+			classpath*:spring-config/spring-task.xml
+		</param-value>
 	</context-param>
 
 	<listener>

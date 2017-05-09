@@ -4,15 +4,19 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
+import cn.sowell.copframe.utils.range.ComparableSingleRange;
+import cn.sowell.copframe.utils.range.DateRange;
 import cn.sowell.copframe.weixin.common.service.WxConfigService;
 import cn.sowell.ddxyz.model.common.core.Delivery;
 import cn.sowell.ddxyz.model.common.core.DeliveryKey;
@@ -46,8 +50,19 @@ public class DefaultDeliveryManager implements DeliveryManager{
 	WxConfigService configService;
 	
 	private Map<DeliveryKey, Delivery> deliveryMap = new LinkedHashMap<DeliveryKey, Delivery>();
+	private Map<Delivery, Long> lastOperateMap = new LinkedHashMap<Delivery, Long>();
+	
 	
 	Logger logger = Logger.getLogger(DeliveryManager.class);
+	
+	private synchronized Delivery getCachedDelivery(DeliveryKey key){
+		Delivery delivery = deliveryMap.get(key);
+		if(delivery != null){
+			lastOperateMap.put(delivery, System.currentTimeMillis());
+		}
+		return delivery;
+	}
+	
 	
 	@Override
 	public List<Delivery> loadTodayDeliveries(){
@@ -57,6 +72,7 @@ public class DefaultDeliveryManager implements DeliveryManager{
 		dMap.forEach((key, delivery) -> {
 			if(!deliveryMap.containsKey(key)){
 				deliveryMap.put(key, delivery);
+				lastOperateMap.put(delivery, System.currentTimeMillis());
 			}
 		});
 		return new ArrayList<Delivery>(dMap.values());
@@ -108,13 +124,14 @@ public class DefaultDeliveryManager implements DeliveryManager{
 	private Delivery getDelivery(DeliveryKey deliveryKey){
 		synchronized (deliveryMap) {
 			//从内存中获得配送对象
-			Delivery result = deliveryMap.get(deliveryKey);
+			Delivery result = getCachedDelivery(deliveryKey);
 			//如果拿不到，那么就去数据库中获取
 			if(result == null){
 				result = dpService.getDelivery(deliveryKey);
 				//如果从数据库中可以拿到，那么将对象放到内存中
 				if(result != null){
 					deliveryMap.put(deliveryKey, result);
+					lastOperateMap.put(result, System.currentTimeMillis());
 				}
 			}
 			return result;
@@ -185,6 +202,21 @@ public class DefaultDeliveryManager implements DeliveryManager{
 	public DeliveryLocation getDeliveryLocation(long locationId) {
 		PlainLocation location = dpService.getDeliveryLocation(locationId);
 		return new DeliveryLocation(location);
+	}
+	
+	@Override
+	public synchronized void clearCache(DateRange range) {
+		if(range != null){
+			ComparableSingleRange<Long> timeRange = range.toLongRange();
+			Set<Delivery> deliveries = new HashSet<Delivery>(lastOperateMap.keySet());
+			for (Delivery delivery : deliveries) {
+				Long time = lastOperateMap.get(delivery);
+				if(timeRange.inRange(time)){
+					lastOperateMap.remove(delivery);
+					deliveryMap.remove(delivery.getId());
+				}
+			}
+		}
 	}
 
 }

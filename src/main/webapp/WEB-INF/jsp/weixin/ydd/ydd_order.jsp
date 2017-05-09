@@ -60,7 +60,7 @@
             <dd><select id="timePoint">
             	<option value="">请选择</option>
             	<c:forEach items="${deliveryMap }" var="item">
-            		<c:if test="${isDebug || item.key.closed }">
+            		<c:if test="${isDebug || !item.key.closed }">
 	            		<option data-key="${item.key.key }" value="${item.key.hour }">${item.key.hour }点</option>
             		</c:if>
             	</c:forEach>
@@ -70,7 +70,7 @@
             <dt>配送地址</dt>
             <dd>
             	<c:forEach items="${deliveryMap }" var="item">
-            		<c:if test="${isDebug || item.key.closed }">
+            		<c:if test="${isDebug || !item.key.closed }">
 	            		<select class="delivery-location" data-key="${item.key.key }" >
 	            			<option value="">请选择</option>
 	            			<c:forEach items="${item.value }" var="delivery">
@@ -148,7 +148,7 @@
         <div class="box">
             <h5>其他备注</h5>
             <p class="blob">
-                <textarea id="remarks" name="remarks" placeholder="输入备注详情"></textarea>
+                <textarea id="comment" placeholder="输入备注详情"></textarea>
             </p>
         </div>
         <div class="box">
