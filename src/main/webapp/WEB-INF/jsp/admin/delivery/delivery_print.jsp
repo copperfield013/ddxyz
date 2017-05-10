@@ -52,7 +52,7 @@
 						<span class="print-addr">${plainOrder.locationName }</span>
 					</div>
 					<div>
-						联系号码：<span class="print-contact">${plainOrder.receiverContact }</span>
+						联系号码：<span class="print-contact">${fn:substring(plainOrder.receiverContact, 0, 3)}****${fn:substring(plainOrder.receiverContact, 7, 11) }</span>
 						<span class="print-greet">欢迎下次光临</span>
 					</div>
 				</div>

@@ -47,7 +47,7 @@
 							<span class="print-addr">${productItem.locationName }</span>
 						</div>
 						<div>
-							联系号码：<span class="print-contact">${productItem.receiverContact }</span>
+							联系号码：<span class="print-contact">${fn:substring(productItem.receiverContact, 0, 3)}****${fn:substring(productItem.receiverContact, 7, 11) }</span>
 							<span class="print-greet">欢迎下次光临</span>
 						</div>
 					</div>
