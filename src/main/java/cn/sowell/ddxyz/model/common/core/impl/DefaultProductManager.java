@@ -341,5 +341,15 @@ public class DefaultProductManager implements ProductManager, InitializingBean{
 			}
 		}
 	}
+	
+	@Override
+	public synchronized void setProductsPrinted(List<Long> productIds) throws ProductException {
+		for (Long pId : productIds) {
+			Product product = getProduct(pId);
+			if(product.getStatus() == Product.STATUS_ORDERED && product.getCanceledStatus() == null){
+				product.make();
+			}
+		}
+	}
 
 }

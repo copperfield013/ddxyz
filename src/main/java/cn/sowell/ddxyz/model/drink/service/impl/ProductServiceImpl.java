@@ -7,6 +7,9 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import cn.sowell.copframe.dto.page.CommonPageInfo;
+import cn.sowell.copframe.utils.CollectionUtils;
+import cn.sowell.ddxyz.model.common.core.ProductManager;
+import cn.sowell.ddxyz.model.common.core.exception.ProductException;
 import cn.sowell.ddxyz.model.drink.dao.DrinkAdditionDao;
 import cn.sowell.ddxyz.model.drink.dao.ProductDao;
 import cn.sowell.ddxyz.model.drink.pojo.PlainDrinkAddition;
@@ -22,6 +25,10 @@ public class ProductServiceImpl implements ProductService {
 	
 	@Resource
 	DrinkAdditionDao drinkAdditionDao;
+	
+	@Resource
+	ProductManager pManager;
+	
 
 	@Override
 	public List<ProductInfoItem> getProductInfoItemList(ProductionCriteria criteria) {
@@ -30,9 +37,12 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public List<ProductInfoItem> getProductInfoItemListByProductIds(List productIdsList) {
+	public List<ProductInfoItem> getProductInfoItemListByProductIds(List<Long> productIdsList) throws ProductException {
 		List<ProductInfoItem> list = productDao.getProductInfoItemListByProductIds(productIdsList);
-		return setProductInfoItemAdditions(list);
+		List<ProductInfoItem> result = setProductInfoItemAdditions(list);
+		List<Long> productIds = CollectionUtils.toList(result, item->item.getProductId());
+		pManager.setProductsPrinted(productIds);
+		return result;
 	}
 
 	@Override

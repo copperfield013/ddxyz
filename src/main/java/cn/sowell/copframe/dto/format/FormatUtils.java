@@ -2,6 +2,7 @@ package cn.sowell.copframe.dto.format;
 
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.Date;
 import java.util.LinkedHashMap;
 /**
  * 
@@ -135,6 +136,8 @@ public class FormatUtils {
 			return (T) toBigDecimal(value);
 		}else if(Boolean.class == formatClass || Boolean.TYPE == formatClass){
 			return (T) toBoolean(value);
+		}else if(Date.class.isAssignableFrom(formatClass)){
+			return (T) value;
 		}
 		return null;
 	}

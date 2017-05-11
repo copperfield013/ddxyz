@@ -1,6 +1,6 @@
 @page{
 	width: 60mm;
-	height: 40mm;
+	height: 38mm;
 }
 * {
     box-sizing: border-box;
@@ -17,7 +17,7 @@ div {
 	position: relative;
 	page-break-after: always;
 	width: 88mm;
-	height: 59mm;
+	height: 54mm;
 }
 .print-content {
     font-size: 14px;
@@ -44,6 +44,7 @@ div {
 
 .print-desc-area {
     font-size: 3px;
+    line-height: 2em;
 }
 
 .print-desc {
@@ -60,18 +61,22 @@ div.print-desc.float-right {
 }
 
 .print-part-area {
-    margin-top: 0.5em;
     border-top: 1px dashed #000;
-    padding-top: 1.5em;
+    padding-top: 2px;
 }
 .print-foot-area {
     position: absolute;
     bottom: 0;
     font-size: 0.8em;
+    padding-top: 2px;
 }
 .print-amount-area {
-	border-bottom: 1px dashed #000;
+	padding-bottom: 5px;
     text-align: right;
+}
+.print-addr-area{
+	border-top: 1px dashed #000;
+	padding-top: 10px;
 }
 .print-greet {
     text-align: center;

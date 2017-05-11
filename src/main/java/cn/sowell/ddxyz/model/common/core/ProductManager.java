@@ -2,6 +2,7 @@ package cn.sowell.ddxyz.model.common.core;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import cn.sowell.copframe.utils.range.DateRange;
@@ -82,6 +83,12 @@ public interface ProductManager {
 	 * @param range
 	 */
 	void clearCache(DateRange range);
+	/**
+	 * 设置打印后的产品状态
+	 * @param productIds
+	 * @throws ProductException 
+	 */
+	void setProductsPrinted(List<Long> productIds) throws ProductException;
 
 	
 	

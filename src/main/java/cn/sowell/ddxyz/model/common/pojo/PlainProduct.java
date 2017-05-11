@@ -43,6 +43,9 @@ public class PlainProduct{
 	@Column(name="c_refund_fee")
 	private Integer refundFee;
 	
+	@Column(name="c_print_time")
+	private Date printTime;
+	
 	@Column(name="create_time")
 	private Date createTime;
 	
@@ -121,6 +124,12 @@ public class PlainProduct{
 	}
 	public void setDispenseKey(Integer dispenseKey) {
 		this.dispenseKey = dispenseKey;
+	}
+	public Date getPrintTime() {
+		return printTime;
+	}
+	public void setPrintTime(Date printTime) {
+		this.printTime = printTime;
 	}
 	
 }

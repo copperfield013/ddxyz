@@ -1,8 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/jsp/common/base_empty.jsp"%>
-<link type="text/css" rel="stylesheet" href="${basePath}media/admin/plugins/bootstrap-3.3.7-dist/css/bootstrap.min.css">
-<link type="text/css" rel="stylesheet" href="${basePath}media/admin/delivery/my.src.css">
-<link type="text/css" rel="stylesheet" href="${basePath}media/admin/delivery/PrintArea.css">
 <div style="display: none;">
 	<c:forEach items="${orderDrinkItemMap[plainOrder] }" step="2" varStatus="i">
 		<div class="PrintArea print-wrapper">

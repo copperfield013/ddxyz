@@ -3,6 +3,8 @@ package cn.sowell.ddxyz.model.drink.pojo.item;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
+
 import cn.sowell.ddxyz.model.drink.pojo.PlainDrinkAddition;
 
 public class ProductInfoItem {
@@ -10,39 +12,62 @@ public class ProductInfoItem {
 	/**
 	 * order的相关信息
 	 */
-	
+	@Column(name="c_order_code")
 	private String orderCode;
 	
+	
+	@Column(name="c_time_point")
 	private Date timePoint;
 	
+	@Column(name="c_receiver_contact")
 	private String receiverContact;
 	
+	
+	@Column(name="c_location_name")
 	private String locationName;
 	
+	@Column(name="create_time")
 	private Date orderCreateTime;
 	
+	@Column(name="c_pay_time")
 	private Date payTime;
+	
+	@Column(name="product_id")
+	private Long productId;
 	
 	/**
 	 * DrinkProduct相关信息
 	 */
 	
+	@Column(name="drink_product_id")
 	private Long drinkProductId;
 	
+	
+	@Column(name="c_drink_type_name")
 	private String drinkName;
 	
+	@Column(name="c_tea_addition_name")
 	private String teaAdditionName;
 	
+	
+	@Column(name="c_sweetness")
 	private Integer sweetness;
 	
+	
+	@Column(name="c_heat")
 	private Integer heat;
 	
+	@Column(name="c_cup_size")
 	private Integer cupSize;
 	
 	/**
 	 * plainProduct价格
 	 */
+	@Column(name="c_price")
 	private Integer price;
+	
+	@Column(name="product_status")
+	private Integer productStatus;
 	
 	/**
 	 * DrinkAddition加料
@@ -161,4 +186,25 @@ public class ProductInfoItem {
 	public void setLocationName(String locationName) {
 		this.locationName = locationName;
 	}
+
+	public void setReceiverContact(String receiverContact) {
+		this.receiverContact = receiverContact;
+	}
+
+	public Long getProductId() {
+		return productId;
+	}
+
+	public void setProductId(Long productId) {
+		this.productId = productId;
+	}
+
+	public Integer getProductStatus() {
+		return productStatus;
+	}
+
+	public void setProductStatus(Integer productStatus) {
+		this.productStatus = productStatus;
+	}
+
 }

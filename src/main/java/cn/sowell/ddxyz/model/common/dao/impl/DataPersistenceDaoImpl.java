@@ -61,19 +61,21 @@ public class DataPersistenceDaoImpl implements DataPersistenceDao{
 
 	@Override
 	public void updateProductStatus(long id, int status) {
-		String sql = "update t_product_base set c_status = :status where id = :id";
+		String sql = "update t_product_base set c_status = :status, update_time = :updateTime where id = :id";
 		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
 		query.setInteger("status", status);
 		query.setLong("id", id);
+		query.setTimestamp("updateTime", new Date());
 		query.executeUpdate();
 	}
 	
 	@Override
 	public void updateProductStatusInOrder(long orderId, int status) {
-		String sql = "update t_product_base set c_status = :status where order_id = :orderId";
+		String sql = "update t_product_base set c_status = :status, update_time = :updateTime where order_id = :orderId";
 		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
 		query.setInteger("status", status);
 		query.setLong("orderId", orderId);
+		query.setTimestamp("updateTime", new Date());
 		query.executeUpdate();
 	}
 	
@@ -85,10 +87,11 @@ public class DataPersistenceDaoImpl implements DataPersistenceDao{
 	
 	@Override
 	public void updateOrderStatus(long orderId, int status) {
-		String sql = "update t_order_base set c_status = :status where id = :id";
+		String sql = "update t_order_base set c_status = :status, update_time = :updateTime where id = :id";
 		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
 		query.setInteger("status", status);
 		query.setLong("id", orderId);
+		query.setTimestamp("updateTime", new Date());
 		query.executeUpdate();
 	}
 	
@@ -161,33 +164,36 @@ public class DataPersistenceDaoImpl implements DataPersistenceDao{
 	
 	@Override
 	public void updateProductDispenseCodeAndOrdered(long productId, DispenseCode code) {
-		String sql = "update t_product_base set c_dispense_code = :dispenseCode, c_dispense_key = :dispenseKey, c_status = :status where id = :productId";
+		String sql = "update t_product_base set c_dispense_code = :dispenseCode, c_dispense_key = :dispenseKey, c_status = :status, update_time = :updateTime where id = :productId";
 		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
 		query.setString("dispenseCode", code.getCode())
 			.setInteger("dispenseKey", (int) code.getKey())
 			.setInteger("status", Product.STATUS_ORDERED)
-			.setLong("productId", productId);
+			.setLong("productId", productId)
+			.setTimestamp("updateTime", new Date());
 		query.executeUpdate();
 	}
 	
 	
 	@Override
 	public void updateOrderRefund(long orderId, int refundFee) {
-		String sql = "update t_order_base set c_canceled_status = :canStatus, c_refund_fee = :refundFee where id = :orderId";
+		String sql = "update t_order_base set c_canceled_status = :canStatus, c_refund_fee = :refundFee, update_time = :updateTime where id = :orderId";
 		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
 		query.setString("canStatus", Order.CAN_STATUS_REFUNDED)
 				.setInteger("refundFee", refundFee)
 				.setLong("orderId", orderId)
+				.setTimestamp("updateTime", new Date())
 				.executeUpdate();
 		
 	}
 	
 	@Override
 	public void updateOrderProductRefund(long orderId) {
-		String sql = "update t_product_base set c_canceled_status = :canStatus, c_refund_fee = c_price where order_id = :orderId";
+		String sql = "update t_product_base set c_canceled_status = :canStatus, c_refund_fee = c_price, update_time = :updateTime where order_id = :orderId";
 		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
 		query.setString("canStatus", Product.CAN_STATUS_ORDER_CANCEL)
 			.setLong("orderId", orderId)
+			.setTimestamp("updateTime", new Date())
 			.executeUpdate();
 	}
 	
@@ -199,10 +205,11 @@ public class DataPersistenceDaoImpl implements DataPersistenceDao{
 	
 	@Override
 	public void updateOrderCanceledStatus(long orderId, String canStatusCanceled) {
-		String sql = "update t_order_base set c_canceled_status = :canStatus where id = :orderId";
+		String sql = "update t_order_base set c_canceled_status = :canStatus, update_time = :updateTime where id = :orderId";
 		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
 		query.setString("canStatus", canStatusCanceled)
 				.setLong("orderId", orderId)
+				.setTimestamp("updateTime", new Date())
 				.executeUpdate();
 	}
 	
@@ -210,16 +217,17 @@ public class DataPersistenceDaoImpl implements DataPersistenceDao{
 	@Override
 	public void updateProductCanceledStatusInOrder(long orderId,
 			String canStatus) {
-		String sql = "update t_product_base set c_canceled_status = :canStatus where order_id = :orderId";
+		String sql = "update t_product_base set c_canceled_status = :canStatus, update_time = :updateTime where order_id = :orderId";
 		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
 		query.setString("canStatus", canStatus)
 			.setLong("orderId", orderId)
+			.setTimestamp("updateTime", new Date())
 			.executeUpdate();
 	}
 	
 	@Override
 	public void updateOrderActualPaied(long orderId, Integer actualPay) {
-		String sql = "update t_order_base set c_actual_pay = @actualPay, c_pay_time = :payTime where id = :orderId";
+		String sql = "update t_order_base set c_actual_pay = @actualPay, c_pay_time = :payTime, update_time = updateTime where id = :orderId";
 		DeferedParamQuery dQuery = new DeferedParamQuery(sql);
 		dQuery.setParam("orderId", orderId);
 		if(actualPay != null){
@@ -228,7 +236,7 @@ public class DataPersistenceDaoImpl implements DataPersistenceDao{
 		}else{
 			dQuery.setSnippet("actualPay", "c_total_price");
 		}
-		dQuery.setParam("payTime", new Date());
+		dQuery.setParam("payTime", new Date()).setParam("updateTime", new Date());
 		Query query = dQuery.createSQLQuery(sFactory.getCurrentSession(), false, null);
 		query.executeUpdate();
 	}
@@ -310,11 +318,12 @@ public class DataPersistenceDaoImpl implements DataPersistenceDao{
 	@Override
 	public void updateDeliveryDispensedCount(long deliveryId,
 			int currentCount) {
-		String sql = "update t_delivery_base set c_current_count = :currentCount where id = :deliveryId";
+		String sql = "update t_delivery_base set c_current_count = :currentCount, update_time = :updateTime where id = :deliveryId";
 		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
 		query
 			.setInteger("currentCount", currentCount)
-			.setLong("deliveryId", deliveryId);
+			.setLong("deliveryId", deliveryId)
+			.setTimestamp("updateTime", new Date());
 		query.executeUpdate();
 	}
 	

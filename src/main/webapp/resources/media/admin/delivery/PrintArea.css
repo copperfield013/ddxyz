@@ -17,7 +17,7 @@ div {
 	position: relative;
 	page-break-after: always;
 	width: 88mm;
-	height: 59mm;
+	height: 54mm;
 }
 .print-content {
     font-size: 14px;
@@ -33,6 +33,10 @@ div {
 .print-content div {
     float: left;
     width: 100%;
+}
+
+.print-addition-row {
+    padding-left: 1em;
 }
 
 .print-title-area {
@@ -60,15 +64,15 @@ div.print-desc.float-right {
 }
 
 .print-part-area {
-    margin-top: 0.5em;
     border-top: 1px dashed #000;
-    padding-top: 0.5em;
+    padding-top: 2px;
 }
 .print-foot-area {
     position: absolute;
     bottom: 0;
     font-size: 0.8em;
     border-top: 1px dashed #000;
+    padding-top: 2px;
 }
 
 .print-greet {

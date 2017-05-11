@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/jsp/common/base_empty.jsp"%>
+<link type="text/css" rel="stylesheet" href="${basePath}media/admin/production/PrintArea_fac.css">
 <div style="display: none;">
 	<div class="print-page">
 		<c:forEach items="${list }" var="productItem">
@@ -23,8 +24,9 @@
 					</div>
 					<div class="print-part-area">
 						<div class="print-part-row">
-							<span class="print-content-title">名称：</span>
-							<span id="view-name">${cupSizeMap[productItem.cupSize] }·${productItem.teaAdditionName }</span>
+							<span id="view-name">${productItem.drinkName }</span>
+							<span id="cup-size">${cupSizeMap[productItem.cupSize] }</span>
+							<span id="tea-addition">${productItem.teaAdditionName }</span>
 							<span id="heat">${heatMap[productItem.heat] }</span>
 							<span id="sweetness">${sweetnessMap[productItem.sweetness] }</span>
 						</div>
