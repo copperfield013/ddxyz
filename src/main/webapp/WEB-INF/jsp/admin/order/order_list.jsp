@@ -1,7 +1,5 @@
 <%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/jsp/common/base_empty.jsp"%>
-<style>
-</style>
 <nav style="padding: 1em 0" id="order-nav">
 	<form class="form-inline" action="admin/order-manage/order-list" >
 		<div class="form-group">
@@ -80,11 +78,6 @@
 	                cancelLabel: '取消',
 	                fromLabel: '从',
 	                toLabel: '到'
-	               /*  weekLabel: 'W',
-	                customRangeLabel: 'Custom Range',
-	                daysOfWeek: moment()._lang._weekdaysMin.slice(),
-	                monthNames: moment()._lang._monthsShort.slice(),
-	                firstDay: 0 */
 				}
 			});
 		});

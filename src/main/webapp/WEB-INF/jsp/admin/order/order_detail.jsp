@@ -1,39 +1,33 @@
 <%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/jsp/common/base_empty.jsp"%>
 <style>
-	.order-table-cell{
+	#order-${order.id } .order-table-cell{
 		display: block;
 		width: 100%;
 	}
-	.left{
-		float:left;
-	}
-	.right{
-		float:left;
-	}
-	.item-detail{
+	#order-${order.id } .item-detail{
 		display: table;
    	 	width: 45%;
    	 	border: 1px solid #FF0000;
    	 	margin-right: 10px;
    	 	margin-top: 20px;
 	}
-	.item-detail>dl{
+	#order-${order.id } .item-detail>dl{
 		display: table-row;
    		width: 100%;
 	}
-	.item-detail>dl>dt, .item-detail>dl>dd{
+	#order-${order.id } .item-detail>dl>dt, .item-detail>dl>dd{
 		border-bottom: dashed 1px #ddd;
 	    height: 2em;
 	    line-height: 2em;
 	    vertical-align: middle;
 	}
-	.item-detail>dl>dt{
+	#order-${order.id } .item-detail>dl>dt{
 		display: table-cell;
 	    width: 8em;
 	    text-align: center;
 	}
-	.item-detail>dl>dd{
+	#order-${order.id } .item-detail>dl>dd{
 		display: table-cell;
 		padding: 0 0.5em;
 	}
@@ -79,7 +73,7 @@
 							<dd>${orderDrinkItem.drinkName }</dd>
 						</dl>
 						<dl>
-							<dt>饮料名称</dt>
+							<dt>添加茶类</dt>
 							<dd>${orderDrinkItem.teaAdditionName }</dd>
 						</dl>
 						<dl>

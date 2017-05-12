@@ -81,10 +81,6 @@ public class AdminOrderManageControlller {
 	
 	@RequestMapping("/order-statistics")
 	public String orderStatistics(OrderCriteria criteria, CommonPageInfo pageInfo, Model model){
-		if(criteria.getTimeRange() == null){
-			criteria.setStartTime(fdFormat.getTheDayZero(new Date()));
-			criteria.setEndTime(fdFormat.incDay(criteria.getStartTime(), 1));
-		}
 		List<OrderStatisticsListItem> statisticsList = drinkOrderService.statisticOrder(criteria, pageInfo);
 		model.addAttribute("statisticsList", statisticsList);
 		model.addAttribute("criteria", criteria);

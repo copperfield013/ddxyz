@@ -43,7 +43,8 @@
 <script>
 	$(function(){
 		seajs.use([], function(){
-			$('#timeRange').daterangepicker({
+			var orderStatisticsNav = $("#order-statistics-nav");
+			$('#timeRange', orderStatisticsNav).daterangepicker({
 				format 				: 'YYYY-MM-DD',
 				separator			: '~',
 				locale				: {
