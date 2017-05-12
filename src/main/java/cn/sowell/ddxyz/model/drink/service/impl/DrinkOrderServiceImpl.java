@@ -26,6 +26,8 @@ import cn.sowell.ddxyz.model.drink.dao.DrinkAdditionDao;
 import cn.sowell.ddxyz.model.drink.dao.DrinkOrderDao;
 import cn.sowell.ddxyz.model.drink.pojo.PlainDrinkAddition;
 import cn.sowell.ddxyz.model.drink.pojo.PlainDrinkOrder;
+import cn.sowell.ddxyz.model.drink.pojo.criteria.OrderCriteria;
+import cn.sowell.ddxyz.model.drink.pojo.item.OrderStatisticsListItem;
 import cn.sowell.ddxyz.model.drink.pojo.item.PlainOrderDrinkItem;
 import cn.sowell.ddxyz.model.drink.service.DrinkOrderService;
 
@@ -59,24 +61,28 @@ public class DrinkOrderServiceImpl implements DrinkOrderService{
 	}
 	
 	@Override
-	public List<PlainOrder> getOrderList(Long userId) {
-		return drinkOrderDao.getOrderList(userId);
+	public List<PlainOrder> getOrderList(OrderCriteria criteria) {
+		return drinkOrderDao.getOrderList(criteria,null);
 	}
 	
-	public List<PlainOrder> getOrderPageList(Long userId, CommonPageInfo pageInfo){
-		return drinkOrderDao.getOrderList(userId, pageInfo);
+	public List<PlainOrder> getOrderPageList(OrderCriteria criteria, CommonPageInfo pageInfo) {
+		return drinkOrderDao.getOrderList(criteria, pageInfo);
 	}
 	
 	
 	@Override
 	public List<PlainDrinkOrder> getDrinkList(UserIdentifier user) {
-		List<PlainOrder> orderList = getOrderList((Long)user.getId());
+		OrderCriteria criteria = new OrderCriteria();
+		criteria.setUserId((Long)user.getId());
+		List<PlainOrder> orderList = getOrderList(criteria);
 		List<PlainDrinkOrder> drinkList = getNewDrinkOrderList(orderList);
 		return drinkList;
 	}
 	
 	public List<PlainDrinkOrder> getDrinkPageList(UserIdentifier user, CommonPageInfo pageInfo){
-		List<PlainOrder> orderList = getOrderPageList((Long)user.getId(), pageInfo);
+		OrderCriteria criteria = new OrderCriteria();
+		criteria.setUserId((Long)user.getId());
+		List<PlainOrder> orderList = getOrderPageList(criteria, pageInfo);
 		List<PlainDrinkOrder> drinkList = getNewDrinkOrderList(orderList);
 		return drinkList;
 	}
@@ -170,5 +176,24 @@ public class DrinkOrderServiceImpl implements DrinkOrderService{
 			items.add(item);
 		}
 		return result;
+	}
+
+
+	@Override
+	public Map<Long, Integer> getOrderCupCount(List<PlainOrder> list) {
+		List<Long> orderIdList = new ArrayList<Long>();
+		if(list != null && list.size() >0){
+			for(PlainOrder order : list){
+				orderIdList.add(order.getId());
+			}
+		}
+		Map<Long, Integer> map = drinkOrderDao.getOrderCupCount(orderIdList);
+		return map;
+	}
+
+
+	@Override
+	public List<OrderStatisticsListItem> statisticOrder(OrderCriteria criteria, CommonPageInfo pageInfo) {
+		return drinkOrderDao.statisticsOrder(criteria, pageInfo);
 	}
 }

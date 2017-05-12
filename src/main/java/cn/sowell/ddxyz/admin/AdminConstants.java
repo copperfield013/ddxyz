@@ -9,6 +9,10 @@ public interface AdminConstants {
 
 
 	/**
+	 * 订单管理
+	 */
+	final String PATH_ORDER = PATH_BASE + "/order";
+	/**
 	 * 生产管理
 	 */
 	final String PATH_PRODUCTION = PATH_BASE + "/production"; 

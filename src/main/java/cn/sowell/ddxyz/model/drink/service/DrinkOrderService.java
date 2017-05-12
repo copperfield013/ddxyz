@@ -9,6 +9,8 @@ import cn.sowell.ddxyz.model.common.core.Delivery;
 import cn.sowell.ddxyz.model.common.pojo.PlainOrder;
 import cn.sowell.ddxyz.model.drink.pojo.PlainDrinkAddition;
 import cn.sowell.ddxyz.model.drink.pojo.PlainDrinkOrder;
+import cn.sowell.ddxyz.model.drink.pojo.criteria.OrderCriteria;
+import cn.sowell.ddxyz.model.drink.pojo.item.OrderStatisticsListItem;
 import cn.sowell.ddxyz.model.drink.pojo.item.PlainOrderDrinkItem;
 
 import com.alibaba.fastjson.JSONObject;
@@ -20,7 +22,9 @@ public interface DrinkOrderService {
 	 * @param userId
 	 * @return
 	 */
-	List<PlainOrder> getOrderList(Long userId);
+	List<PlainOrder> getOrderList(OrderCriteria criteria);
+	
+	List<PlainOrder> getOrderPageList(OrderCriteria criteria, CommonPageInfo pageInfo);
 	
 	
 	/**
@@ -62,4 +66,14 @@ public interface DrinkOrderService {
 	 */
 	JSONObject converteInitOrder(Delivery delivery,
 			List<PlainOrderDrinkItem> orderItems);
+	
+	Map<Long, Integer> getOrderCupCount(List<PlainOrder> list);
+	
+	/**
+	 * 订单统计 
+	 * @param criteria
+	 * @param pageInfo 可为null
+	 * @return
+	 */
+	List<OrderStatisticsListItem> statisticOrder(OrderCriteria criteria, CommonPageInfo pageInfo);
 }

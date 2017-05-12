@@ -37,7 +37,7 @@ public class DrinkDeliveryDaoImpl implements DrinkDeliveryDao {
 		Session session = sFactory.getCurrentSession();
 		String sql = "select "
 				+ "o.id, o.c_order_code, o.c_time_point, o.c_receiver_contact, o.c_location_name, o.create_time, o.c_pay_time"
-				+ " from t_order_base o where o.c_status <> 0 @mainWhere order by o.c_pay_time asc";
+				+ " from t_order_base o where o.c_status <> 0 and o.c_canceled_status is null @mainWhere order by o.c_pay_time asc";
 		DeferedParamQuery dQuery = new DeferedParamQuery(sql);
 		DeferedParamSnippet mainWhere = dQuery.createSnippet("mainWhere", null);
 		if(criteria.getStartTime() != null){
@@ -54,7 +54,7 @@ public class DrinkDeliveryDaoImpl implements DrinkDeliveryDao {
 		}
 		if(StringUtils.hasText(criteria.getOrderCode())){
 			mainWhere.append("and o.c_order_code like :orderCode");
-			dQuery.setParam("orderCode", "%" + criteria.getOrderCode() + "%");
+			dQuery.setParam("orderCode", "%" + criteria.getOrderCode() );
 		}
 		if(StringUtils.hasText(criteria.getLocationName())){
 			mainWhere.append("and o.c_location_name like :locationName");

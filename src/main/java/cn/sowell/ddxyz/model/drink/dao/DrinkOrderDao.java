@@ -1,9 +1,12 @@
 package cn.sowell.ddxyz.model.drink.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import cn.sowell.copframe.dto.page.CommonPageInfo;
 import cn.sowell.ddxyz.model.common.pojo.PlainOrder;
+import cn.sowell.ddxyz.model.drink.pojo.criteria.OrderCriteria;
+import cn.sowell.ddxyz.model.drink.pojo.item.OrderStatisticsListItem;
 import cn.sowell.ddxyz.model.drink.pojo.item.PlainOrderDrinkItem;
 
 public interface DrinkOrderDao {
@@ -19,7 +22,9 @@ public interface DrinkOrderDao {
 	 * @param userId
 	 * @return
 	 */
-	List<PlainOrder> getOrderList(Long userId);
+	List<PlainOrder> getOrderList(OrderCriteria criteria, CommonPageInfo pageInfo);
 	
-	List<PlainOrder> getOrderList(Long userId, CommonPageInfo pageInfo);
+	Map<Long, Integer> getOrderCupCount(List<Long> orderIdList);
+	
+	List<OrderStatisticsListItem> statisticsOrder(OrderCriteria criteria, CommonPageInfo pageInfo);
 }
