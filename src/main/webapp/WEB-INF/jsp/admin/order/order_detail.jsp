@@ -12,6 +12,12 @@
    	 	margin-right: 10px;
    	 	margin-top: 20px;
 	}
+	#order-${order.id } .left{
+		float:left;
+	}
+	#order-${order.id } .right{
+		float:left;
+	}
 	#order-${order.id } .item-detail>dl{
 		display: table-row;
    		width: 100%;
@@ -66,8 +72,8 @@
 		<dt></dt>
 		<dd>
 			<div class="order-table-cell">
-				<c:forEach items="${orderDrinkItemMap[plainOrder] }" var="orderDrinkItem">
-					<div class="item-detail">
+				<c:forEach items="${orderDrinkItemMap[plainOrder] }" var="orderDrinkItem" varStatus="status">
+					<div class="item-detail ${status.count%2 == 1? 'left' : 'right' }">
 						<dl>
 							<dt>饮料类型</dt>
 							<dd>${orderDrinkItem.drinkName }</dd>
@@ -102,5 +108,3 @@
 		</dd>
 	</dl>
 </div>
-<script>
-</script>
