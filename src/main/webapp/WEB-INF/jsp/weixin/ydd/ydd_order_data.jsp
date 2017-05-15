@@ -36,7 +36,7 @@
    		</p>
    		<c:forEach items="${orderItem.orderDrinkItems }" var="item">
    			<p class="detail">
-    			<img src="${basePath }media/weixin/main/image/thumb-tea1.jpg" alt="奶茶1">
+    			<img src="${basePath }${item.thumbUri }" alt="${item.drinkName }">
             	<span class="name">${item.drinkName }<i>￥<fmt:formatNumber value="${item.price/100 }" pattern="0.00"/></i></span>
             	 <span class="option">
             	 	${item.teaAdditionName }|${sweetnessMap[item.sweetness] }|${heatMap[item.heat] }|${cupSizeMap[item.cupSize] }

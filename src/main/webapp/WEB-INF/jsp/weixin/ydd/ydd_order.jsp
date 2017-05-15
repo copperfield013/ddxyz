@@ -18,6 +18,9 @@
 		    color: #f00;
 		    margin-left: 5%;
     	}
+    	label.tea-addition-type.x-check.radio {
+		    padding: 0 1em;
+		}
     	.cup-remain-wrapper{
     		display: none;
     	}
@@ -111,7 +114,7 @@
 	            <p data-key="${teaAdditionTypeEntry.key }" class="tea-addition-type-wrapper">
 	            	<c:forEach items="${teaAdditionTypeEntry.value }" var="teaAdditionType">
 		                <input type="radio" name="teaAdditionType" id="teaAdditionType_${teaAdditionType.id }" value="${teaAdditionType.id }">
-		                <label for="teaAdditionType_${teaAdditionType.id }">${teaAdditionType.name }</label>
+		                <label class="tea-addition-type" for="teaAdditionType_${teaAdditionType.id }">${teaAdditionType.name }</label>
 	            	</c:forEach>
 	            </p>
             </c:forEach>

@@ -19,6 +19,7 @@ import cn.sowell.ddxyz.model.common.core.ReceiverInfo;
 import cn.sowell.ddxyz.model.common.core.exception.OrderException;
 import cn.sowell.ddxyz.model.common.core.impl.DefaultProductItemParameter;
 import cn.sowell.ddxyz.model.common.core.impl.DrinkDataHandler;
+import cn.sowell.ddxyz.model.drink.service.OrderItemService;
 
 public class OrderTerm {
 	final long waresId;
@@ -124,7 +125,7 @@ public class OrderTerm {
 		
 	}
 	
-	public OrderParameter createOrderParameter(){
+	public OrderParameter createOrderParameter(OrderItemService oiService){
 		//创建订单参数
 		OrderParameter oParameter = new OrderParameter(this.waresId);
 		//设置配送点
@@ -152,6 +153,7 @@ public class OrderTerm {
 				itemParam.setPrice(oItem.getPerPrice());
 				itemParam.setWaresName(oItem.getWaresName());
 				itemParam.setPrice(oItem.getPerPrice());
+				itemParam.setThumbUri(oiService.getThumbUri(oItem));
 				DrinkDataHandler productPersistHandler = new DrinkDataHandler();
 				productPersistHandler.getDrink().setDrinkTypeId(oItem.getDrinkTypeId());
 				productPersistHandler.getDrink().setDrinkTypeName(oItem.getDrinkTypeName());

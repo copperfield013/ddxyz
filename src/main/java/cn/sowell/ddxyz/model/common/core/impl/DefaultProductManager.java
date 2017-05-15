@@ -105,6 +105,7 @@ public class DefaultProductManager implements ProductManager, InitializingBean{
 			product.setStatus(Product.STATUS_DEFAULT);
 			product.setCreateTime(new Date());
 			product.setUpdateTime(product.getCreateTime());
+			product.setThumbUri(itemParam.getThumbUri());
 			ProductDataHandler handler = itemParam.getOptionPersistHandler();
 			DefaultProduct dProduct = new DefaultProduct(product, dpService);
 			dProduct.setOptionHandler(itemParam.getOptionPersistHandler());

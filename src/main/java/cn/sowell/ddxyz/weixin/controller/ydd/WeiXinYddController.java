@@ -41,6 +41,7 @@ import cn.sowell.ddxyz.model.drink.pojo.PlainDrinkType;
 import cn.sowell.ddxyz.model.drink.pojo.item.PlainOrderDrinkItem;
 import cn.sowell.ddxyz.model.drink.service.DrinkOrderService;
 import cn.sowell.ddxyz.model.drink.service.DrinkService;
+import cn.sowell.ddxyz.model.drink.service.OrderItemService;
 import cn.sowell.ddxyz.model.drink.term.OrderTerm;
 import cn.sowell.ddxyz.model.merchant.service.DeliveryService;
 import cn.sowell.ddxyz.model.weixin.pojo.WeiXinUser;
@@ -73,6 +74,9 @@ public class WeiXinYddController {
 	WxPayService payService;
 	
 	Logger logger = Logger.getLogger(WeiXinYddController.class);
+
+	@Resource
+	OrderItemService oiService;
 	
 	@RequestMapping({"", "/"})
 	public String index(Model model){
@@ -172,7 +176,7 @@ public class WeiXinYddController {
 		try {
 			OrderTerm term = OrderTerm.fromJson(dManager, waresId, jReq.getJsonObject());
 			WeiXinUser user = WxUtils.getCurrentUser(WeiXinUser.class);
-			Order order = oService.applyForOrder(term.createOrderParameter(), user, OrderToken.getAnonymousToken());
+			Order order = oService.applyForOrder(term.createOrderParameter(oiService), user, OrderToken.getAnonymousToken());
 			if(order != null){
 				//订单创建成功
 				//构造用于前台调用微信支付窗口的参数

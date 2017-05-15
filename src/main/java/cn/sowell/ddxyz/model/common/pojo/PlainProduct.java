@@ -46,6 +46,9 @@ public class PlainProduct{
 	@Column(name="c_print_time")
 	private Date printTime;
 	
+	@Column(name="c_thumb_uri")
+	private String thumbUri;
+	
 	@Column(name="create_time")
 	private Date createTime;
 	
@@ -130,6 +133,12 @@ public class PlainProduct{
 	}
 	public void setPrintTime(Date printTime) {
 		this.printTime = printTime;
+	}
+	public String getThumbUri() {
+		return thumbUri;
+	}
+	public void setThumbUri(String thumbUri) {
+		this.thumbUri = thumbUri;
 	}
 	
 }

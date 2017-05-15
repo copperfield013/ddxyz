@@ -35,6 +35,12 @@ public class PlainOrderDrinkItem {
 	@Column(name="c_cup_size")
 	private Integer cupSize;
 	
+	@Column(name="c_status")
+	private Integer status;
+	
+	@Column(name="c_thumb_uri")
+	private String thumbUri;
+	
 	private List<PlainDrinkAddition> additions = new ArrayList<PlainDrinkAddition>();
 	
 	public Long getDrinkProductId() {
@@ -98,5 +104,17 @@ public class PlainOrderDrinkItem {
 	}
 	public void setTeaAdditionId(Long teaAdditionId) {
 		this.teaAdditionId = teaAdditionId;
+	}
+	public Integer getStatus() {
+		return status;
+	}
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+	public String getThumbUri() {
+		return thumbUri;
+	}
+	public void setThumbUri(String thumbUri) {
+		this.thumbUri = thumbUri;
 	}
 }

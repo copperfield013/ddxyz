@@ -35,7 +35,7 @@
             <h4>奶茶种类</h4>
             <c:forEach items="${drinkTypes }" var="drinkType" >
 	            <p>
-	                <img src="${basePath }${drinkType.pictureUri }" alt="奶茶1">
+	                <img src="${basePath }${drinkType.pictureUri }" alt="${drinkType.name }">
 	                <span class="name">${drinkType.name }</span>
 	                <span class="price">
 	                    <b>￥<fmt:formatNumber value="${drinkType.basePrice / 100}" pattern="0.00" />元/杯</b><i>（大杯+3元）</i>

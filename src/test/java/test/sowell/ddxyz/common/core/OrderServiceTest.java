@@ -31,6 +31,7 @@ import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlan;
 import cn.sowell.ddxyz.model.common.service.OrderService;
 import cn.sowell.ddxyz.model.drink.pojo.item.PlainOrderDrinkItem;
 import cn.sowell.ddxyz.model.drink.service.DrinkOrderService;
+import cn.sowell.ddxyz.model.drink.service.OrderItemService;
 import cn.sowell.ddxyz.model.drink.term.OrderTerm;
 import cn.sowell.ddxyz.model.merchant.service.DeliveryService;
 import cn.sowell.ddxyz.model.weixin.pojo.WeiXinUser;
@@ -56,6 +57,9 @@ public class OrderServiceTest {
 	
 	@Resource
 	DrinkOrderService dOrderService;
+
+	@Resource
+	OrderItemService oiService;
 	
 	@Test
 	public void applyOrderTest(){
@@ -155,14 +159,14 @@ public class OrderServiceTest {
 	
 	@Test
 	public void submitOrder(){
-		JSONObject jo = JSON.parseObject("{\"deliveryLocationId\":1,\"timePoint\":{\"year\":2017,\"month\":3,\"hour\":13,\"date\":5},\"totalPrice\":5000,\"receiver\":{\"contact\":\"12345678\",\"name\":\"Copperfield\",\"address\":\"临时地址\"},\"items\":[{\"waresId\":1,\"waresName\":\"饮品\",\"drinkTypeId\":1,\"drinkTypeName\":\"奶茶\",\"cupCount\":5,\"sweetness\":1,\"heat\":1,\"cupSize\":2,\"perPrice\":1000,\"additions\":[{\"typeId\":1,\"name\":\"红豆\"},{\"typeId\":2,\"name\":\"珍珠\"}]},{\"waresId\":1,\"waresName\":\"饮品\",\"drinkTypeId\":2,\"drinkTypeName\":\"玛奇朵\",\"cupCount\":2,\"sweetness\":2,\"heat\":2,\"cupSize\":2,\"perPrice\":1200,\"additions\":[{\"typeId\":1,\"name\":\"波霸\"},{\"typeId\":2,\"name\":\"燕麦\"}]}]}");
+		JSONObject jo = JSON.parseObject("{\"deliveryLocationId\":1,\"timePoint\":{\"year\":2017,\"month\":4,\"hour\":13,\"date\":15},\"totalPrice\":5000,\"receiver\":{\"contact\":\"12345678\",\"name\":\"Copperfield\",\"address\":\"临时地址\"},\"items\":[{\"waresId\":1,\"waresName\":\"饮品\",\"drinkTypeId\":1,\"drinkTypeName\":\"奶茶\",\"cupCount\":5,\"sweetness\":1,\"heat\":1,\"cupSize\":2,\"perPrice\":1000,\"additions\":[{\"typeId\":1,\"name\":\"红豆\"},{\"typeId\":2,\"name\":\"珍珠\"}]},{\"waresId\":1,\"waresName\":\"饮品\",\"drinkTypeId\":2,\"drinkTypeName\":\"玛奇朵\",\"cupCount\":2,\"sweetness\":2,\"heat\":2,\"cupSize\":2,\"perPrice\":1200,\"additions\":[{\"typeId\":1,\"name\":\"波霸\"},{\"typeId\":2,\"name\":\"燕麦\"}]}]}");
 		
 		try {
 			OrderTerm term = OrderTerm.fromJson(dManager, 1l, jo);
 			WeiXinUser user = userService.getWeiXinUserByOpenid("ovZxms3dvkaZR2aFpmkWh2SxmCTY");
 			OrderToken orderToken = new OrderToken() {
 			};
-			Order order = orderService.applyForOrder(term.createOrderParameter(), user, orderToken);
+			Order order = orderService.applyForOrder(term.createOrderParameter(oiService), user, orderToken);
 			
 			DefaultOrderPayParameter payParam = new DefaultOrderPayParameter(user);
 			payParam.setActualPay(1000);
@@ -211,6 +215,28 @@ public class OrderServiceTest {
 	public void testOrderDrinkService(){
 		List<PlainOrderDrinkItem> list = dOrderService.getOrderDrinkItemList(205l);
 		System.out.println(list);
+	}
+	
+	
+	
+	@Test
+	public void prime(){
+		int count = 0;
+		for (int i = 101; i < 200; i+=2) {
+			int j = 1, max = (int) Math.sqrt(i);
+			boolean flag = true;
+			while(++j <= max){
+				if(i % j == 0){
+					flag = false;
+					break;
+				}
+			}
+			if(flag){
+				System.out.println(i);
+				count++;
+			}
+		}
+		System.out.println("素数个数：" + count);
 	}
 	
 }

@@ -6,11 +6,13 @@ import java.util.Set;
 import javax.annotation.Resource;
 
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.SessionFactory;
 import org.hibernate.type.StandardBasicTypes;
 import org.springframework.stereotype.Repository;
 
 import cn.sowell.copframe.dao.deferedQuery.DeferedParamQuery;
+import cn.sowell.copframe.dto.format.FormatUtils;
 import cn.sowell.ddxyz.model.common.dao.CommonProductDao;
 import cn.sowell.ddxyz.model.common.pojo.PlainProduct;
 import cn.sowell.ddxyz.model.common.pojo.criteria.ProductCriteria;
@@ -66,6 +68,13 @@ public class CommonProductDaoImpl implements CommonProductDao{
 		
 		Query query = dQuery.createQuery(sFactory.getCurrentSession(), true, null);
 		return query.list();
+	}
+	
+	@Override
+	public String getDrinkThumbUri(Long drinkTypeId) {
+		String sql = "select dt.c_pic_uri from t_drink_type dt where dt.id = :drinkTypeId";
+		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
+		return FormatUtils.toString(query.setLong("drinkTypeId", drinkTypeId).uniqueResult());
 	}
 	
 }

@@ -13,4 +13,11 @@ public interface CommonProductDao {
 	 */
 	List<PlainProduct> getProducts(ProductCriteria criteria);
 
+	/**
+	 * 
+	 * @param drinkTypeId
+	 * @return
+	 */
+	String getDrinkThumbUri(Long drinkTypeId);
+
 }

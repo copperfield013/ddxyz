@@ -8,6 +8,7 @@ public class DefaultProductItemParameter implements ProductItemParameter {
 	private Long waresId;
 	private String wareName;
 	private Integer price;
+	private String thumbUri;
 	private ProductDataHandler productOptionPersistHandler;
 	
 	@Override
@@ -44,6 +45,14 @@ public class DefaultProductItemParameter implements ProductItemParameter {
 
 	public void setProductDataHandler(ProductDataHandler productPersistHandler) {
 		this.productOptionPersistHandler = productPersistHandler;
+	}
+
+	public String getThumbUri() {
+		return thumbUri;
+	}
+
+	public void setThumbUri(String thumbUri) {
+		this.thumbUri = thumbUri;
 	}
 
 }

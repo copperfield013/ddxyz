@@ -25,6 +25,12 @@ public interface ProductItemParameter {
 	 * @return
 	 */
 	Integer getPrice();
+	
+	/**
+	 * 缩略图
+	 * @return
+	 */
+	String getThumbUri();
 	/**
 	 * 获得用于持久化产品的参数信息的处理器
 	 * @return
