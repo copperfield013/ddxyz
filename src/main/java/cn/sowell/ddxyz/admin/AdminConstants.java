@@ -20,4 +20,8 @@ public interface AdminConstants {
 	 * 配送管理
 	 */
 	final String PATH_DELIVERY = PATH_BASE + "/delivery";
+	/**
+	 * 配送计划（配置）
+	 */
+	final String PATH_CONFIG = PATH_BASE + "/config";
 }

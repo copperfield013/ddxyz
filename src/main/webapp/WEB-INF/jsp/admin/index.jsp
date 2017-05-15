@@ -95,6 +95,12 @@
 	                            <span class="menu-text">配送管理</span>
 	                        </a>
 	                    </li>
+	                    <li>
+	                        <a href="admin/config/plan-add" class="menu-dropdown tab" target="delivery_plan_list" title="配送计划">
+	                        	<i class="menu-icon fa fa-desktop"></i>
+	                            <span class="menu-text">配送计划</span>
+	                        </a>
+	                    </li>
 					</ul>
 				</div>
 				<div class="page-content">
