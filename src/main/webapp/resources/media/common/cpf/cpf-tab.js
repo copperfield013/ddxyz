@@ -127,7 +127,9 @@ define(function(require, exports, module){
 			if(typeof content === 'string'){
 				url = content;
 				formData = _formData;
-				!free && $CPF.showLoading();
+				if(!free && this.isActive()){
+					$CPF.showLoading();
+				}
 				Ajax.ajax(url, formData, {
 					page		: page,
 					whenSuc		: function(data, dataType){
@@ -140,7 +142,9 @@ define(function(require, exports, module){
 					}
 				});
 			}else if(content instanceof $){
-				!free && $CPF.showLoading();
+				if(!free && this.isActive()){
+					$CPF.showLoading();
+				}
 				var $title = content.children('title').first();
 				if($title.length === 1){
 					$title.remove();
@@ -201,6 +205,12 @@ define(function(require, exports, module){
 			var $title = this.getTitleDom();
 			$('a', $title).trigger('click');
 			return this;
+		};
+		/**
+		 * 判断当前标签页是否有被激活
+		 */
+		this.isActive = function(){
+			return this.getTitleDom().is('.active');
 		};
 		/**
 		 * 关闭标签

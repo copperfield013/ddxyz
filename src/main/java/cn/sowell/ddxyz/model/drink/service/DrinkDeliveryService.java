@@ -18,5 +18,18 @@ public interface DrinkDeliveryService {
 	Map<PlainOrder, List<PlainOrderDrinkItem>> getOrderItems(List<PlainOrder> list);
 	
 	Map<PlainOrderDrinkItem, List<PlainDrinkAddition>> getDrinkItemAdditions(Map<PlainOrder,List<PlainOrderDrinkItem>> map);
+	/**
+	 * 计算订单内产品完成的数量
+	 * @param map
+	 * @return
+	 */
+	Map<PlainOrder, Integer> mapOrderMakedCount(
+			Map<PlainOrder, List<PlainOrderDrinkItem>> map);
+
+	/**
+	 * 更新订单为派送单已经打印
+	 * @param orderId
+	 */
+	void updateOrderPrinted(Long orderId);
 
 }

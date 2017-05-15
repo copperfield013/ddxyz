@@ -35,7 +35,7 @@ define(function(require, exports){
 		/**
 		 * 获得随机字符串
 		 * @param len 随机字符串长度，默认32
-		 * @param radix 字符维度。如果传入10，则生成的字符串的每个字符都是0~9，如果传入16，则为0~F。默认16
+		 * @param radix 字符维度。如果传入10，则生成的字符串的每个字符都是0~9，如果传入16，则为0~F。默认16，最大62
 		 * @return 随机字符串
 		 */
 		uuid		: function(len, radix){

@@ -14,6 +14,8 @@ public class ProductionCriteria {
 	
 	private Integer printCount;
 	
+	private Integer productStatus;
+	
 	/**
 	 * 时间范围字符串（用于从页面上传入，并且返回到页面中）
 	 */
@@ -61,6 +63,30 @@ public class ProductionCriteria {
 		this.setEndTime(range[1]);
 	}
 
+	public Integer getPrintCount() {
+		return printCount;
+	}
+
+	public void setPrintCount(Integer printCount) {
+		this.printCount = printCount;
+	}
+
+	public Integer getProductStatus() {
+		return productStatus;
+	}
+
+	public void setProductStatus(Integer productStatus) {
+		this.productStatus = productStatus;
+	}
+
+	public OfDateFormat getDateformat() {
+		return dateformat;
+	}
+
+	public void setDateformat(OfDateFormat dateformat) {
+		this.dateformat = dateformat;
+	}
+
 	public String getTimePoint() {
 		return timePoint;
 	}
@@ -69,11 +95,4 @@ public class ProductionCriteria {
 		this.timePoint = timePoint;
 	}
 
-	public Integer getPrintCount() {
-		return printCount;
-	}
-
-	public void setPrintCount(Integer printCount) {
-		this.printCount = printCount;
-	}
 }

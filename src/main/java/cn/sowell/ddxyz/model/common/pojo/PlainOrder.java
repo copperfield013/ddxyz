@@ -80,6 +80,9 @@ public class PlainOrder implements OrderDetail{
 	@Column(name="c_pay_expire_time")
 	private Date payExpireTime;
 	
+	@Column(name="c_print_time")
+	private Date printTime;
+	
 	@Column(name="create_time")
 	private Date createTime;
 	
@@ -229,6 +232,12 @@ public class PlainOrder implements OrderDetail{
 	}
 	public void setPayTime(Date payTime) {
 		this.payTime = payTime;
+	}
+	public Date getPrintTime() {
+		return printTime;
+	}
+	public void setPrintTime(Date printTime) {
+		this.printTime = printTime;
 	}
 	
 	

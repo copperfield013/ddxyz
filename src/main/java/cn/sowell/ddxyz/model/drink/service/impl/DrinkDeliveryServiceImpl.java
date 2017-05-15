@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import cn.sowell.copframe.dto.page.CommonPageInfo;
+import cn.sowell.ddxyz.model.common.core.Product;
 import cn.sowell.ddxyz.model.common.pojo.PlainOrder;
 import cn.sowell.ddxyz.model.drink.dao.DrinkAdditionDao;
 import cn.sowell.ddxyz.model.drink.dao.DrinkDeliveryDao;
@@ -68,6 +69,28 @@ public class DrinkDeliveryServiceImpl implements DrinkDeliveryService {
 			result.put(key, additions);
 		}
 		return result;
+	}
+	
+	@Override
+	public Map<PlainOrder, Integer> mapOrderMakedCount(
+			Map<PlainOrder, List<PlainOrderDrinkItem>> map) {
+		Map<PlainOrder, Integer> result = new HashMap<PlainOrder, Integer>();
+		map.forEach((order, products) -> {
+			int makedCount = 0;
+			for (PlainOrderDrinkItem product : products) {
+				if(product.getStatus() >= Product.STATUS_MAKING){
+					makedCount++;
+				}
+			}
+			result.put(order, makedCount);
+		});
+		
+		return result;
+	}
+	
+	@Override
+	public void updateOrderPrinted(Long orderId) {
+		drinkOrderDao.updateOrderPrinted(orderId);
 	}
 
 }

@@ -1,13 +1,13 @@
 package cn.sowell.ddxyz.model.drink.dao.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.apache.http.HeaderElementIterator;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
@@ -50,7 +50,8 @@ public class DrinkOrderDaoImpl implements DrinkOrderDao {
 				+ "d.c_tea_addition_name, "
 				+ "d.c_sweetness, "
 				+ "d.c_heat, "
-				+ "d.c_cup_size "
+				+ "d.c_cup_size, "
+				+ "p.c_status "
 				+ "FROM "
 				+ "t_product_base p, t_drink_product d "
 				+ "WHERE p.id = d.product_id "
@@ -180,6 +181,16 @@ public class DrinkOrderDaoImpl implements DrinkOrderDao {
 			}
 			return new ArrayList<OrderStatisticsListItem>();
 		}
+	}
+	
+	@Override
+	public void updateOrderPrinted(Long orderId) {
+		String sql = "update t_order_base o set o.c_print_time = :currentTime where o.id = :orderId";
+		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
+		query
+			.setTimestamp("currentTime", new Date())
+			.setLong("orderId", orderId);
+		query.executeUpdate();
 	}
 	
 }

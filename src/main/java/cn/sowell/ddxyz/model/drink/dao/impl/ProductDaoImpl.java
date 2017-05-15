@@ -19,6 +19,7 @@ import cn.sowell.copframe.dao.utils.QueryUtils;
 import cn.sowell.copframe.dto.format.FormatUtils;
 import cn.sowell.copframe.dto.format.FrameDateFormat;
 import cn.sowell.copframe.dto.page.CommonPageInfo;
+import cn.sowell.ddxyz.model.common.core.Order;
 import cn.sowell.ddxyz.model.drink.dao.ProductDao;
 import cn.sowell.ddxyz.model.drink.pojo.criteria.ProductionCriteria;
 import cn.sowell.ddxyz.model.drink.pojo.item.ProductInfoItem;
@@ -55,12 +56,13 @@ public class ProductDaoImpl implements ProductDao {
 				+ "t_order_base o, t_drink_product d, t_product_base p "
 				+ "WHERE p.id = d.product_id "
 				+ "AND o.id = p.order_id "
-				+ "AND o.c_status <> 0 "
 				+ "AND o.c_canceled_status is null "
-				+ "AND p.c_status ='1' @mainWhere "
+				+ "@mainWhere "
 				+ "order by o.c_pay_time asc";
 		DeferedParamQuery dQuery = new DeferedParamQuery(sql);
 		DeferedParamSnippet mainWhere = dQuery.createSnippet("mainWhere", null);
+		mainWhere.append("and o.c_status = :paiedStatus");
+		dQuery.setParam("paiedStatus", Order.STATUS_PAYED);
 		if(criteria.getStartTime() != null){
 			mainWhere.append("AND o.c_pay_time >= :startTime");
 			dQuery.setParam("startTime", criteria.getStartTime(), StandardBasicTypes.TIMESTAMP);
@@ -71,7 +73,11 @@ public class ProductDaoImpl implements ProductDao {
 		}
 		if(criteria.getTimePoint() != null && !criteria.getTimePoint().equals("")){
 			mainWhere.append("AND DATE_FORMAT(o.c_time_point,'%H:%i:%s') = :timePoint");
-			dQuery.setParam("timePoint", criteria.getTimePoint()+":00:00", StandardBasicTypes.STRING);
+			dQuery.setParam("timePoint", criteria.getTimePoint() + ":00:00", StandardBasicTypes.STRING);
+		}
+		if(criteria.getProductStatus() != null){
+			mainWhere.append("and p.c_status = :productStatus");
+			dQuery.setParam("productStatus", criteria.getProductStatus());
 		}
 		
 		if(pageInfo == null && criteria.getPrintCount() == null){ //查询全部
@@ -89,8 +95,8 @@ public class ProductDaoImpl implements ProductDao {
 		}else{ //分页查询
 			SQLQuery countQuery = dQuery.createSQLQuery(session, false, new WrapForCountFunction());
 			Integer count = FormatUtils.toInteger(countQuery.uniqueResult());
+			pageInfo.setCount(count);
 			if(count > 0){
-				pageInfo.setCount(count);
 				SQLQuery query = dQuery.createSQLQuery(session, false, null);
 				QueryUtils.setPagingParamWithCriteria(query, pageInfo);
 				query.setResultTransformer(HibernateRefrectResultTransformer.getInstance(ProductInfoItem.class));

@@ -3,6 +3,7 @@ package cn.sowell.ddxyz;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TreeSet;
 
 import cn.sowell.ddxyz.model.common.core.Order;
 import cn.sowell.ddxyz.model.common.core.Product;
@@ -11,6 +12,15 @@ import cn.sowell.ddxyz.model.common.core.Product;
 public interface DdxyzConstants {
 	final Integer VALUE_TRUE = 1;
 	final String COMMON_SPLITER = ";";
+	
+	final TreeSet<Integer> TIMEPOINT_SET = new TreeSet<Integer>(){
+		{
+			for(int i = 9; i <= 21; i++){
+				add(i);
+			}
+		}
+	};
+	
 	final Map<Integer, String> CUP_SIZE_MAP = new LinkedHashMap<Integer, String>(){
 		{
 			put(2, "中杯");
@@ -64,7 +74,8 @@ public interface DdxyzConstants {
 			put(Product.STATUS_MAKING, "正在制作");
 			put(Product.STATUS_COMPLETED, "制作完成");
 			put(Product.STATUS_PACKED, "已装箱");
-			put(Product.STATUS_DELIVERIED, "派送中");
+			put(Product.STATUS_DELIVERING, "派送中");
+			put(Product.STATUS_DELIVERIED, "已送达");
 			put(Product.STATUS_CONFIRMED, "确认收货");
 		}
 	};

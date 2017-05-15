@@ -16,6 +16,8 @@ public class DeliveryCriteria {
 	
 	private String locationName;
 	
+	private Integer hasPrinted;
+	
 	/**
 	 * 时间范围字符串（用于从页面上传入，并且返回到页面中）
 	 */
@@ -85,6 +87,14 @@ public class DeliveryCriteria {
 		Date[] range = dateformat.splitDateRange(timeRange);
 		this.setStartTime(range[0]);
 		this.setEndTime(range[1]);
+	}
+
+	public Integer getHasPrinted() {
+		return hasPrinted;
+	}
+
+	public void setHasPrinted(Integer hasPrinted) {
+		this.hasPrinted = hasPrinted;
 	}
 
 }

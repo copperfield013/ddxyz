@@ -1,6 +1,7 @@
 package cn.sowell.ddxyz.admin.controller.production;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -20,6 +21,7 @@ import cn.sowell.copframe.dto.page.CommonPageInfo;
 import cn.sowell.copframe.utils.CollectionUtils;
 import cn.sowell.ddxyz.DdxyzConstants;
 import cn.sowell.ddxyz.admin.AdminConstants;
+import cn.sowell.ddxyz.model.common.core.Product;
 import cn.sowell.ddxyz.model.common.core.exception.ProductException;
 import cn.sowell.ddxyz.model.drink.pojo.criteria.ProductionCriteria;
 import cn.sowell.ddxyz.model.drink.pojo.item.ProductInfoItem;
@@ -55,6 +57,16 @@ public class AdminProductionController {
 		if(criteria.getTimeRange() == null){
 			criteria.setStartTime(fdFormat.getTheDayZero(new Date()));
 			criteria.setEndTime(fdFormat.incDay(criteria.getStartTime(), 1));
+		}
+		if(criteria.getProductStatus() == null){
+			criteria.setProductStatus(Product.STATUS_ORDERED);
+		}
+		if(criteria.getTimePoint() == null){
+			int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+			Integer timePoint = DdxyzConstants.TIMEPOINT_SET.higher(hour);
+			if(timePoint != null){
+				criteria.setTimePoint(String.valueOf(timePoint));
+			}
 		}
 		List<ProductInfoItem> list = productService.getProductInfoItemPageList(criteria, pageInfo);
 		model.addAttribute("list", list);

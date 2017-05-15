@@ -27,4 +27,6 @@ public interface DrinkOrderDao {
 	Map<Long, Integer> getOrderCupCount(List<Long> orderIdList);
 	
 	List<OrderStatisticsListItem> statisticsOrder(OrderCriteria criteria, CommonPageInfo pageInfo);
+
+	void updateOrderPrinted(Long orderId);
 }

@@ -43,6 +43,15 @@ define(function(require, exports, module){
 				$(this).closest('form').trigger('submit');
 			}
 		});
+		/**
+		 * 初始化下拉框的值
+		 */
+		$('form select', $page).each(function(){
+			var val = $(this).attr('data-value');
+			if(val){
+				$(this).val(val);
+			}
+		});
 	});
 	
 	function bindSubmit($page){

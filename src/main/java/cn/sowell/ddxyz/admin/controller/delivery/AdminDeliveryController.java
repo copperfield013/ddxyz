@@ -1,5 +1,6 @@
 package cn.sowell.ddxyz.admin.controller.delivery;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -47,8 +48,16 @@ public class AdminDeliveryController {
 			criteria.setStartTime(fdFormat.getTheDayZero(new Date()));
 			criteria.setEndTime(fdFormat.incDay(criteria.getStartTime(), 1));
 		}
+		if(criteria.getTimePoint() == null){
+			int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+			Integer timePoint = DdxyzConstants.TIMEPOINT_SET.higher(hour);
+			if(timePoint != null){
+				criteria.setTimePoint(String.valueOf(timePoint));
+			}
+		}
 		List<PlainOrder> orderList = drinkDeliveryService.getOrderPageList(criteria, pageInfo);
 		Map<PlainOrder,List<PlainOrderDrinkItem>> map = drinkDeliveryService.getOrderItems(orderList);
+		Map<PlainOrder, Integer> orderMakedCountMap = drinkDeliveryService.mapOrderMakedCount(map);
 //		
 		Map<PlainOrderDrinkItem, List<PlainDrinkAddition>> additionMap = drinkDeliveryService.getDrinkItemAdditions(map);
 		model.addAttribute("orderList", orderList);
@@ -59,19 +68,23 @@ public class AdminDeliveryController {
 		model.addAttribute("cupSizeMap", DdxyzConstants.CUP_SIZE_MAP);
 		model.addAttribute("criteria", criteria);
 		model.addAttribute("pageInfo", pageInfo);
+		model.addAttribute("completedCountMap", orderMakedCountMap);
 		return AdminConstants.PATH_DELIVERY + "/delivery_list.jsp";
 	}
 	
 	@RequestMapping("/delivery-print")
 	public String printOrder(@RequestParam Long orderId, Model model){
 		PlainOrder plainOrder = orderService.getPlainOrder(orderId);
-		List<PlainOrderDrinkItem> orderDrinkItemList = drinkOrderService.getOrderDrinkItemList(orderId);
-		Map<PlainOrder, List<PlainOrderDrinkItem>> orderDrinkItemMap = new HashMap<PlainOrder, List<PlainOrderDrinkItem>>();
-		orderDrinkItemMap.put(plainOrder, orderDrinkItemList);
-		Map<PlainOrderDrinkItem, List<PlainDrinkAddition>> additionMap = drinkDeliveryService.getDrinkItemAdditions(orderDrinkItemMap);
-		model.addAttribute("plainOrder", plainOrder);
-		model.addAttribute("orderDrinkItemMap", orderDrinkItemMap);
-		model.addAttribute("addtionMap", additionMap);
+		if(plainOrder != null){
+			List<PlainOrderDrinkItem> orderDrinkItemList = drinkOrderService.getOrderDrinkItemList(orderId);
+			Map<PlainOrder, List<PlainOrderDrinkItem>> orderDrinkItemMap = new HashMap<PlainOrder, List<PlainOrderDrinkItem>>();
+			orderDrinkItemMap.put(plainOrder, orderDrinkItemList);
+			Map<PlainOrderDrinkItem, List<PlainDrinkAddition>> additionMap = drinkDeliveryService.getDrinkItemAdditions(orderDrinkItemMap);
+			drinkDeliveryService.updateOrderPrinted(orderId);
+			model.addAttribute("plainOrder", plainOrder);
+			model.addAttribute("orderDrinkItemMap", orderDrinkItemMap);
+			model.addAttribute("addtionMap", additionMap);
+		}
 		model.addAttribute("heatMap", DdxyzConstants.HEAT_MAP);
 		model.addAttribute("sweetnessMap", DdxyzConstants.SWEETNESS_MAP);
 		model.addAttribute("cupSizeMap", DdxyzConstants.CUP_SIZE_MAP);

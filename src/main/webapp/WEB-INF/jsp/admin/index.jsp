@@ -139,7 +139,9 @@
 					'form'	: 'COMMON/cpf/cpf-form.js',
 					'tab' 	: 'COMMON/cpf/cpf-tab.js',
 					'ajax'	: 'COMMON/cpf/cpf-ajax.js',
-					'css'	: 'COMMON/cpf/cpf-css.js'
+					'css'	: 'COMMON/cpf/cpf-css.js',
+					'timer'	: 'COMMON/cpf/cpf-timer.js',
+					'console':'COMMON/cpf/cpf-console.js'
 				}
 	    		});
 	    		seajs.use('COMMON/cpf/cpf-main.js');
