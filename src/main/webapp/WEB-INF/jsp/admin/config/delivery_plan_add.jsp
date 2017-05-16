@@ -1,13 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/jsp/common/base_empty.jsp"%>
-<style>
-        body,html {
-            padding:0;
-            margin:0;
-            width:100%;
-            height:100%;
-            font-size: 13px;
-        }
+ <style>
         * {
             box-sizing: border-box;
         }
@@ -24,6 +17,7 @@
         .delivery-plan {
             padding:1em 0 0.2em 0.5em;
             border-bottom:1px dashed #cccccc;
+             min-height:2em;
         }
         .delivery-plan:after {
             content:'';
@@ -38,14 +32,15 @@
         }
         .delivery-plan > ul {
             display:none;
+            margin-left: 15%;
         }
         .delivery-plan > ul.active {
             display: block;
         }
         .delivery-plan > ul > li {
-            width:2.5em;
-            height:2.5em;
-            line-height: 2.5em;
+            width:3.5em;
+            height:3.5em;
+            line-height: 3.5em;
             border:1px solid #CCCCCC;
             text-align: center;
             margin:0 0.8em 0.8em 0;
@@ -59,33 +54,33 @@
             width:15%;
             text-align: left;
             display: inline-block;
+            position: absolute;
+            margin-top: -0.5em;
+            left: 0.5em;
+            top: 50%;
         }
         /*计划年份*/
         .plan-year {
             position: relative;
         }
-        .plan-year > .plan-title {
-            position: absolute;
-            margin-top:-0.5em;
-            left:0.5em;
-            top:50%;
-        }
         .plan-year-box {
-            width:36em;
+            width:31em;
             margin-left:15%;
+            min-height:1px;
         }
-        .plan-year > .plan-year-add {
-            width:2em;
-            font-size: 2em;
-            border-radius:0.5em;
+        .plan-year > .plan-year-add,
+        .plan-year > .plan-year-remove {
+            width:1.5em;
             text-align: center;
             cursor: pointer;
             outline: none;
+            font-size: 2em;
+            margin-right:0.5em;
         }
         .plan-year-box >span.plan-year-detail {
             display:block;
             border:1px solid #CCCCCC;
-            width:5em;
+            width:4.7em;
             height:2.5em;
             line-height: 2.5em;
             text-align: center;
@@ -97,39 +92,50 @@
             background-color:#044d22;
             color:#ffffff;
         }
+        .inputYear {
+            border: 1px solid #CCCCCC;
+            width: 4.7em;
+            height: 2.5em;
+            line-height: 2.5em;
+            text-align: center;
+            margin: 0 0 0.8em 0;
+            float: left;
+            display:none;
+        }
+        .inputYear.active {
+            display:block;
+        }
         /*计划月份*/
         .plan-month {
-            line-height: 6.6em;
+            position:relative;
         }
         .plan-month-choose {
-            width:20em;
+            width:26em;
         }
         /*配送日期*/
         .plan-date {
-            line-height: 3.2em;
+            position:relative;
         }
         /*配送时间点*/
         .plan-time {
-            line-height:6.6em;
+            position:relative;
         }
         .plan-time-choose {
-            width:24em;
+            width:31em;
         }
         /*提交*/
         .delivery-info-submit{
-            float:right;
             margin-top:2em;
+            margin-left:15%;
         }
         .delivery-info-submit > button {
-            width: 4em;
-            font-size: 1.5em;
-            border-radius: 0.5em;
+            width:5.6em;
+            height:2.8em;
             text-align: center;
             cursor: pointer;
             outline: none;
         }
     </style>
-
 <div class="delivery-add-warp">
         <div class="plan-year delivery-plan">
             <p class="plan-title">计划年份</p>
@@ -137,8 +143,10 @@
                 <span class="plan-year-detail active" data-year="2017">2017</span>
                 <span class="plan-year-detail" data-year="2018">2018</span>
                 <span class="plan-year-detail" data-year="2019">2019</span>
+                <input type="text" autofocus="autofocus" class="inputYear"/>
             </div>
             <button class="plan-year-add">+</button>
+            <button class="plan-year-remove">-</button>
         </div>
         <div class="plan-month delivery-plan">
             <p class="plan-title">计划月份</p>
@@ -269,25 +277,74 @@
         <div class="delivery-info-submit">
             <button>提交</button>
         </div>
-    </div><script>
+    </div>
+<script>
 $(function(){
+    plusClick();
     addYear();
     chooseDate();
     clickYear();
     changeYear();
-    //    增加计划年份
-    function addYear(){
+    removeYear();
+
+// 判断是否是数字 返回true 和false
+    function isNumber(value){
+        return /^[(-?\d+\.\d+)|(-?\d+)|(-?\.\d+)]+$/.test(value + '');
+    }
+
+//判断是否是重复年份，是的话返回true 否的话返回false
+    function yearRepeat(num){
+        var length = $(".plan-year-detail").length;
+        for(var i=0; i<length; i++){
+            if( num == parseFloat($('.plan-year-detail')[i].innerText)){
+                return true;
+            }
+    }
+        return false;
+    }
+
+//  解除具体日期选择的绑定
+    function offDateClick(){
+        $('.delivery-plan>ul').off("click",">li")
+    }
+//    点击加号
+    function plusClick(){
         $('.plan-year-add').on("click",function(){
-            var html = '';
-            var year = 0;
-            year = parseFloat($('.plan-year-detail:last').text())+1;
-            html = "<span class='plan-year-detail active' data-year='"+year+"'>"+year+"</span>";
-            $('.plan-year-detail.active').removeClass("active");
-            $('.plan-year-box').append(html);
-            addDateDom(year);
-            changeYear();
+            $('.inputYear').addClass("active").focus();
         })
     }
+// input 失去焦点(enter) 添加年份
+    function addYear(){
+        var input = $('.inputYear');
+        function add(){
+            input.removeClass("active");
+            var year = parseFloat(input.val());
+            var html = '';
+            var isNum=isNumber(year);
+//            如果不是数字，无法输入 ，如果是重复的数字，提示不能重复
+            if(!isNum){
+                input.val('');
+            }else if(yearRepeat(year)){
+                alert("年份重复")
+                input.val('');
+            }else {
+                html = "<span class='plan-year-detail active' data-year='"+year+"'>"+year+"</span>";
+                $('.plan-year-detail.active').removeClass("active");
+                input.before(html);
+                input.val('');
+                addDateDom(year);
+                changeYear();
+            }
+        }
+        input.on("blur",function(){
+            add();
+        });
+        input.on("keypress",function(event){
+            if(event.keyCode == "13"){
+                add();
+            }
+        })
+    };
 
 // 点击计划年份
     function clickYear(){
@@ -299,10 +356,15 @@ $(function(){
         })
     }
 
-// 选中计划月份 配送日期  配送时间点
+// 选中计划月份 配送日期  配送时间点,以及取消
     function chooseDate(){
         $('.delivery-plan>ul').on("click",">li",function(){
-            $(this).addClass('active');
+            console.log("chooseDate work");
+            if($(this).hasClass("active")){
+                $(this).removeClass("active")
+            }else {
+                $(this).addClass('active');
+            }
         })
     }
 
@@ -313,7 +375,6 @@ $(function(){
                 .addClass("active")
                 .siblings('ul').removeClass("active");
     }
-
 // 新建 新建年份对于的日期 dom
     function addDateDom(time){
         var monthHtml = '';
@@ -365,7 +426,35 @@ $(function(){
         $(".plan-date").append(dateHtml);
         $(".plan-time").append(timeHtml);
         // 动态生成的  需要重新绑定事件
+        offDateClick();
         chooseDate();
+    }
+
+//删除 删除年份相应的日期dom
+    function removeDateDom(time){
+        $("ul[data-year="+time+"]").remove();
+        changeYear();
+    }
+
+//  删除选中年份
+    function removeYear(){
+        $('.plan-year-remove').on("click",function(){
+//            选中的年份删除, 选中状态赋给后一个，如果没有后一个，则赋给前一个，都没有则不用管
+            var self =$('.plan-year-detail.active');
+            var year = parseFloat(self.data('year'));
+            var next = self.next();
+            var before = self.prev();
+            if(before.length == 1){
+                before.addClass("active");
+                self.remove();
+            }else if( next.length ==1 ){
+                next.addClass("active")
+                self.remove();
+            }else{
+                self.remove();
+            }
+            removeDateDom(year);
+        })
     }
 
 })
