@@ -111,6 +111,25 @@ public class DrinkOrderDaoImpl implements DrinkOrderDao {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PlainOrder> getOrderPageList(long userId,
+			CommonPageInfo pageInfo) {
+		String hql = "from PlainOrder o where o.orderUserId = :userId order by o.createTime desc";
+		DeferedParamQuery dQuery = new DeferedParamQuery(hql);
+		dQuery.setParam("userId", userId);
+		Session session = sFactory.getCurrentSession();
+		Query countQuery = dQuery.createQuery(session, false, new WrapForCountFunction());
+		Integer count = FormatUtils.toInteger(countQuery.uniqueResult());
+		pageInfo.setCount(count);
+		if(count > 0){
+			Query query = dQuery.createQuery(sFactory.getCurrentSession(), false, null);
+			return query.list();
+		}
+		return new ArrayList<PlainOrder>();
+	}
+	
+	
 	@SuppressWarnings({ "serial" })
 	@Override
 	public Map<Long, Integer> getOrderCupCount(List<Long> orderIdList) {

@@ -17,12 +17,6 @@ import com.alibaba.fastjson.JSONObject;
 
 public interface DrinkOrderService {
 
-	/**
-	 * 根据用户id获取订单列表
-	 * @param userId
-	 * @return
-	 */
-	List<PlainOrder> getOrderList(OrderCriteria criteria);
 	
 	List<PlainOrder> getOrderPageList(OrderCriteria criteria, CommonPageInfo pageInfo);
 	
@@ -40,7 +34,6 @@ public interface DrinkOrderService {
 	 */
 	List<PlainDrinkAddition> getDrinkAdditionList(Long productId);
 	
-	List<PlainDrinkOrder> getDrinkList(UserIdentifier user);
 	
 	List<PlainDrinkOrder> getDrinkPageList(UserIdentifier user, CommonPageInfo pageInfo);
 

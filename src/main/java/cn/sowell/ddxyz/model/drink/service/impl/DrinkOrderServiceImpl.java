@@ -60,33 +60,18 @@ public class DrinkOrderServiceImpl implements DrinkOrderService{
 		return drinkAdditionDao.getDrinkAdditionList(productId);
 	}
 	
-	@Override
-	public List<PlainOrder> getOrderList(OrderCriteria criteria) {
-		return drinkOrderDao.getOrderList(criteria,null);
-	}
-	
 	public List<PlainOrder> getOrderPageList(OrderCriteria criteria, CommonPageInfo pageInfo) {
 		return drinkOrderDao.getOrderList(criteria, pageInfo);
 	}
 	
 	
-	@Override
-	public List<PlainDrinkOrder> getDrinkList(UserIdentifier user) {
-		OrderCriteria criteria = new OrderCriteria();
-		criteria.setUserId((Long)user.getId());
-		List<PlainOrder> orderList = getOrderList(criteria);
-		List<PlainDrinkOrder> drinkList = getNewDrinkOrderList(orderList);
-		return drinkList;
-	}
-	
 	public List<PlainDrinkOrder> getDrinkPageList(UserIdentifier user, CommonPageInfo pageInfo){
-		OrderCriteria criteria = new OrderCriteria();
-		criteria.setUserId((Long)user.getId());
-		List<PlainOrder> orderList = getOrderPageList(criteria, pageInfo);
+		List<PlainOrder> orderList = drinkOrderDao.getOrderPageList((long) user.getId(), pageInfo);
 		List<PlainDrinkOrder> drinkList = getNewDrinkOrderList(orderList);
 		return drinkList;
 	}
-	
+
+
 	private List<PlainDrinkOrder> getNewDrinkOrderList(List<PlainOrder> orderList){
 		List<PlainDrinkOrder> orderItemList = new ArrayList<PlainDrinkOrder>();
 		if(orderList != null && orderList.size() > 0){

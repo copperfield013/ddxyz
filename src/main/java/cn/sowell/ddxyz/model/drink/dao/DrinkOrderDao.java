@@ -29,4 +29,12 @@ public interface DrinkOrderDao {
 	List<OrderStatisticsListItem> statisticsOrder(OrderCriteria criteria, CommonPageInfo pageInfo);
 
 	void updateOrderPrinted(Long orderId);
+
+	/**
+	 * 根据用户id和分页数据获得订单列表
+	 * @param id
+	 * @param pageInfo
+	 * @return
+	 */
+	List<PlainOrder> getOrderPageList(long userId, CommonPageInfo pageInfo);
 }
