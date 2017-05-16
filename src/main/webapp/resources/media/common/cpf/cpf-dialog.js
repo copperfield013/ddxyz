@@ -190,7 +190,7 @@ define(function(require, exports, module){
 		//显示弹出框
 		this.show = function(){
 			Page.putPage(id, page);
-			this.getDom().modal();
+			this.getDom().modal({backdrop: 'static', keyboard: false});
 		};
 		//最小化弹出框
 		this.minimize = function(){
