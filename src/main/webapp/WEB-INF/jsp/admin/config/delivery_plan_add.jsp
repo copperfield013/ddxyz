@@ -31,11 +31,7 @@
             float:left;
         }
         .delivery-plan > ul {
-            display:none;
             margin-left: 15%;
-        }
-        .delivery-plan > ul.active {
-            display: block;
         }
         .delivery-plan > ul > li {
             width:3.5em;
@@ -150,7 +146,7 @@
         </div>
         <div class="plan-month delivery-plan">
             <p class="plan-title">计划月份</p>
-            <ul class="plan-month-choose" data-year="2017">
+            <ul class="plan-month-choose">
                 <li class="plan-month-detail">1</li>
                 <li class="plan-month-detail">2</li>
                 <li class="plan-month-detail">3</li>
@@ -164,56 +160,11 @@
                 <li class="plan-month-detail">11</li>
                 <li class="plan-month-detail">12</li>
             </ul>
-            <ul class="plan-month-choose" data-year="2018">
-                <li class="plan-month-detail">1</li>
-                <li class="plan-month-detail">2</li>
-                <li class="plan-month-detail">3</li>
-                <li class="plan-month-detail">4</li>
-                <li class="plan-month-detail">5</li>
-                <li class="plan-month-detail">6</li>
-                <li class="plan-month-detail">7</li>
-                <li class="plan-month-detail">8</li>
-                <li class="plan-month-detail">9</li>
-                <li class="plan-month-detail">10</li>
-                <li class="plan-month-detail">11</li>
-                <li class="plan-month-detail">12</li>
-            </ul>
-            <ul class="plan-month-choose" data-year="2019">
-                <li class="plan-month-detail">1</li>
-                <li class="plan-month-detail">2</li>
-                <li class="plan-month-detail">3</li>
-                <li class="plan-month-detail">4</li>
-                <li class="plan-month-detail">5</li>
-                <li class="plan-month-detail">6</li>
-                <li class="plan-month-detail">7</li>
-                <li class="plan-month-detail">8</li>
-                <li class="plan-month-detail">9</li>
-                <li class="plan-month-detail">10</li>
-                <li class="plan-month-detail">11</li>
-                <li class="plan-month-detail">12</li>
-            </ul>
+
         </div>
         <div class="plan-date delivery-plan">
             <p class="plan-title">配送日期</p>
-            <ul class="plan-date-choose" data-year="2017">
-                <li class="plan-date-detail">一</li>
-                <li class="plan-date-detail">二</li>
-                <li class="plan-date-detail">三</li>
-                <li class="plan-date-detail">四</li>
-                <li class="plan-date-detail">五</li>
-                <li class="plan-date-detail">六</li>
-                <li class="plan-date-detail">七</li>
-            </ul>
-            <ul class="plan-date-choose" data-year="2018">
-                <li class="plan-date-detail">一</li>
-                <li class="plan-date-detail">二</li>
-                <li class="plan-date-detail">三</li>
-                <li class="plan-date-detail">四</li>
-                <li class="plan-date-detail">五</li>
-                <li class="plan-date-detail">六</li>
-                <li class="plan-date-detail">七</li>
-            </ul>
-            <ul class="plan-date-choose" data-year="2019">
+            <ul class="plan-date-choose">
                 <li class="plan-date-detail">一</li>
                 <li class="plan-date-detail">二</li>
                 <li class="plan-date-detail">三</li>
@@ -225,54 +176,22 @@
         </div>
         <div class="plan-time delivery-plan">
             <p class="plan-title">配送时间点</p>
-            <ul class="plan-time-choose" data-year="2017">
-            <li class="plan-time-detail">8</li>
-            <li class="plan-time-detail">10</li>
-            <li class="plan-time-detail">11</li>
-            <li class="plan-time-detail">12</li>
-            <li class="plan-time-detail">13</li>
-            <li class="plan-time-detail">14</li>
-            <li class="plan-time-detail">15</li>
-            <li class="plan-time-detail">16</li>
-            <li class="plan-time-detail">17</li>
-            <li class="plan-time-detail">18</li>
-            <li class="plan-time-detail">19</li>
-            <li class="plan-time-detail">20</li>
-            <li class="plan-time-detail">21</li>
-            <li class="plan-time-detail">22</li>
-        </ul>
-            <ul class="plan-time-choose" data-year="2018">
-                <li class="plan-time-detail">8</li>
-                <li class="plan-time-detail">10</li>
-                <li class="plan-time-detail">11</li>
-                <li class="plan-time-detail">12</li>
-                <li class="plan-time-detail">13</li>
-                <li class="plan-time-detail">14</li>
-                <li class="plan-time-detail">15</li>
-                <li class="plan-time-detail">16</li>
-                <li class="plan-time-detail">17</li>
-                <li class="plan-time-detail">18</li>
-                <li class="plan-time-detail">19</li>
-                <li class="plan-time-detail">20</li>
-                <li class="plan-time-detail">21</li>
-                <li class="plan-time-detail">22</li>
-            </ul>
-            <ul class="plan-time-choose" data-year="2019">
-                <li class="plan-time-detail">8</li>
-                <li class="plan-time-detail">10</li>
-                <li class="plan-time-detail">11</li>
-                <li class="plan-time-detail">12</li>
-                <li class="plan-time-detail">13</li>
-                <li class="plan-time-detail">14</li>
-                <li class="plan-time-detail">15</li>
-                <li class="plan-time-detail">16</li>
-                <li class="plan-time-detail">17</li>
-                <li class="plan-time-detail">18</li>
-                <li class="plan-time-detail">19</li>
-                <li class="plan-time-detail">20</li>
-                <li class="plan-time-detail">21</li>
-                <li class="plan-time-detail">22</li>
-            </ul>
+            <ul class="plan-time-choose">
+	            <li class="plan-time-detail">8</li>
+	            <li class="plan-time-detail">10</li>
+	            <li class="plan-time-detail">11</li>
+	            <li class="plan-time-detail">12</li>
+	            <li class="plan-time-detail">13</li>
+	            <li class="plan-time-detail">14</li>
+	            <li class="plan-time-detail">15</li>
+	            <li class="plan-time-detail">16</li>
+	            <li class="plan-time-detail">17</li>
+	            <li class="plan-time-detail">18</li>
+	            <li class="plan-time-detail">19</li>
+	            <li class="plan-time-detail">20</li>
+	            <li class="plan-time-detail">21</li>
+	            <li class="plan-time-detail">22</li>
+        	</ul> 
         </div>
         <div class="delivery-info-submit">
             <button>提交</button>
@@ -284,7 +203,6 @@ $(function(){
     addYear();
     chooseDate();
     clickYear();
-    changeYear();
     removeYear();
 
 // 判断是否是数字 返回true 和false
@@ -303,10 +221,6 @@ $(function(){
         return false;
     }
 
-//  解除具体日期选择的绑定
-    function offDateClick(){
-        $('.delivery-plan>ul').off("click",">li")
-    }
 //    点击加号
     function plusClick(){
         $('.plan-year-add').on("click",function(){
@@ -332,8 +246,6 @@ $(function(){
                 $('.plan-year-detail.active').removeClass("active");
                 input.before(html);
                 input.val('');
-                addDateDom(year);
-                changeYear();
             }
         }
         input.on("blur",function(){
@@ -352,14 +264,12 @@ $(function(){
             // 选中的增加背景色，其他的去掉背景色
             $('.plan-year-detail.active').removeClass("active");
             $(this).addClass("active");
-            changeYear();
         })
     }
 
 // 选中计划月份 配送日期  配送时间点,以及取消
     function chooseDate(){
         $('.delivery-plan>ul').on("click",">li",function(){
-            console.log("chooseDate work");
             if($(this).hasClass("active")){
                 $(this).removeClass("active")
             }else {
@@ -367,75 +277,6 @@ $(function(){
             }
         })
     }
-
-// 选中的年份 关联的日期显示，未选中的 关联的日期隐藏
-    function changeYear(){
-        var YearKey =  $(".plan-year-detail.active").data("year");
-        $(".delivery-plan>ul[data-year="+YearKey+"]")
-                .addClass("active")
-                .siblings('ul').removeClass("active");
-    }
-// 新建 新建年份对于的日期 dom
-    function addDateDom(time){
-        var monthHtml = '';
-        var dateHtml  = '';
-        var timeHtml  = '';
-        var dataTime = time;
-        monthHtml = "<ul class='plan-month-choose' data-year='"+dataTime+"'>"+
-        "<li class='plan-month-detail'>1</li>"+
-        "<li class='plan-month-detail'>2</li>"+
-        "<li class='plan-month-detail'>3</li>"+
-        "<li class='plan-month-detail'>4</li>"+
-        "<li class='plan-month-detail'>5</li>"+
-        "<li class='plan-month-detail'>6</li>"+
-        "<li class='plan-month-detail'>7</li>"+
-        "<li class='plan-month-detail'>8</li>"+
-        "<li class='plan-month-detail'>9</li>"+
-        "<li class='plan-month-detail'>10</li>"+
-        "<li class='plan-month-detail'>11</li>"+
-        "<li class='plan-month-detail'>12</li>"+
-        "</ul>";
-        dateHtml = "<ul class='plan-date-choose' data-year='"+dataTime+"'>"+
-        "<li class='plan-date-detail'>一</li>"+
-        "<li class='plan-date-detail'>二</li>"+
-        "<li class='plan-date-detail'>三</li>"+
-        "<li class='plan-date-detail'>四</li>"+
-        "<li class='plan-date-detail'>五</li>"+
-        "<li class='plan-date-detail'>六</li>"+
-        "<li class='plan-date-detail'>七</li>"+
-        "</ul>";
-
-        timeHtml = "<ul class='plan-time-choose'' data-year='"+dataTime+"'>"+
-        "<li class='plan-time-detail'>8</li>"+
-        "<li class='plan-time-detail'>10</li>"+
-        "<li class='plan-time-detail'>11</li>"+
-        "<li class='plan-time-detail'>12</li>"+
-        "<li class='plan-time-detail'>13</li>"+
-        "<li class='plan-time-detail'>14</li>"+
-        "<li class='plan-time-detail'>15</li>"+
-        "<li class='plan-time-detail'>16</li>"+
-        "<li class='plan-time-detail'>17</li>"+
-        "<li class='plan-time-detail'>18</li>"+
-        "<li class='plan-time-detail'>19</li>"+
-        "<li class='plan-time-detail'>20</li>"+
-        "<li class='plan-time-detail'>21</li>"+
-        "<li class='plan-time-detail'>22</li>"+
-        "</ul>";
-
-        $(".plan-month").append(monthHtml);
-        $(".plan-date").append(dateHtml);
-        $(".plan-time").append(timeHtml);
-        // 动态生成的  需要重新绑定事件
-        offDateClick();
-        chooseDate();
-    }
-
-//删除 删除年份相应的日期dom
-    function removeDateDom(time){
-        $("ul[data-year="+time+"]").remove();
-        changeYear();
-    }
-
 //  删除选中年份
     function removeYear(){
         $('.plan-year-remove').on("click",function(){
@@ -453,7 +294,6 @@ $(function(){
             }else{
                 self.remove();
             }
-            removeDateDom(year);
         })
     }
 
