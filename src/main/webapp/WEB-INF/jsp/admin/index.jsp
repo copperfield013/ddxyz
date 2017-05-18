@@ -72,7 +72,7 @@
 	                        </a>
 							<ul class="submenu">
                                	<li>
-                               		<a class="tab" href="admin/order-manage/order-list" target="order_list" title="订单查看">
+                               		<a class="tab" href="admin/order-manage/order-list" target="order-list" title="订单查看">
                                			<span class="menu-text">订单查看</span>
                                		</a>
                                	</li>
@@ -84,19 +84,19 @@
 							</ul>
 	                    </li>
 	                    <li>
-	                        <a href="admin/production/product-list" class="menu-dropdown tab" target="product_list" title="生产管理">
+	                        <a href="admin/production/product-list" class="menu-dropdown tab" target="product-list" title="生产管理">
 	                        	<i class="menu-icon fa fa-desktop"></i>
 	                            <span class="menu-text">生产管理</span>
 	                        </a>
 	                    </li>
 	                     <li>
-	                        <a href="admin/delivery/delivery_list" class="menu-dropdown tab" target="delivery_list" title="配送管理">
+	                        <a href="admin/delivery/delivery_list" class="menu-dropdown tab" target="delivery-list" title="配送管理">
 	                        	<i class="menu-icon fa fa-desktop"></i>
 	                            <span class="menu-text">配送管理</span>
 	                        </a>
 	                    </li>
 	                    <li>
-	                        <a href="admin/config/plan-add" class="menu-dropdown tab" target="delivery_plan_list" title="配送计划">
+	                        <a href="admin/config/plan-list" class="menu-dropdown tab" target="delivery-plan-list" title="配送计划">
 	                        	<i class="menu-icon fa fa-desktop"></i>
 	                            <span class="menu-text">配送计划</span>
 	                        </a>

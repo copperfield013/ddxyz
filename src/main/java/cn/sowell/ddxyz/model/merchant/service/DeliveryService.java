@@ -4,10 +4,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.sowell.copframe.dto.page.CommonPageInfo;
 import cn.sowell.ddxyz.model.common.core.DeliveryTimePoint;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlan;
 import cn.sowell.ddxyz.model.common.pojo.PlainLocation;
+import cn.sowell.ddxyz.model.common.pojo.criteria.DeliveryPlanCriteria;
 
 public interface DeliveryService {
 	/**
@@ -55,5 +57,9 @@ public interface DeliveryService {
 	 * @return
 	 */
 	Map<DeliveryTimePoint, List<PlainDelivery>> getUsableDeliveryMap(long orderId);
+	
+	List<PlainDeliveryPlan> getPlainDeliveryPlanPageList(DeliveryPlanCriteria criteria, CommonPageInfo pageInfo);
+	
+	boolean changePlanDisabled(Long planId, Integer disabled);
 	
 }

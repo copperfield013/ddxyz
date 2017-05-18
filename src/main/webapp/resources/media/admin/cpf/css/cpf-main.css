@@ -202,6 +202,11 @@ label.form-control-title {
 }
 
 
+.datepicker.dropdown-menu{
+	z-index: 4000;
+}
+
+
 .progress-cover{
 	position: absolute;
     top: 0;

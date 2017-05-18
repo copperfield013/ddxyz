@@ -38,7 +38,10 @@ define(function(require, exports, module){
 			
 		};
 		var data = $.extend({}, defaultResponseData, _data);
-		
+		data.localPageAction = data.localPageAction && data.localPageAction.toLowerCase();
+		data.targetPageAction = data.targetPageAction && data.targetPageAction.toLowerCase();
+		data.targetPageType = data.targetPageType && data.targetPageType.toLowerCase();
+		data.noticeType = data.noticeType && data.noticeType.toLowerCase();
 		this.getLocalPageAction = function(){
 			return data.localPageAction;
 		};
@@ -157,7 +160,7 @@ define(function(require, exports, module){
 		    			if(typeof json === 'string'){
 		    				json = $.parseJSON(json)
 		    			}
-		    			if(json && json['AJAX_PAGE_RESPONSE'] === 'cpf'){
+		    			if(json && json['ajax_page_response'] === 'cpf'){
 		    				var jRes = new AjaxPageResponse(json);
 		    				var result = param.whenSuc(jRes, 'json');
 		    				if(result !== false){

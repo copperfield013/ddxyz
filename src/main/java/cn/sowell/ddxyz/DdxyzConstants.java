@@ -13,6 +13,9 @@ public interface DdxyzConstants {
 	final Integer VALUE_TRUE = 1;
 	final String COMMON_SPLITER = ";";
 	
+	final long MERCHANT_ID = 1;
+	final long WARES_ID = 1;
+	
 	final TreeSet<Integer> TIMEPOINT_SET = new TreeSet<Integer>(){
 		{
 			for(int i = 9; i <= 21; i++){

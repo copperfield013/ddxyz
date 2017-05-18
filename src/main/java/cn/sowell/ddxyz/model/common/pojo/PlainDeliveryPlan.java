@@ -67,6 +67,9 @@ public class PlainDeliveryPlan {
 	@Column(name="c_end_date")
 	private Date endDate;
 	
+	@Column(name="c_disabled")
+	private Integer disabled;
+	
 	@Column(name="create_time")
 	private Date createTime;
 	
@@ -121,6 +124,12 @@ public class PlainDeliveryPlan {
 	}
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
+	}
+	public Integer getDisabled() {
+		return disabled;
+	}
+	public void setDisabled(Integer disabled) {
+		this.disabled = disabled;
 	}
 	public Date getCreateTime() {
 		return createTime;

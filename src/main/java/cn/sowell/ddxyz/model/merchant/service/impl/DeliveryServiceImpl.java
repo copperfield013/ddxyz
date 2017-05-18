@@ -13,7 +13,9 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import cn.sowell.copframe.dto.page.CommonPageInfo;
 import cn.sowell.copframe.utils.CollectionUtils;
+import cn.sowell.ddxyz.DdxyzConstants;
 import cn.sowell.ddxyz.model.common.core.Delivery;
 import cn.sowell.ddxyz.model.common.core.DeliveryManager;
 import cn.sowell.ddxyz.model.common.core.DeliveryTimePoint;
@@ -21,6 +23,7 @@ import cn.sowell.ddxyz.model.common.core.Order;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlan;
 import cn.sowell.ddxyz.model.common.pojo.PlainLocation;
+import cn.sowell.ddxyz.model.common.pojo.criteria.DeliveryPlanCriteria;
 import cn.sowell.ddxyz.model.common.service.OrderService;
 import cn.sowell.ddxyz.model.merchant.dao.DeliveryDao;
 import cn.sowell.ddxyz.model.merchant.service.DeliveryService;
@@ -107,6 +110,18 @@ public class DeliveryServiceImpl implements DeliveryService{
 		}
 		return map;
 	}
-	
+	public List<PlainDeliveryPlan> getPlainDeliveryPlanPageList(DeliveryPlanCriteria criteria, CommonPageInfo pageInfo){
+		return deliveryDao.getPlainDeliveryPlanPageList(criteria, pageInfo);
+	}
+
+	@Override
+	public boolean changePlanDisabled(Long planId, Integer disabled) {
+		if(disabled == DdxyzConstants.VALUE_TRUE){
+			return deliveryDao.changePlanDisabled(planId, disabled);
+		}else if(disabled == null){
+			return deliveryDao.changePlanDisabled(planId, null);
+		}
+		return false;
+	}
 	
 }
