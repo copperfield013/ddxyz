@@ -20,6 +20,7 @@
     	}
     	label.tea-addition-type.x-check.radio {
 		    padding: 0 1em;
+		    margin-right: 5px;
 		}
     	.cup-remain-wrapper{
     		display: none;

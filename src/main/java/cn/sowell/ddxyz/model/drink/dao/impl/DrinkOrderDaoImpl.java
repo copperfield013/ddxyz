@@ -124,6 +124,7 @@ public class DrinkOrderDaoImpl implements DrinkOrderDao {
 		pageInfo.setCount(count);
 		if(count > 0){
 			Query query = dQuery.createQuery(sFactory.getCurrentSession(), false, null);
+			QueryUtils.setPagingParamWithCriteria(query, pageInfo);
 			return query.list();
 		}
 		return new ArrayList<PlainOrder>();
