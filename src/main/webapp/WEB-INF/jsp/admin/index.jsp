@@ -96,10 +96,28 @@
 	                        </a>
 	                    </li>
 	                    <li>
-	                        <a href="admin/config/plan-list" class="menu-dropdown tab" target="delivery-plan-list" title="配送计划">
-	                        	<i class="menu-icon fa fa-desktop"></i>
-	                            <span class="menu-text">配送计划</span>
+	                        <a href="#" class="menu-dropdown">
+	                            <i class="menu-icon fa fa-desktop"></i>
+	                            <span class="menu-text">配送配置</span>
+	                            <i class="menu-expand"></i>
 	                        </a>
+							<ul class="submenu">
+                               	<li>
+                               		<a class="tab" href="admin/config/plan/plan-list" target="delivery-plan-list" title="配送计划">
+                               			<span class="menu-text">配送计划</span>
+                               		</a>
+                               	</li>
+                               	<li>
+                               		<a class="tab" href="admin/config/info/list?from=index" target="delivery-info-list" title="配送列表">
+                               			<span class="menu-text">配送列表</span>
+                               		</a>
+                               	</li>
+                               	<li>
+                               		<a class="tab" href="admin/config/location/list" target="delivery-location-list" title="配送地点配置">
+                               			<span class="menu-text">配送地点配置</span>
+                               		</a>
+                               	</li>
+							</ul>
 	                    </li>
 					</ul>
 				</div>

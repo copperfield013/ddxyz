@@ -145,7 +145,7 @@
         }
     </style>
    	<div id="plan-add" class="delivery-add-warp">
-	    <form id="add-plan-form" action="admin/config/plan-doAdd">
+	    <form id="add-plan-form" action="admin/config/plan/plan-doAdd">
 	        <div class="plan-year delivery-plan">
 	            <p class="plan-title">计划年份</p>
 	            <div class="plan-year-box">
@@ -214,7 +214,7 @@
 	        </div>
 	        <div class="plan-max-count delivery-plan">
 	        	<p class="plan-title">配送最大数</p>
-	        	<input type="text" id="max-count" name="maxCount"/>
+	        	<input type="text" id="max-count" name="maxCount"/>&nbsp;杯
 	        </div>
 	        <div class="plan-limit-minutes delivery-plan">
 	        	<p class="plan-title">提前结束时间</p>

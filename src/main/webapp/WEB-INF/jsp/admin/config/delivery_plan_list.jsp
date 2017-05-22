@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/jsp/common/base_empty.jsp"%>
 <nav style="padding: 1em 0" id="delivery-plan-list">
-	<form class="form-inline" action="admin/config/plan-list" >
+	<form class="form-inline" action="admin/config/plan/plan-list" >
 		<div class="form-group">
 			<label class="form-control-title" for="contactName">配送地点</label>
 			<input type="text" css-width="8em" class="form-control" id="locationName" name="locationName" placeholder="配送地点" value="${criteria.locationName }">
@@ -52,7 +52,7 @@
 		seajs.use(['ajax', 'dialog', 'utils'], function(Ajax, Dialog, utils){
 			var planList = $("#delivery-plan-list");
 			$("#add_new_plan", planList).click(function(){
-				Dialog.openDialog("admin/config/plan-add","添加新计划","plan-add");
+				Dialog.openDialog("admin/config/plan/plan-add","添加新计划","plan-add");
 			});
 		
 		
@@ -72,7 +72,7 @@
 			var page = $(this).getLocatePage();
 			if(planId){
 				Dialog.confirm(confirmMsg,function(){
-					Ajax.ajax("admin/config/change-disabled", {
+					Ajax.ajax("admin/config/plan/change-disabled", {
 						'id' : planId,
 						'disabled' : status	
 						},{

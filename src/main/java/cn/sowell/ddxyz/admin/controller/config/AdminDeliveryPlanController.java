@@ -28,7 +28,7 @@ import cn.sowell.ddxyz.model.common.pojo.criteria.DeliveryPlanWrap;
 import cn.sowell.ddxyz.model.merchant.service.DeliveryService;
 
 @Controller
-@RequestMapping(AdminConstants.URI_BASE + "/config")
+@RequestMapping(AdminConstants.URI_BASE + "/config/plan")
 public class AdminDeliveryPlanController {
 	
 	@Resource

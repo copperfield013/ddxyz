@@ -36,6 +36,10 @@ public class PlainDelivery {
 	@Column(name="c_max_count")
 	private Integer maxCount;
 	
+	//当前占用配送量
+	@Column(name="c_current_count")
+	private Integer currentCount = 0;
+	
 	//当前状态
 	@Column(name="c_status")
 	private int status = 0;
@@ -67,6 +71,12 @@ public class PlainDelivery {
 	}
 	public void setMaxCount(Integer maxCount) {
 		this.maxCount = maxCount;
+	}
+	public Integer getCurrentCount() {
+		return currentCount;
+	}
+	public void setCurrentCount(Integer currentCount) {
+		this.currentCount = currentCount;
 	}
 	public int getStatus() {
 		return status;
