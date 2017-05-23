@@ -35,7 +35,8 @@
 	    <script src="media/admin/plugins/beyond/js/datetime/bootstrap-timepicker.js"></script>
 	    <script src="media/admin/plugins/beyond/js/datetime/moment.js"></script>
 	    <script src="media/admin/plugins/beyond/js/datetime/daterangepicker.js"></script>
-	    <script type="text/javascript" src="media/admin/plugins/bootstrapt-treeview/dist/bootstrap-treeview.min.js"></script>
+	    <script src="media/admin/plugins/bootstrapt-treeview/dist/bootstrap-treeview.min.js"></script>
+	    <script src="media/admin/plugins/beyond/js/validation/bootstrapValidator.js"></script>
 	</head>
 	<body>
 		<div class="navbar">
