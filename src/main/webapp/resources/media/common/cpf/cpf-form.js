@@ -29,6 +29,7 @@ define(function(require, exports, module){
 			;
 			var url = $this.attr('action')
 				;
+			$this.trigger('cpf-submit', [formData, $this, page]);
 			try{
 				page.loadContent(url, undefined, formData);
 			}catch(e){

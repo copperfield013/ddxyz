@@ -14,10 +14,14 @@ package cn.sowell.copframe.dto.ajax;
 public class AjaxPageResponse {
 	//当前页面的动作
 	private PageAction localPageAction;
+	//当前重定向时跳转的页面链接
+	private String localPageRedirectURL;
 	//处理指定页面的id
 	private String targetPageId;
 	//处理指定页面的动作
 	private PageAction targetPageAction;
+	//指定页面重定向时跳转的页面链接
+	private String targetPageRedirectURL;
 	//指定页面要修改的标题
 	private String targetPageTitle;
 	//如果指定页面不存在，那么要以何种类型打开
@@ -117,7 +121,19 @@ public class AjaxPageResponse {
 	public String getAjax_page_response() {
 		return ajax_page_response;
 	}
-	
-	
+	public String getLocalPageRedirectURL() {
+		return localPageRedirectURL;
+	}
+	public void setLocalPageRedirectURL(String localPageRedirectURL) {
+		this.setLocalPageAction(PageAction.REDIRECT);
+		this.localPageRedirectURL = localPageRedirectURL;
+	}
+	public String getTargetPageRedirectURL() {
+		return targetPageRedirectURL;
+	}
+	public void setTargetPageRedirectURL(String targetPageRedirectURL) {
+		this.setTargetPageAction(PageAction.REDIRECT);
+		this.targetPageRedirectURL = targetPageRedirectURL;
+	}
 	
 }

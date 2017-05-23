@@ -15,6 +15,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 
 import cn.sowell.copframe.dto.ajax.AjaxPageResponse;
+import cn.sowell.copframe.dto.ajax.NoticeType;
 import cn.sowell.copframe.dto.format.OfDateFormat;
 import cn.sowell.copframe.dto.page.CommonPageInfo;
 import cn.sowell.ddxyz.admin.AdminConstants;
@@ -59,7 +60,11 @@ public class AdminDeliveryInfoController {
 		}catch(Exception e){
 			return JSON.toJSONString(AjaxPageResponse.FAILD("操作失败"), SerializerFeature.WriteEnumUsingToString);
 		}
-		return JSON.toJSONString(AjaxPageResponse.REFRESH_LOCAL("操作成功"), SerializerFeature.WriteEnumUsingToString);
+		AjaxPageResponse response = new AjaxPageResponse();
+		response.setLocalPageRedirectURL("admin/config/info/list?from=index");
+		response.setNotice("操作成功");
+		response.setNoticeType(NoticeType.SUC);
+		return JSON.toJSONString(response, SerializerFeature.WriteEnumUsingToString);
 	}
 
 }

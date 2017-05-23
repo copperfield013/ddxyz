@@ -21,12 +21,14 @@ define(function(require, exports, module){
 		var defaultResponseData = {
 			//当前页面的处理方式(close:关闭;refresh:重新加载;redirect:url：跳转)
 			localPageAction	: '',
+			localPageRedirectURL	: '',
 			//要处理响应数据的页面id
 			targetPageId	: '',
 			//处理方式(refresh/redirect,默认refresh，传入url时则为redirect）
 			targetPageAction: '',
 			//打开的页面标题
 			targetPageTitle	: '',
+			targetPageRedirectURL	: '',
 			//如果没有找到targetPageId对应的Page，将以什么方式打开页面(redirect下)（dialog/tab,默认dialog）
 			targetPageType	: '',
 			//响应状态
@@ -45,6 +47,9 @@ define(function(require, exports, module){
 		this.getLocalPageAction = function(){
 			return data.localPageAction;
 		};
+		this.getLocalPageRedirectURL = function(){
+			return data.localPageRedirectURL;
+		};
 		
 		this.getTargetPageId = function(){
 			return data.targetPageId;
@@ -52,6 +57,9 @@ define(function(require, exports, module){
 		
 		this.getTargetPageAction = function(){
 			return data.targetPageAction;
+		};
+		this.getTargetPageRedirectURL = function(){
+			return data.targetPageRedirectURL;
 		};
 		
 		this.getTargetPageTitle = function(){
@@ -75,7 +83,7 @@ define(function(require, exports, module){
 			var localPageAction = this.getLocalPageAction();
 			if(localPageAction && page instanceof Page){
 				//处理当前页面
-				_doAction(localPageAction, page);
+				_doAction(localPageAction, page, null, this.getLocalPageRedirectURL());
 			}
 			var tPageId = this.getTargetPageId(),
 				tPageAction = this.getTargetPageAction()
@@ -83,7 +91,7 @@ define(function(require, exports, module){
 			if(tPageId){
 				var tPage = Page.getPage(tPageId);
 				if(tPage instanceof Page){
-					_doAction(tPageAction, tPage, this.getTargetPageTitle());
+					_doAction(tPageAction, tPage, this.getTargetPageTitle(), this.getLocalPageRedirectURL());
 				}
 			}
 			var notice = this.getNotice(),
@@ -98,12 +106,11 @@ define(function(require, exports, module){
 		}
 		
 	}
-	var REDIRECT_KEY = 'redirect:';
-	function _doAction(action, page, title){
+	var REDIRECT_KEY = 'redirect';
+	function _doAction(action, page, title, url){
 		if(action === 'refresh'){
 			page.refresh();
-		}else if(action.startsWith(REDIRECT_KEY)){
-			var url = action.substr(REDIRECT_KEY.length)
+		}else if(action === REDIRECT_KEY){
 			page.loadContent(url, title);
 		}else if(action === 'close'){
 			page.close();
