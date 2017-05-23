@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/jsp/common/base_empty.jsp"%>
 <nav style="padding: 1em 0" id="delivery-info-list">
-	<form class="form-inline" action="admin/config/info/list" >
+	<form id="condition-form" class="form-inline" action="admin/config/info/list" >
 		<div class="form-group">
         	<label class="form-control-title" for="receiveTime">配送日期</label>
             <div class="input-group">
@@ -11,9 +11,9 @@
 			<label class="form-control-title" for="locationName">配送地点</label>
 			<input type="text" css-width="8em" class="form-control" id="locationName" name="locationName" placeholder="配送地点" value="${criteria.locationName }">
 		</div>
-		<button type="reset" class="btn btn-default">清空</button>
+		<button id="clear-all-condition" type="button" class="btn btn-default">清空</button>
 		<button type="submit" class="btn btn-default">查询</button>
-		<button id="search-all-delivery-info" type="button" class="btn btn-default">查询今天所有配送</button>
+		<button id="search-all-delivery-info" type="button" class="btn btn-default">刷新</button>
 	</form>
 </nav>
 <table class="table">
@@ -54,11 +54,24 @@
 		seajs.use(['ajax', 'dialog', 'utils'], function(Ajax, Dialog, utils){
 			var deliveryInfoList = $("#delivery-info-list");
 			$("#receiveTime", deliveryInfoList).datepicker();
+			
+			$("#clear-all-condition", deliveryInfoList).click(function(){
+				clearInput();
+			});
+			
 			$("#search-all-delivery-info", deliveryInfoList).click(function(){
-				Ajax.ajax('admin/config/info/showToday', null, {
-					page	: deliveryInfoList.getLocatePage()
+				Dialog.confirm("确定要重新加载？",function(){
+					Ajax.ajax('admin/config/info/showToday', null, {
+						page	: deliveryInfoList.getLocatePage()
+					});
 				});
-			})
+			});
+			
+			//清除查询表单的条件input
+			function clearInput(){
+				var conditionForm = $("#condition-form",deliveryInfoList);
+				$(':input', conditionForm).not(':button, :submit').val('');
+			}
 		});
 	});
 </script>

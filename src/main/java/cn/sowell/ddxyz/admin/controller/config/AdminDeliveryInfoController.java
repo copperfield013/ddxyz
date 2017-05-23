@@ -41,6 +41,7 @@ public class AdminDeliveryInfoController {
 	public String list(@RequestParam(required=false) String from, DeliveryInfoCriteria criteria, CommonPageInfo pageInfo, Model model){
 		if(from != null && from.equals("index")){
 			criteria.setDeliveryTime(new Date());
+			criteria.setReceiveTime(ofDateFormat.format(new Date(), "yyyy-MM-dd"));
 		}
 		/*if(criteria.getReceiveTime() == null){
 			criteria.setDeliveryTime(new Date());
