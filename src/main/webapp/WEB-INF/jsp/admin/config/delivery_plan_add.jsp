@@ -246,8 +246,8 @@
 $(function(){
     seajs.use(['ajax', 'dialog'], function(Ajax, Dialog){
     	
-    	var planAdd = $("#plan-add");
         addYear();
+    	var planAdd = $("#plan-add");
         $("#start-date", planAdd).datepicker();
         $("#end-date", planAdd).datepicker();
         
@@ -344,11 +344,11 @@ $(function(){
     	}
 
 		//    点击加号
-	    function plusClick(){
-	        $('.plan-year-add', planAdd).on("click",function(){
-	            $('.inputYear', planAdd).addClass("active").focus();
-	        })
-	    }
+	   
+        $('.plan-year-add', planAdd).on("click",function(){
+            $('.inputYear', planAdd).addClass("active").focus();
+        })
+	    
 		// input 失去焦点(enter) 添加年份
 	    function addYear(){
 	        var input = $('.inputYear', planAdd);
