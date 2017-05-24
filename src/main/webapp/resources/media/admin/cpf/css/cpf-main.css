@@ -117,12 +117,20 @@ li.main-tab-title>a{
 }
 
 /* 详情样式 */
-.detail *{
-	font-size: 15px;
+.page-body {
+    padding-top: 20px;
+    background-color: #fff;
+    height: 100%;
+    margin-left: 0;
 }
 .detail {
     display: table;
     width: 100%;
+}
+.detail .row {
+    margin-top: 9px;
+    border-bottom: 1px solid #efefef;
+    padding-bottom: 3px;
 }
 .detail>dl{
 	display: table-row;

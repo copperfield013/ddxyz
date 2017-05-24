@@ -37,6 +37,7 @@
 	    <script src="media/admin/plugins/beyond/js/datetime/daterangepicker.js"></script>
 	    <script src="media/admin/plugins/bootstrapt-treeview/dist/bootstrap-treeview.min.js"></script>
 	    <script src="media/admin/plugins/beyond/js/validation/bootstrapValidator.js"></script>
+	    <script src="media/admin/plugins/beyond/js/tagsinput/bootstrap-tagsinput.js"></script>
 	</head>
 	<body>
 		<div class="navbar">
@@ -155,18 +156,19 @@
 					  MAIN		: '${basePath}media/admin/main/js/'
 				},
 				alias	: {
-					'$CPF'	: 'COMMON/cpf/cpf-core.js',
-					'utils'	: 'COMMON/cpf/cpf-utils.js',
-					'page'	: 'COMMON/cpf/cpf-page.js',
-					'dialog': 'COMMON/cpf/cpf-dialog.js',
-					'paging': 'COMMON/cpf/cpf-paging.js',
-					'tree'	: 'COMMON/cpf/cpf-tree.js',
-					'form'	: 'COMMON/cpf/cpf-form.js',
-					'tab' 	: 'COMMON/cpf/cpf-tab.js',
-					'ajax'	: 'COMMON/cpf/cpf-ajax.js',
-					'css'	: 'COMMON/cpf/cpf-css.js',
-					'timer'	: 'COMMON/cpf/cpf-timer.js',
-					'console':'COMMON/cpf/cpf-console.js'
+					'$CPF'		: 'COMMON/cpf/cpf-core.js',
+					'utils'		: 'COMMON/cpf/cpf-utils.js',
+					'page'		: 'COMMON/cpf/cpf-page.js',
+					'dialog'	: 'COMMON/cpf/cpf-dialog.js',
+					'paging'	: 'COMMON/cpf/cpf-paging.js',
+					'tree'		: 'COMMON/cpf/cpf-tree.js',
+					'form'		: 'COMMON/cpf/cpf-form.js',
+					'tab' 		: 'COMMON/cpf/cpf-tab.js',
+					'ajax'		: 'COMMON/cpf/cpf-ajax.js',
+					'css'		: 'COMMON/cpf/cpf-css.js',
+					'timer'		: 'COMMON/cpf/cpf-timer.js',
+					'console'	: 'COMMON/cpf/cpf-console.js',
+					'controll'	: 'COMMON/cpf/cpf-controll.js'
 				}
 	    		});
 	    		seajs.use('COMMON/cpf/cpf-main.js');

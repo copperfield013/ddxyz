@@ -18,25 +18,40 @@ define(function(require, exports, module){
 	});
 	
 	$CPF.putPageInitSequeue(4, function($page){
-		//阻止跳转
-		$('form', $page).submit(function(e){
-			  e.preventDefault();
-		});
 		$('form', $page).submit(function(e){
 			var $this = $(this),
 				page = $this.getLocatePage(),
 				formData = new FormData(this)
 			;
+			var validator = $this.data('bootstrapValidator');
+			if(validator){
+				validator.validate();
+				if(!validator.isValid()){
+					return false;
+				}
+			}
 			var url = $this.attr('action')
 				;
-			$this.trigger('cpf-submit', [formData, $this, page]);
+			//构造提交事件
+			var submitEvent = $.Event('cpf-submit');
+			var canceled = false;
+			submitEvent.doCancel = function(){canceled = true};
+			var result = $this.trigger(submitEvent, [formData, $this, page]);
 			try{
-				page.loadContent(url, undefined, formData);
+				if(!canceled){
+					page.loadContent(url, undefined, formData);
+				}
 			}catch(e){
 				console.error(e);
 			}finally{
 				return false;
 			}
+		}).filter('.validate-form').each(function(){
+			//初始化验证插件
+			$(this).bootstrapValidator();
+		}).end().submit(function(e){
+			//阻止跳转
+			  e.preventDefault();
 		});
 		//绑定在文本框的回车事件
 		$('form :text', $page).keypress(function(e){

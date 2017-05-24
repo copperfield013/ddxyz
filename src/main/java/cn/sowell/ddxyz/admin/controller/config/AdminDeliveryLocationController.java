@@ -64,14 +64,11 @@ public class AdminDeliveryLocationController {
 	
 	@ResponseBody
 	@RequestMapping("/checkCode")
-	public String checkLoacationCode(String code){
+	public JsonResponse checkLoacationCode(String code){
+		JsonResponse jRes = new JsonResponse();
 		boolean bool = deliveryLocationService.checkLocationCode(code);
-		if(bool){
-			return "{\"status\":\"YES\"}";
-		}else{
-			return "{\"status\":\"NO\"}";
-		}
-		
+		jRes.put("valid", bool);
+		return jRes;
 	}
 
 }

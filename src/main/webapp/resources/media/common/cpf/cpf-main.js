@@ -28,6 +28,7 @@ define(function(require){
 	require('tree');
 	require('tab');
 	require('css');
+	require('controll');
 	$CPF.init({
 		loadingImg			: 'media/admin/cpf/image/loading.gif',
 		maxPageCount		: 8,

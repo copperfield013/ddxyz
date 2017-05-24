@@ -36,9 +36,11 @@ define(function(require, exports, module){
 				});
 			}else{
 				$('a[href],button[href]', $page).click(function(){
-					var href = $(this).attr('href');
-					if(href !== '#'){
-						goPage(this, page);
+					if(!$(this).is('.tab,.dialog')){
+						var href = $(this).attr('href');
+						if(href !== '#'){
+							goPage(this, page);
+						}
 					}
 				});
 			}

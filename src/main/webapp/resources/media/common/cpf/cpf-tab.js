@@ -235,7 +235,7 @@ define(function(require, exports, module){
 				}else{
 					var prevTab = this.getPrevTab();
 					if(!(prevTab instanceof Tab)){
-						activateTab($CPF.getParam('defaultTab'));
+						$CPF.getParam('defaultTab').activate();
 					}else{
 						prevTab.activate();
 					}

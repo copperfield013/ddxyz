@@ -1,5 +1,6 @@
 package test.sowell.ddxyz.common.core;
 
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,9 +11,6 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import cn.sowell.copframe.weixin.pay.paied.WxPayStatus;
 import cn.sowell.ddxyz.model.common.core.DefaultOrderPayParameter;
@@ -40,8 +38,8 @@ import cn.sowell.ddxyz.model.weixin.service.WeiXinUserService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath*:spring-config/spring-junit.xml")
+/*@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = "classpath*:spring-config/spring-junit.xml")*/
 public class OrderServiceTest {
 	@Resource
 	DeliveryManager dManager;
@@ -237,6 +235,32 @@ public class OrderServiceTest {
 			}
 		}
 		System.out.println("素数个数：" + count);
+	}
+	
+	
+	@Test
+	public void factorial(){
+		long result = 1, before = 1;
+		for(int i = 2; i<= 20; i++){
+			long cur = i * before;
+			result += result + cur;
+			before = cur;
+		}
+		System.out.println(result);
+	}
+	
+	
+	@Test
+	public void factorial1(){
+		BigDecimal result = new BigDecimal(1), before = new BigDecimal(1);
+		for(int i = 2; i<= 50 ; i++){
+			BigDecimal bi = new BigDecimal(i),
+					cur = bi.multiply(before);
+			result = result.add(result.add(cur));
+			before = cur;
+		}
+		System.out.println(result.toString());
+		factorial();
 	}
 	
 }

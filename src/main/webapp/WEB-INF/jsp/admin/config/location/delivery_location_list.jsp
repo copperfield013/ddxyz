@@ -35,10 +35,10 @@
 				<td>${i.index + 1}</td>
 				<td>
 					<a href="admin/config/location/detail?id=${location.id }" page-type="tab" target="@delivery-location-detail-${location.id }" title="${location.name }">
-						${location.name }
+						${location.code }
 					</a>
 				</td>
-				<td>${location.code }</td>
+				<td>${location.name }</td>
 				<td>${location.address }</td>
 				<td>
 					

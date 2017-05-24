@@ -7,7 +7,10 @@
 			<input type="text" css-width="8em" class="form-control" id="locationName" name="locationName" placeholder="配送地点" value="${criteria.locationName }">
 		</div>
 		<button type="submit" class="btn btn-default">查询</button>
-		<button id="add_new_plan"type="button" class="btn btn-default">添加新计划</button>
+		<a 	class="btn btn-default tab" 
+			href="admin/config/plan/plan-add" title="添加新计划"
+			target="plan-add-page"
+			>添加新计划</a>
 	</form>
 </nav>
 <table class="table">
@@ -51,35 +54,34 @@
 	$(function(){
 		seajs.use(['ajax', 'dialog', 'utils'], function(Ajax, Dialog, utils){
 			var planList = $("#delivery-plan-list");
-			$("#add_new_plan", planList).click(function(){
+			/* $("#add_new_plan", planList).click(function(){
 				Dialog.openDialog("admin/config/plan/plan-add","添加新计划","plan-add");
+			}); */
+		
+			$(".plan-disabled").click(function(){
+				changePlanDisabled.apply(this, [1, '确定禁用该配送计划？']);
+				return false;
+			});
+			
+			$(".plan-abled").click(function(){
+				changePlanDisabled.apply(this, ['', '确认启用该配送计划？']);
+				return false;
 			});
 		
-		
-		$(".plan-disabled").click(function(){
-			changePlanDisabled.apply(this, [1, '确定禁用该配送计划？']);
-			return false;
-		});
-		
-		$(".plan-abled").click(function(){
-			changePlanDisabled.apply(this, ['', '确认启用该配送计划？']);
-			return false;
-		});
-		
-		function changePlanDisabled(status, confirmMsg){
-			var $row = $(this).closest('tr[data-id]');
-			var planId = $row.attr('data-id');
-			var page = $(this).getLocatePage();
-			if(planId){
-				Dialog.confirm(confirmMsg,function(){
-					Ajax.ajax("admin/config/plan/change-disabled", {
-						'id' : planId,
-						'disabled' : status	
-						},{
-							page : page
+			function changePlanDisabled(status, confirmMsg){
+				var $row = $(this).closest('tr[data-id]');
+				var planId = $row.attr('data-id');
+				var page = $(this).getLocatePage();
+				if(planId){
+					Dialog.confirm(confirmMsg,function(){
+						Ajax.ajax("admin/config/plan/change-disabled", {
+							'id' : planId,
+							'disabled' : status	
+							},{
+								page : page
+							});
 						});
-					});
-				}
+					}
 			}
 		});
 		

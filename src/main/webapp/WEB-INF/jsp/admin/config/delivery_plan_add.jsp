@@ -1,253 +1,289 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/jsp/common/base_empty.jsp"%>
- <style>
-        * {
-            box-sizing: border-box;
-        }
-        ul,li,p,a{
-            padding:0;
-            margin:0;
-            list-style: none;
-            text-decoration: none;
-        }
-        .delivery-add-warp {
-            width:100%;
-            padding:3em 5em 0 2em;
-        }
-        .delivery-plan {
-            padding:1em 0 0.2em 0.5em;
-            border-bottom:1px dashed #cccccc;
-             min-height:2em;
-        }
-        .delivery-plan:after {
-            content:'';
-            display:block;
-            clear:both;
-        }
-        .delivery-plan > .plan-title,
-        .delivery-plan > .plan-year-box,
-        .delivery-plan > ul,
-        .delivery-plan > ul > li {
-            float:left;
-        }
-        .delivery-plan > ul {
-            margin-left: 15%;
-        }
-        .delivery-plan > ul > li {
-            width:3.5em;
-            height:3.5em;
-            line-height: 3.5em;
-            border:1px solid #CCCCCC;
-            text-align: center;
-            margin:0 0.8em 0.8em 0;
-            cursor: pointer;
-        }
-        .delivery-plan >ul >li.active {
-            background-color:#044d22;
-            color:#ffffff;
-        }
-        .plan-title {
-            width:15%;
-            text-align: left;
-            display: inline-block;
-            position: absolute;
-            margin-top: -0.5em;
-            left: 0.5em;
-            top: 50%;
-        }
-        /*计划年份*/
-        .plan-year {
-            position: relative;
-        }
-        .plan-year-box {
-            width:31em;
-            margin-left:15%;
-            min-height:1px;
-        }
-        .plan-year > .plan-year-add,
-        .plan-year > .plan-year-remove {
-            width:1.5em;
-            text-align: center;
-            cursor: pointer;
-            outline: none;
-            font-size: 2em;
-            margin-right:0.5em;
-        }
-        .plan-year-box >span.plan-year-detail {
-            display:block;
-            border:1px solid #CCCCCC;
-            width:4.7em;
-            height:2.5em;
-            line-height: 2.5em;
-            text-align: center;
-            margin:0 1.5em 0.8em 0;
-            cursor: pointer;
-            float:left;
-        }
-        .plan-year-box >span.plan-year-detail.active {
-            background-color:#044d22;
-            color:#ffffff;
-        }
-        .inputYear {
-            border: 1px solid #CCCCCC;
-            width: 4.7em;
-            height: 2.5em;
-            line-height: 2.5em;
-            text-align: center;
-            margin: 0 0 0.8em 0;
-            float: left;
-            display:none;
-        }
-        .inputYear.active {
-            display:block;
-        }
-        /*计划月份*/
-        .plan-month {
-            position:relative;
-        }
-        .plan-month-choose {
-            width:26em;
-        }
-        /*配送日期*/
-        .plan-date {
-            position:relative;
-        }
-        /*配送时间点*/
-        .plan-time {
-            position:relative;
-        }
-        .plan-time-choose {
-            width:31em;
-        }
-        .plan-location, .plan-max-count, .plan-limit-minutes, .plan-start-date, .plan-end-date{
-        	position:relative;
-        }
-        .plan-location #location {
-        	margin-left:15%;
-        }
-        .plan-max-count input[type="text"]{
-        	margin-left:15%;
-        }
-        .input-group{
-        	margin-left:15%;
-        }
-        /*提交*/
-        .delivery-info-submit{
-            margin-top:2em;
-            margin-left:15%;
-        }
-        .delivery-info-submit > button {
-            width:5.6em;
-            height:2.8em;
-            text-align: center;
-            cursor: pointer;
-            outline: none;
-        }
-    </style>
-   	<div id="plan-add" class="delivery-add-warp">
-	    <form id="add-plan-form" action="admin/config/plan/plan-doAdd">
-	        <div class="plan-year delivery-plan">
-	            <p class="plan-title">计划年份</p>
-	            <div class="plan-year-box">
-	                <span class="plan-year-detail active" data-year="${year }">${year }</span>
-	                <input type="text" autofocus="autofocus" class="inputYear"/>
-	            </div>
-	            <button type="button" class="plan-year-add">+</button>
-	            <button type="button" class="plan-year-remove">-</button>
-	        </div>
-	        <div class="plan-month delivery-plan">
-	            <p class="plan-title">计划月份</p>
-	            <ul class="plan-month-choose">
-	                <li class="plan-month-detail">1</li>
-	                <li class="plan-month-detail">2</li>
-	                <li class="plan-month-detail">3</li>
-	                <li class="plan-month-detail">4</li>
-	                <li class="plan-month-detail">5</li>
-	                <li class="plan-month-detail">6</li>
-	                <li class="plan-month-detail">7</li>
-	                <li class="plan-month-detail">8</li>
-	                <li class="plan-month-detail">9</li>
-	                <li class="plan-month-detail">10</li>
-	                <li class="plan-month-detail">11</li>
-	                <li class="plan-month-detail">12</li>
-	            </ul>
-	        </div>
-	        <div class="plan-date delivery-plan">
-	            <p class="plan-title">配送日期</p>
-	            <ul class="plan-date-choose">
-	                <li class="plan-date-detail" data-value="1">一</li>
-	                <li class="plan-date-detail" data-value="2">二</li>
-	                <li class="plan-date-detail" data-value="3">三</li>
-	                <li class="plan-date-detail" data-value="4">四</li>
-	                <li class="plan-date-detail" data-value="5">五</li>
-	                <li class="plan-date-detail" data-value="6">六</li>
-	                <li class="plan-date-detail" data-value="7">七</li>
-	            </ul>
-	        </div>
-	        <div class="plan-time delivery-plan">
-	            <p class="plan-title">配送时间点</p>
-	            <ul class="plan-time-choose">
-		            <li class="plan-time-detail">8</li>
-		            <li class="plan-time-detail">10</li>
-		            <li class="plan-time-detail">11</li>
-		            <li class="plan-time-detail">12</li>
-		            <li class="plan-time-detail">13</li>
-		            <li class="plan-time-detail">14</li>
-		            <li class="plan-time-detail">15</li>
-		            <li class="plan-time-detail">16</li>
-		            <li class="plan-time-detail">17</li>
-		            <li class="plan-time-detail">18</li>
-		            <li class="plan-time-detail">19</li>
-		            <li class="plan-time-detail">20</li>
-		            <li class="plan-time-detail">21</li>
-		            <li class="plan-time-detail">22</li>
-	        	</ul> 
-	        </div>
-	        <input type="hidden" id="period" name="period">
-	        <div class="plan-location delivery-plan">
-	        	<p class="plan-title">配送地点</p>
-	        	<select id="location" name="locationId">
-	        		<c:forEach items="${locationList }" var="location">
-	        			<option value="${location.id }">${location.name }</option>
-	        		</c:forEach>
-				</select>
-	        </div>
-	        <div class="plan-max-count delivery-plan">
-	        	<p class="plan-title">配送最大数</p>
-	        	<input type="text" id="max-count" name="maxCount"/>&nbsp;杯
-	        </div>
-	        <div class="plan-limit-minutes delivery-plan">
-	        	<p class="plan-title">提前结束时间</p>
-	        	<div class="input-group">
-	               <input type="text" id="lead-minutes" name="leadMinutes"/>&nbsp;分钟
-	           </div>
-	        </div>
-	        <div class="plan-start-date delivery-plan">
-	        	<p class="plan-title">周期开始时间</p>
-	            <div class="input-group">
-	               <input type="text" class="form-control" id="start-date" name="startDate" readonly="readonly" 
-	               	css-width="25em"  css-cursor="text" data-date-format="yyyy-mm-dd"/>
-	           </div>
-	        </div>
-	        <div class="plan-end-date delivery-plan">
-	        	<p class="plan-title">周期结束时间</p>
-	        	<div class="input-group">
-	               <input type="text" class="form-control" id="end-date" name="endDate" readonly="readonly" 
-	               	css-width="25em"  css-cursor="text" data-date-format="yyyy-mm-dd"/>
-	           </div>
-	        </div>
-	        <div class="delivery-info-submit">
-	            <button id="plan-add-submit" type="button">提交</button>
-	        </div>
-	    </form>
-    </div>
-	
+<style>
+* {
+	box-sizing: border-box;
+}
+
+ul, li, p, a {
+	padding: 0;
+	margin: 0;
+	list-style: none;
+	text-decoration: none;
+}
+
+.delivery-add-warp {
+	width: 100%;
+	padding: 3em 5em 0 2em;
+}
+
+.delivery-plan:after {
+	content: '';
+	display: block;
+	clear: both;
+}
+
+.delivery-plan>.plan-title, .delivery-plan>.plan-year-box,
+	.delivery-plan>ul, .delivery-plan>ul>li {
+	float: left;
+}
+
+.delivery-plan>ul>li {
+	width: 3.5em;
+	height: 3.5em;
+	line-height: 3.5em;
+	border: 1px solid #CCCCCC;
+	text-align: center;
+	margin: 0 0.8em 0.8em 0;
+	cursor: pointer;
+}
+
+.delivery-plan>ul>li.active {
+	background-color: #044d22;
+	color: #ffffff;
+}
+
+.plan-title {
+	width: 15%;
+	text-align: left;
+	display: inline-block;
+	position: absolute;
+	margin-top: -0.5em;
+	left: 0.5em;
+	top: 50%;
+}
+/*计划年份*/
+.plan-year {
+	position: relative;
+}
+
+.plan-year-box {
+	min-height: 1px;
+}
+
+.plan-year>.plan-year-add, .plan-year>.plan-year-remove {
+	width: 1.5em;
+	text-align: center;
+	cursor: pointer;
+	outline: none;
+	font-size: 2em;
+	margin-right: 0.5em;
+}
+
+.plan-year-box>span.plan-year-detail {
+	display: block;
+	border: 1px solid #CCCCCC;
+	width: 4.7em;
+	height: 2.5em;
+	line-height: 2.5em;
+	text-align: center;
+	margin: 0 1.5em 0.8em 0;
+	cursor: pointer;
+	float: left;
+}
+
+.plan-year-box>span.plan-year-detail.active {
+	background-color: #044d22;
+	color: #ffffff;
+}
+
+.inputYear {
+	border: 1px solid #CCCCCC;
+	width: 4.7em;
+	height: 2.5em;
+	line-height: 2.5em;
+	text-align: center;
+	margin: 0 0 0.8em 0;
+	float: left;
+	display: none;
+}
+
+.inputYear.active {
+	display: block;
+}
+/*计划月份*/
+.plan-month {
+	position: relative;
+}
+
+.plan-month-choose {
+	width: 26em;
+}
+/*配送日期*/
+.plan-date {
+	position: relative;
+}
+/*配送时间点*/
+.plan-time {
+	position: relative;
+}
+
+.plan-time-choose {
+	width: 31em;
+}
+
+.plan-location, .plan-max-count, .plan-limit-minutes, .plan-start-date,
+	.plan-end-date {
+	position: relative;
+}
+
+/*提交*/
+.delivery-info-submit {
+	margin-top: 2em;
+}
+
+.delivery-info-submit>button {
+	width: 5.6em;
+	height: 2.8em;
+	text-align: center;
+	cursor: pointer;
+	outline: none;
+}
+</style>
+<div id="plan-add">
+	<div class="page-header">
+		<div class="header-title">
+			<h1>添加配送计划</h1>
+		</div>
+	</div>
+	<div class="page-body">
+		<div class="row">
+			<div class="col-lg-10">
+				<form id="add-plan-form" class="bv-form form-horizontal" action="admin/config/plan/plan-doAdd">
+					<div class="form-group">
+						<label class="col-lg-2 control-label">计划年份</label>
+						<div class="col-lg-8 delivery-plan plan-year">
+							<input id="years" type="text" class="form-controll" value="${year }" data-role="tagsinput" placeholder="添加年份  " />
+						<%-- 
+							<div class="plan-year-box">
+				                <span class="plan-year-detail active" data-year="${year }">${year }</span>
+				                <input type="text" autofocus="autofocus" class="inputYear"/>
+				            </div>
+				            <button type="button" class="plan-year-add">+</button>
+				            <button type="button" class="plan-year-remove">-</button> --%>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-lg-2 control-label">计划月份</label>
+						<div class="col-lg-5 plan-month delivery-plan">
+							<ul class="plan-month-choose">
+				                <li class="plan-month-detail">1</li>
+				                <li class="plan-month-detail">2</li>
+				                <li class="plan-month-detail">3</li>
+				                <li class="plan-month-detail">4</li>
+				                <li class="plan-month-detail">5</li>
+				                <li class="plan-month-detail">6</li>
+				                <li class="plan-month-detail">7</li>
+				                <li class="plan-month-detail">8</li>
+				                <li class="plan-month-detail">9</li>
+				                <li class="plan-month-detail">10</li>
+				                <li class="plan-month-detail">11</li>
+				                <li class="plan-month-detail">12</li>
+				            </ul>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-lg-2 control-label">配送日期</label>
+						<div class="col-lg-5 delivery-plan plan-date">
+							<ul class="plan-date-choose">
+				                <li class="plan-date-detail" data-value="1">一</li>
+				                <li class="plan-date-detail" data-value="2">二</li>
+				                <li class="plan-date-detail" data-value="3">三</li>
+				                <li class="plan-date-detail" data-value="4">四</li>
+				                <li class="plan-date-detail" data-value="5">五</li>
+				                <li class="plan-date-detail" data-value="6">六</li>
+				                <li class="plan-date-detail" data-value="7">七</li>
+				            </ul>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-lg-2 control-label">配送时间点</label>
+						<div class="col-lg-5 plan-time delivery-plan">
+				            <ul class="plan-time-choose">
+					            <li class="plan-time-detail">8</li>
+					            <li class="plan-time-detail">10</li>
+					            <li class="plan-time-detail">11</li>
+					            <li class="plan-time-detail">12</li>
+					            <li class="plan-time-detail">13</li>
+					            <li class="plan-time-detail">14</li>
+					            <li class="plan-time-detail">15</li>
+					            <li class="plan-time-detail">16</li>
+					            <li class="plan-time-detail">17</li>
+					            <li class="plan-time-detail">18</li>
+					            <li class="plan-time-detail">19</li>
+					            <li class="plan-time-detail">20</li>
+					            <li class="plan-time-detail">21</li>
+					            <li class="plan-time-detail">22</li>
+				        	</ul> 
+				        </div>
+					</div>
+					<input type="hidden" id="period" name="period">
+					<div class="form-group">
+						<label class="col-lg-2 control-label">配送地点</label>
+				        <div class="col-lg-5 plan-location delivery-plan">
+				        	<select id="location" name="locationId" class="form-control">
+				        		<c:forEach items="${locationList }" var="location">
+				        			<option value="${location.id }">${location.name }</option>
+				        		</c:forEach>
+							</select>
+				        </div>
+					</div>
+					<div class="form-group">
+						<label class="col-lg-2 control-label">配送最大数(杯)</label>
+				        <div class="col-lg-5 plan-max-count delivery-plan">
+				        	<input type="text" class="form-control" id="max-count" name="maxCount"/>
+				        </div>
+					</div>
+					<div class="form-group">
+						<label class="col-lg-2 control-label">提前结束时间(分钟)</label>
+				        <div class="col-lg-5 plan-limit-minutes delivery-plan">
+				        	<div class="input-group">
+					               <input type="text" class="form-control" id="lead-minutes" name="leadMinutes"/>
+							</div>
+				        </div>
+					</div>
+					<div class="form-group">
+						<label class="col-lg-2 control-label">周期开始时间</label>
+				        <div class="col-lg-5 plan-start-date delivery-plan">
+				            <div class="input-group">
+				               <input type="text" class="form-control" id="start-date" name="startDate" readonly="readonly" 
+				               	css-width="25em"  css-cursor="text" data-date-format="yyyy-mm-dd"/>
+				           </div>
+				        </div>
+					</div>
+					<div class="form-group">
+						<label class="col-lg-2 control-label">周期结束时间</label>
+				        <div class="col-lg-5 plan-end-date delivery-plan">
+				        	<p class="plan-title"></p>
+				        	<div class="input-group">
+				               <input type="text" class="form-control" id="end-date" name="endDate" readonly="readonly" 
+				               	css-width="25em"  css-cursor="text" data-date-format="yyyy-mm-dd"/>
+				           </div>
+				        </div>
+					</div>
+			        <div class="form-group">
+			        	<div class="col-lg-offset-4 col-lg-3 delivery-info-submit">
+			        		<input class="btn btn-block btn-darkorange" id="plan-add-submit" type="button" value="提交"  />
+				        </div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
 <script>
 $(function(){
-    seajs.use(['ajax', 'dialog'], function(Ajax, Dialog){
+    seajs.use(['ajax', 'dialog', 'utils'], function(Ajax, Dialog){
+    	var planAdd = $("#plan-add");
+    	console.log($('#years', planAdd));
+    	$('#years', planAdd).on('beforeItemAdd', function(e){
+    		console.log(e);
+    		if(!utils.isInteger(e.item)){
+    			e.cancel();
+    		}
+    	});
     	
         addYear();
-    	var planAdd = $("#plan-add");
         $("#start-date", planAdd).datepicker();
         $("#end-date", planAdd).datepicker();
         
