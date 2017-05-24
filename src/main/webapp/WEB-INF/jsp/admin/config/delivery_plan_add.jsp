@@ -273,7 +273,7 @@ ul, li, p, a {
 </div>
 <script>
 $(function(){
-    seajs.use(['ajax', 'dialog', 'utils'], function(Ajax, Dialog){
+    seajs.use(['ajax', 'dialog', 'utils'], function(Ajax, Dialog, utils){
     	var planAdd = $("#plan-add");
     	console.log($('#years', planAdd));
     	$('#years', planAdd).on('beforeItemAdd', function(e){
@@ -288,6 +288,11 @@ $(function(){
         $("#end-date", planAdd).datepicker();
         
     	$("#plan-add-submit", planAdd).click(function(){
+    		var $years = $('#years', planAdd);
+   			var years = $years.tagsinput('items');
+    		console.log(years);
+    		
+    		
         	var dateYear = '';
         	var dateMonth = '';
         	var dateWeek = '';
