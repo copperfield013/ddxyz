@@ -42,4 +42,9 @@ public class DeliveryLocationServiceImpl implements DeliveryLocationService {
 		return deliveryLocationDao.checkLocationCode(code);
 	}
 
+	@Override
+	public void deletePlainLocation(Long locationId) {
+		deliveryLocationDao.deletePlainLocation(locationId);
+	}
+
 }

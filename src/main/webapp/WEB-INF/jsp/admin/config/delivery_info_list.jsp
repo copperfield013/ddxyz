@@ -60,10 +60,12 @@
 			});
 			
 			$("#search-all-delivery-info", deliveryInfoList).click(function(){
-				Dialog.confirm("确定要重新加载？",function(){
-					Ajax.ajax('admin/config/info/showToday', null, {
-						page	: deliveryInfoList.getLocatePage()
-					});
+				Dialog.confirm("确定要重新加载？",function(isYes){
+					if(isYes){
+						Ajax.ajax('admin/config/info/showToday', null, {
+							page	: deliveryInfoList.getLocatePage()
+						});
+					}
 				});
 			});
 			

@@ -15,5 +15,7 @@ public interface DeliveryLocationService {
 	void addPlainLocation(PlainLocation location);
 	
 	boolean checkLocationCode(String code);
+	
+	void deletePlainLocation(Long locationId);
 
 }

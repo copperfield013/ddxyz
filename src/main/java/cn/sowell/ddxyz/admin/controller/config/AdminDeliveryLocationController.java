@@ -10,8 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.JSONPath;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 
 import cn.sowell.copframe.dto.ajax.AjaxPageResponse;
 import cn.sowell.copframe.dto.ajax.JsonResponse;
@@ -21,7 +22,6 @@ import cn.sowell.ddxyz.admin.AdminConstants;
 import cn.sowell.ddxyz.model.common.pojo.PlainLocation;
 import cn.sowell.ddxyz.model.config.pojo.criteria.DeliveryLocationCriteria;
 import cn.sowell.ddxyz.model.config.service.DeliveryLocationService;
-import cn.sowell.ddxyz.model.merchant.service.DeliveryService;
 
 @Controller
 @RequestMapping(AdminConstants.URI_BASE + "/config/location")
@@ -69,6 +69,17 @@ public class AdminDeliveryLocationController {
 		boolean bool = deliveryLocationService.checkLocationCode(code);
 		jRes.put("valid", bool);
 		return jRes;
+	}
+	
+	@ResponseBody
+	@RequestMapping("/delete")
+	public String delite(@RequestParam("id")Long locationId){
+		try{
+			deliveryLocationService.deletePlainLocation(locationId);
+		}catch(Exception e){
+			return JSON.toJSONString(AjaxPageResponse.FAILD("操作失败！"), SerializerFeature.WriteEnumUsingToString);
+		}
+		return JSON.toJSONString(AjaxPageResponse.REFRESH_LOCAL("操作成功！"), SerializerFeature.WriteEnumUsingToString);
 	}
 
 }

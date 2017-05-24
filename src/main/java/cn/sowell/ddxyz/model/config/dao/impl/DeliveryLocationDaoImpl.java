@@ -85,4 +85,13 @@ public class DeliveryLocationDaoImpl implements DeliveryLocationDao {
 		return true;
 	}
 
+	@Override
+	public void deletePlainLocation(Long locationId) {
+		Session session = sFactory.getCurrentSession();
+		String sql = "delete from t_delivery_location where id = :locationId";
+		SQLQuery query = session.createSQLQuery(sql);
+		query.setLong("locationId", locationId);
+		query.executeUpdate();
+	}
+
 }

@@ -15,5 +15,7 @@ public interface DeliveryLocationDao {
 	void savePlainLocation(PlainLocation location);
 	
 	boolean checkLocationCode(String code);
+	
+	void deletePlainLocation(Long locationId);
 
 }
