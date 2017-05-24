@@ -152,7 +152,7 @@ ul, li, p, a {
 				<form id="add-plan-form" class="bv-form form-horizontal" action="admin/config/plan/plan-doAdd">
 					<div class="form-group">
 						<label class="col-lg-2 control-label">计划年份</label>
-						<div class="col-lg-8 delivery-plan plan-year">
+						<div class="col-lg-6 delivery-plan plan-year">
 							<input id="years" type="text" class="form-controll" value="${year }" data-role="tagsinput" placeholder="添加年份  " />
 						<%-- 
 							<div class="plan-year-box">
@@ -165,7 +165,7 @@ ul, li, p, a {
 					</div>
 					<div class="form-group">
 						<label class="col-lg-2 control-label">计划月份</label>
-						<div class="col-lg-5 plan-month delivery-plan">
+						<div class="col-lg-6 plan-month delivery-plan">
 							<ul class="plan-month-choose">
 				                <li class="plan-month-detail">1</li>
 				                <li class="plan-month-detail">2</li>
@@ -184,7 +184,7 @@ ul, li, p, a {
 					</div>
 					<div class="form-group">
 						<label class="col-lg-2 control-label">配送日期</label>
-						<div class="col-lg-5 delivery-plan plan-date">
+						<div class="col-lg-6 delivery-plan plan-date">
 							<ul class="plan-date-choose">
 				                <li class="plan-date-detail" data-value="1">一</li>
 				                <li class="plan-date-detail" data-value="2">二</li>
@@ -237,28 +237,21 @@ ul, li, p, a {
 					<div class="form-group">
 						<label class="col-lg-2 control-label">提前结束时间(分钟)</label>
 				        <div class="col-lg-5 plan-limit-minutes delivery-plan">
-				        	<div class="input-group">
-					               <input type="text" class="form-control" id="lead-minutes" name="leadMinutes"/>
-							</div>
+				               <input type="text" class="form-control" id="lead-minutes" name="leadMinutes"/>
 				        </div>
 					</div>
 					<div class="form-group">
 						<label class="col-lg-2 control-label">周期开始时间</label>
 				        <div class="col-lg-5 plan-start-date delivery-plan">
-				            <div class="input-group">
-				               <input type="text" class="form-control" id="start-date" name="startDate" readonly="readonly" 
-				               	css-width="25em"  css-cursor="text" data-date-format="yyyy-mm-dd"/>
-				           </div>
+			               <input type="text" class="form-control" id="start-date" name="startDate" readonly="readonly" 
+			               	css-cursor="text" data-date-format="yyyy-mm-dd"/>
 				        </div>
 					</div>
 					<div class="form-group">
 						<label class="col-lg-2 control-label">周期结束时间</label>
 				        <div class="col-lg-5 plan-end-date delivery-plan">
-				        	<p class="plan-title"></p>
-				        	<div class="input-group">
-				               <input type="text" class="form-control" id="end-date" name="endDate" readonly="readonly" 
-				               	css-width="25em"  css-cursor="text" data-date-format="yyyy-mm-dd"/>
-				           </div>
+			               <input type="text" class="form-control" id="end-date" name="endDate" readonly="readonly" 
+			               	css-cursor="text" data-date-format="yyyy-mm-dd"/>
 				        </div>
 					</div>
 			        <div class="form-group">
@@ -275,11 +268,18 @@ ul, li, p, a {
 $(function(){
     seajs.use(['ajax', 'dialog', 'utils'], function(Ajax, Dialog, utils){
     	var planAdd = $("#plan-add");
+    	var curYear = ${year};
+    	console.log("cur year:" + curYear);
     	console.log($('#years', planAdd));
     	$('#years', planAdd).on('beforeItemAdd', function(e){
     		console.log(e);
     		if(!utils.isInteger(e.item)){
-    			e.cancel();
+    			e.cancel = true;
+    			Dialog.notice("请输入数字！", "error");
+    		}
+    		if(e.item < curYear){
+    			e.cancel = true;
+    			Dialog.notice("请输入不小于今年年份的数字！", "error");
     		}
     	});
     	
@@ -297,9 +297,12 @@ $(function(){
         	var dateMonth = '';
         	var dateWeek = '';
         	var dateTime = '';
-        	$(".plan-year-detail", planAdd).each(function(){
+        	/* $(".plan-year-detail", planAdd).each(function(){
         		var year = $(this).data("year");
         		dateYear= dateYear + year +",";
+        	}); */
+        	$.each(years, function(n, value){
+        		dateYear= dateYear + value +",";
         	});
         	$(".plan-month-detail.active", planAdd).each(function(){
         		var month = $(this).text();
