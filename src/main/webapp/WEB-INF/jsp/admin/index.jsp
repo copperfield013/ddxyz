@@ -124,14 +124,20 @@
 					</ul>
 				</div>
 				<div class="page-content">
-					<div class="tabbable">
-						<ul class="nav nav-tabs" id="main-tab-title-container">
-							<li class="active main-tab-title">
-							    <a data-toggle="tab" href="#cpf-home-tab">
-									主页
-							    </a>
-							</li>
-						</ul>
+					<div class="tabbable">	
+						<div class="tab-warp">
+							<a href="javascript:;" class="move left">◀</a>	
+								<div>	
+									<ul class="nav nav-tabs" id="main-tab-title-container">
+										<li class="active main-tab-title">
+										    <a data-toggle="tab" href="#cpf-home-tab">
+												主页
+										    </a>
+										</li>
+									</ul>
+								</div>
+							<a href="javascript:;" class="move right">▶</a>
+						</div>				
 						<div class="tab-content" id="main-tab-content-container">
 							<div id="cpf-home-tab" class="tab-pane active main-tab-content">
 								<jsp:include page="home.jsp"></jsp:include>
