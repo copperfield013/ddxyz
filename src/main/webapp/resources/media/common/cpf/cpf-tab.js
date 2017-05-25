@@ -227,11 +227,6 @@ define(function(require, exports, module){
 				for(var i=0 ;i<=index-1;i++){
 					excursion += ulDom.children()[i].offsetWidth;
 				}
-				console.log("ulWidth:"+ulWidth);
-				console.log("warpWidth:"+warpWidth);
-				console.log("thisWidth:"+thisWidth);
-				console.log("excursion:"+excursion);
-				console.log("leftLimit"+leftLimit);
 				if(excursion <-leftLimit){
 					ulDom.css('left',34-excursion);
 					console.log("iam in left");
@@ -261,6 +256,11 @@ define(function(require, exports, module){
 			var ulWidth = parseFloat(ulDom.css("width"));
 			var ulLeft = parseFloat(ulDom.css("left"));
 			var finalWidth = ulWidth - closeWidth+1;
+			console.log(warpWidth);
+			console.log(closeWidth);
+			console.log(ulWidth);
+			console.log(ulLeft);
+			console.log(finalWidth);
 			if(result === false){
 				return this;
 			}
@@ -293,7 +293,7 @@ define(function(require, exports, module){
 			this.destruct();
 			ulDom.css("width",finalWidth);
 			if(finalWidth >= warpWidth){
-				ulDom.css("left",ulLeft+closeWidth)
+				ulDom.css("left",ulLeft-closeWidth)
 			}
 			if(finalWidth < warpWidth){
 				ulDom.css("left",0);
