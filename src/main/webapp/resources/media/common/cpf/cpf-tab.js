@@ -45,6 +45,10 @@ define(function(require, exports, module){
 	 * CPF插件调用init后会加载该函数
 	 */
 	$CPF.putInitSequeue(1, function(){
+		/**
+		 * init时就为左右移动标签的a绑定事件
+		 */	
+		moveTab();
 	});
 	
 	/**
@@ -52,7 +56,7 @@ define(function(require, exports, module){
 	 */
 	$CPF.putPageInitSequeue(10, function($page){
 		require('utils').scrollTo($($page), 0);
-		bindPageTabEvent($page)
+		bindPageTabEvent($page);
 	});
 	
 	function Tab(_param){
@@ -182,8 +186,18 @@ define(function(require, exports, module){
 			}
 			tab = tab || Tab.getLastTab();
 			if(tabMap[tab.getId()]){
+				var warpWidth = parseFloat(tab.getTitleDom().parent().parent().css("width"));
+				var nextWidth = parseFloat(this.getTitleDom().text().length-1)*13+42;
+				var ulWidth = parseFloat(tab.getTitleDom().parent().css("width"));
+				var totalWidth = nextWidth+ulWidth-1;
+				var moveWidth = totalWidth -warpWidth +34;
+				tab.getTitleDom().parent().css("width",totalWidth);
+				if(totalWidth >= warpWidth){
+					$('a.move').css("display","block");
+					tab.getTitleDom().parent().css("left",-moveWidth);
+				}
 				//前面的标签已经显示
-				this.getTitleDom().insertAfter(tab.getTitleDom());
+				this.getTitleDom().insertAfter(tab.getTitleDom());	
 				this.getContent().insertAfter(tab.getContent());
 				var origin = tabMap[this.getId()];
 				if(origin){
@@ -202,6 +216,30 @@ define(function(require, exports, module){
 		 * 激活当前标签
 		 */
 		this.activate = function(){
+			if($(".move").css("display") === "block"){
+				var ulDom = $("#main-tab-title-container")
+				var ulWidth = parseFloat(ulDom.css("width"));
+				var warpWidth =parseFloat(ulDom.parent().css("width"));
+				var thisWidth =parseFloat(this.getTitleDom().css("width"));
+				var index = this.getTitleDom().index();
+				var excursion = 0;
+				var leftLimit = parseFloat(ulDom.css("left"));
+				for(var i=0 ;i<=index-1;i++){
+					excursion += ulDom.children()[i].offsetWidth;
+				}
+				console.log("ulWidth:"+ulWidth);
+				console.log("warpWidth:"+warpWidth);
+				console.log("thisWidth:"+thisWidth);
+				console.log("excursion:"+excursion);
+				console.log("leftLimit"+leftLimit);
+				if(excursion <-leftLimit){
+					ulDom.css('left',34-excursion);
+					console.log("iam in left");
+				}else if( excursion+thisWidth+leftLimit > warpWidth){
+					ulDom.css('left',-(excursion+2+thisWidth-warpWidth+34));
+					console.log("i am in right");
+				}	
+			}
 			var $title = this.getTitleDom();
 			$('a', $title).trigger('click');
 			return this;
@@ -216,7 +254,13 @@ define(function(require, exports, module){
 		 * 关闭标签
 		 */
 		this.close = function(activateTabId){
+			var ulDom = $("#main-tab-title-container")
+			var warpWidth = parseFloat(ulDom.parent().css("width"));
 			var result = param.onClose(this);
+			var closeWidth = param.title.length*13+42;
+			var ulWidth = parseFloat(ulDom.css("width"));
+			var ulLeft = parseFloat(ulDom.css("left"));
+			var finalWidth = ulWidth - closeWidth+1;
 			if(result === false){
 				return this;
 			}
@@ -241,11 +285,21 @@ define(function(require, exports, module){
 					}
 				}
 			}
+			
 			//关闭并且移除当前标签对象
 			tabMap[this.getId()] = undefined;
 			this.getTitleDom().remove();
 			this.getContent().remove();
 			this.destruct();
+			ulDom.css("width",finalWidth);
+			if(finalWidth >= warpWidth){
+				ulDom.css("left",ulLeft+closeWidth)
+			}
+			if(finalWidth < warpWidth){
+				ulDom.css("left",0);
+				$('a.move').css("display","none");
+				ulDom.css("marginLeft",0);
+			}
 			return this;
 		};
 		/**
@@ -269,8 +323,35 @@ define(function(require, exports, module){
 		this.destruct = function(){
 			Page.remove(id);
 		};
+	
 	}
 	
+	
+	/**
+	 * 左右移动标签页绑定事件
+	 */
+	function moveTab(){
+		$('.move').on("click",function(e){
+			var ulDom = $("#main-tab-title-container");
+			var ulWidth = parseFloat(ulDom.css("width"));
+			var leftWidth = parseFloat(ulDom.css("left"));
+			var warpWidth = parseFloat(ulDom.parent().css("width"));
+			var moveDistance = parseFloat(ulDom.children().last().css("width"));
+			if($(this).hasClass("left")){
+				if(-leftWidth<moveDistance){
+					ulDom.css("left",34)
+				}else{
+					ulDom.css("left",leftWidth+moveDistance)
+				}
+			}else if($(this).hasClass("right")){
+				if(ulWidth+leftWidth-34-warpWidth < moveDistance){
+					ulDom.css("left",-(ulWidth+34-warpWidth))	
+				}else{
+					ulDom.css("left",leftWidth-moveDistance);	
+				}	
+			}
+		})
+	}
 	
 	/**
 	 * 构造标签页对象
