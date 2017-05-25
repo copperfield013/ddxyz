@@ -18,8 +18,35 @@ div.page-container, div.page-container, div.page-container>.page-content{
 div.page-container>.page-content{
 	position: relative;
 }
+div.tab-warp{
+	position:relative;
+}
+a.move {
+	display:none;
+	position:absolute;
+	top:0;
+	width:34px;
+	height:34px;
+	line-height:34px;
+	text-align:center;
+	color:#000000;
+	font-size:18px;
+	z-index:999999999;
+	background-color:#eeeeee;
+	text-decoration:none;
+}
+a.left {
+	left:0;
+	border-right: 1px solid #d6d8dd;
+}
+a.right {
+	right:0;
+	border-left: 1px solid #d6d8dd;
+}
 ul.nav-tabs{
 	height: 34px;
+	position:absolute;
+	top:0;
 }
 div.tab-content{
 	position: absolute;
