@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,7 @@ import cn.sowell.copframe.dto.ajax.JsonRequest;
 import cn.sowell.copframe.dto.ajax.JsonResponse;
 import cn.sowell.copframe.dto.page.CommonPageInfo;
 import cn.sowell.copframe.utils.CollectionUtils;
+import cn.sowell.copframe.utils.HttpRequestUtils;
 import cn.sowell.copframe.weixin.common.service.WxConfigService;
 import cn.sowell.copframe.weixin.common.utils.WxUtils;
 import cn.sowell.copframe.weixin.pay.prepay.H5PayParameter;
@@ -79,7 +81,7 @@ public class WeiXinYddController {
 	OrderItemService oiService;
 	
 	@RequestMapping({"", "/"})
-	public String index(Model model){
+	public String index(Model model, HttpServletRequest request){
 		long waresId = 1l;
 		long merchantId = 1l;
 		List<DeliveryTimePoint> timePointItems = dService.getTodayDeliveryTimePoints(waresId);
