@@ -4,12 +4,17 @@ import java.util.Comparator;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.annotation.Resource;
+
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import cn.sowell.copframe.common.property.PropertyPlaceholder;
 import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.copframe.weixin.common.service.WxConfigService;
+import cn.sowell.copframe.weixin.config.WxApp;
+import cn.sowell.copframe.weixin.config.WxConfig;
+import cn.sowell.copframe.xml.ValueUnprovidedExcepetion;
 import cn.sowell.copframe.xml.XmlNode;
 
 @Service
@@ -17,24 +22,46 @@ public class WxConfigServiceImpl implements WxConfigService{
 
 	Logger logger = Logger.getLogger(WxConfigService.class);
 	
+	@Resource
+	WxConfig wxConfig;
+	
+	WxApp APP(){
+		String wxapp = getAppKey();
+		WxApp app = wxConfig.getApp(wxapp);
+		if(app == null){
+			throw new ValueUnprovidedExcepetion("没有找到" + wxapp +"对应的微信公众号");
+		}
+		return app;
+	}
+	
+	@Override
+	public String getAppKey() {
+		return PropertyPlaceholder.getProperty("wxapp");
+	}
+	
 	@Override
 	public String getAppid() {
-		return PropertyPlaceholder.getProperty("appid");
+		return APP().getAppid();
 	}
 
 	@Override
 	public String getSecret() {
-		return PropertyPlaceholder.getProperty("wxsecret");
+		return APP().getSecret();
 	}
 	
 	@Override
 	public String getWxPayKey() {
-		return PropertyPlaceholder.getProperty("wxpaykey");
+		return APP().getPayKey();
 	}
 	
 	@Override
 	public String getMerchantId() {
-		return PropertyPlaceholder.getProperty("merchant_id");
+		return APP().getMerchantId();
+	}
+	
+	@Override
+	public String getMerchantPKCS12FilePath() {
+		return APP().getPkcs12FilePath();
 	}
 
 	@Override

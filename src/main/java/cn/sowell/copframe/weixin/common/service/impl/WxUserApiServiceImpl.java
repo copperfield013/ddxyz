@@ -21,7 +21,7 @@ import com.alibaba.fastjson.JSONObject;
 public class WxUserApiServiceImpl implements WxUserApiService{
 	
 	@Resource
-	WxConfigService wxConfigService;
+	WxConfigService configService;
 	
 	Logger logger = Logger.getLogger(WxUserApiService.class);
 	
@@ -30,8 +30,8 @@ public class WxUserApiServiceImpl implements WxUserApiService{
 		//发送请求获得openid和accessToken
 		String outputStr = "appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code";
 		outputStr = outputStr
-					.replace("APPID", PropertyPlaceholder.getProperty("appid"))
-					.replace("SECRET", PropertyPlaceholder.getProperty("wxsecret"))
+					.replace("APPID", configService.getAppid())
+					.replace("SECRET", configService.getSecret())
 					.replace("CODE", code);
 		String res = WXHTTPClient.request("https://api.weixin.qq.com/sns/oauth2/access_token?", 
 				"POST", 
@@ -89,7 +89,7 @@ public class WxUserApiServiceImpl implements WxUserApiService{
 					PropertyPlaceholder.getProperty("project_url") 
 					+ PropertyPlaceholder.getProperty("wx_authenticate_uri");
 		String oAuthURL = "https://open.weixin.qq.com/connect/oauth2/authorize?"
-				+ "appid=" + wxConfigService.getAppid()
+				+ "appid=" + configService.getAppid()
 				+ "&redirect_uri=" + afterOAuthURL
 				+ "&response_type=code&scope=snsapi_userinfo"
 				+ "&state="	+ state 

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+	<template key="newOrder" code="OPENTM203405336">
+		<app key="ddxyz" tid="-ADmSaK-uLTAAX4ncdePae_-7nREarNuE-5EHVDE4Gw" />
+		<app key="ddxy" tid="13cike_EqfEHON1JWrbJrG_BTkbcL4jUfXmJ1-31s-A" />
+		
+		<data class="cn.sowell.ddxyz.model.weixin.pojo.templateMsg.WxNewOrderMessage">
+			<property name="prevMsg" key="first" color="#f00" />
+			<property name="orderCode" key="keyword1" />
+			<property name="contact" key="keyword2" />
+			<property name="orderContent" key="keyword3" />
+			<property name="address" key="keyword4" />
+			<property name="timePoint" key="keyword5" />
+			<property name="postMsg" key="remark" />
+		</data>
+		<content>
+			<![CDATA[
+				{{first.DATA}}
+				订单编号：{{keyword1.DATA}}
+				联系信息：{{keyword2.DATA}}
+				订单内容：{{keyword3.DATA}}
+				订单地址：{{keyword4.DATA}}
+				预约送达时间：{{keyword5.DATA}}
+				{{remark.DATA}}
+			]]>
+		</content>
+	</template>
+	<template key="orderPaied" code="OPENTM207705069">
+		<app key="ddxyz" tid="T-UC8oW_WdhY39U6S7rNvuObhjxg_X5seCf3afuLmpQ" />
+		<app key="ddxy" tid="l42edKXjvTAm0QtZfwuJh3Sun8DTY1OqWK4GZaGf5io" />
+		
+		<data class="cn.sowell.ddxyz.model.weixin.pojo.templateMsg.WxOrderPaiedMessage">
+			<property name="prevMsg" key="first" />
+			<property name="detail" key="keyword1" />
+			<property name="amount" key="keyword2" />
+			<property name="address" key="keyword3" />
+			<property name="timePoint" key="keyword4" />
+			<property name="postMsg" key="remark" />
+		</data>
+		<content>
+			<![CDATA[
+				{{first.DATA}}
+				商品信息：{{keyword1.DATA}}
+				支付金额：{{keyword2.DATA}}
+				取餐地址：{{keyword3.DATA}}
+				预计取餐时间：{{keyword4.DATA}}
+				{{remark.DATA}}
+			]]>
+		</content>
+	</template>
+</templates>

@@ -40,10 +40,10 @@ define(function(require, exports, module){
 			
 		};
 		var data = $.extend({}, defaultResponseData, _data);
-		data.localPageAction = data.localPageAction && data.localPageAction.toLowerCase();
-		data.targetPageAction = data.targetPageAction && data.targetPageAction.toLowerCase();
-		data.targetPageType = data.targetPageType && data.targetPageType.toLowerCase();
-		data.noticeType = data.noticeType && data.noticeType.toLowerCase();
+		data.localPageAction = data.localPageAction && data.localPageAction;
+		data.targetPageAction = data.targetPageAction && data.targetPageAction;
+		data.targetPageType = data.targetPageType && data.targetPageType;
+		data.noticeType = data.noticeType && data.noticeType;
 		this.getLocalPageAction = function(){
 			return data.localPageAction;
 		};
@@ -92,6 +92,9 @@ define(function(require, exports, module){
 				var tPage = Page.getPage(tPageId);
 				if(tPage instanceof Page){
 					_doAction(tPageAction, tPage, this.getTargetPageTitle(), this.getLocalPageRedirectURL());
+					if(localPageAction === 'close' && tPage.getType() === 'tab'){
+						tPage.getPageObj().activate();
+					}
 				}
 			}
 			var notice = this.getNotice(),

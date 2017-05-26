@@ -5,6 +5,12 @@ import java.util.Map;
 import cn.sowell.copframe.xml.XmlNode;
 
 public interface WxConfigService {
+	/**
+	 * 
+	 * @return
+	 */
+	String getAppKey();
+	
 	String getAppid();
 	
 	/**
@@ -70,4 +76,10 @@ public interface WxConfigService {
 	 * @return
 	 */
 	boolean isDebug();
+	/**
+	 * 获得商户的微信支付证书路径
+	 * @return
+	 */
+	String getMerchantPKCS12FilePath();
+
 }

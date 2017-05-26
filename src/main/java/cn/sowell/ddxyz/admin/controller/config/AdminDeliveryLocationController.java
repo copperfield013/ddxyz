@@ -10,10 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.SerializerFeature;
-
 import cn.sowell.copframe.dto.ajax.AjaxPageResponse;
 import cn.sowell.copframe.dto.ajax.JsonResponse;
 import cn.sowell.copframe.dto.page.CommonPageInfo;
@@ -22,6 +18,9 @@ import cn.sowell.ddxyz.admin.AdminConstants;
 import cn.sowell.ddxyz.model.common.pojo.PlainLocation;
 import cn.sowell.ddxyz.model.config.pojo.criteria.DeliveryLocationCriteria;
 import cn.sowell.ddxyz.model.config.service.DeliveryLocationService;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 
 @Controller
 @RequestMapping(AdminConstants.URI_BASE + "/config/location")
@@ -54,12 +53,10 @@ public class AdminDeliveryLocationController {
 	
 	@ResponseBody
 	@RequestMapping("/doAdd")
-	public JsonResponse doAdd(PlainLocation location){
+	public AjaxPageResponse doAdd(PlainLocation location){
 		location.setMerchantId(DdxyzConstants.MERCHANT_ID);
 		deliveryLocationService.addPlainLocation(location);
-		JsonResponse jres = new JsonResponse();
-		jres.setJsonObject((JSONObject) JSONObject.toJSON(AjaxPageResponse.CLOSE_AND_REFRESH_PAGE("添加成功！", "delivery-location-list")));
-		return jres;
+		return AjaxPageResponse.CLOSE_AND_REFRESH_PAGE("添加成功！", "delivery-location-list");
 	}
 	
 	@ResponseBody

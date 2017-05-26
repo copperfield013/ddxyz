@@ -22,6 +22,7 @@
 	<context:component-scan base-package="cn.sowell.ddxyz.model.common.core.impl" />
 	<!-- controller自动扫描(自动注入) -->
 	<context:component-scan base-package="cn.sowell.ddxyz.*.controller.*" />
+	
 	<mvc:interceptors>
 		<!-- 用于在请求中设置一些常用的变量 -->
 		<bean class="cn.sowell.ddxyz.weixin.interceptor.CommonRequestAttributeSetInterceptor" />

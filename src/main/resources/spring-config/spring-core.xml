@@ -31,5 +31,13 @@
 				<value>classpath:config.properties</value>
 			</list>
 		</property>  
-	</bean> 
+	</bean>
+	<!-- 微信公众号配置 -->
+	<bean class="cn.sowell.copframe.weixin.config.WxConfig">
+		<constructor-arg value="classpath:wxconfig/wxconfig.xml" />
+	</bean>
+	<!-- 微信模板消息配置 -->
+	<bean class="cn.sowell.copframe.weixin.message.template.config.WxMessageTemplateConfig" >
+		<constructor-arg value="classpath:wxconfig/wx-tempmsg.xml" />
+	</bean>
 </beans>    

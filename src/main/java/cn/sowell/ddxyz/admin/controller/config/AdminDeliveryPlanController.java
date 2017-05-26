@@ -11,12 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.SerializerFeature;
-
 import cn.sowell.copframe.dto.ajax.AjaxPageResponse;
-import cn.sowell.copframe.dto.ajax.JsonResponse;
 import cn.sowell.copframe.dto.ajax.NoticeType;
 import cn.sowell.copframe.dto.page.CommonPageInfo;
 import cn.sowell.ddxyz.DdxyzConstants;
@@ -55,26 +50,23 @@ public class AdminDeliveryPlanController {
 	
 	@ResponseBody
 	@RequestMapping("/plan-doAdd")
-	public JsonResponse doAdd(DeliveryPlanWrap deliveryPlanWrap){
+	public AjaxPageResponse doAdd(DeliveryPlanWrap deliveryPlanWrap){
 		deliveryPlanWrap.getPlan().setWaresId(DdxyzConstants.WARES_ID);
 		deliveryService.addPlan(deliveryPlanWrap.getPlan());
-		JsonResponse jres = new JsonResponse();
-		jres.setJsonObject((JSONObject) JSONObject.toJSON( 
-				AjaxPageResponse.CLOSE_AND_REFRESH_PAGE("配送计划添加成功！", "delivery-plan-list")));
-		return jres;
+		return AjaxPageResponse.CLOSE_AND_REFRESH_PAGE("配送计划添加成功！", "delivery-plan-list");
 	}
 	
 	@ResponseBody
 	@RequestMapping("/change-disabled")
-	public String changePlanDisabled(@RequestParam("id") Long planId, Integer disabled){
+	public AjaxPageResponse changePlanDisabled(@RequestParam("id") Long planId, Integer disabled){
 		boolean changeResult = deliveryService.changePlanDisabled(planId, disabled);
 		if(changeResult){
-			return JSON.toJSONString(AjaxPageResponse.REFRESH_LOCAL("操作成功"), SerializerFeature.WriteEnumUsingToString);
+			return AjaxPageResponse.REFRESH_LOCAL("操作成功");
 		}else{
 			AjaxPageResponse response = new AjaxPageResponse();
 			response.setNotice("操作失败");
 			response.setNoticeType(NoticeType.ERROR);
-			return JSON.toJSONString(response, SerializerFeature.WriteEnumUsingToString);
+			return response;
 		}
 	}
 }

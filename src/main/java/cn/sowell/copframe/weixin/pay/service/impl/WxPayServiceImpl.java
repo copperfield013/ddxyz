@@ -259,7 +259,7 @@ public class WxPayServiceImpl implements WxPayService{
 		 */
 
 		KeyStore keyStore = KeyStore.getInstance("PKCS12");
-		ClassPathResource resFile = new ClassPathResource("wxcert/apiclient_cert.p12");
+		ClassPathResource resFile = new ClassPathResource(configService.getMerchantPKCS12FilePath());
 		InputStream instream = resFile.getInputStream();
 		String merchantId = configService.getMerchantId();
 		try {

@@ -18,4 +18,12 @@ public interface WeiXinUserService {
 	 * @return
 	 */
 	WeiXinUser getWeiXinUserById(Long userId);
+	
+	/**
+	 * 获得所有配置为可以接收messageType的消息的微信粉丝的openid
+	 * @param messageType
+	 * @return
+	 */
+	String[] getConfigedMessageOpenids(Long merchantId, String messageType);
+	
 }

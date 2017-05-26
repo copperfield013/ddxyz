@@ -16,9 +16,9 @@ import cn.sowell.copframe.dto.format.FormatUtils;
  * @author Copperfield Zhang
  * @date 2017年2月8日 上午9:48:04
  */
-public class RefrectSetValueConverter implements PropertyValueConverter<Object, Object>{
+public class ReflectSetValueConverter implements PropertyValueConverter<Object, Object>{
 
-	private RefrectSetValueConverter(){
+	private ReflectSetValueConverter(){
 		
 	}
 	
@@ -65,14 +65,14 @@ public class RefrectSetValueConverter implements PropertyValueConverter<Object, 
 	}
 
 
-	private static RefrectSetValueConverter instance;
+	private static ReflectSetValueConverter instance;
 	/**
 	 * 获得反射转换器的单例。因为该转换器是状态无关的对象，因此不需要重复构造
 	 * @return
 	 */
-	public static RefrectSetValueConverter getInstance(){
+	public static ReflectSetValueConverter getInstance(){
 		if(instance == null){
-			instance = new RefrectSetValueConverter();
+			instance = new ReflectSetValueConverter();
 		}
 		return instance;
 	}

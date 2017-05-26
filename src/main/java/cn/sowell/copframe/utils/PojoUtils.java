@@ -10,6 +10,20 @@ import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
 public class PojoUtils {
+	
+	public static Object getPropertyValue(Object source, String propertyName){
+		Assert.notNull(source);
+		PropertyDescriptor pd = BeanUtils.getPropertyDescriptor(source.getClass(), propertyName);
+		Method readMethod = pd.getReadMethod();
+		try {
+			return readMethod.invoke(source);
+		} catch (Exception e){
+			throw new UnsupportedOperationException();
+		}
+	}
+	
+	
+	
 	public static <T> void coverProperties(T source, T target){
 
 		Assert.notNull(source, "Source must not be null");

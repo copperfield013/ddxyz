@@ -16,6 +16,7 @@ import cn.sowell.copframe.weixin.pay.exception.WeiXinPayException;
 import cn.sowell.copframe.weixin.pay.prepay.PrepayParameter;
 import cn.sowell.copframe.weixin.pay.prepay.PrepayResult;
 import cn.sowell.copframe.weixin.pay.service.WxPayService;
+import cn.sowell.ddxyz.DdxyzConstants;
 import cn.sowell.ddxyz.model.common.core.DefaultOrderPayParameter;
 import cn.sowell.ddxyz.model.common.core.Delivery;
 import cn.sowell.ddxyz.model.common.core.DeliveryManager;
@@ -35,6 +36,8 @@ import cn.sowell.ddxyz.model.common.pojo.PlainOrder;
 import cn.sowell.ddxyz.model.common.pojo.PlainOrderReceiver;
 import cn.sowell.ddxyz.model.common.service.OrderService;
 import cn.sowell.ddxyz.model.weixin.pojo.WeiXinUser;
+import cn.sowell.ddxyz.model.weixin.service.WeiXinMessageService;
+import cn.sowell.ddxyz.model.weixin.service.WeiXinUserService;
 
 @Service
 public class OrderServiceImpl implements OrderService{
@@ -52,6 +55,12 @@ public class OrderServiceImpl implements OrderService{
 	
 	@Resource
 	CommonOrderDao oDao;
+	
+	@Resource
+	WeiXinMessageService messageService;
+	
+	@Resource
+	WeiXinUserService userService;
 	
 	Logger logger = Logger.getLogger(OrderServiceImpl.class);
 	
@@ -125,6 +134,9 @@ public class OrderServiceImpl implements OrderService{
 		Order order = getOrder(orderId);
 		OrderPayParameter payParam = new DefaultOrderPayParameter(user);
 		order.pay(payParam);
+		//发送微信消息给管理员和客户
+		messageService.sendNewOrderMessage(order, userService.getConfigedMessageOpenids(DdxyzConstants.MERCHANT_ID, DdxyzConstants.MSGTYPE_NEWORDER));
+		messageService.sendOrderPaiedMessage(order);
 	}
 	
 	

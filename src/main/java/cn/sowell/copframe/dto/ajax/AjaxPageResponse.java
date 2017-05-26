@@ -1,5 +1,7 @@
 package cn.sowell.copframe.dto.ajax;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 
 
 /**
@@ -32,7 +34,9 @@ public class AjaxPageResponse {
 	//响应提示语类型
 	private NoticeType noticeType;
 	//标识
+	@JSONField(name="ajax_page_response")
 	private final String ajax_page_response = "cpf";
+	
 	public String getTargetPageId() {
 		return targetPageId;
 	}

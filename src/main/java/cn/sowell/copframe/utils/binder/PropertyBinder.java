@@ -35,7 +35,7 @@ public class PropertyBinder {
 		Assert.notNull(target);
 		this.target = target;
 		//默认添加一个属性反射转换器
-		addPvConverter(RefrectSetValueConverter.getInstance());
+		addPvConverter(ReflectSetValueConverter.getInstance());
 	}
 	
 	/**
@@ -65,7 +65,7 @@ public class PropertyBinder {
 						pvConverter.setPropertyValue(this.target, convertValue, context);
 					} catch (PropertyValueConvertException e) {
 						//只记录除了反射set属性值的转换器抛出的异常
-						if(!(pvConverter instanceof RefrectSetValueConverter)){
+						if(!(pvConverter instanceof ReflectSetValueConverter)){
 							logger.error(e);
 						}
 					}

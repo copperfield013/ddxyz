@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<app id="ddxyz" cname="点点新意">
+		<!-- 公众号id -->
+		<appid>wx044790c2cb35fd68</appid>
+		<!-- 公众号秘钥 -->
+		<secret>d95a6a5fbd494504b6825402596f3b80</secret>
+		<merchant>
+			<!-- 商户id -->
+			<id>1338312901</id>
+			<!-- 支付秘钥 -->
+			<pay-key>sowellyidiandiannaicha1234567890</pay-key>
+			<!-- 配置证书路径 -->
+			<cert>
+				<pkcs12>wxconfig/wxcert/ddxyz/apiclient_cert.p12</pkcs12>
+			</cert>
+		</merchant>
+		
+		
+	</app>
+	<app id="ddxy" cname="点点心怡">
+		<!-- 公众号id -->
+		<appid>wx0e4bec62d4d4420e</appid>
+		<!-- 公众号秘钥 -->
+		<secret>65bb55f623c8d4e5d089cbbd4d3bdc61</secret>
+		<merchant>
+			<!-- 商户id -->
+			<id>1448386602</id>
+			<!-- 支付秘钥 -->
+			<pay-key>sowellyidiandiannaicha1234567890</pay-key>
+			<!-- 配置证书路径 -->
+			<cert>
+				<pkcs12>wxconfig/wxcert/ddxy/apiclient_cert.p12</pkcs12>
+			</cert>
+		</merchant>
+	</app>
+</config>

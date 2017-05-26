@@ -11,7 +11,14 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import cn.sowell.copframe.utils.HttpRequestUtils;
+import cn.sowell.copframe.weixin.common.service.WxConfigService;
+import cn.sowell.copframe.weixin.common.service.WxCredentialService;
+import cn.sowell.copframe.weixin.message.template.TemplateMessageRequestParameter;
 import cn.sowell.copframe.weixin.pay.paied.WxPayStatus;
 import cn.sowell.ddxyz.model.common.core.DefaultOrderPayParameter;
 import cn.sowell.ddxyz.model.common.core.DeliveryLocation;
@@ -38,8 +45,8 @@ import cn.sowell.ddxyz.model.weixin.service.WeiXinUserService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
-/*@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath*:spring-config/spring-junit.xml")*/
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = "classpath*:spring-config/spring-junit.xml")
 public class OrderServiceTest {
 	@Resource
 	DeliveryManager dManager;
@@ -58,6 +65,12 @@ public class OrderServiceTest {
 
 	@Resource
 	OrderItemService oiService;
+	
+	@Resource
+	WxConfigService configService;
+	
+	@Resource
+	WxCredentialService credentialService;
 	
 	@Test
 	public void applyOrderTest(){
@@ -126,7 +139,7 @@ public class OrderServiceTest {
 	
 	@Test
 	public void payOrder(){
-		Order order = orderService.getOrder(26l);
+		Order order = orderService.getOrder(235L);
 		if(order != null){
 			WeiXinUser payUser = userService.getWeiXinUserByOpenid("ovZxms3dvkaZR2aFpmkWh2SxmCTY");
 			DefaultOrderPayParameter payParam = new DefaultOrderPayParameter(payUser);
@@ -262,5 +275,23 @@ public class OrderServiceTest {
 		System.out.println(result.toString());
 		factorial();
 	}
+	
+	@Test
+	public void sendMsg(){
+		TemplateMessageRequestParameter p = new TemplateMessageRequestParameter();
+		p.setToUserOpenId("ovZxms3dvkaZR2aFpmkWh2SxmCTY");
+		p.setTemplateId("soyQpfQ-cuT357KFPcQYLLB_ELfDZSA-uM6EzS7C3zA");
+		p.putData("first", "有新订单啦！");
+		p.putData("keyword1", "2017年5月24日");
+		p.putData("keyword2", "天虹商场");
+		p.putData("keyword3", "100元");
+		p.putData("keyword4", "热的");
+		p.putData("remark", "请快点送");
+		JSONObject jo = (JSONObject) JSON.toJSON(p);
+		String url = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=" + credentialService.getAccessToken();
+		HttpRequestUtils.postJsonAndReturnJson(url , jo);
+	}
+	
+	
 	
 }

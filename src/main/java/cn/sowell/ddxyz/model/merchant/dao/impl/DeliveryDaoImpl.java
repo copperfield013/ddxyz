@@ -43,7 +43,7 @@ public class DeliveryDaoImpl implements DeliveryDao{
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
-		String hql = "from PlainDelivery d where d.waresId = :waresId and d.timePoint >= :theDayZero and d.timePoint < :theSecondZero and d.disabled is null";
+		String hql = "from PlainDelivery d where d.waresId = :waresId and d.timePoint >= :theDayZero and d.timePoint < :theSecondZero and d.disabled is null order by d.timePoint asc";
 		Query query = sFactory.getCurrentSession().createQuery(hql);
 		query.setLong("waresId", waresId)
 				.setTimestamp("theDayZero", cal.getTime())

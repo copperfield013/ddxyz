@@ -22,6 +22,27 @@ public interface XmlNode {
 	 * @return
 	 */
 	String getAttribute(String attrName);
+	
+	/**
+	 * 获得属性值，如果属性没有给出，则返回默认值
+	 * @param attrName
+	 * @param def 默认值
+	 * @return
+	 */
+	default String getAttribute(String attrName, String def){
+		String attr = getAttribute(attrName);
+		return attr == null? def: attr;
+	}
+	
+	/**
+	 * 强制获得当前节点的某个属性的值，如果没有时会抛出异常
+	 * @param attrName 属性名
+	 * @return
+	 * @throws ValueUnprovidedExcepetion
+	 */
+	String getStrictAttribute(String attrName)
+			throws ValueUnprovidedExcepetion;
+	
 	/**
 	 * 获得内容
 	 * @return
@@ -130,5 +151,21 @@ public interface XmlNode {
 	 * @return
 	 */
 	LinkedHashMap<String, String> toTagTextMap();
+	/**
+	 * 获得路径
+	 * @return
+	 */
+	String getPath();
+	/**
+	 * 获得第一个子节点，如果不存在这个子节点，会抛出异常
+	 * @param tagName
+	 * @return
+	 */
+	XmlNode getStrictFirstElement(String tagName) throws ValueUnprovidedExcepetion;
+	/**
+	 * 强制获得标签的文本内容，如果文本为空，则抛出异常
+	 * @return
+	 */
+	String getStrictText() throws ValueUnprovidedExcepetion;
 	
 }

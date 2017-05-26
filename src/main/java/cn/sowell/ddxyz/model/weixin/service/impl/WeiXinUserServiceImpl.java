@@ -70,4 +70,11 @@ public class WeiXinUserServiceImpl implements WeiXinUserService{
 	public WeiXinUser getWeiXinUserById(Long userId) {
 		return wxUserDao.getUser(userId);
 	}
+	
+	@Override
+	public String[] getConfigedMessageOpenids(Long merchantId,
+			String messageType) {
+		return wxUserDao.getConfigedMessageOpenids(merchantId, messageType);
+	}
+	
 }

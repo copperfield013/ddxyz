@@ -175,6 +175,18 @@ public class HttpRequestUtils {
 		}
 		return postAndReturnJson(url, "utf-8", content.toString());
 	}
+	/**
+	 * post发送请求，请求内容为json，响应的内容也是json
+	 * @param url
+	 * @param jo
+	 * @return
+	 */
+	public static JSONObject postJsonAndReturnJson(String url, JSONObject jo) {
+		if(jo != null){
+			return postAndReturnJson(url, "utf-8", jo.toString());
+		}
+		return null;
+	}
 	
 	/**
 	 * 以xml报文的方式发起请求到url，并且返回XmlNode
@@ -196,6 +208,7 @@ public class HttpRequestUtils {
 		String ajaxHeader = reqeust.getHeader("X-Requested-With");  
         return "XMLHttpRequest".equalsIgnoreCase(ajaxHeader);
 	}
+
 
 	
 	

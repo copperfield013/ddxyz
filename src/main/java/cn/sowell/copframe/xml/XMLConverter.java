@@ -202,7 +202,12 @@ public class XMLConverter<T> {
 		return fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
 	}
 
-
+	/**
+	 * 
+	 * @param returnXML
+	 * @param source
+	 * @return
+	 */
 	public T parse(XmlNode returnXML, T source) {
 		if(returnXML != null){
 			Class<?> objClass = source.getClass();

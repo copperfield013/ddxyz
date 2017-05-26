@@ -60,7 +60,7 @@
 			});
 			
 			$("#search-all-delivery-info", deliveryInfoList).click(function(){
-				Dialog.confirm("确定要重新加载？",function(isYes){
+				Dialog.confirm("当前操作会根据配送计划重新生成配送，是否继续？",function(isYes){
 					if(isYes){
 						Ajax.ajax('admin/config/info/showToday', null, {
 							page	: deliveryInfoList.getLocatePage()

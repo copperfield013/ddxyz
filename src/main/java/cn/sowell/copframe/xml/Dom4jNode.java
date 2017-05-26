@@ -12,6 +12,7 @@ import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.dom4j.tree.DefaultElement;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import cn.sowell.copframe.exception.XMLException;
 /**
@@ -85,12 +86,35 @@ public class Dom4jNode implements XmlNode{
 
 	@Override
 	public String getAttribute(String attrName) {
-		return _thisElement.attributeValue(attrName);
+		return getAttribute(attrName, false);
+	}
+	
+	@Override
+	public String getStrictAttribute(String attrName)
+			throws ValueUnprovidedExcepetion {
+		return getAttribute(attrName, true);
+	}
+	
+	public String getAttribute(String attrName, boolean strict) throws ValueUnprovidedExcepetion{
+		String value = _thisElement.attributeValue(attrName);
+		if(value == null && strict){
+			throw new ValueUnprovidedExcepetion(this, attrName);
+		}
+		return value;
 	}
 	
 	@Override
 	public String getText() {
 		return _thisElement.getTextTrim();
+	}
+	
+	@Override
+	public String getStrictText() throws ValueUnprovidedExcepetion {
+		String text = getText();
+		if(StringUtils.hasText(text)){
+			return text;
+		}
+		throw new ValueUnprovidedExcepetion(this.getPath() + "的内容不能为空");
 	}
 	
 	@Override
@@ -104,6 +128,15 @@ public class Dom4jNode implements XmlNode{
 		}
 		return null;
 	}
+	@Override
+	public XmlNode getStrictFirstElement(String tagName)
+			throws ValueUnprovidedExcepetion {
+		XmlNode ele = getFirstElement(tagName);
+		if(ele != null){
+			return ele;
+		}
+		throw new ValueUnprovidedExcepetion(this, tagName, true);
+	}
 
 	@Override
 	public XmlNode getFirstElement(String attrName, String attrValue) {
@@ -116,7 +149,7 @@ public class Dom4jNode implements XmlNode{
 		}
 		return null;
 	}
-
+	
 	@Override
 	public List<XmlNode> getElements(String attrName, String attrValue) {
 		List<XmlNode> result = new ArrayList<XmlNode>();
@@ -226,6 +259,11 @@ public class Dom4jNode implements XmlNode{
 	@Override
 	public String toString() {
 		return asXML();
+	}
+	
+	@Override
+	public String getPath(){
+		return _thisElement.getPath();
 	}
 
 }

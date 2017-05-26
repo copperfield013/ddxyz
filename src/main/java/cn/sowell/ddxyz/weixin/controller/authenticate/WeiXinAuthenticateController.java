@@ -19,6 +19,7 @@ import cn.sowell.copframe.SystemConstants;
 import cn.sowell.copframe.common.property.PropertyPlaceholder;
 import cn.sowell.copframe.weixin.authentication.WxUserPrincipal;
 import cn.sowell.copframe.weixin.authentication.WxAuthorizationAccessToken;
+import cn.sowell.copframe.weixin.common.service.WxConfigService;
 import cn.sowell.copframe.weixin.common.service.WxUserApiService;
 import cn.sowell.ddxyz.model.weixin.pojo.WeiXinUser;
 import cn.sowell.ddxyz.model.weixin.service.WeiXinUserService;
@@ -33,6 +34,9 @@ public class WeiXinAuthenticateController {
 	@Resource
 	WxUserApiService userApiService;
 
+	@Resource
+	WxConfigService configService;
+	
 	Logger logger = Logger.getLogger(WeiXinAuthenticateController.class);
 	
 	@RequestMapping("/")
@@ -60,6 +64,7 @@ public class WeiXinAuthenticateController {
 						userApiService.loadUserFromServer(token, user);
 						user.setAuthorityChain(PropertyPlaceholder.getProperty("wx_default_authen"));
 						Date date = new Date();
+						user.setAppid(configService.getAppid());
 						user.setCreateTime(date);
 						user.setUpdateTime(date);
 						Long id = weiXinUserService.saveUser(user);
