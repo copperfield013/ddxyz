@@ -43,6 +43,14 @@
 						</div>
 					</div>
 					<div class="form-group">
+						<label class="col-lg-1 control-label" for="map">地标</label>
+						<!--百度地图容器-->
+						<div class="col-lg-3">
+							<input id="coordinate" type="hidden" name="coordinate"/>
+					    	<div style="width:700px;height:550px;border:#ccc solid 1px;font-size:12px" id="map"></div>
+					    </div>
+					</div>
+					<div class="form-group">
 						<div class="col-lg-offset-1 col-lg-2">
 							<input type="submit" class="btn" id="location-add-submit-btn" value="提交" />
 						</div>
@@ -55,7 +63,55 @@
 
 <script>
 	$(function(){
-		seajs.use(['ajax', 'dialog'], function(Ajax, Dialog){
+		seajs.use(['ajax'], function(Ajax){
+			var location_add_page = $("#location-add")
+			//创建和初始化地图函数：
+			function initMap(){
+			  	createMap();//创建地图
+			  	setMapEvent();//设置地图事件
+			  	addMapControl();//向地图添加控件
+			  	//addMapOverlay();//向地图添加覆盖物
+			  	clickMap();
+			}
+			function createMap(){
+				map = new BMap.Map("map");
+				Ajax.ajax('admin/config/location/getLocationPoint',null,function(json){
+					map.centerAndZoom(new BMap.Point(json.lng, json.lat),13);
+				});
+			}
+			function setMapEvent(){
+			  map.enableScrollWheelZoom();
+			  map.enableKeyboard();
+			  map.enableDragging();
+			  map.enableDoubleClickZoom()
+			}
+			function addClickHandler(target,window){
+			  target.addEventListener("click",function(){
+			    target.openInfoWindow(window);
+			  });
+			}
+			//向地图添加控件
+			function addMapControl(){
+			  var scaleControl = new BMap.ScaleControl({anchor:BMAP_ANCHOR_BOTTOM_LEFT}); // 比例尺控件
+			  scaleControl.setUnit(BMAP_UNIT_IMPERIAL);
+			  map.addControl(scaleControl);
+			  var navControl = new BMap.NavigationControl({anchor:BMAP_ANCHOR_TOP_LEFT,type:0}); //地图的平移缩放控件
+			  map.addControl(navControl);
+			  var overviewControl = new BMap.OverviewMapControl({anchor:BMAP_ANCHOR_BOTTOM_RIGHT,isOpen:true}); //缩略地图控件
+			  map.addControl(overviewControl);
+			}
+			//左键单击 击地图
+			function clickMap(){
+				map.addEventListener("click", function(e){
+					map.clearOverlays();
+					var point = new BMap.Point(e.point.lng, e.point.lat);
+					var marker = new BMap.Marker(point);
+					map.addOverlay(marker);
+					$("#coordinate", location_add_page).val(e.point.lng + "," + e.point.lat);
+				});
+			}
+			var map;
+			initMap();
 		});
 	});
 </script>
