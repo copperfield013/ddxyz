@@ -113,7 +113,7 @@ public class AdminDeliveryLocationController {
 		if (null == str || str.isEmpty()) {
 			return null;
 		}
-		// 获取坐标位子
+		// 获取坐标位置
 		int index = str.indexOf("point");
 		int end = str.indexOf("}}", index);
 		if (index == -1 || end == -1) {
