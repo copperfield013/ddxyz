@@ -3,26 +3,11 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<base href="${basePath }" />
 		<title>点点新意管理系统</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
 		<link rel="icon" href="favicon.ico" type="image/x-icon" />
 		<link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
-		
-		<!--Basic Styles-->
-	    <link href="media/admin/plugins/beyond/css/bootstrap.min.css" rel="stylesheet" />
-	    <link href="media/admin/plugins/beyond/css/font-awesome.min.css" rel="stylesheet" />
-	
-	    <!--Fonts-->
-	    <!-- <link href="http://fonts.useso.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300" rel="stylesheet" type="text/css"> -->
-	
-	    <!--Beyond styles-->
-	    <link id="beyond-link" href="media/admin/plugins/beyond/css/beyond.min.css" rel="stylesheet" type="text/css" />
-	    <!--  -->
-	    <link href="media/admin/cpf/css/cpf-main.css" rel="stylesheet" type="text/css" />
+		<jsp:include page="/WEB-INF/jsp/admin/common/admin-include.jsp"></jsp:include>
 	    <!--Basic Scripts-->
-	    <script src="media/jquery-1.11.3.js"></script>
 	    <script src="media/admin/plugins/beyond/js/jquery-ui-1.10.4.custom.js"></script>
 	    <!--Skin Script: Place this script in head to load scripts for skins and rtl support-->
 	    <script src="media/admin/plugins/beyond/js/skins.min.js"></script>
@@ -152,8 +137,6 @@
 	    <script src="media/admin/plugins/beyond/js/bootstrap.js"></script>
 	    <script src="media/admin/plugins/beyond/js/toastr/toastr.js"></script>
 	    <script src="media/admin/plugins/beyond/js/beyond.min.js"></script>
-	    <!-- SeaJS -->
-	    <script src="${basePath }media/sea-debug.js"></script>
 	    
 	    <script type="text/javascript">
 	    	$(function(){
