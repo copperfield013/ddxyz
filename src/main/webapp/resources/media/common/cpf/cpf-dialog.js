@@ -35,13 +35,13 @@ define(function(require, exports, module){
 			id			: utils.uuid(5, 32),
 			title		: '标题',
 			content		: '',
+			onShow		: $.noop,
 			onClose		: $.noop,
 			onSubmit	: undefined,
 			isModal		: true,
 			width		: bodySize.width * 3/5,
 			height		: bodySize.height * 3/5,
 			top			: 0,//bodySize.top + bodySize.Height * 1/5,
-			left		: bodySize.left + bodySize.Width * 1/5
 		};
 		var param = $.extend({}, defaultParam, _param);
 		var id = String(param.id),
@@ -77,6 +77,12 @@ define(function(require, exports, module){
 				overflowX	: 'auto',
 				overflowY	: 'auto'
 			});
+			var $dialog = $model.children('.' + CLASS_DIALOG);
+			var size = {
+				width	: $dialog.width(),
+				height	: $dialog.height()
+			}
+			param.onShow.apply(_this, [null, size]);
 		});
 		//
 		$model.on('hidden.bs.modal', function () {
@@ -296,6 +302,27 @@ define(function(require, exports, module){
 			//直接加载弹出框
 			dialog.loadContent(url)
 				.show();
+			return dialog;
+		},
+		/**
+		 * 
+		 */
+		openFrameDialog	: function(url, title, id, param){
+			var $wrap = $('<div>');
+			var $iframe = $('<iframe scrolling="no" frameboder="0" border="0" style="width:100%;height:100%;border:none">');
+			$iframe.attr('src', url).attr('name', 'cpf-dialog-frame' + id);
+			var dialog = new Dialog($.extend({
+				title	: title,
+				id		: id,
+				onShow	: function(){
+					this.getDom().find('.' + CLASS_BODY).css({
+						padding		: 'none',
+						overflow	: 'hidden'
+					});
+				}
+			}, param));
+			
+			dialog.loadContent($wrap.append($iframe)).show();
 			return dialog;
 		},
 		getDialog	: function(dialogId){

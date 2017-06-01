@@ -159,6 +159,7 @@ define(function(require, exports, module){
 				}
 				this.getContent().html(content.html());
 				$CPF.initPage(_this.getContent());
+				param.onPageLoad.apply(this);
 				$CPF.closeLoading();
 			}
 			if(_title){
@@ -256,11 +257,6 @@ define(function(require, exports, module){
 			var ulWidth = parseFloat(ulDom.css("width"));
 			var ulLeft = parseFloat(ulDom.css("left"));
 			var finalWidth = ulWidth - closeWidth+1;
-			console.log(warpWidth);
-			console.log(closeWidth);
-			console.log(ulWidth);
-			console.log(ulLeft);
-			console.log(finalWidth);
 			if(result === false){
 				return this;
 			}
@@ -444,6 +440,38 @@ define(function(require, exports, module){
 		},
 		getTab 		: function(tabId){
 			return tabMap[tabId];
+		},
+		openFrameInTab	: function(url, id, param){
+			var $wrap = $('<div>');
+			var $iframe = $('<iframe scrolling="no" frameboder="0" border="0" style="width:100%;height:100%;border:none">');
+			$iframe.attr('src', url).attr('name', 'cpf-tab-frame' + id);
+			
+			
+			var tab = Tab.getTab(id);
+			if(!tab){
+				tab = new Tab($.extend({
+					id			: id,
+					onPageLoad	: function(){
+						var _this = this;
+						var title = param && param.title;
+						if(!title){
+							$('iframe', this.getContent()).on('load', function(){
+								var cWin = this.contentWindow;
+								var $title = $('title', cWin.document);
+								if($title.length > 0){
+									title = $title.eq(0).text();
+									_this.setTitle(title);
+								}
+							});
+						}
+						this.setTitle(title || '新标签页');
+					}
+				}, param));
+				tab.insert();
+			}
+			tab.loadContent($wrap.append($iframe))
+				.activate();
+			return tab;
 		}
 	});
 	

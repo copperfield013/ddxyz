@@ -30,6 +30,12 @@ public class IPUtils {
 			// 192.168.x.x/16
 			final byte SECTION_5 = (byte) 0xC0;
 			final byte SECTION_6 = (byte) 0xA8;
+			// 127.x.x.x/8
+			final byte SECTION_7 = (byte) 0x7F;
+			// 224.x.x.x/8
+			final byte SECTION_224 = (byte) 0xE0;
+			// 169.254.x.x/16
+			final byte SECTION_169 = (byte) 0xA9;
 			switch (b0) {
 			case SECTION_1:
 				return true;
@@ -42,8 +48,18 @@ public class IPUtils {
 				case SECTION_6:
 					return true;
 				}
+			case SECTION_7:
+				return true;
+			case SECTION_224:
+				return true;
+			case SECTION_169:
+				if(b1 == 0xFE){
+					return true;
+				}
 			default:
-				return false;
+				if("0.0.0.0".equals(text) || "255.255.255.255".equals(text)){
+					return true;
+				}
 			}
 		}
 		return false;

@@ -68,6 +68,10 @@ define(function(require, exports, module){
 				$(this).val(val);
 			}
 		});
+		$('form :text.datepicker', $page).each(function(){
+			$(this).datepicker();
+		});
+		
 	});
 	
 	function bindSubmit($page){

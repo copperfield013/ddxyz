@@ -82,6 +82,7 @@ public class WeiXinYddController {
 	
 	@RequestMapping({"", "/"})
 	public String index(Model model, HttpServletRequest request){
+		System.out.println(HttpRequestUtils.getIpAddress(request));
 		long waresId = 1l;
 		long merchantId = 1l;
 		List<DeliveryTimePoint> timePointItems = dService.getTodayDeliveryTimePoints(waresId);

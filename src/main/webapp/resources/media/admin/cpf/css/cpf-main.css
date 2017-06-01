@@ -107,6 +107,9 @@ div.tab-content>.tab-pane{
 }
 
 /* 标签页模块 */
+.navbar .navbar-inner{
+	background-color: #044d22;
+}
 li.main-tab-title{
 	position: relative;
 }
@@ -138,6 +141,9 @@ li.main-tab-title>a{
 }
 
 /* 弹出框样式 */
+.modal-body-wrapper{
+	height: 100%;
+}
 .modal-footer{
 	padding-top: 5px;
 	padding-bottom: 5px;

@@ -21,11 +21,6 @@
 	    <link id="beyond-link" href="media/admin/plugins/beyond/css/beyond.min.css" rel="stylesheet" type="text/css" />
 	    <!--  -->
 	    <link href="media/admin/cpf/css/cpf-main.css" rel="stylesheet" type="text/css" />
-	    <style type="text/css">
-	    	.navbar .navbar-inner{
-	    		background-color: #044d22;
-	    	}
-	    </style>
 	    <!--Basic Scripts-->
 	    <script src="media/jquery-1.11.3.js"></script>
 	    <script src="media/admin/plugins/beyond/js/jquery-ui-1.10.4.custom.js"></script>
@@ -87,9 +82,15 @@
 							</ul>
 	                    </li>
 	                    <li>
-	                        <a href="admin/production/product-list" class="menu-dropdown tab" target="product-list" title="生产管理">
+	                        <a href="admin/production/main" class="menu-dropdown tab" target="product-main" title="生产管理">
 	                        	<i class="menu-icon fa fa-desktop"></i>
 	                            <span class="menu-text">生产管理</span>
+	                        </a>
+	                    </li>
+	                    <li>
+	                        <a href="admin/production/product-list" class="menu-dropdown tab" target="product-list" title="生产管理">
+	                        	<i class="menu-icon fa fa-desktop"></i>
+	                            <span class="menu-text">生产管理1</span>
 	                        </a>
 	                    </li>
 	                     <li>

@@ -52,6 +52,18 @@ public class AdminProductionController {
 	Logger logger = Logger.getLogger(AdminProductionController.class);
 	
 	
+	@RequestMapping("/main")
+	public String main(Model model){
+		return AdminConstants.PATH_PRODUCTION + "/production_main.jsp";
+	}
+	
+	@RequestMapping("/query")
+	public String query(){
+		return AdminConstants.PATH_PRODUCTION + "/production_query.jsp";
+	}
+	
+	
+	
 	@RequestMapping("/product-list")
 	public String list(ProductionCriteria criteria,CommonPageInfo pageInfo, Model model){
 		if(criteria.getTimeRange() == null){

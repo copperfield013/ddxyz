@@ -7,25 +7,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>登录点点新意</title>
 		<meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
-		<script>
-			if (!document.getElementsByClassName) {
-			    document.getElementsByClassName = function (className, element) {
-			        var children = (element || document).getElementsByTagName('*');
-			        var elements = new Array();
-			        for (var i = 0; i < children.length; i++) {
-			            var child = children[i];
-			            var classNames = child.className.split(' ');
-			            for (var j = 0; j < classNames.length; j++) {
-			                if (classNames[j] == className) {
-			                    elements.push(child);
-			                    break;
-			                }
-			            }
-			        }
-			        return elements;
-			    };
-			}
-		</script>
+		<jsp:include page="/WEB-INF/jsp/admin/common/admin-include.jsp"></jsp:include>
 		<style>
 		@charset "utf-8";
 
@@ -161,14 +143,22 @@
 		
 	</body>
 	<script>
-		window.onload=function(){
-			var warnInfo = document.getElementsByClassName("login-warn")[0];
-			var loginBox =document.getElementsByClassName("loginbox")[0];
-			if(!warnInfo){			
-		        loginBox.setAttribute('style','margin-top:-200px;opacity:1')
-			}else{
-				loginBox.setAttribute('style','transition:none;margin-top:-200px;opacity:1')
-			}
-	    }
+		$(function(){
+			window.onload=function(){
+				var warnInfo = $('.login-warn');
+				var loginBox = $('.loginbox');
+				if(warnInfo.length === 0){
+					loginBox.attr('style', 'margin-top:-200px;opacity:1');
+				}else{
+					loginBox.attr('style', 'transition:none;margin-top:-200px;opacity:1');
+				}
+				console.log('111');
+				$(document).keypress(function(e){
+					if(e.keyCode === 13){
+						$('#submit').click();
+					}
+				});
+		    }
+		});
 	</script>
 </html>
