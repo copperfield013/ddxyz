@@ -24,14 +24,14 @@
 			    width:100%;
 			    height:100%;
 			}
-			div.login-container {
+			div.Z-login-container {
 			    width:100%;
 			    height:100%;
 			    background-color:#EEEEEE;
 			    position: relative;
 			}
 			
-			div.loginbox {
+			div.Z-loginbox {
 			    width: 540px;
 			    position: absolute;
 			    top: 50%;
@@ -53,11 +53,11 @@
 			    opacity:0;
 			}
 			
-			div.loginbox > div.loginbox-logo {
+			div.Z-loginbox > div.loginbox-logo {
 			    text-align: center;
 			}
 			
-			div.loginbox > div.loginbox-logo >img {
+			div.Z-loginbox > div.loginbox-logo >img {
 			    width:7.64em;
 			    height:4.71em;
 			}
@@ -93,7 +93,7 @@
 			    margin-bottom:1.43em;
 			}
 			
-			div.loginbox > div.loginbox-submit {
+			div.Z-loginbox > div.loginbox-submit {
 			    margin-top:2.3em;
 			}
 			
@@ -116,8 +116,8 @@
 	</head>
 	<body>
 		<form action="admin/doLogin" method="post">
-    		<div class="login-container">
-    			<div class="loginbox">
+    		<div class="Z-login-container">
+    			<div class="Z-loginbox">
     	    		
         			<div class="loginbox-logo">
             			<img src="media/common/ydd/image/ydd-logo.png"/>
@@ -146,7 +146,7 @@
 		$(function(){
 			window.onload=function(){
 				var warnInfo = $('.login-warn');
-				var loginBox = $('.loginbox');
+				var loginBox = $('.Z-loginbox');
 				if(warnInfo.length === 0){
 					loginBox.attr('style', 'margin-top:-200px;opacity:1');
 				}else{
