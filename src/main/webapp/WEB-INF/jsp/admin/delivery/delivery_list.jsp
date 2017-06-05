@@ -71,7 +71,7 @@ body{ -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none; use
 .condition-area > div.address-choose-area,
 .condition-area > div.print-status-area {
     float:left;
-    width:11.4em;
+    width:11.2em;
     border:1px solid #d5d5d5;
     height:2.8em;
     line-height: 2.8em;
@@ -79,42 +79,11 @@ body{ -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none; use
    text-align: center;
     background-color:#ffffff;
 }
-#my_picker {
-    border:none;
-    background-color:#ffffff;
-    outline: 0;
-    box-shadow:none;
-    width:5.6em;
-    padding:0;
-    float:right;
-    margin-left:-0.2em;
-}
-#time_choose,
-#address-choose,
-#print-status-choose {
-    height:2.4em;
-    width:4.6em;
-    border:none;
-    outline: 0;
-    box-shadow:none;
-    background-color:#ffffff;
-    padding:0;
-    float:right;
-    margin-left:-1em;
-    margin-right:0.8em;
-    font-size : 1.1em;
-}
-#address-choose {
-    width:5.6em;
-    margin-left:-1em;
-    margin-right:0;
-}
-#print-status-choose {
-    margin-right:0;
-}
+
 
 div.condition-area > div.tea-number-area {
     float:right;
+    margin-right:0.2em;
 }
 
 div.content-area {
@@ -133,13 +102,30 @@ div.content-area > div.detail-operation {
 }
 div.content-area > div.detail-operation >div {
     float:right;
+    border:1px solid transparent;
 }
 div.content-area > div.detail-operation >div > i{
     margin-left:1em;
     cursor: pointer;
+    display:inline-block;
+    text-align:center;
+    width:2.8em;
+    height:2.4em;
+    line-height:2.4em;
+    border-radius:0.6em;
+}
+div.content-area > div.detail-operation >div > i#refresh {
+  margin-top:0.2em;
+}
+div.content-area > div.detail-operation >div > i:hover {
+	color:#ffffff;
+	background-color:#044d11;
 }
 div.content-area > div.detail-operation >div > i:before {
-   font-size: 2em;
+    font-size: 2em;
+}
+div.content-area > div.detail-operation >div > i#refresh:before {
+   font-size: 2.4em;
 }
 div.content-area >div.detail-info-area {
    position: absolute;
@@ -154,16 +140,17 @@ div.content-area >div.detail-info-area >div.detail-info {
     width:29%;
     height:40%;
     margin-left:4%;
-    border:1px solid #000000;
+    border:1px solid #cccccc;
     margin-top:4em;
+    background-color:#ffffff;
     color:#000000;
     padding:0 1em;
-    cursor: pointer;
 }
 
 div.content-area >div.detail-info-area >div.detail-info.active {
-    background-color:#008000;
-    color:#CCCCCC;
+    background-color:#044D11;
+    color:#ffffff;
+    border:1px solid transparent;
 }
 
 div.content-area >div.detail-info-area >div.detail-info > label {
@@ -186,11 +173,10 @@ div.detail-info >p > i.single-printer{
     height:3em;
     cursor: pointer;
     position: relative;
-    bottom:1em;
     z-index: 9;
 }
 div.content-area >div.detail-info-area >div.detail-info.active >p > i.single-printer {
-    color:#CCCCCC;
+    color:#ffffff;
 }
 div.detail-info >p > i.single-printer:before{
     font-size: 2em;
@@ -372,33 +358,16 @@ div.detail-info >p > i.single-printer:before{
             <form action="admin/production/product-list">
                 <div class="condition-area">
                     <div class="timepicker-area">
-                        <span>下单时间：</span>
-                        <input name="order-time" class="form-control" type="text" id="my_picker" value="2017-5-31"/>
+                        <span>下单时间：2017-5-31</span>
                     </div>
                     <div class="time-choose-area">
-                        <span>时间档：</span>
-                        <select name="time-choose" id="time_choose">
-                            <option value="">全部</option>
-							<c:forEach var="i" begin="9" end="21" step="1">
-								<option value="${i }">${i }点</option>
-							</c:forEach>
-                        </select>
+                        <span>时间档：15点档</span>
                     </div>
                     <div class="address-choose-area">
-                        <span>配送地点：</span>
-                        <select name="address-choose" id="address-choose">
-                        	<option value="all" selected="selected">全部</option>
-                            <option value="hz" selected="selected">杭钻大厦</option>
-                            <option value="th">天虹商场</option>
-                        </select>
+                        <span>配送地点：杭钻大厦</span>     
                     </div>
                     <div class="print-status-area">
-                        <span>打印状态：</span>
-                        <select name="print-status-choose" id="print-status-choose">
-	                        <option value="">全部</option>
-							<option value="-1">未打印</option>
-							<option value="1">已打印</option>
-                        </select>
+                        <span>打印状态：未打印</span> 
                     </div>
                     <div class="tea-number-area">
                         共<span>50</span>杯，已选择<span>1</span>杯
@@ -427,204 +396,204 @@ div.detail-info >p > i.single-printer:before{
                                 <span class="text"></span>
                             </label>
                             <p>
-                                编号：
+                                编号:
                                 <span class="order-id">000220170421201459</span>
-                                (<span class="order-status">未打印</span>)
+                                                                                            （<span class="order-status">未打印</span>）
                             </p>
                             <p>
-                                付款时间：
+                                付款时间:
                                 <span class="payment-time">20:15:00</span>&nbsp;
                                 <span class="dispatching-time">15点档</span>&nbsp;
-                                分发号：<span class="dispatching-number">1</span>
+                                分发号:<span class="dispatching-number">1</span>
                             </p>
                             <p>
-                                奶茶
-                                规格：<span class="tea-standard">中杯</span>
-                                甜度：<span class="tea-sweet">5分甜</span>
-                                冰度：<span class="tea-temperature">冰</span>
+                                <span>奶茶</span>&nbsp;
+                                规格:<span class="tea-standard">中杯</span>&nbsp;
+                                甜度:<span class="tea-sweet">5分甜</span>&nbsp;
+                                冰度:<span class="tea-temperature">冰</span>
                             </p>
                             <p>
-                                搭配：<span class="tea-match">红茶</span>
-                                加料：<span class="tea-add">珍珠、波霸、椰果</span>
+                                搭配:&nbsp;<span class="tea-match">红茶</span>&nbsp;
+                                加料:&nbsp;<span class="tea-add">珍珠、波霸、椰果</span>
                             </p>
                             <p>
-                                配送地址：<span class="dispatching-address">杭钻大厦</span>
+                                配送地址:<span class="dispatching-address">杭钻大厦</span>
                             </p>
                             <p>
-                                联系号码：<span class="phone-number">13588888888</span>
-                                <i class="typcn typcn-printer single-printer"></i>
+                                联系号码:<span class="phone-number">13588888888</span>
+                                <i class="typcn typcn-printer single-printer" title="打印当前项"></i>
                             </p>
                         </div>
                         <div class="detail-info">
                             <label>
-                                <input type="checkbox" name="order-number" class="pitch-on-order" value="2"/>
+                                <input type="checkbox" name="order-number" class="pitch-on-order" value="1"/>
                                 <span class="text"></span>
                             </label>
                             <p>
-                                编号：
+                                编号:
                                 <span class="order-id">000220170421201459</span>
-                                (<span class="order-status">未打印</span>)
+                                                                                            （<span class="order-status">未打印</span>）
                             </p>
                             <p>
-                                付款时间：
+                                付款时间:
                                 <span class="payment-time">20:15:00</span>&nbsp;
                                 <span class="dispatching-time">15点档</span>&nbsp;
-                                分发号：<span class="dispatching-number">1</span>
+                                分发号:<span class="dispatching-number">1</span>
                             </p>
                             <p>
-                                奶茶
-                                规格：<span class="tea-standard">中杯</span>
-                                甜度：<span class="tea-sweet">5分甜</span>
-                                冰度：<span class="tea-temperature">冰</span>
+                                <span>奶茶</span>&nbsp;
+                                规格:<span class="tea-standard">中杯</span>&nbsp;
+                                甜度:<span class="tea-sweet">5分甜</span>&nbsp;
+                                冰度:<span class="tea-temperature">冰</span>
                             </p>
                             <p>
-                                搭配：<span class="tea-match">红茶</span>
-                                加料：<span class="tea-add">珍珠、波霸、椰果</span>
+                                搭配:&nbsp;<span class="tea-match">红茶</span>&nbsp;
+                                加料:&nbsp;<span class="tea-add">珍珠、波霸、椰果</span>
                             </p>
                             <p>
-                                配送地址：<span class="dispatching-address">杭钻大厦</span>
+                                配送地址:<span class="dispatching-address">杭钻大厦</span>
                             </p>
                             <p>
-                                联系号码：<span class="phone-number">13588888888</span>
-                                <i class="typcn typcn-printer single-printer"></i>
+                                联系号码:<span class="phone-number">13588888888</span>
+                                <i class="typcn typcn-printer single-printer" title="打印当前项"></i>
                             </p>
                         </div>
                         <div class="detail-info">
                             <label>
-                                <input type="checkbox" name="order-number" class="pitch-on-order" value="3"/>
+                                <input type="checkbox" name="order-number" class="pitch-on-order" value="1"/>
                                 <span class="text"></span>
                             </label>
                             <p>
-                                编号：
+                                编号:
                                 <span class="order-id">000220170421201459</span>
-                                (<span class="order-status">未打印</span>)
+                                                                                            （<span class="order-status">未打印</span>）
                             </p>
                             <p>
-                                付款时间：
+                                付款时间:
                                 <span class="payment-time">20:15:00</span>&nbsp;
                                 <span class="dispatching-time">15点档</span>&nbsp;
-                                分发号：<span class="dispatching-number">1</span>
+                                分发号:<span class="dispatching-number">1</span>
                             </p>
                             <p>
-                                奶茶
-                                规格：<span class="tea-standard">中杯</span>
-                                甜度：<span class="tea-sweet">5分甜</span>
-                                冰度：<span class="tea-temperature">冰</span>
+                                <span>奶茶</span>&nbsp;
+                                规格:<span class="tea-standard">中杯</span>&nbsp;
+                                甜度:<span class="tea-sweet">5分甜</span>&nbsp;
+                                冰度:<span class="tea-temperature">冰</span>
                             </p>
                             <p>
-                                搭配：<span class="tea-match">红茶</span>
-                                加料：<span class="tea-add">珍珠、波霸、椰果</span>
+                                搭配:&nbsp;<span class="tea-match">红茶</span>&nbsp;
+                                加料:&nbsp;<span class="tea-add">珍珠、波霸、椰果</span>
                             </p>
                             <p>
-                                配送地址：<span class="dispatching-address">杭钻大厦</span>
+                                配送地址:<span class="dispatching-address">杭钻大厦</span>
                             </p>
                             <p>
-                                联系号码：<span class="phone-number">13588888888</span>
-                                <i class="typcn typcn-printer single-printer"></i>
+                                联系号码:<span class="phone-number">13588888888</span>
+                                <i class="typcn typcn-printer single-printer" title="打印当前项"></i>
                             </p>
                         </div>
                         <div class="detail-info">
                             <label>
-                                <input type="checkbox" name="order-number" class="pitch-on-order" value="4"/>
+                                <input type="checkbox" name="order-number" class="pitch-on-order" value="1"/>
                                 <span class="text"></span>
                             </label>
                             <p>
-                                编号：
+                                编号:
                                 <span class="order-id">000220170421201459</span>
-                                (<span class="order-status">未打印</span>)
+                                                                                            （<span class="order-status">未打印</span>）
                             </p>
                             <p>
-                                付款时间：
+                                付款时间:
                                 <span class="payment-time">20:15:00</span>&nbsp;
                                 <span class="dispatching-time">15点档</span>&nbsp;
-                                分发号：<span class="dispatching-number">1</span>
+                                分发号:<span class="dispatching-number">1</span>
                             </p>
                             <p>
-                                奶茶
-                                规格：<span class="tea-standard">中杯</span>
-                                甜度：<span class="tea-sweet">5分甜</span>
-                                冰度：<span class="tea-temperature">冰</span>
+                                <span>奶茶</span>&nbsp;
+                                规格:<span class="tea-standard">中杯</span>&nbsp;
+                                甜度:<span class="tea-sweet">5分甜</span>&nbsp;
+                                冰度:<span class="tea-temperature">冰</span>
                             </p>
                             <p>
-                                搭配：<span class="tea-match">红茶</span>
-                                加料：<span class="tea-add">珍珠、波霸、椰果</span>
+                                搭配:&nbsp;<span class="tea-match">红茶</span>&nbsp;
+                                加料:&nbsp;<span class="tea-add">珍珠、波霸、椰果</span>
                             </p>
                             <p>
-                                配送地址：<span class="dispatching-address">杭钻大厦</span>
+                                配送地址:<span class="dispatching-address">杭钻大厦</span>
                             </p>
                             <p>
-                                联系号码：<span class="phone-number">13588888888</span>
-                                <i class="typcn typcn-printer single-printer"></i>
+                                联系号码:<span class="phone-number">13588888888</span>
+                                <i class="typcn typcn-printer single-printer" title="打印当前项"></i>
                             </p>
                         </div>
                         <div class="detail-info">
                             <label>
-                                <input type="checkbox" name="order-number" class="pitch-on-order" value="5"/>
+                                <input type="checkbox" name="order-number" class="pitch-on-order" value="1"/>
                                 <span class="text"></span>
                             </label>
                             <p>
-                                编号：
+                                编号:
                                 <span class="order-id">000220170421201459</span>
-                                (<span class="order-status">未打印</span>)
+                                                                                            （<span class="order-status">未打印</span>）
                             </p>
                             <p>
-                                付款时间：
+                                付款时间:
                                 <span class="payment-time">20:15:00</span>&nbsp;
                                 <span class="dispatching-time">15点档</span>&nbsp;
-                                分发号：<span class="dispatching-number">1</span>
+                                分发号:<span class="dispatching-number">1</span>
                             </p>
                             <p>
-                                奶茶
-                                规格：<span class="tea-standard">中杯</span>
-                                甜度：<span class="tea-sweet">5分甜</span>
-                                冰度：<span class="tea-temperature">冰</span>
+                                <span>奶茶</span>&nbsp;
+                                规格:<span class="tea-standard">中杯</span>&nbsp;
+                                甜度:<span class="tea-sweet">5分甜</span>&nbsp;
+                                冰度:<span class="tea-temperature">冰</span>
                             </p>
                             <p>
-                                搭配：<span class="tea-match">红茶</span>
-                                加料：<span class="tea-add">珍珠、波霸、椰果</span>
+                                搭配:&nbsp;<span class="tea-match">红茶</span>&nbsp;
+                                加料:&nbsp;<span class="tea-add">珍珠、波霸、椰果</span>
                             </p>
                             <p>
-                                配送地址：<span class="dispatching-address">杭钻大厦</span>
+                                配送地址:<span class="dispatching-address">杭钻大厦</span>
                             </p>
                             <p>
-                                联系号码：<span class="phone-number">13588888888</span>
-                                <i class="typcn typcn-printer single-printer"></i>
+                                联系号码:<span class="phone-number">13588888888</span>
+                                <i class="typcn typcn-printer single-printer" title="打印当前项"></i>
                             </p>
                         </div>
                         <div class="detail-info">
                             <label>
-                                <input type="checkbox" name="order-number" class="pitch-on-order" value="6"/>
+                                <input type="checkbox" name="order-number" class="pitch-on-order" value="1"/>
                                 <span class="text"></span>
                             </label>
                             <p>
-                                编号：
+                                编号:
                                 <span class="order-id">000220170421201459</span>
-                                (<span class="order-status">未打印</span>)
+                                                                                            （<span class="order-status">未打印</span>）
                             </p>
                             <p>
-                                付款时间：
+                                付款时间:
                                 <span class="payment-time">20:15:00</span>&nbsp;
                                 <span class="dispatching-time">15点档</span>&nbsp;
-                                分发号：<span class="dispatching-number">1</span>
+                                分发号:<span class="dispatching-number">1</span>
                             </p>
                             <p>
-                                奶茶
-                                规格：<span class="tea-standard">中杯</span>
-                                甜度：<span class="tea-sweet">5分甜</span>
-                                冰度：<span class="tea-temperature">冰</span>
+                                <span>奶茶</span>&nbsp;
+                                规格:<span class="tea-standard">中杯</span>&nbsp;
+                                甜度:<span class="tea-sweet">5分甜</span>&nbsp;
+                                冰度:<span class="tea-temperature">冰</span>
                             </p>
                             <p>
-                                搭配：<span class="tea-match">红茶</span>
-                                加料：<span class="tea-add">珍珠、波霸、椰果</span>
+                                搭配:&nbsp;<span class="tea-match">红茶</span>&nbsp;
+                                加料:&nbsp;<span class="tea-add">珍珠、波霸、椰果</span>
                             </p>
                             <p>
-                                配送地址：<span class="dispatching-address">杭钻大厦</span>
+                                配送地址:<span class="dispatching-address">杭钻大厦</span>
                             </p>
                             <p>
-                                联系号码：<span class="phone-number">13588888888</span>
-                                <i class="typcn typcn-printer single-printer"></i>
+                                联系号码:<span class="phone-number">13588888888</span>
+                                <i class="typcn typcn-printer single-printer" title="打印当前项"></i>
                             </p>
-                        </div>
+                        </div>            
                     </div>
                 </div>
             </form>
@@ -636,17 +605,7 @@ $(function(){
 	seajs.use(['ajax','dialog','utils', 'timer'], function(Ajax, Dialog, utils, Timer){
 		var a = '<%=request.getParameter("withTimer") %>';
 		var $page = $('#product-list-page');
-		//操作图标点击事件
-		$(".operation-icon").on("mousedown",function(){
-        	$(this).css("color","#008000");
-    	});
-    	$(".operation-icon").on("mouseup",function(){
-        	$(this).css("color","#000000");
-    	});
-		//绑定时间范围选择器
-		$('#my_picker').datepicker({
-			format:'yyyy-dd-mm'
-		});
+	
 		//订单选择方法
 		function pitchOn(warp,checked,allChecked){
 	        var that = warp;
