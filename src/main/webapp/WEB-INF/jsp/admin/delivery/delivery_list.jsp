@@ -407,17 +407,17 @@ div.detail-info >p > i.single-printer:before{
                 <div class="content-area">
                     <div class="detail-operation">
                             <div>
-                                <i class="typcn typcn-arrow-left-thick operation-icon" id="to-left"></i>
+                                <i class="typcn typcn-arrow-left-thick operation-icon" id="to-left" title="前一页"></i>
 
-                                <i class="typcn typcn-arrow-right-thick operation-icon" id="to-right"></i>
+                                <i class="typcn typcn-arrow-right-thick operation-icon" id="to-right" title="后一页"></i>
 
-                                <i class="typcn typcn-input-checked operation-icon" id="all-cheaked"></i>
+                                <i class="typcn typcn-input-checked operation-icon" id="all-cheaked" title="全选"></i>
 
-                                <i class="typcn typcn-printer operation-icon" id="printer"></i>
+                                <i class="typcn typcn-printer operation-icon" id="printer" title="打印选中项"></i>
 
-                                <i class="typcn typcn-refresh-outline operation-icon" id="refresh-all"></i>
+                                <i class="typcn typcn-refresh-outline operation-icon" id="refresh-all" title="自动刷新"></i>
 
-                                <i class="typcn typcn-refresh operation-icon" id="refresh"></i>
+                                <i class="typcn typcn-refresh operation-icon" id="refresh" title="刷新"></i>
                             </div>
                     </div>
                     <div class="detail-info-area">
