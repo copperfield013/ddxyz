@@ -7,6 +7,65 @@
     <jsp:include page="/WEB-INF/jsp/weixin/common/weixin-include.jsp"></jsp:include>
     <link rel="stylesheet" href="${basePath }media/weixin/main/css/buy.css?${RES_STAMP}">
     <style type="text/css">
+    	.shade {
+    		position:absolute;
+    		top:0;
+    		bottom:0;
+    		left:0;
+    		right:0;
+    		background-color:rgba(0,0,0,0.2);
+    		z-index:9;
+    	}
+    	.shade >div {
+    		font-size:20px;
+    		width: 12em;
+		    height: 6em;
+		    border-radius: 0.4em;
+		    background-color: rgba(250,250,250,1);
+		    position: absolute;
+		    top: 30%;
+		    left: 50%;
+		    margin-left: -6em;	
+		    text-align: center;
+		    padding-top:0.5em;
+			
+    	}
+    	.shade >div >p {
+    		padding:0;
+    		margin:0;
+    		height:1.6em
+    	}
+    	.shade >div >div.shade-operation {
+    		margin-bottom:0.5em;
+    	}
+    	.shade >div >div.shade-operation:after{
+    		content:'';
+    		display:block;
+    		clear:both;
+    	}
+    	.shade span.shade-warn {
+    		display:block;
+    		float:left;
+    		margin-left:1em;
+    		width:1.1em;
+    		height:1.1em;
+    		line-height:1.1em;
+    		text-align:center;
+    		border-radius:50%;
+    		color:#F0B840;
+    		border:2px solid #F0B840;
+    	}
+    	.shade span.shade-close {
+    		font-size:40px;
+    		display:block;
+    		float:right;
+    		margin-right:0.5em;
+    		width:0.55em;
+    		height:0.55em;
+    		line-height:0.55em;
+    		text-align:center;
+    		color:#004621;
+    	}
     	.delivery-location{
     		display: none;
     	}
@@ -55,6 +114,16 @@
 </head>
 <body>
 <form class="validate" action="index.html" method="post">
+<div class=shade>
+	<div>
+		<div class="shade-operation">
+			<span class="shade-warn">!</span>
+			<span class="shade-close">×</span>
+		</div>
+		<p>当前业务繁忙</p>
+		<p>暂停接单!</p>
+	</div>
+</div>
 <main class="form">
     <!-- 配送信息 -->
     <div class="send-info">
@@ -192,7 +261,7 @@ $(function(){
 	});
 	if(!(deliveryId && orderId) && deliveryHour){
 		$('#timePoint').val(deliveryHour).trigger('change');
-	}
+	};
 });
 </script>
 </body>
