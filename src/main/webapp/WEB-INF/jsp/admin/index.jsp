@@ -108,6 +108,20 @@
                                	</li>
 							</ul>
 	                    </li>
+	                    <li>
+	                        <a href="#" class="menu-dropdown">
+	                            <i class="menu-icon fa fa-desktop"></i>
+	                            <span class="menu-text">门店配置</span>
+	                            <i class="menu-expand"></i>
+	                        </a>
+	                        <ul class="submenu">
+                               	<li>
+                               		<a class="tab" href="admin/merchant/rule/list" target="merchant-disabled-rule-list" title="规则列表">
+                               			<span class="menu-text">规则列表</span>
+                               		</a>
+                               	</li>
+							</ul>
+	                    </li>
 					</ul>
 				</div>
 				<div class="page-content">
