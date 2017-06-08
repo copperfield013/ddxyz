@@ -16,6 +16,7 @@ import cn.sowell.copframe.dto.ajax.NoticeType;
 import cn.sowell.copframe.dto.page.CommonPageInfo;
 import cn.sowell.ddxyz.DdxyzConstants;
 import cn.sowell.ddxyz.admin.AdminConstants;
+import cn.sowell.ddxyz.model.common.core.DeliveryManager;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlan;
 import cn.sowell.ddxyz.model.common.pojo.PlainLocation;
 import cn.sowell.ddxyz.model.common.pojo.criteria.DeliveryPlanCriteria;
@@ -28,6 +29,9 @@ public class AdminDeliveryPlanController {
 	
 	@Resource
 	DeliveryService deliveryService;
+	
+	@Resource
+	DeliveryManager dManager;
 	
 	@RequestMapping("/plan-list")
 	public String list(DeliveryPlanCriteria criteria, CommonPageInfo pageInfo, Model model){
@@ -53,6 +57,7 @@ public class AdminDeliveryPlanController {
 	public AjaxPageResponse doAdd(DeliveryPlanWrap deliveryPlanWrap){
 		deliveryPlanWrap.getPlan().setWaresId(DdxyzConstants.WARES_ID);
 		deliveryService.addPlan(deliveryPlanWrap.getPlan());
+		dManager.loadTodayDeliveries();
 		return AjaxPageResponse.CLOSE_AND_REFRESH_PAGE("配送计划添加成功！", "delivery-plan-list");
 	}
 	

@@ -238,25 +238,33 @@ define(function(require, exports, module){
 			var reqJSON = order.toObject();
 			var Ajax = require('ajax');
 			//提交订单到后台
-			Ajax.postJson('weixin/ydd/submitOrder', reqJSON, function(json){
-				if(json != null && json.orderId){
-					var OrderPay = require('order/order-pay');
-					OrderPay.pay(json.orderId, function(){
-						//后台支付成功
-						alert('支付成功');
-						location.href = 'weixin/ydd/orderList';
-					}, function(){
-						alert('没有支付');
-						location.href = 'weixin/ydd/orderList';
-					}, function(){
-						location.href = 'weixin/ydd/orderList';
+			Ajax.postJson('weixin/ydd/canOrder', null, function(json){
+				if(json.status){
+					Ajax.postJson('weixin/ydd/submitOrder', reqJSON, function(json){
+						if(json != null && json.orderId){
+							var OrderPay = require('order/order-pay');
+							OrderPay.pay(json.orderId, function(){
+								//后台支付成功
+								alert('支付成功');
+								location.href = 'weixin/ydd/orderList';
+							}, function(){
+								alert('没有支付');
+								location.href = 'weixin/ydd/orderList';
+							}, function(){
+								location.href = 'weixin/ydd/orderList';
+							});
+						}else{
+							//后台创建订单失败，显示错误信息
+							alertMsg('创建订单失败');
+							showShade(false);
+						}
 					});
 				}else{
-					//后台创建订单失败，显示错误信息
-					alertMsg('创建订单失败');
+					//当前时间不允许下单
+					alertMsg('当前业务繁忙，暂停接单！');
 					showShade(false);
 				}
-			});
+			})
 		});
 		
 		/**

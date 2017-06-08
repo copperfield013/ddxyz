@@ -114,16 +114,18 @@
 </head>
 <body>
 <form class="validate" action="index.html" method="post">
-<div class=shade>
-	<div>
-		<div class="shade-operation">
-			<span class="shade-warn">!</span>
-			<span class="shade-close">×</span>
+<c:if test="${isDisabled }">
+	<div class=shade>
+		<div>
+			<div class="shade-operation">
+				<span class="shade-warn">!</span>
+				<span class="shade-close">×</span>
+			</div>
+			<p>当前业务繁忙</p>
+			<p>暂停接单!</p>
 		</div>
-		<p>当前业务繁忙</p>
-		<p>暂停接单!</p>
 	</div>
-</div>
+</c:if>
 <main class="form">
     <!-- 配送信息 -->
     <div class="send-info">

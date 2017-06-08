@@ -269,8 +269,6 @@ $(function(){
     seajs.use(['ajax', 'dialog', 'utils'], function(Ajax, Dialog, utils){
     	var planAdd = $("#plan-add");
     	var curYear = ${year};
-    	console.log("cur year:" + curYear);
-    	console.log($('#years', planAdd));
     	$('#years', planAdd).on('beforeItemAdd', function(e){
     		console.log(e);
     		if(!utils.isInteger(e.item)){
@@ -336,7 +334,6 @@ $(function(){
         	}
         	period = dateYear + dateMonth + dateWeek + dateTime;
         	$("#period", planAdd).val(period);
-        	console.log(period);
         	$("#add-plan-form", planAdd).submit();
         });
     	

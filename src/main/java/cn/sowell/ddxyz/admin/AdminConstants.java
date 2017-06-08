@@ -24,4 +24,9 @@ public interface AdminConstants {
 	 * 配送计划（配置）
 	 */
 	final String PATH_CONFIG = PATH_BASE + "/config";
+	
+	/**
+	 * 门店下单可用规则配置
+	 */
+	final String PATH_MERCHANT = PATH_BASE + "/merchant";
 }

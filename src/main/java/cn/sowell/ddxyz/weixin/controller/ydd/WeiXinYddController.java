@@ -46,6 +46,7 @@ import cn.sowell.ddxyz.model.drink.service.DrinkService;
 import cn.sowell.ddxyz.model.drink.service.OrderItemService;
 import cn.sowell.ddxyz.model.drink.term.OrderTerm;
 import cn.sowell.ddxyz.model.merchant.service.DeliveryService;
+import cn.sowell.ddxyz.model.merchant.service.MerchantDisabledRuleService;
 import cn.sowell.ddxyz.model.weixin.pojo.WeiXinUser;
 import cn.sowell.ddxyz.weixin.WeiXinConstants;
 
@@ -74,6 +75,9 @@ public class WeiXinYddController {
 	
 	@Resource
 	WxPayService payService;
+	
+	@Resource
+	MerchantDisabledRuleService ruleService;
 	
 	Logger logger = Logger.getLogger(WeiXinYddController.class);
 
@@ -109,6 +113,10 @@ public class WeiXinYddController {
 		Map<Long, List<PlainDrinkAdditionType>> additionMap = drinkService.getAdditionMap(waresId);
 		PlainOrderReceiver receiverInfo = oService.getLastReceiverInfo(user.getId());
 		//如果传入订单主键，那么找到这个订单
+		
+		//判断当前时间是否可以下单
+		boolean  isDisabled = ruleService.getIsInRules(DdxyzConstants.MERCHANT_ID);
+		
 		model.addAttribute("isDebug", configService.isDebug());
 		model.addAttribute("deliveryMap", deliveryMap);
 		model.addAttribute("drinkTypes", drinkTypes);
@@ -122,6 +130,7 @@ public class WeiXinYddController {
 		
 		model.addAttribute("deliveryId", deliveryId);
 		model.addAttribute("orderId", orderId);
+		model.addAttribute("isDisabled", isDisabled);
 		return WeiXinConstants.PATH_YDD + "/ydd_order.jsp";
 	}
 	
@@ -167,6 +176,20 @@ public class WeiXinYddController {
 			jRes.put("remain", "unlimited");
 		}else{
 			jRes.put("remain", remain);
+		}
+		return jRes;
+	}
+	
+	
+	@ResponseBody
+	@RequestMapping("/canOrder")
+	public JsonResponse canOrder(){
+		JsonResponse jRes = new JsonResponse();
+		boolean  isDisabled = ruleService.getIsInRules(DdxyzConstants.MERCHANT_ID);
+		if(isDisabled){
+			jRes.put("status", false);
+		}else{
+			jRes.put("status", true);
 		}
 		return jRes;
 	}
