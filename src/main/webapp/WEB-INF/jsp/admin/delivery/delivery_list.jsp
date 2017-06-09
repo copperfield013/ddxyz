@@ -181,7 +181,7 @@ div.content-area >div.detail-info-area >div.detail-info.active >p > i.single-pri
 div.detail-info >p > i.single-printer:before{
     font-size: 2em;
 }
-@media screen and (max-height:640px){
+@media screen and (max-height:680px){
     div.detail-info >p {
         margin:1em 0;
         line-height:1.5em;
@@ -199,7 +199,7 @@ div.detail-info >p > i.single-printer:before{
         margin-top:-1em;
     }
 }
-@media screen and (max-height:540px){
+@media screen and (max-height:620px){
     div.content-area >div.detail-info-area >div.detail-info {
         margin-top:0.5em;
     }
@@ -217,10 +217,20 @@ div.detail-info >p > i.single-printer:before{
 	    top: 2em;
     }
     div.detail-info >p {
-    	line-height:1.5em;
+    	line-height:1.3em;
     }
 }
-@media screen and (max-width:1040px){
+@media screen and (max-height:590px){
+    div.detail-info >p {
+    	line-height:1em;
+    }
+}
+@media screen and (max-height:520px){
+    div.detail-info >p {
+    	line-height:0em;
+    }
+}
+@media screen and (max-width:1080px){
     div.content-area >div.detail-info-area >div.detail-info {
         width:32%;
         margin-left:1%;
@@ -230,7 +240,7 @@ div.detail-info >p > i.single-printer:before{
     	margin-left:1%;
     }
 }
-@media screen and (max-width:840px){
+@media screen and (max-width:1000px){
     div.content-area >div.detail-info-area >div.detail-info {
         width:32%;
         margin-left:1%;
