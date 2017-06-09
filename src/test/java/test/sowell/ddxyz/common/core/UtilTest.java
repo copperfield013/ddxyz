@@ -25,5 +25,6 @@ public class UtilTest {
 		OfDateFormat df = new OfDateFormat();
 		Date date = df.parse("2017-6-3 1:00:01");
 		System.out.println(cal.isTimeIncluded(date.getTime()));
+		
 	}
 }

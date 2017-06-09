@@ -16,6 +16,7 @@ define(function(require){
 	 * 8.
 	 * 9.
 	 * 10.tab
+	 * 11.control
 	 * 
 	 */
 	
@@ -28,7 +29,7 @@ define(function(require){
 	require('tree');
 	require('tab');
 	require('css');
-	require('controll');
+	require('control');
 	$CPF.init({
 		loadingImg			: 'media/admin/cpf/image/loading.gif',
 		maxPageCount		: 8,

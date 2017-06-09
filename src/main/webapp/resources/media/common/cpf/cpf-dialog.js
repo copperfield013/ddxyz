@@ -38,6 +38,7 @@ define(function(require, exports, module){
 			onShow		: $.noop,
 			onClose		: $.noop,
 			onSubmit	: undefined,
+			afterLoad	: $.noop,
 			isModal		: true,
 			width		: bodySize.width * 3/5,
 			height		: bodySize.height * 3/5,
@@ -170,6 +171,7 @@ define(function(require, exports, module){
 					this.setTitle(_title);
 				}
 				$CPF.initPage($wrapper);
+				param.afterLoad.apply(_this, []);
 			}
 			return this;
 		};

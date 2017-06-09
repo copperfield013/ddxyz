@@ -247,6 +247,18 @@ define(function(require, exports){
 				var val = $select.val();
 				return $select.find('option[value="' + val + '"]');
 			}
+		},
+		/**
+		 * 移除一个元素样式，对css样式无影响
+		 */
+		removeStyle		: function(dom, styleName){
+			if(styleName){
+				var style = $(dom).attr('style'),
+					reg = new RegExp(styleName + '\\s*:\\s*([^;]+;)|([^;]+$)', 'gi')
+				style = style.replace(reg, '');
+				$(dom).attr('style', style);
+			}
+			return this;
 		}
 		
 	});

@@ -49,7 +49,7 @@
 	                	</li>
 						 <li>
 	                        <a href="#" class="menu-dropdown">
-	                            <i class="menu-icon fa fa-desktop"></i>
+	                            <i class="menu-icon fa fa-bookmark"></i>
 	                            <span class="menu-text">订单管理</span>
 	                            <i class="menu-expand"></i>
 	                        </a>
@@ -68,7 +68,7 @@
 	                    </li>
 	                    <li>
 	                        <a href="admin/production/main" class="menu-dropdown tab" target="product-main" title="生产管理">
-	                        	<i class="menu-icon fa fa-desktop"></i>
+	                        	<i class="menu-icon fa fa-beer"></i>
 	                            <span class="menu-text">生产管理</span>
 	                        </a>
 	                    </li>
@@ -80,13 +80,13 @@
 	                    </li>
 	                     <li>
 	                        <a href="admin/delivery/delivery_list" class="menu-dropdown tab" target="delivery-list" title="配送管理">
-	                        	<i class="menu-icon fa fa-desktop"></i>
+	                        	<i class="menu-icon fa fa-truck"></i>
 	                            <span class="menu-text">配送管理</span>
 	                        </a>
 	                    </li>
 	                    <li>
 	                        <a href="#" class="menu-dropdown">
-	                            <i class="menu-icon fa fa-desktop"></i>
+	                            <i class="menu-icon fa fa-gears"></i>
 	                            <span class="menu-text">配送配置</span>
 	                            <i class="menu-expand"></i>
 	                        </a>
@@ -122,6 +122,21 @@
                                	</li>
 							</ul>
 	                    </li>
+	                    <li>
+	                    	<a href="#" class="menu-dropdown">
+	                    		<i class="menu-icon fa fa-code"></i>
+	                    		<span class="menu-text">测试</span>
+	                    		<i class="menu-expand"></i>
+	                    	</a>
+	                    	<ul class="submenu">
+                               	<li>
+                               		<a class="tab" href="admin/test/upload" target="testUpload" title="上传测试">
+                               			<span class="menu-text">上传测试</span>
+                               		</a>
+                               	</li>
+							</ul>
+	                    </li>
+	                    
 					</ul>
 				</div>
 				<div class="page-content">
@@ -173,7 +188,7 @@
 					'css'		: 'COMMON/cpf/cpf-css.js',
 					'timer'		: 'COMMON/cpf/cpf-timer.js',
 					'console'	: 'COMMON/cpf/cpf-console.js',
-					'controll'	: 'COMMON/cpf/cpf-controll.js'
+					'control'	: 'COMMON/cpf/cpf-control.js'
 				}
 	    		});
 	    		seajs.use('COMMON/cpf/cpf-main.js');

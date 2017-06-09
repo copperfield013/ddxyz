@@ -75,6 +75,10 @@
 								<option>已打印</option>
 							</select>
 						</div>
+						<div class="col-lg-1 control-label">订单号</div>
+						<div class="col-lg-3">
+							<input type="text" class="form-control" />
+						</div>
 					</div>
 					<div class="form-group">
 						<div class="col-lg-offset-4 col-lg-4">

@@ -29,7 +29,7 @@ define(function(require, exports, module){
 	
 	
 	
-	function Controll(){
+	function Control(){
 		
 	}
 	
@@ -38,8 +38,8 @@ define(function(require, exports, module){
 	}
 	
 	
-	Controll.TagsInput = TagsInput;
+	Control.TagsInput = TagsInput;
 	
 	
-	module.exports = Controll;
+	module.exports = Control;
 });

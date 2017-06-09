@@ -34,7 +34,8 @@
 				'ajax'		: 'COMMON/cpf/cpf-ajax.js',
 				'page'		: 'COMMON/cpf/cpf-page.js',
 				'dialog'	: 'COMMON/cpf/cpf-dialog.js',
-				'timer'		: 'COMMON/cpf/cpf-timer.js'
+				'timer'		: 'COMMON/cpf/cpf-timer.js',
+				'upload'	: 'COMMON/cpf/cpf-upload.js'
 				//..其他模块
 		  	}
 		});
