@@ -207,7 +207,7 @@ div.detail-info >p > i.single-printer:before{
         margin-top:0em;
     }
     div.content-area >div.detail-info-area >div.detail-info {
-    	padding:0 0.5em;
+    	padding:0 0.1em 0 0.5em;
     }
     div.content-area > div.detail-operation {
     	height: 2em;
@@ -227,7 +227,7 @@ div.detail-info >p > i.single-printer:before{
 }
 @media screen and (max-height:520px){
     div.detail-info >p {
-    	line-height:0em;
+    	line-height:0.5em;
     }
 }
 @media screen and (max-width:1080px){
@@ -246,7 +246,7 @@ div.detail-info >p > i.single-printer:before{
         margin-left:1%;
     }
     div.detail-info >p {
-        margin:0.2em;
+        
     }
 }
 @media screen and (max-width:800px){
@@ -258,8 +258,7 @@ div.detail-info >p > i.single-printer:before{
     	bottom:0.1em;
     }
     div.detail-info >p {
-        padding:0;
-        margin:0;
+       
     }
 }
 
