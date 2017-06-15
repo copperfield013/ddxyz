@@ -36,48 +36,43 @@
 			<div class="row">
 				<form class="bv-form form-horizontal">
 					<div class="form-group">
-						<div class="col-lg-1 control-label">下单日期</div>
+						<div class="col-lg-1 control-label">付款日期</div>
 						<div class="col-lg-3">
-							<input type="text" class="form-control datepicker" readonly="readonly" 
+							<input type="text" id="pay-time" name="payTime" class="form-control datepicker" readonly="readonly" 
 			               	css-cursor="text" data-date-format="yyyy-mm-dd"/>
 						</div>
 						<div class="col-lg-1 control-label">时间点</div>
 						<div class="col-lg-3">
-							<select class="form-control">
-								<option>8点</option>
-								<option>9点</option>
-								<option>10点</option>
-								<option>11点</option>
-								<option>12点</option>
-								<option>13点</option>
-								<option>14点</option>
-								<option>15点</option>
-								<option>16点</option>
-								<option>17点</option>
-								<option>18点</option>
-								<option>19点</option>
-								<option>20点</option>
-								<option>21点</option>
-								<option>22点</option>
+							<select class="form-control" id="time-point-select" name="timePoint">
+								<option value="">请选择</option>
+								<c:forEach items="${timePointList }" var="timePoint">
+									<option value="${timePoint.hour }">${timePoint.hour }点</option>
+								</c:forEach>
 							</select>
 						</div>
 						<div class="col-lg-1 control-label">配送地点</div>
 						<div class="col-lg-3">
-							<input type="text" class="form-control"  />
+							<!-- <input type="text" class="form-control"  /> -->
+							<select class="form-control" id="location-select" name="locationId">
+								<option value="">请选择</option>
+								<c:forEach items="${locationList }" var="location">
+									<option value="${location.id }">${location.name }</option>
+								</c:forEach>
+							</select>
 						</div>
 					</div>
 					<div class="form-group">
 						<div class="col-lg-1 control-label">打印状态</div>
 						<div class="col-lg-3">
-							<select class="form-control">
-								<option>全部</option>
-								<option>未打印</option>
-								<option>已打印</option>
+							<select class="form-control" id="print-status" name="printStatus">
+								<option value="">全部</option>
+								<option value="0">未打印</option>
+								<option value="1">已打印</option>
 							</select>
 						</div>
 						<div class="col-lg-1 control-label">订单号</div>
 						<div class="col-lg-3">
-							<input type="text" class="form-control" />
+							<input id="order-code" name="orderCode" type="text" class="form-control" />
 						</div>
 					</div>
 					<div class="form-group">
@@ -106,11 +101,13 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<td>13</td>
-								<td>50</td>
-								<td>2</td>
-							</tr>
+							<c:forEach items="${timePointList }" var="timePoint">
+								<tr>
+									<td>${timePoint.hour }</td>
+									<td>${printedMap[timePoint] }</td>
+									<td>${notPrintMap[timePoint] }</td>
+								</tr>
+							</c:forEach>
 						</tbody>
 					</table>
 				</div>
@@ -124,7 +121,14 @@
 		seajs.use(['tab'], function(Tab){
 			var $page = $('#production_main');
 			$('#query', $page).click(function(){
-				Tab.openFrameInTab('admin/production/query', 'production_query');
+				var url = 'admin/production/query?payTimeStr='+ $("#pay-time", $page).val() 
+							+ '&timePoint=' + $("#time-point-select option:selected", $page).val()
+							+ '&locationId=' + $("#location-select option:selected", $page).val()
+							+ '&locationName=' + encodeURI(encodeURI($("#location-select option:selected", $page).text()))
+							+ '&printStatus=' + $("#print-status option:selected", $page).val()
+							+ '&orderCode=' + $("#order-code", $page).val();
+				/* url = encodeURI(url); */
+				Tab.openFrameInTab(url, 'production_query');
 			});
 		})
 	});

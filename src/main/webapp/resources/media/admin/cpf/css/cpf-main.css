@@ -141,9 +141,9 @@ li.main-tab-title>a{
 }
 
 /* 弹出框样式 */
-.modal-body-wrapper{
+/* .modal-body-wrapper{
 	height: 100%;
-}
+} */
 .modal-footer{
 	padding-top: 5px;
 	padding-bottom: 5px;

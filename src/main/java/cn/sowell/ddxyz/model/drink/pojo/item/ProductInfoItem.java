@@ -69,6 +69,10 @@ public class ProductInfoItem {
 	@Column(name="product_status")
 	private Integer productStatus;
 	
+	@Column(name="c_dispense_key")
+	private Integer dispenseKey;
+	
+
 	/**
 	 * DrinkAddition加料
 	 */
@@ -205,6 +209,14 @@ public class ProductInfoItem {
 
 	public void setProductStatus(Integer productStatus) {
 		this.productStatus = productStatus;
+	}
+	
+	public Integer getDispenseKey() {
+		return dispenseKey;
+	}
+
+	public void setDispenseKey(Integer dispenseKey) {
+		this.dispenseKey = dispenseKey;
 	}
 
 }

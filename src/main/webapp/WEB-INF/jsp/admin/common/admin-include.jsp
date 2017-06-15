@@ -17,29 +17,3 @@
 <script src="${basePath }media/jquery-1.11.3.js"></script>
 <!-- SeaJS -->
 <script src="${basePath }media/sea-debug.js"></script>
-<!-- 页面加载时把各个JS模块加载到容器当中 -->
-<script type="text/javascript">
-	$(function(){
-		seajs.config({
-			base	: '${basePath}media/admin/',
-			paths	: {
-				COMMON	: '${basePath}media/common/',
-				MAIN	: '${basePath}media/admin/main/js/'
-			},
-		  	alias	: {
-		    	'$CPF'		: 'COMMON/cpf/cpf-core.js',
-				'utils'		: 'COMMON/cpf/cpf-utils.js',
-				'console'	: 'COMMON/cpf/cpf-console.js',
-				'print'		: 'COMMON/cpf/cpf-print.js',
-				'ajax'		: 'COMMON/cpf/cpf-ajax.js',
-				'page'		: 'COMMON/cpf/cpf-page.js',
-				'dialog'	: 'COMMON/cpf/cpf-dialog.js',
-				'timer'		: 'COMMON/cpf/cpf-timer.js',
-				'upload'	: 'COMMON/cpf/cpf-upload.js'
-				//..其他模块
-		  	}
-		});
-		seajs.use('MAIN/admin-main.js');
-	});
-	
-</script>
