@@ -37,7 +37,8 @@
 				.condition-area > div.timepicker-area,
 				.condition-area > div.time-choose-area,
 				.condition-area > div.address-choose-area,
-				.condition-area > div.print-status-area {
+				.condition-area > div.print-status-area,
+				.condition-area > div.order-code-area {
 				    float:left;
 				    width:11.2em;
 				    border:1px solid #d5d5d5;
