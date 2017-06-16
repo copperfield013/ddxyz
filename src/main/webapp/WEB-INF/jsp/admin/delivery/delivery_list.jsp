@@ -59,6 +59,9 @@ body{ -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none; use
     width:100%;
     height:100%;
 }
+.ui-content {
+					position:relative;
+				}
 .condition-area {
     width:100%;
     padding:0.6em 2em;
