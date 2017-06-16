@@ -27,6 +27,9 @@
 				    width:100%;
 				    height:100%;
 				}
+				.ui-content {
+					position:relative;
+				}
 				.condition-area {
 				    width:100%;
 				    padding:0.6em 2em;
@@ -150,7 +153,7 @@
 				div.detail-info >p > i.single-printer:before{
 				    font-size: 2em;
 				}
-				@media screen and (max-height:635px){
+				@media screen and (max-height:601px){
 				    div.detail-info >p {
 				        margin:1em 0;
 				        line-height:1.5em;
@@ -168,7 +171,7 @@
 				        margin-top:-1em;
 				    }
 				}
-				@media screen and (max-height:575px){
+				@media screen and (max-height:541px){
 				    div.content-area >div.detail-info-area >div.detail-info {
 				        margin-top:0.5em;
 				    }
@@ -189,17 +192,17 @@
 				    	line-height:1.3em;
 				    }
 				}
-				@media screen and (max-height:545px){
+				@media screen and (max-height:511px){
 				    div.detail-info >p {
 				    	line-height:1em;
 				    }
 				}
-				@media screen and (max-height:475px){
+				@media screen and (max-height:441px){
 				    div.detail-info >p {
 				    	line-height:0.5em;
 				    }
 				}
-				@media screen and (max-width:856px){
+				@media screen and (max-width:846px){
 				    div.content-area >div.detail-info-area >div.detail-info {
 				        width:32%;
 				        margin-left:1%;
@@ -209,7 +212,7 @@
 				    	margin-left:1%;
 				    }
 				}
-				@media screen and (max-width:776px){
+				@media screen and (max-width:766px){
 				    div.content-area >div.detail-info-area >div.detail-info {
 				        width:32%;
 				        margin-left:1%;
@@ -218,7 +221,7 @@
 				       
 				    }
 				}
-				@media screen and (max-width:576px){
+				@media screen and (max-width:566px){
 				    div.content-area >div.detail-info-area >div.detail-info {
 				        width:32%;
 				        margin-left:1%;
@@ -231,7 +234,7 @@
 				    }
 				}
 				
-				@media screen and (max-width:416px){
+				@media screen and (max-width:406px){
 				    div.content-area >div.detail-info-area >div.detail-info {
 				        height:45%;
 				    }
