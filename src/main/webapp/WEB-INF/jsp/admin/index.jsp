@@ -136,7 +136,20 @@
                                	</li>
 							</ul>
 	                    </li>
-	                    
+	                    <li>
+	                        <a href="#" class="menu-dropdown">
+	                            <i class="menu-icon fa fa-desktop"></i>
+	                            <span class="menu-text">自定义菜单</span>
+	                            <i class="menu-expand"></i>
+	                        </a>
+	                        <ul class="submenu">
+                               	<li>
+                               		<a class="tab" href="admin/menu/add-menu" target="admin-menu-add" title="增加菜单">
+                               			<span class="menu-text">增加菜单</span>
+                               		</a>
+                               	</li>
+							</ul>
+	                    </li>
 					</ul>
 				</div>
 				<div class="page-content">

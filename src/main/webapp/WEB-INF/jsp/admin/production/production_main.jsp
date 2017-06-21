@@ -127,7 +127,6 @@
 							+ '&locationName=' + encodeURI(encodeURI($("#location-select option:selected", $page).text()))
 							+ '&printStatus=' + $("#print-status option:selected", $page).val()
 							+ '&orderCode=' + $("#order-code", $page).val();
-				/* url = encodeURI(url); */
 				Tab.openFrameInTab(url, 'production_query');
 			});
 		})

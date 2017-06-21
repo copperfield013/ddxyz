@@ -33,4 +33,9 @@ public interface AdminConstants {
 	 * 测试模块
 	 */
 	final String PATH_TEST = PATH_BASE + "/test";
+	
+	/**
+	 * 自定义菜单
+	 */
+	final String PATH_MENU = PATH_BASE + "/menu";
 }
