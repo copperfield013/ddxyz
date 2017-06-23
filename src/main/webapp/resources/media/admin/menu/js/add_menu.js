@@ -302,7 +302,7 @@ var menu = {
         $("#linkUrl").on("keyup",function(){                            //菜单名url绑定
             var presentMenuUrl = $('#linkUrl').val();
             //选中项菜单url更改
-             console.log($('.menu-preview-menu li.active').attr('data-url',presentMenuUrl));
+            $('.menu-preview-menu li.active').attr('data-url',presentMenuUrl);
         })
     },
 
