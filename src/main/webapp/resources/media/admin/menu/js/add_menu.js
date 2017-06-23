@@ -34,7 +34,7 @@ var menu = {
         } else if (mainMenuCount > 0 && mainMenuCount <= 3) {
             for (var i = 0; i < mainMenuCount; i++) {
                 var menuText = data.button[i].name;                      //每个菜单的名字
-                if(data.button[i.type]){
+                if(data.button[i].type){
                 	 var menuType = data.button[i].type;
                 }else {
                 	 var menuType = 'view'                              //默认为view     		
