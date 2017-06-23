@@ -33,21 +33,31 @@ var menu = {
             mainMenuWidth = "100%";
         } else if (mainMenuCount > 0 && mainMenuCount <= 3) {
             for (var i = 0; i < mainMenuCount; i++) {
-                var menuText = data.button[i].name;                  //每个菜单的名字
+                var menuText = data.button[i].name;                      //每个菜单的名字
+                if(data.button[i.type]){
+                	 var menuType = data.button[i].type;
+                }else {
+                	 var menuType = 'view'                              //默认为view     		
+                }
+                if(data.button[i].url){
+                	var menuUrl  = data.button[i].url;	
+                }else{
+                	var menuUrl  ='';                                    //默认为空
+                }               
                 if(data.button[i].sub_button){
                     var subMenuCount = data.button[i].sub_button.length; //当前一级菜单下的二级菜单个数                   
                 }else {
                     var subMenuCount = 0;
                 }
                 if (subMenuCount === 0) {                            //判断当前一级菜单下的二级菜单是否为0
-                    menuHtml += "<li class='menu-name'><span>" + menuText +
+                    menuHtml += "<li class='menu-name' data-type='"+menuType+"' data-url='"+menuUrl+"'><span>" + menuText +
                                 "</span><ul class='submenu'>" +
                                 "<li class='submenu-name submenu-add'></li>" +
                                 "</ul>" +
                                 "<i></i>" +
                                 "</li>"
                 } else if (subMenuCount > 0 && subMenuCount <= 5) {
-                    menuHtml += "<li class='menu-name more'><span>" + menuText +
+                    menuHtml += "<li class='menu-name more' data-type='"+menuType+"' data-url='"+menuUrl+"'><span>" + menuText +
                         "</span><ul class='submenu'>" +
                         "</ul>" +
                         "<i></i>" +
@@ -72,14 +82,14 @@ var menu = {
             alert("初始化数据不匹配");
         }
         menuWarp.html(menuHtml);
-        var menu = $('ul.menu-preview-menu>li');  //dom片段添加进去之后再找元素
+        var menu = $('ul.menu-preview-menu>li');       //dom片段添加进去之后再找元素
         
         menu.css("width", mainMenuWidth);
         menuWarp.on('click', '>li', function () {      //一级菜单绑定点击事件
             var that = $(this);
             me.mainMenuClick(that);
         })
-        menuWarp.on('click', '>li>i', function () {  //一级菜单删除事件
+        menuWarp.on('click', '>li>i', function () {    //一级菜单删除事件
             var r = confirm("are you sure");
             var that = $(this).parent('li');
             if (r === true) {
@@ -113,12 +123,22 @@ var menu = {
                      var subMenuCount = data.button[i].sub_button.length;
                 }else {
                     var subMenuCount = 0;
-                }              
+                }     
                 var subMenuWarp = $("ul.menu-preview-menu>li:eq(" + i + ")>ul.submenu");
                 var subMenuHtml = '';
                 for (var j = 0; j < subMenuCount; j++) {
                     var subMenuText = data.button[i].sub_button[j].name;
-                    subMenuHtml += "<li class='submenu-name'><span>" + subMenuText + "</span><i></i></li>";
+                    if( data.button[i].sub_button[j].type ){
+                    	var subMenuType = data.button[i].sub_button[j].type;
+                    }else{
+                    	var subMenuType = 'view'                            //默认为view
+                    }
+                    if( data.button[i].sub_button[j].url ){
+                    	var subMenuUrl = data.button[i].sub_button[j].url;
+                    }else{
+                    	var subMenuUrl = ''                                 //默认为链接为空
+                    }
+                    subMenuHtml += "<li class='submenu-name' data-type='"+subMenuType+"' data-url='"+subMenuUrl+"'><span>" + subMenuText + "</span><i></i></li>";
                 }
                 if (subMenuCount >= 0 && subMenuCount < 5) {
                     subMenuWarp.html(subMenuHtml).append("<li class='submenu-name submenu-add'></li>");
@@ -272,14 +292,18 @@ var menu = {
     },
 
 
-    //input输入框输入 并且绑定change事件
+    //input输入框输入 并且绑定keyup事件
     menuName:function(that){
-        $("#menuName").on("keyup",function(){
+        $("#menuName").on("keyup",function(){                            //菜单名input绑定
             var presentMenuName = $('#menuName').val();
             //选中项菜单命名更改
              $('.menu-preview-menu li.active>span').text(presentMenuName);
         })
-
+        $("#linkUrl").on("keyup",function(){                            //菜单名url绑定
+            var presentMenuUrl = $('#linkUrl').val();
+            //选中项菜单url更改
+             console.log($('.menu-preview-menu li.active').attr('data-url',presentMenuUrl));
+        })
     },
 
 
@@ -291,6 +315,8 @@ var menu = {
         if( mainMenuCount !== 0){
             for( var i = 0 ; i<mainMenuCount; i++){
                 var presentMenu = $('.menu-preview-menu>li.menu-name:eq('+i+')');  //当前一级菜单
+                var presentMenuType = presentMenu.attr('data-type');               //当前一级菜单type
+                var presentMenuUrl  = presentMenu.attr('data-url');                //当前一级菜单url
                 var mainMenuText = presentMenu.children('span').text();
                 var presentSubCount = presentMenu.children('.submenu').children('li').length;//当前一级菜单下二级菜单个数
                 if( presentMenu.children('.submenu').children('li.submenu-add').length !==0 ){
@@ -298,13 +324,20 @@ var menu = {
                 }
                 saveData.button[i] = {};
                 saveData.button[i].name = mainMenuText;
+                saveData.button[i].type = presentMenuType;
+                saveData.button[i].url =  presentMenuUrl;
                 if( presentSubCount !==0){    //有二级菜单
                     saveData.button[i].sub_button=[];
                     saveData.button[i].sub_button.length=presentSubCount;
                     for( var j = 0 ; j<presentSubCount; j++){
-                        var subMenuText = presentMenu.children(".submenu").children("li.submenu-name:eq("+j+")").text();
+                    	var presentSubMenu = presentMenu.children(".submenu").children("li.submenu-name:eq("+j+")");
+                        var subMenuText = presentSubMenu.text();
+                        var subMenuType = presentSubMenu.attr('data-type'); ;
+                        var subMenuUrl  = presentSubMenu.attr('data-url');
                         saveData.button[i].sub_button[j] = {};
                         saveData.button[i].sub_button[j].name =subMenuText ;
+                        saveData.button[i].sub_button[j].type = subMenuType;   
+                        saveData.button[i].sub_button[j].url  = subMenuUrl;
                     }
                 }
             }
