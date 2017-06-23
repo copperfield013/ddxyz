@@ -292,9 +292,9 @@ var menu = {
             for( var i = 0 ; i<mainMenuCount; i++){
                 var presentMenu = $('.menu-preview-menu>li.menu-name:eq('+i+')');  //当前一级菜单
                 var mainMenuText = presentMenu.children('span').text();
-                console.log(mainMenuText);
                 var presentSubCount = presentMenu.children('.submenu').children('li').length;//当前一级菜单下二级菜单个数
-                if( presentMenu.children('.submenu').children('li.menu-add') ){
+                if( presentMenu.children('.submenu').children('li.submenu-add').length !==0 ){
+                	console.log(1);
                     presentSubCount -=1;
                 }
                 saveData.button[i] = {};
