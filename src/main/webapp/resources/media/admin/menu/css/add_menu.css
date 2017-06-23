@@ -255,3 +255,8 @@ div.menu-name-area >span {
 #initData {
 	display:none;
 }
+
+/* 样式重叠问题 */
+.page-sidebar .sidebar-menu .submenu {
+	bottom:0;
+}
