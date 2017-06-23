@@ -14,10 +14,14 @@
             </div>
             <div class="menu-name-area">
                 <div class="operation-menuname">
-                    <span>菜单地址：</span>
+                    <span>菜单名称：</span>
                     <p>
                         <input type="text" name="menuName" value="菜单名称" id="menuName">
                         <span class="menu-name-info">字数不超过4个汉字或8个字母（注：请勿输入空格）</span>
+                    </p>
+                    <span>链接地址：</span>
+                    <p>
+                        <input type="text" name="linkUrl" id="linkUrl" placeholder="请输入要跳转的页面URL">
                     </p>
                     <input type="button" value="保存" class="save">
                 </div>
@@ -25,37 +29,14 @@
             </div>
         </div>
         </div>
-         <!--初始化数据存放 -->
-        <!--最外层大括号必须 ， 键值对下没有另外的键值对那么该键值对后不能加逗号,字键值对不能为空，没有就不传-->
-        <div id="initData">
-            {
-                "button":[
-                            {
-                                "name":"微门户",
-                                "sub_button":[
-                                                {   
-                                                    "name":"社区简介"    
-                                                },
-                                                {
-                                                    "name":"社区新闻"      
-                                                }
-                                            ]
-                            },
-                            {
-                                "name":"微互动",
-                                "sub_button":[
-                                                
-                                            ]
-                            }
-                        ]
-            }
-        </div> 
     </div>
     
  <script>
    $(function(){
-        var initData = JSON.parse($('#initData').text());
-        menu.init(initData);
+        var initData = $.parseJSON('${menuConteng}');
+/*         var initData = JSON.parse($('#initData').text()); */
+        console.log("initData:" + initData.menu );
+        menu.init(initData.menu);
          //保存
      $('.save').on("click",function(e){
             var saveData = {};
