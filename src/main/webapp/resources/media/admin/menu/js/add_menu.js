@@ -294,7 +294,6 @@ var menu = {
                 var mainMenuText = presentMenu.children('span').text();
                 var presentSubCount = presentMenu.children('.submenu').children('li').length;//当前一级菜单下二级菜单个数
                 if( presentMenu.children('.submenu').children('li.submenu-add').length !==0 ){
-                	console.log(1);
                     presentSubCount -=1;
                 }
                 saveData.button[i] = {};
