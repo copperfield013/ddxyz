@@ -310,7 +310,6 @@ var menu = {
                 }
             }
         }
-        console.log(saveData);
         return saveData;      
     }
 }
