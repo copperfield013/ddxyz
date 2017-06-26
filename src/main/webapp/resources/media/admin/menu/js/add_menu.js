@@ -13,7 +13,6 @@ var menu = {
 
     // 构造菜单
     menuConstructor: function (data) {
-    	console.log(data);
         var me = this;
         var data = data;
         var menuWarp = $('ul.menu-preview-menu');
