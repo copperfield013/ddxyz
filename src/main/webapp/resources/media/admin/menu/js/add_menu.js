@@ -13,6 +13,7 @@ var menu = {
 
     // 构造菜单
     menuConstructor: function (data) {
+    	console.log(data);
         var me = this;
         var data = data;
         var menuWarp = $('ul.menu-preview-menu');
@@ -156,6 +157,9 @@ var menu = {
     mainMenuClick: function (that) {
         var me =this;
         var mainMenuCount = $('ul.menu-preview-menu>li').length;
+        var mainMenuType  = 'view'   // 默认添加的一级菜单type为 view
+        var mainMenuUrl   = ''       //默认添加的一级菜单url为 空字符串
+        $('.menu-preview-menu li.active').removeClass('active');
         $(that).addClass('active')
             .addClass('expand')
             .addClass('menu-name')
@@ -164,7 +168,7 @@ var menu = {
             .removeClass('active')
             .removeClass('expand');
         if (that.text() === '') {     //add
-            that.prepend("<span>菜单名称</span>");
+            that.prepend("<span>菜单名称</span>").attr("data-type",mainMenuType).attr("data-url",mainMenuUrl);
             if (mainMenuCount <= 2) {  //创建一级菜单，并且重新计算菜单宽度
                 var menuWarp = $('ul.menu-preview-menu');
                 var MenuCount = menuWarp.children('li').length + 1;
@@ -219,7 +223,9 @@ var menu = {
         if( ifAdd ){
             var subMenuCount = that.siblings().length+1;
             if( subMenuCount <= 5){
-                var subHtml = "<li class='submenu-name active'><span>菜单名称</span><i></i></li>";
+            	var subMenuType = 'view' ;
+            	var subMenuUrl  = '';
+                var subHtml = "<li class='submenu-name active' data-type='"+subMenuType+"' data-url='"+subMenuUrl+"'><span>菜单名称</span><i></i></li>";
                 that.siblings().removeClass('active');
 
                 that.before(subHtml);
@@ -281,15 +287,18 @@ var menu = {
 
     //右侧input框显示,
     displayRightArea:function(){
-        var rightArea = $('div.operation-menuname').css("display","block");
+        var rightArea     = $('div.operation-menuname').css("display","block");
         var rightAreaInfo = $('div.menu-name-area>span').css("display","none");
     },
 
-    //文本框内容显示为当前选中项菜单文本
+    //文本框内容显示为当前选中项菜单文本 以及url显示
     inputText:function(that){
       var  text = $('.menu-preview-menu li.active>span').text();
+      var  presentUrl = $('.menu-preview-menu li.active').attr("data-url");
       $("#menuName").val(text);
+      $("#linkUrl").val(presentUrl);
     },
+    
 
 
     //input输入框输入 并且绑定keyup事件
