@@ -33,24 +33,26 @@
     
  <script>
    $(function(){
-        var initData = $.parseJSON('${menuConteng}');
-/*         var initData = JSON.parse($('#initData').text()); */
-        console.log("initData:" + initData.menu );
-        menu.init(initData.menu);
-         //保存
-     $('.save').on("click",function(e){
-            var saveData = {};
-            e.stopPropagation();
-            saveData =  menu.save();
-
-            /*
-             ***
-             ***该数据为保存时的数据,可自由操作；
-             ***
-            */
-            console.log(saveData);  
-
-
-        })
+	   seajs.use('ajax', function(Ajax){
+		   var addMenuPage = $("#admin-menu-add");
+	        var initData = $.parseJSON('${menuContent}');
+	/*         var initData = JSON.parse($('#initData').text()); */
+	        menu.init(initData.menu);
+	         //保存
+	     $('.save').on("click",function(e){
+	            var saveData = {};
+	            e.stopPropagation();
+	            saveData =  menu.save();
+	            /*
+	             ***
+	             ***该数据为保存时的数据,可自由操作；
+	             ***
+	            */
+	            Ajax.postJson('admin/menu/doAddMenu', saveData, function(json){
+	            	var response = new Ajax.AjaxPageResponse(json);
+	            	response.doAction(addMenuPage.getLocatePage());
+	            });
+	        })
+	   })
    })  
 </script>

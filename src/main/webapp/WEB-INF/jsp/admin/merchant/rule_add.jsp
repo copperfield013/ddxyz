@@ -137,7 +137,6 @@ $(function(){
 	    $("#rule-add-submit", ruleAdd).click(function(){
     		var $years = $('#years', ruleAdd);
    			var years = $years.tagsinput('items');
-    		console.log(years);
     		
     		
         	var dateWeek = '';
@@ -158,7 +157,6 @@ $(function(){
         	}
         	var ruleCron = "* * " + dateTime + " * * " + dateWeek + " *";
         	$("#rule-cron", ruleAdd).val(ruleCron);
-        	console.log(ruleCron);
         	$("#merchant-rule-add-form", ruleAdd).submit();
         });
     });

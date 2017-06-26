@@ -694,7 +694,6 @@ $(function(){
 					callback: function(){
 						//如果当前页面
 						var withTimer = $('#delivery-list-page #withTimer').val();
-						console.log(withTimer);
 						if(withTimer == 'true'){
 							query();
 						}else{

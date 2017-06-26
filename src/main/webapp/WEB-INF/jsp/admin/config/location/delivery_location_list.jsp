@@ -58,10 +58,8 @@
 			});
 			
 			$(".del-location-a", deliveryLocationList).click(function(){
-				console.log("11");
 				var $row = $(this).closest('tr[data-id]');
 				var locationId = $row.attr('data-id');
-				console.log("delete location id:" + locationId);
 				var page = $(this).getLocatePage();
 				if(locationId){
 					Dialog.confirm("确定删除该配送地点？", function(isYes){

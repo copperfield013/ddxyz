@@ -270,7 +270,6 @@ $(function(){
     	var planAdd = $("#plan-add");
     	var curYear = ${year};
     	$('#years', planAdd).on('beforeItemAdd', function(e){
-    		console.log(e);
     		if(!utils.isInteger(e.item)){
     			e.cancel = true;
     			Dialog.notice("请输入数字！", "error");
@@ -288,7 +287,6 @@ $(function(){
     	$("#plan-add-submit", planAdd).click(function(){
     		var $years = $('#years', planAdd);
    			var years = $years.tagsinput('items');
-    		console.log(years);
     		
     		
         	var dateYear = '';
