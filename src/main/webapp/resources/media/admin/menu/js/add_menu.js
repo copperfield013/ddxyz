@@ -158,7 +158,7 @@ var menu = {
         var me =this;
         var mainMenuCount = $('ul.menu-preview-menu>li').length;
         var mainMenuType  = 'view'   // 默认添加的一级菜单type为 view
-        var mainMenuUrl   = ''       //默认添加的一级菜单url为 空字符串
+        var mainMenuUrl   = 'http://'       //默认添加的一级菜单url为 空字符串
         $('.menu-preview-menu li.active').removeClass('active');
         $(that).addClass('active')
             .addClass('expand')
@@ -224,7 +224,7 @@ var menu = {
             var subMenuCount = that.siblings().length+1;
             if( subMenuCount <= 5){
             	var subMenuType = 'view' ;
-            	var subMenuUrl  = '';
+            	var subMenuUrl  = 'http://';
                 var subHtml = "<li class='submenu-name active' data-type='"+subMenuType+"' data-url='"+subMenuUrl+"'><span>菜单名称</span><i></i></li>";
                 that.siblings().removeClass('active');
 
