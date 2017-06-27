@@ -27,12 +27,12 @@ public class AdminMenuController {
 	@Resource
 	WxCredentialService wxCredentialService;
 	
-	@RequestMapping("add-menu")
+	@RequestMapping("menu")
 	public String menu(Model model){
 		String accessToken = wxCredentialService.getAccessToken();
 		JSONObject jo = menuService.getMenu(accessToken);
 		model.addAttribute("menuContent", jo);
-		return AdminConstants.PATH_MENU + "/add_menu.jsp";
+		return AdminConstants.PATH_MENU + "/menu.jsp";
 	}
 	
 	@ResponseBody

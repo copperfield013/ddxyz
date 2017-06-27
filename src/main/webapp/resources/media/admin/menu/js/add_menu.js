@@ -259,6 +259,7 @@ var menu = {
             //当没有二级菜单的时候，一级图标改变
             subMenuCount = addSubMenuParent.children().length-1;
             if( subMenuCount ===0 ){
+            	addSubMenuParent.parent().attr('data-url', 'http://');
                 addSubMenuParent.parent().removeClass('more');
             }
         }    
