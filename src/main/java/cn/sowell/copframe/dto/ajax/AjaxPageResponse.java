@@ -82,6 +82,14 @@ public class AjaxPageResponse {
 		return response;
 	}
 	
+	public static AjaxPageResponse REFRESH_LOCAL_BY_TYPE(String notice, NoticeType noticeType){
+		AjaxPageResponse response = new AjaxPageResponse();
+		response.setLocalPageAction(PageAction.REFRESH);
+		response.setNotice(notice);
+		response.setNoticeType(noticeType);
+		return response;
+	}
+	
 	public static AjaxPageResponse FAILD(String notice){
 		AjaxPageResponse response = new AjaxPageResponse();
 		response.setNotice(notice);

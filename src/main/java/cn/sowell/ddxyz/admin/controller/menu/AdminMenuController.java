@@ -4,10 +4,16 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 
+import cn.sowell.copframe.dto.ajax.AjaxPageResponse;
+import cn.sowell.copframe.dto.ajax.JsonRequest;
+import cn.sowell.copframe.dto.ajax.NoticeType;
 import cn.sowell.copframe.weixin.common.service.WxCredentialService;
 import cn.sowell.ddxyz.admin.AdminConstants;
 import cn.sowell.ddxyz.model.menu.service.MenuService;
@@ -25,8 +31,18 @@ public class AdminMenuController {
 	public String menu(Model model){
 		String accessToken = wxCredentialService.getAccessToken();
 		JSONObject jo = menuService.getMenu(accessToken);
-		model.addAttribute("menuConteng", jo);
+		model.addAttribute("menuContent", jo);
 		return AdminConstants.PATH_MENU + "/add_menu.jsp";
+	}
+	
+	@ResponseBody
+	@RequestMapping("/doAddMenu")
+	public AjaxPageResponse doAdd(@RequestBody JsonRequest jReq){
+		JSONObject json = menuService.createMenu(wxCredentialService.getAccessToken(), jReq.getJsonObject());
+		if(Integer.parseInt(json.getString("errcode")) == 0){
+			return AjaxPageResponse.REFRESH_LOCAL("菜单配置成功！");
+		}
+		return AjaxPageResponse.REFRESH_LOCAL_BY_TYPE("菜单配置失败！", NoticeType.ERROR);
 	}
 
 }

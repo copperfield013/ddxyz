@@ -245,4 +245,5 @@ define(function(require, exports, module){
 	}
 	exports.ajax = ajax;
 	exports.postJson = postJson;
+	exports.AjaxPageResponse = AjaxPageResponse;
 });
