@@ -4,10 +4,13 @@ import java.text.ParseException;
 import java.util.Date;
 
 import org.junit.Test;
+import org.quartz.CronExpression;
 import org.quartz.impl.calendar.CronCalendar;
 
+import cn.sowell.copframe.dto.format.FrameDateFormat;
 import cn.sowell.copframe.dto.format.OfDateFormat;
 import cn.sowell.copframe.utils.text.TextHandler;
+import cn.sowell.ddxyz.model.common.utils.DeliveryPeriodUtils;
 
 public class UtilTest {
 	
@@ -21,10 +24,13 @@ public class UtilTest {
 	
 	@Test
 	public void cronTest() throws ParseException{
-		CronCalendar cal = new CronCalendar("* * 1 * * ?");
-		OfDateFormat df = new OfDateFormat();
-		Date date = df.parse("2017-6-3 1:00:01");
-		System.out.println(cal.isTimeIncluded(date.getTime()));
-		
+		FrameDateFormat df = new OfDateFormat();
+		Date theDay = df .parse("2017-6-3");
+		int[] hours = DeliveryPeriodUtils.getCronHourList("0 0 2,3,4 * * ?", theDay);
+		for (int hour : hours) {
+			System.out.println(hour + "点");
+		}
 	}
+	
+	
 }

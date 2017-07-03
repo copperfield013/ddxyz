@@ -114,5 +114,4 @@ public class CollectionUtils {
 		appendTo(source, result, itemGetter);
 		return result;
 	}
-	
 }

@@ -115,5 +115,12 @@ public interface FrameDateFormat {
 	 * @return 返回计算后的日期时间对象，注意只有日期改变，时间不变
 	 */
 	Date incDay(Date datetime, int incDay);
+	/**
+	 * 判断两个时间是否在同一天
+	 * @param date
+	 * @param theDay
+	 * @return
+	 */
+	boolean inDay(Date date, Date theDay);
 
 }

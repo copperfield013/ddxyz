@@ -10,6 +10,8 @@ import cn.sowell.ddxyz.model.common.core.Order;
 import cn.sowell.ddxyz.model.common.core.exception.OrderException;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlan;
+import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryTimePoint;
+import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryTimepointPlan;
 import cn.sowell.ddxyz.model.common.pojo.PlainLocation;
 import cn.sowell.ddxyz.model.common.pojo.PlainOrder;
 import cn.sowell.ddxyz.model.common.pojo.PlainOrderLog;
@@ -164,5 +166,23 @@ public interface DataPersistenceDao {
 	 * @return
 	 */
 	List<PlainProduct> getAllUsableProducts(long deliveryId);
+	/**
+	 * 从数据库获得当天可用的所有时间点计划
+	 * @param date
+	 * @return 
+	 */
+	List<PlainDeliveryTimepointPlan> getTheDayUsableTimepointPlan(Date date);
+	/**
+	 * 
+	 * @param timepoint
+	 */
+	Long saveTimePoint(PlainDeliveryTimePoint timepoint);
+	/**
+	 * 
+	 * @param timepoints
+	 * @return
+	 */
+	Set<PlainDeliveryTimePoint> getDeliveryTimepoints(
+			Set<PlainDeliveryTimePoint> timepoints);
 	
 }

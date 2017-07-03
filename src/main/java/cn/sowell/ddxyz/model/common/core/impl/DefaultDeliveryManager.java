@@ -4,20 +4,26 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.Assert;
 
+import cn.sowell.copframe.dto.format.FrameDateFormat;
 import cn.sowell.copframe.utils.range.ComparableSingleRange;
 import cn.sowell.copframe.utils.range.DateRange;
 import cn.sowell.copframe.weixin.common.service.WxConfigService;
+import cn.sowell.ddxyz.DdxyzConstants;
 import cn.sowell.ddxyz.model.common.core.Delivery;
 import cn.sowell.ddxyz.model.common.core.DeliveryKey;
 import cn.sowell.ddxyz.model.common.core.DeliveryLocation;
@@ -30,6 +36,8 @@ import cn.sowell.ddxyz.model.common.core.OrderToken;
 import cn.sowell.ddxyz.model.common.core.result.CheckResult;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlan;
+import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryTimePoint;
+import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryTimepointPlan;
 import cn.sowell.ddxyz.model.common.pojo.PlainLocation;
 import cn.sowell.ddxyz.model.common.service.DataPersistenceService;
 import cn.sowell.ddxyz.model.common.utils.DeliveryPeriodUtils;
@@ -49,9 +57,12 @@ public class DefaultDeliveryManager implements DeliveryManager{
 	@Resource
 	WxConfigService configService;
 	
+	@Resource
+	FrameDateFormat dateFormat;
+	
 	private Map<DeliveryKey, Delivery> deliveryMap = new LinkedHashMap<DeliveryKey, Delivery>();
 	private Map<Delivery, Long> lastOperateMap = new LinkedHashMap<Delivery, Long>();
-	
+	private Map<Long, Map<Date, PlainDeliveryTimePoint>> timePointMap = new LinkedHashMap<Long, Map<Date,PlainDeliveryTimePoint>>();
 	
 	Logger logger = Logger.getLogger(DeliveryManager.class);
 	
@@ -75,9 +86,51 @@ public class DefaultDeliveryManager implements DeliveryManager{
 				lastOperateMap.put(delivery, System.currentTimeMillis());
 			}
 		});
+		List<PlainDeliveryTimepointPlan> timepointPlans = dpService.getTheDayUsableTimepointPlan();
+		Set<PlainDeliveryTimePoint> tpSet = generateDeliveryTimepoint(timepointPlans , Calendar.getInstance());
+		if(!tpSet.isEmpty()){
+			dpService.mergeDeliveryTimepoints(new HashSet<PlainDeliveryTimePoint>(tpSet));
+		}
+		tpSet.forEach(tp -> {
+			Map<Date, PlainDeliveryTimePoint> innerMap = timePointMap.get(tp.getWaresId());
+			if(innerMap == null){
+				innerMap = new TreeMap<Date, PlainDeliveryTimePoint>();
+				timePointMap.put(tp.getWaresId(), innerMap);
+			}
+			if(!innerMap.containsKey(tp.getTimePoint())){
+				innerMap.put(tp.getTimePoint(), tp);
+			}
+		});
+		
 		return new ArrayList<Delivery>(dMap.values());
 	}
 	
+	
+	private Set<PlainDeliveryTimePoint> generateDeliveryTimepoint(List<PlainDeliveryTimepointPlan> plans, Calendar theDay){
+		Assert.notNull(plans);
+		Set<PlainDeliveryTimePoint> result = new TreeSet<PlainDeliveryTimePoint>();
+		Calendar zero = Calendar.getInstance();
+		zero.setTime(dateFormat.getTheDayZero(theDay.getTime()));
+		for (PlainDeliveryTimepointPlan plan : plans) {
+			Date startTime = plan.getStartTime(),
+					endTime = plan.getEndTime(),
+					zeroTime = zero.getTime();
+			if((startTime == null || startTime.equals(zeroTime) || startTime.before(zeroTime)) && (endTime == null || endTime.after(zeroTime))){
+				int[] hours = DeliveryPeriodUtils.getCronHourList(plan.getPeriod(), zeroTime);
+				for (int hour : hours) {
+					zero.set(Calendar.HOUR_OF_DAY, hour);
+					PlainDeliveryTimePoint timepoint = new PlainDeliveryTimePoint();
+					timepoint.setTimePoint(zero.getTime());
+					timepoint.setWaresId(plan.getWaresId());
+					timepoint.setCountMax(plan.getTotalMax());
+					timepoint.setWaresId(DdxyzConstants.WARES_ID);
+					timepoint.setCreateTime(new Date());
+					result.add(timepoint);
+				}
+			}
+		}
+		return result;
+	}
 	
 	private Map<DeliveryKey, PlainDelivery> generateDelivery(List<PlainDeliveryPlan> plans, Calendar theDay) {
 		Map<DeliveryKey, PlainDelivery> map = new LinkedHashMap<DeliveryKey, PlainDelivery>();
@@ -172,6 +225,19 @@ public class DefaultDeliveryManager implements DeliveryManager{
 				if(timePoint.getClosed() && !configService.isDebug()){
 					return result.setResult(false, "配送时间点的关闭时间为[" + timePoint.getCloseTime() + "]，已过期");
 				}
+				
+				//判断该时间点的配送总限额是否足够
+				Map<Date, PlainDeliveryTimePoint> tpMap = timePointMap.get(orderParameter.getWaresId());
+				//默认总限额足够，只有在时间点限制存在，并且配送总数大于总限额时，则判断为不足够
+				boolean timePointAvailable = true;
+				if(tpMap != null ){
+					PlainDeliveryTimePoint tp = tpMap.get(timePoint.getDatetime());
+					if(tp != null){
+						if(tp.getCurrentCount() + orderParameter.getDispenseResourceRequest().getDispenseCount() > tp.getCountMax()){
+							timePointAvailable = false;
+						}
+					}
+				}
 			
 				//检查请求中的资源是否足够
 				DispenseResourceRequest resourceReq = orderParameter.getDispenseResourceRequest();
@@ -181,10 +247,18 @@ public class DefaultDeliveryManager implements DeliveryManager{
 						if(!delivery.checkAvailable(dispenseCount)){
 							return result.setResult(false, "配送的资源不足，检验不通过");
 						}else{
-							return result.setResult(true, "配送资源充足");
+							if(timePointAvailable){
+								return result.setResult(true, "配送资源充足");
+							}else{
+								return result.setResult(false, "配送资源足够，但是产品数量已经超出该时间点的总限额");
+							}
 						}
 					}else{
-						return result.setResult(true, "对应配送的资源没有限制数量，可以请求任意数量");
+						if(timePointAvailable){
+							return result.setResult(true, "对应配送的资源没有限制数量，可以请求任意数量");
+						}else{
+							return result.setResult(false, "配送资源没有限制数量，但是产品数量已经超出该时间点的总限额");
+						}
 					}
 				}else{
 					//当需要的资源数量为0的时候，可以直接返回检查成功
@@ -217,6 +291,20 @@ public class DefaultDeliveryManager implements DeliveryManager{
 				}
 			}
 		}
+	}
+	
+	@Override
+	public Integer getTimepointRemain(Long waresId, Date timepoint) {
+		Map<Date, PlainDeliveryTimePoint> map = timePointMap.get(waresId);
+		if(map != null){
+			PlainDeliveryTimePoint tp = map.get(timepoint);
+			if(tp != null){
+				if(tp.getCountMax() != null){
+					return tp.getCountMax() - tp.getCurrentCount();
+				}
+			}
+		}
+		return null;
 	}
 
 }

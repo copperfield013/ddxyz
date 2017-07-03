@@ -5,14 +5,12 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
 
-import org.apache.commons.collections.list.TreeList;
 import org.springframework.util.Assert;
 
 import cn.sowell.ddxyz.model.common.core.Delivery;
@@ -76,12 +74,18 @@ public class DefaultDelivery implements Delivery{
 	@Override
 	public boolean checkAvailable(int reqCount) {
 		Integer maxCount = getMaxCount();
+		boolean result = true;
 		//最大限制为null时，无论表示没有限制
-		if(maxCount == null){
-			return true;
-		}else{
-			return getCurrentCount() + reqCount <= maxCount;
+		if(maxCount != null){
+			result = getCurrentCount() + reqCount <= maxCount;
 		}
+		if(result){
+			Integer remain = dManager.getTimepointRemain(pDelivery.getWaresId(), pDelivery.getTimePoint());
+			if(remain != null){
+				result = remain >= reqCount;
+			}
+		}
+		return result;
 	}
 	
 	@Override

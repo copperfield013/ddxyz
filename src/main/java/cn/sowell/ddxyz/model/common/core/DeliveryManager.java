@@ -1,6 +1,7 @@
 package cn.sowell.ddxyz.model.common.core;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import cn.sowell.copframe.utils.range.DateRange;
@@ -61,6 +62,13 @@ public interface DeliveryManager {
 	 * @param range
 	 */
 	void clearCache(DateRange range);
-
-
+	
+	/**
+	 * 获得某个时间点的余量
+	 * @param waresId 商品id
+	 * @param timepoint 时间点
+	 * @return 为null时，表示该时间点没有限制，否则返回该时间点的余量
+	 */
+	Integer getTimepointRemain(Long waresId, Date timepoint);
+	
 }

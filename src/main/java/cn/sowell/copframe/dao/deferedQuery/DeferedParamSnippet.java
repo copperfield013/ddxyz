@@ -55,4 +55,12 @@ public class DeferedParamSnippet {
 		this.prependWhenNotEmpty = prependWhenNotEmpty;
 	}
 	
+	public void trimBefore(String trimStr){
+		if(trimStr != null && !trimStr.isEmpty()){
+			int index = buffer.indexOf(trimStr);
+			if(index == 0){
+				buffer.substring(trimStr.length());
+			}
+		}
+	}
 }

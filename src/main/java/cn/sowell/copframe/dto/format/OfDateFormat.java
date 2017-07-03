@@ -2,6 +2,7 @@ package cn.sowell.copframe.dto.format;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 /**
  * 
  * <p>Title: OfDateFormat</p>
@@ -25,6 +26,5 @@ public class OfDateFormat extends AbstractFrameDateFormat {
 	public OfDateFormat() {
 		super(defaultDateFormat, defaultTimeFormat, defaultDateTimeFormat);
 	}
-	
-	
+
 }

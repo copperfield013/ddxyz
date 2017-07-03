@@ -4,12 +4,21 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
+import org.apache.log4j.Logger;
+import org.quartz.CronExpression;
 
 import cn.sowell.copframe.dto.format.FormatUtils;
+import cn.sowell.copframe.dto.format.FrameDateFormat;
+import cn.sowell.copframe.dto.format.OfDateFormat;
 
 public class DeliveryPeriodUtils {
-
+	static FrameDateFormat dateFormat = new OfDateFormat();
+	static Logger logger = Logger.getLogger(DeliveryPeriodUtils.class);
 	/**
 	 * 
 	 * 传入一个dateSring的规则字符串，包含年，月，时，日(或星期几)。将dateString按照年，月，时，日（或星期）解析分组，存储为不同的数组。
@@ -90,5 +99,33 @@ public class DeliveryPeriodUtils {
 			result.add(FormatUtils.toInteger(hour));
 		}
 		return result;
+	}
+
+	public static int[] getCronHourList(String period, Date theDay) {
+		try {
+			CronExpression cron = new CronExpression(period);
+			Date zero = dateFormat.getTheDayZero(theDay);
+			Date date = new Date(zero.getTime() - 1);
+			Set<Integer> hours = new TreeSet<Integer>();
+			Calendar cal = Calendar.getInstance();
+			while(date != null){
+				date = cron.getNextValidTimeAfter(date);
+				if(dateFormat.inDay(date, zero)){
+					cal.setTime(date);
+					hours.add(cal.get(Calendar.HOUR_OF_DAY));
+				}else{
+					break;
+				}
+			}
+			int[] result = new int[hours.size()];
+			int i = 0;
+			for (Integer hour : hours) {
+				result[i++] = hour;
+			}
+			return result;
+		} catch (ParseException e) {
+			logger.error("cron表达式解析错误", e);
+		}
+		return new int[0];
 	}
 }

@@ -22,7 +22,8 @@ public class AbstractFrameDateFormat implements FrameDateFormat{
 	protected DateFormat timeFormat;
 	//默认日期时间格式化对象
 	protected DateFormat dateTimeFormat;
-
+	
+	protected final long ONE_DAY_LENGTH;
 	/**
 	 * 自定义格式化对象
 	 * @param dateFormat
@@ -35,6 +36,10 @@ public class AbstractFrameDateFormat implements FrameDateFormat{
 		this.dateFormat = dateFormat;
 		this.timeFormat = timeFormat;
 		this.dateTimeFormat = dateTimeFormat;
+		Calendar cal = Calendar.getInstance();
+		long tm = cal.getTimeInMillis();
+		cal.add(Calendar.DATE, 1);
+		ONE_DAY_LENGTH = cal.getTimeInMillis() - tm;
 	}
 
 	@Override
@@ -169,6 +174,16 @@ public class AbstractFrameDateFormat implements FrameDateFormat{
 		cal.setTime(datetime);
 		cal.add(Calendar.DATE, incDay);
 		return cal.getTime();
+	}
+	
+	@Override
+	public boolean inDay(Date date, Date theDay) {
+		Date zero = getTheDayZero(theDay);
+		long sub = date.getTime() - zero.getTime();
+		if(sub <= ONE_DAY_LENGTH){
+			return true;
+		}
+		return false;
 	}
 	
 }

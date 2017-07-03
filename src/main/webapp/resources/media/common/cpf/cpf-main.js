@@ -35,6 +35,8 @@ define(function(require){
 		maxPageCount		: 8,
 		sessionInvalidURL	: 'admin/login'
 	});
+	$CPF.showLoading();
 	//初始化当前页面
     $CPF.initPage(document);
+    $CPF.closeLoading();
 });

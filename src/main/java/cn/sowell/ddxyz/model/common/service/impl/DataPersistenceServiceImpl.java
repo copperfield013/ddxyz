@@ -7,20 +7,15 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
-
-
+import java.util.Set;
 
 import javax.annotation.Resource;
-
-
 
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-
-
+import cn.sowell.copframe.utils.CollectionUtils;
 import cn.sowell.ddxyz.model.common.core.Delivery;
 import cn.sowell.ddxyz.model.common.core.DeliveryKey;
 import cn.sowell.ddxyz.model.common.core.DeliveryLocation;
@@ -40,6 +35,8 @@ import cn.sowell.ddxyz.model.common.core.impl.DefaultProduct;
 import cn.sowell.ddxyz.model.common.dao.DataPersistenceDao;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlan;
+import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryTimePoint;
+import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryTimepointPlan;
 import cn.sowell.ddxyz.model.common.pojo.PlainLocation;
 import cn.sowell.ddxyz.model.common.pojo.PlainOrder;
 import cn.sowell.ddxyz.model.common.pojo.PlainOrderLog;
@@ -278,6 +275,34 @@ public class DataPersistenceServiceImpl implements DataPersistenceService{
 	@Override
 	public PlainOrder getPlainOrder(long orderId) {
 		return dpDao.getOrder(orderId);
+	}
+	
+	
+	@Override
+	public List<PlainDeliveryTimepointPlan> getTheDayUsableTimepointPlan() {
+		return dpDao.getTheDayUsableTimepointPlan(new Date());
+	}
+	
+	@Override
+	public Map<Date, PlainDeliveryTimePoint> mergeDeliveryTimepoints(
+			Set<PlainDeliveryTimePoint> timepoints) {
+		Map<Date, PlainDeliveryTimePoint> result = new LinkedHashMap<Date, PlainDeliveryTimePoint>();
+		Map<Date, PlainDeliveryTimePoint> tpMap = CollectionUtils.toMap(timepoints, timepoint->timepoint.getTimePoint());
+		
+		//根据所有map的key，从数据库查看其配送记录是否存在，如果存在，则不添加，并将其数据库中对应的id放到key中
+		Set<PlainDeliveryTimePoint> existsTimepoints = dpDao.getDeliveryTimepoints(timepoints);
+		for (PlainDeliveryTimePoint existsTimePoint : existsTimepoints) {
+			tpMap.remove(existsTimePoint.getTimePoint());
+			result.put(existsTimePoint.getTimePoint(), existsTimePoint);
+		}
+		//遍历剩余所有的时间点，将其持久化并且放到map中
+		tpMap.forEach((key, timepoint)->{
+			dpDao.saveTimePoint(timepoint);
+			result.put(key, timepoint);
+		});
+		
+		
+		return result;
 	}
 	
 }

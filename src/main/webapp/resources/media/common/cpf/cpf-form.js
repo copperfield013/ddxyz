@@ -18,11 +18,14 @@ define(function(require, exports, module){
 	});
 	
 	$CPF.putPageInitSequeue(4, function($page){
-		$('form', $page).submit(function(e){
+		$('form', $page).not('.nform').submit(function(e){
 			var $this = $(this),
 				page = $this.getLocatePage(),
 				formData = new FormData(this)
 			;
+			if(!page){
+				return;
+			}
 			var validator = $this.data('bootstrapValidator');
 			if(validator){
 				validator.validate();

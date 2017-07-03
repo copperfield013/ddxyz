@@ -1,6 +1,7 @@
 package cn.sowell.ddxyz.model.common.service;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -16,6 +17,8 @@ import cn.sowell.ddxyz.model.common.core.exception.OrderException;
 import cn.sowell.ddxyz.model.common.core.exception.ProductException;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlan;
+import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryTimePoint;
+import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryTimepointPlan;
 import cn.sowell.ddxyz.model.common.pojo.PlainLocation;
 import cn.sowell.ddxyz.model.common.pojo.PlainOrder;
 import cn.sowell.ddxyz.model.common.pojo.PlainOrderLog;
@@ -173,6 +176,18 @@ public interface DataPersistenceService {
 	 * @return
 	 */
 	PlainOrder getPlainOrder(long orderId);
+	/**
+	 * 从数据库中获得时间点生成计划
+	 * @return
+	 */
+	List<PlainDeliveryTimepointPlan> getTheDayUsableTimepointPlan();
+	/**
+	 * 
+	 * @param timepointMap
+	 * @return
+	 */
+	Map<Date, PlainDeliveryTimePoint> mergeDeliveryTimepoints(
+			Set<PlainDeliveryTimePoint> timepoints);
 
 	
 

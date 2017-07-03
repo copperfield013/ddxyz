@@ -34,6 +34,8 @@ import cn.sowell.ddxyz.model.common.core.exception.ProductException;
 import cn.sowell.ddxyz.model.common.dao.DataPersistenceDao;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlan;
+import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryTimePoint;
+import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryTimepointPlan;
 import cn.sowell.ddxyz.model.common.pojo.PlainLocation;
 import cn.sowell.ddxyz.model.common.pojo.PlainOrder;
 import cn.sowell.ddxyz.model.common.pojo.PlainOrderLog;
@@ -244,7 +246,7 @@ public class DataPersistenceDaoImpl implements DataPersistenceDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<PlainDeliveryPlan> getTheDayUsablePlan(Date theDay) {
-		String hql = "from PlainDeliveryPlan plan where plan.startDate <= :theDay and plan.endDate > :theDay";
+		String hql = "from PlainDeliveryPlan plan where plan.startDate <= :theDay and plan.endDate > :theDay and (plan.disabled is null or plan.disabled <> 1)";
 		Query query = sFactory.getCurrentSession().createQuery(hql);
 		query.setTimestamp("theDay", theDay);
 		return query.list();
@@ -353,6 +355,37 @@ public class DataPersistenceDaoImpl implements DataPersistenceDao{
 			return query.list();
 		}
 		return new ArrayList<PlainProduct>();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PlainDeliveryTimepointPlan> getTheDayUsableTimepointPlan(
+			Date date) {
+		String hql = "from PlainDeliveryTimepointPlan plan where plan.startTime <= :theDay and plan.endTime > :theDay and (plan.disabled is null or plan.disabled <> 1)";
+		Query query = sFactory.getCurrentSession().createQuery(hql);
+		query.setTimestamp("theDay", date);
+		return query.list();
+	}
+	
+	@Override
+	public Long saveTimePoint(PlainDeliveryTimePoint timepoint) {
+		return (Long) sFactory.getCurrentSession().save(timepoint);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Set<PlainDeliveryTimePoint> getDeliveryTimepoints(
+			Set<PlainDeliveryTimePoint> timepoints) {
+		Assert.notEmpty(timepoints);
+		DeferedParamQuery dQuery = new DeferedParamQuery("from PlainDeliveryTimePoint timepoint");
+		int i = 0;
+		for (PlainDeliveryTimePoint timepoint : timepoints) {
+			dQuery.appendCondition("or (timepoint.timePoint = :timePoint_" + i + " and timepoint.waresId = :waresId_" + i + ")");
+			dQuery.setParam("timePoint_" + i, timepoint.getTimePoint());
+			dQuery.setParam("waresId_" + i++, timepoint.getWaresId());
+		}
+		Query query = dQuery.createQuery(sFactory.getCurrentSession(), true, null);
+		return new LinkedHashSet<PlainDeliveryTimePoint>(query.list());
 	}
 	
 }

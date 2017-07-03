@@ -23,7 +23,7 @@
 				<div class="ui-page" id="product-list-page">
 				    <div class="ui-body">
 				        <div class="ui-content">
-				            <form action="admin/production/query" id="production-query-form">
+				            <form class="nform" action="admin/production/query" id="production-query-form">
 				            	<input type="hidden" name="pageNo" id="page-no" value="${pageInfo.pageNo }">
 				            	<input type="hidden" name="withTimer" id="withTimer" value="${withTimer }"/>
 				                <div class="condition-area">
@@ -295,7 +295,7 @@
 				    		withTimer = 'true';
 				    		$("#withTimer", $page).val(withTimer);
 				    		autoQuery();
-				    	})
+				    	});
 				    	
 				    	//刷新
 				    	$("#refresh", $page).on("click", function(){

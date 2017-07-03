@@ -49,6 +49,7 @@ public interface Delivery {
 	
 	/**
 	 * 判断当前配送的资源是否足够
+	 * 同时会根据配送时间点的限额来判断
 	 * @param reqCount 请求的资源数
 	 * @return
 	 */

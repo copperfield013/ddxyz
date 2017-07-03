@@ -7,6 +7,11 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>登录点点新意</title>
 		<meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
+		<script type="text/javascript">
+			if(window.ADMIN_LOADED === true){
+				location.href = '${basePath }/admin/login';
+			}
+		</script>
 		<jsp:include page="/WEB-INF/jsp/admin/common/admin-include.jsp"></jsp:include>
 		<style>
 		@charset "utf-8";
@@ -152,7 +157,6 @@
 				}else{
 					loginBox.attr('style', 'transition:none;margin-top:-200px;opacity:1');
 				}
-				console.log('111');
 				$(document).keypress(function(e){
 					if(e.keyCode === 13){
 						$('#submit').click();

@@ -158,12 +158,26 @@ public class DeferedParamQuery{
 		String sql = this.queryString;
 		//添加条件语句
 		if(this.conditions != null && this.conditions.size() > 0){
-			if(addWhere){
-				sql += " where 1=1 ";
-			}
+			String conditionSQL = "";
 			for (String condition : conditions) {
-				sql += " " + condition + " ";
+				conditionSQL += " " + condition + " ";
 			}
+			if(addWhere){
+				String trimSQL = conditionSQL.trim();
+				int trimLength = trimSQL.length();
+				if(trimLength >= 3){
+					String prefix = trimSQL.substring(0, 3);
+					if(prefix.equalsIgnoreCase("or ")){
+						conditionSQL = " where " + trimSQL.substring(3);
+					}else if(trimLength >= 4){
+						prefix = trimSQL.substring(0, 4);
+						if(prefix.equalsIgnoreCase("and ")){
+							conditionSQL = " where " + trimSQL.substring(4);
+						}
+					}
+				}
+			}
+			sql += conditionSQL;
 		}
 		//替换语句中的参数
 		for (Entry<String, DeferedParamSnippet> snippetEntry : this.snippettMap.entrySet()) {
