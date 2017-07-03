@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"  pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/jsp/common/base_empty.jsp"%>
 <link rel="stylesheet"  href="media/admin/menu/css/add_menu.css"> 
-<script src="media/admin/menu/js/add_menu.js"></script>
 <div class="ui-page" id="admin-menu-add">
         <div class="ui-body">
         <div class="ui-content">
@@ -14,6 +13,15 @@
             </div>
             <div class="menu-name-area">
                 <div class="operation-menuname">
+                	<div>
+		            	<span>菜单选择：</span>
+		            	<select id="quick-select-menu">
+		            		<option value="0" data-url="http://" selected="selected">自定义</option>
+		            		<option value="1" data-url="${basePath }weixin/ydd">主页</option>
+		            		<option value="2" data-url="${basePath }weixin/ydd/order?${RES_STAMP}">我要下单</option>
+		            		<option value="3" data-url="${basePath }weixin/ydd/orderList">我的订单</option>
+		            	</select>
+                	</div>
                     <span>菜单名称：</span>
                     <p>
                         <input type="text" name="menuName" value="菜单名称" id="menuName">
@@ -33,16 +41,17 @@
     
  <script>
    $(function(){
-	   seajs.use('ajax', function(Ajax){
+	   seajs.use(['ajax','menu/js/add_menu'], function(Ajax, CustomMenu){
 		   var addMenuPage = $("#admin-menu-add");
 	        var initData = $.parseJSON('${menuContent}');
 	/*         var initData = JSON.parse($('#initData').text()); */
-	        menu.init(initData.menu);
+			console.log('aa');
+	        CustomMenu.init(initData.menu);
 	         //保存
 	     $('.save').on("click",function(e){
 	            var saveData = {};
 	            e.stopPropagation();
-	            saveData =  menu.save();
+	            saveData =  CustomMenu.save();
 	            /*
 	             ***
 	             ***该数据为保存时的数据,可自由操作；
