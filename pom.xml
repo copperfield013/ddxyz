@@ -210,6 +210,12 @@
 		    <version>4.5.2</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.qq.weixin</groupId>
+			<artifactId>aes</artifactId>
+			<version>0.1-final</version>
+		</dependency>
+
 	</dependencies>
 	<build>
 		<finalName>ddxyz</finalName>
