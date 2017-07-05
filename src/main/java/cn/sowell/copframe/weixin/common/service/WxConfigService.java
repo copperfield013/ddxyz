@@ -5,6 +5,12 @@ import java.util.Map;
 import cn.sowell.copframe.xml.XmlNode;
 
 public interface WxConfigService {
+	
+	/**
+	 * 获得公众号的微信号
+	 * @return
+	 */
+	String getAppWxcount();
 	/**
 	 * 
 	 * @return
@@ -81,5 +87,17 @@ public interface WxConfigService {
 	 * @return
 	 */
 	String getMerchantPKCS12FilePath();
+	
+	/**
+	 * 获得微信消息的
+	 * @return
+	 */
+	String getMsgToken();
+	
+	/**
+	 * 
+	 * @return
+	 */
+	String getMsgEncodingAESKey();
 
 }
