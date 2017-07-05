@@ -16,10 +16,10 @@
                 	<div>
 		            	<span>菜单选择</span>
 		            	<select id="quick-select-menu">
-		            		<option value="0" data-url="http://" selected="selected">自定义</option>
-		            		<option value="1" data-url="${basePath }weixin/ydd">主页</option>
-		            		<option value="2" data-url="${basePath }weixin/ydd/order?${RES_STAMP}">我要下单</option>
-		            		<option value="3" data-url="${basePath }weixin/ydd/orderList">我的订单</option>
+		            		<option value="" data-url="http://" selected="selected">自定义</option>
+		            		<option value="" data-url="${basePath }weixin/ydd">主页</option>
+		            		<option value="" data-url="${basePath }weixin/ydd/order?${RES_STAMP}">我要下单</option>
+		            		<option value="" data-url="${basePath }weixin/ydd/orderList">我的订单</option>
 		            	</select>
                 	</div>
                 	<div>
@@ -48,9 +48,7 @@
 	   seajs.use(['ajax','menu/js/add_menu'], function(Ajax, CustomMenu){
 		   var addMenuPage = $("#admin-menu-add");
 	        var initData = $.parseJSON('${menuContent}');
-	/*         var initData = JSON.parse($('#initData').text()); */
-			console.log('aa');
-	        CustomMenu.init(initData);
+	        CustomMenu.init(initData.menu);
 	         //保存
 	     $('.save').on("click",function(e){
 	            var saveData = {};
