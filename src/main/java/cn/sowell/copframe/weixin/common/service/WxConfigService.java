@@ -10,13 +10,23 @@ public interface WxConfigService {
 	 * 获得公众号的微信号
 	 * @return
 	 */
-	String getAppWxcount();
+	String getAppWxAcount();
 	/**
-	 * 
+	 * 配置公众号时的唯一标识
 	 * @return
 	 */
 	String getAppKey();
 	
+	/**
+	 * 公众号的名称
+	 * @return
+	 */
+	String getAppName();
+	
+	/**
+	 * 微信平台分配的公众号的id
+	 * @return
+	 */
 	String getAppid();
 	
 	/**

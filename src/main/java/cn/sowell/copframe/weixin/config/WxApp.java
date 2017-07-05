@@ -52,7 +52,7 @@ public class WxApp {
 	public void setPkcs12FilePath(String pkcs12FilePath) {
 		this.pkcs12FilePath = pkcs12FilePath;
 	}
-	public String getWxcount() {
+	public String getWxAcount() {
 		return wxcount;
 	}
 	public void setWxcount(String wxcount) {

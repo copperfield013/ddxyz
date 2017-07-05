@@ -35,8 +35,13 @@ public class WxConfigServiceImpl implements WxConfigService{
 	}
 	
 	@Override
-	public String getAppWxcount() {
-		return APP().getWxcount();
+	public String getAppWxAcount() {
+		return APP().getWxAcount();
+	}
+	
+	@Override
+	public String getAppName() {
+		return APP().getCname();
 	}
 	
 	@Override

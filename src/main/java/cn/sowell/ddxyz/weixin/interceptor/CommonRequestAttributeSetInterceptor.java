@@ -47,7 +47,7 @@ public class CommonRequestAttributeSetInterceptor implements WebRequestIntercept
 			AntPathMatcher matcher = new AntPathMatcher("/");
 			String path = HttpRequestUtils.getURI(req);
 			
-			String basePath = req.getScheme()+"://" + req.getServerName() + ":" + req.getServerPort() + req.getContextPath()+"/";
+			String basePath = configService.getProjectURL();
 			long resStamp = System.currentTimeMillis();
 			req.setAttribute("RES_STAMP", resStamp);
 			req.setAttribute("basePath", basePath);

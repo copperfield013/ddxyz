@@ -28,7 +28,7 @@ public class AdminUser implements UserDetails{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private String id;
+	private Long id;
 	
 	
 	@Column(name="c_username")
@@ -162,11 +162,11 @@ public class AdminUser implements UserDetails{
 		this.authorityChain = authorityChain;
 	}
 
-	public String getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
