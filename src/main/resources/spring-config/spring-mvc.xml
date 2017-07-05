@@ -52,8 +52,7 @@ http://www.springframework.org/schema/context/spring-context-4.3.xsd">
 					<constructor-arg value="UTF-8" /> 
 					<property name="supportedMediaTypes">    
 						<list>    
-							<value>text/plain;charset=UTF-8</value>
-							<value>text/xml;charset=UTF-8</value> 
+							<value>*/*;charset=UTF-8</value> 
 						</list>    
 					</property>    
 				</bean>

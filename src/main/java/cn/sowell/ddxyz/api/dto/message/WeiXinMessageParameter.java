@@ -16,6 +16,7 @@ public class WeiXinMessageParameter {
 	private String openid;
 	private String encrypt_type;
 	private String msg_signature;
+	private String echostr;
 	
 	public String getSignature() {
 		return signature;
@@ -52,5 +53,11 @@ public class WeiXinMessageParameter {
 	}
 	public void setMsg_signature(String msg_signature) {
 		this.msg_signature = msg_signature;
+	}
+	public String getEchostr() {
+		return echostr;
+	}
+	public void setEchostr(String echostr) {
+		this.echostr = echostr;
 	}
 }

@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.context.request.WebRequest;
 
 import cn.sowell.copframe.exception.XMLException;
 import cn.sowell.copframe.weixin.common.service.WxConfigService;
@@ -31,23 +30,24 @@ public class WeixinApiController {
 	@ResponseBody
 	@RequestMapping("/message")
 	public String message(WeiXinMessageParameter msgParam,
-			@RequestBody String xmlReq){
-		try {
-			WXBizMsgCrypt pc = new WXBizMsgCrypt(configService.getMsgToken(), configService.getMsgEncodingAESKey(), configService.getAppid());
-			String xml = xmlReq.toString();
+			@RequestBody(required=false) String xml){
+		if(xml != null){
+			try {
+				WXBizMsgCrypt pc = new WXBizMsgCrypt(configService.getMsgToken(), configService.getMsgEncodingAESKey(), configService.getAppid());
+				logger.info(xml);
+				String msg = pc.decryptMsg(msgParam.getMsg_signature(), msgParam.getTimestamp(), msgParam.getNonce(), xml);
+				XmlNode msgXml = new Dom4jNode(msg);
+				WeiXinMessageEncryptedData data = XmlNode.parseObject(msgXml, new WeiXinMessageEncryptedData());
+				logger.info("解析后消息：");
+				logger.info(data.getContent());
+			} catch (AesException e) {
+				logger.error("微信解析消息时发生错误", e);
+			} catch (XMLException e) {
+				logger.error("解析转换后的消息时发生错误");
+			}
 			logger.info(xml);
-			String msg = pc.decryptMsg(msgParam.getMsg_signature(), msgParam.getTimestamp(), msgParam.getNonce(), xmlReq);
-			XmlNode msgXml = new Dom4jNode(msg);
-			WeiXinMessageEncryptedData data = XmlNode.parseObject(msgXml, new WeiXinMessageEncryptedData());
-			logger.info("解析后消息：");
-			logger.info(data.getContent());
-		} catch (AesException e) {
-			logger.error("微信解析消息时发生错误", e);
-		} catch (XMLException e) {
-			logger.error("解析转换后的消息时发生错误");
 		}
-		logger.info(xmlReq);
-		return "";
+		return msgParam.getEchostr();
 	}
 	
 }
