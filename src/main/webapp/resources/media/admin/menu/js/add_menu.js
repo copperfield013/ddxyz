@@ -6,6 +6,10 @@ define(function(require, exports, module){
 	    // 初始化(获取数据初始化菜单栏)
 	    init: function (initData) {
 	        var me = this;
+	        if(me.init.arguments.length<=0){
+	        	initData = {};	
+	        	alert("数据传输为空，有未知错误，可能导致您接下来的菜单操作无效");	
+	        }
 	        me.menuConstructor(initData);
 	        me.subMenuConstructor(initData);
 	        me.menuName();
@@ -91,7 +95,7 @@ define(function(require, exports, module){
 	            me.mainMenuClick(that);
 	        })
 	        menuWarp.on('click', '>li>i', function () {    //一级菜单删除事件
-	            var r = confirm("are you sure");
+	            var r = confirm("确定要删除吗？");
 	            var that = $(this).parent('li');
 	            if (r === true) {
 	                console.log("delete");
@@ -251,7 +255,7 @@ define(function(require, exports, module){
 	        var presentMenu = that.parent();
 	        var addSubMenuParent  = presentMenu.parent();
 	        var hasAddMenu = (presentMenu.siblings('li.submenu-add').length !== 0 )
-	        var deleteSubMenu = confirm("are you sure");
+	        var deleteSubMenu = confirm("确定要删除吗？");
 	        var subMenuCount = null;
 	        if( deleteSubMenu ){
 	             presentMenu.remove();
