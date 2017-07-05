@@ -2,12 +2,14 @@ package cn.sowell.copframe.weixin.config;
 
 public class WxApp {
 	private String id;
+	private String wxcount;
 	private String cname;
 	private String appid;
 	private String secret;
 	private String merchantId;
 	private String payKey;
 	private String pkcs12FilePath;
+	private WxMsgConfig msgConfig = new WxMsgConfig();
 	public String getId() {
 		return id;
 	}
@@ -49,5 +51,17 @@ public class WxApp {
 	}
 	public void setPkcs12FilePath(String pkcs12FilePath) {
 		this.pkcs12FilePath = pkcs12FilePath;
+	}
+	public String getWxcount() {
+		return wxcount;
+	}
+	public void setWxcount(String wxcount) {
+		this.wxcount = wxcount;
+	}
+	public WxMsgConfig getMsgConfig() {
+		return msgConfig;
+	}
+	public void setMsgConfig(WxMsgConfig msgConfig) {
+		this.msgConfig = msgConfig;
 	}
 }

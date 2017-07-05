@@ -27,6 +27,7 @@ public class WxConfig {
 			WxApp app = new WxApp();
 			app.setId(appTag.getStrictAttribute("id"));
 			app.setCname(appTag.getAttribute("cname"));
+			app.setWxcount(appTag.getStrictFirstElement("wxcount").getText());
 			app.setAppid(appTag.getStrictFirstElement("appid").getText());
 			app.setSecret(appTag.getStrictFirstElement("secret").getText());
 			XmlNode merchantNode = appTag.getFirstElement("merchant");
@@ -34,6 +35,11 @@ public class WxConfig {
 				app.setMerchantId(merchantNode.getStrictFirstElement("id").getStrictText());
 				app.setPayKey(merchantNode.getStrictFirstElement("pay-key").getStrictText());
 				app.setPkcs12FilePath(merchantNode.getStrictFirstElement("cert").getStrictFirstElement("pkcs12").getStrictText());
+			}
+			XmlNode msgNode = appTag.getFirstElement("msg");
+			if(msgNode != null){
+				app.getMsgConfig().setToken(msgNode.getStrictFirstElement("token").getStrictText());
+				app.getMsgConfig().setEncodingAESKey(msgNode.getStrictFirstElement("aesKey").getStrictText());
 			}
 			appMap.put(app.getId(), app);
 		});

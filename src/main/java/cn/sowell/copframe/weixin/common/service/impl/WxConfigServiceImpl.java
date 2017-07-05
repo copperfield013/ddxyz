@@ -35,6 +35,11 @@ public class WxConfigServiceImpl implements WxConfigService{
 	}
 	
 	@Override
+	public String getAppWxcount() {
+		return APP().getWxcount();
+	}
+	
+	@Override
 	public String getAppKey() {
 		return PropertyPlaceholder.getProperty("wxapp");
 	}
@@ -141,6 +146,18 @@ public class WxConfigServiceImpl implements WxConfigService{
 	@Override
 	public long getCurrentTimestamp() {
 		return System.currentTimeMillis() / 1000;
+	}
+	
+	
+	@Override
+	public String getMsgEncodingAESKey() {
+		return APP().getMsgConfig().getEncodingAESKey();
+	}
+	
+	
+	@Override
+	public String getMsgToken() {
+		return APP().getMsgConfig().getToken();
 	}
 	
 	
