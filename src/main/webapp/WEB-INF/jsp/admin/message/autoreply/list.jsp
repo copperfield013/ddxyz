@@ -36,7 +36,7 @@
 				<tr data-id="${messageConfig.id }">
 					<td>${i.index + 1}</td>
 					<td>
-						<a href="admin/message/detail?id=${messageConfig.id }" page-type="tab" target="@message-config-detail-${messageConfig.id }" title="匹配规则">
+						<a href="admin/message/autoReply/detail?id=${messageConfig.id }" page-type="tab" target="@message-config-detail-${messageConfig.id }" title="匹配规则">
 							${messageConfig.ruleExpression }
 						</a>
 					</td>
