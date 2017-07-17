@@ -36,7 +36,7 @@ public interface MessageConfigDao {
 	 * 获取数据库中的所有messageConfig,以List形式返回
 	 * @return
 	 */
-	List<MessageConfig> getList(MessageConfig messageConfig, CommonPageInfo pageInfo);
+	List<MessageConfig> getList(CommonPageInfo pageInfo);
 	
 	/**
 	 * 获取系统当前最高的优先级级别

@@ -9,9 +9,12 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
+import cn.sowell.copframe.dao.deferedQuery.DeferedParamQuery;
+import cn.sowell.copframe.dao.deferedQuery.DeferedParamSnippet;
 import cn.sowell.copframe.dao.deferedQuery.HibernateRefrectResultTransformer;
 import cn.sowell.copframe.dto.format.FormatUtils;
 import cn.sowell.copframe.dto.page.CommonPageInfo;
+import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
 import cn.sowell.ddxyz.model.message.dao.MessageConfigDao;
 import cn.sowell.ddxyz.model.message.pojo.MessageConfig;
 
@@ -44,7 +47,7 @@ public class MessageConfigDaoImpl implements MessageConfigDao{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<MessageConfig> getList(MessageConfig messageConfig, CommonPageInfo pageInfo) {
+	public List<MessageConfig> getList(CommonPageInfo pageInfo) {
 		Session session = sFactory.getCurrentSession();
 		String sql = "select "
 				+ "mc.id, "
@@ -53,23 +56,22 @@ public class MessageConfigDaoImpl implements MessageConfigDao{
 				+ "mc.c_level, "
 				+ "mc.c_remarks, "
 				+ "mc.create_time "
-				+ "from t_message_config mc ";
-		if(messageConfig != null){
-			return null;
-		}else{
-			sql +=" order by mc.create_time desc";
-			SQLQuery query = session.createSQLQuery(sql);
-			if(pageInfo != null){
-				Integer count = FormatUtils.toInteger(query.uniqueResult());
-				if(count > 0){
-					pageInfo.setCount(count);
-					query.setFirstResult(pageInfo.getFirstIndex());
-					query.setMaxResults(pageInfo.getPageSize());
-				}
+				+ "from t_message_config mc order by mc.create_time desc";
+		
+		SQLQuery query = session.createSQLQuery(sql);
+		if(pageInfo != null){
+			String countSQL = "select count(*) from t_message_config";
+			SQLQuery countQuery = session.createSQLQuery(countSQL);
+			Integer count = FormatUtils.toInteger(countQuery.uniqueResult());
+			if(count > 0){
+				pageInfo.setCount(count);
+				query.setFirstResult(pageInfo.getFirstIndex());
+				query.setMaxResults(pageInfo.getPageSize());
 			}
-			query.setResultTransformer(HibernateRefrectResultTransformer.getInstance(MessageConfig.class));
-			return  query.list();
 		}
+		query.setResultTransformer(HibernateRefrectResultTransformer.getInstance(MessageConfig.class));
+		return  query.list();
+		
 	}
 
 	@Override

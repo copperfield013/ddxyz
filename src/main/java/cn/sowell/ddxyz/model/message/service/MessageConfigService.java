@@ -46,7 +46,7 @@ public interface MessageConfigService {
 	 * @param pageInfo
 	 * @return
 	 */
-	List<MessageConfig> getList(MessageConfig messageConfig, CommonPageInfo pageInfo);
+	List<MessageConfig> getList(CommonPageInfo pageInfo);
 	
 	/**
 	 * 系统初始化时获取messageConfig放入系统缓存中

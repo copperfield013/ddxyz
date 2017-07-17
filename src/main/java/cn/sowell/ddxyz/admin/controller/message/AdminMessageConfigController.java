@@ -25,7 +25,7 @@ public class AdminMessageConfigController {
 	
 	@RequestMapping("/list")
 	public String list(CommonPageInfo pageInfo, Model model){
-		List<MessageConfig> list = messageConfigService.getList(null, null);
+		List<MessageConfig> list = messageConfigService.getList(pageInfo);
 		model.addAttribute("messageConfigList", list);
 		model.addAttribute("pageInfo", pageInfo);
 		return AdminConstants.PATH_MESSAGE_CONFIG + "/autoreply/list.jsp";

@@ -77,13 +77,13 @@ public class MessageConfigServiceImpl implements MessageConfigService{
 	}
 
 	@Override
-	public List<MessageConfig> getList(MessageConfig messageConfig, CommonPageInfo pageInfo) {
-		return messageConfigDao.getList(messageConfig, pageInfo);
+	public List<MessageConfig> getList(CommonPageInfo pageInfo) {
+		return messageConfigDao.getList(pageInfo);
 	}
 
 	@Override
 	public void getList() {
-		messageConfigList = messageConfigDao.getList(null, null);
+		messageConfigList = messageConfigDao.getList(null);
 	}
 	
 	@Override
