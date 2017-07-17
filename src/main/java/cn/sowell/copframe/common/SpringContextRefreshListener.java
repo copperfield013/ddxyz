@@ -8,6 +8,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 
 import cn.sowell.ddxyz.model.common.core.DeliveryManager;
 import cn.sowell.ddxyz.model.merchant.service.MerchantDisabledRuleService;
+import cn.sowell.ddxyz.model.message.service.MessageConfigService;
 
 public class SpringContextRefreshListener implements ApplicationListener<ContextRefreshedEvent>{
 
@@ -16,6 +17,9 @@ public class SpringContextRefreshListener implements ApplicationListener<Context
 	
 	@Resource
 	MerchantDisabledRuleService ruleService;
+	
+	@Resource
+	MessageConfigService messaageConfigService;
 	
 	private Logger logger = Logger.getLogger(SpringContextRefreshListener.class);
 	
@@ -30,6 +34,10 @@ public class SpringContextRefreshListener implements ApplicationListener<Context
 		logger.info("初始化门店规则");
 		ruleService.getRulesList();
 		logger.info("门店规则初始化完成");
+		
+		logger.info("初始化自动回复规则");
+		messaageConfigService.getList();
+		logger.info("自动回复规则初始化完成");
 	}
 
 }

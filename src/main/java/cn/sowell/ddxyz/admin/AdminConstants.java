@@ -38,4 +38,9 @@ public interface AdminConstants {
 	 * 自定义菜单
 	 */
 	final String PATH_MENU = PATH_BASE + "/menu";
+	
+	/**
+	 * 自动回复
+	 */
+	final String PATH_MESSAGE_CONFIG = PATH_BASE + "/message";
 }

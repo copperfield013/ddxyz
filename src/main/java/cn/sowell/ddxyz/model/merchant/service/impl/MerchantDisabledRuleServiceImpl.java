@@ -55,7 +55,6 @@ public class MerchantDisabledRuleServiceImpl implements MerchantDisabledRuleServ
 	@Override
 	public void getRulesList() {
 		merchantDisabledRuleList = merchantDisabledRuleDao.getRules(null, null);
-		System.out.println("------------> list size is:" + merchantDisabledRuleList.size());
 	}
 	
 	@Override
@@ -69,7 +68,6 @@ public class MerchantDisabledRuleServiceImpl implements MerchantDisabledRuleServ
 		merchantDisabledRule.setCreateTime(new Date());
 		merchantDisabledRuleDao.saveMerchantDisabledRule(merchantDisabledRule);
 		merchantDisabledRuleList.add(merchantDisabledRule);
-		System.out.println("------------> list size is:" + merchantDisabledRuleList.size());
 	}
 	
 	@Override
@@ -81,7 +79,6 @@ public class MerchantDisabledRuleServiceImpl implements MerchantDisabledRuleServ
 		for(MerchantDisabledRule rule : merchantDisabledRuleList){
 			if(rule.getId() == ruleId){
 				merchantDisabledRuleList.remove(rule);
-				System.out.println("------------> list size is:" + merchantDisabledRuleList.size());
 				break;
 			}
 		}

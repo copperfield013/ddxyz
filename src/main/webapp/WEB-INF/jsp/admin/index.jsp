@@ -142,6 +142,25 @@
 	                            <span class="menu-text">自定义菜单</span>
 	                        </a>
 	                    </li>
+	                    <li>
+	                        <a href="#" class="menu-dropdown">
+	                            <i class="menu-icon fa fa-desktop"></i>
+	                            <span class="menu-text">消息与客服</span>
+	                            <i class="menu-expand"></i>
+	                        </a>
+	                        <ul class="submenu">
+	                        	<li>
+			                        <a href="admin/message/autoReply/list" class="tab" target="message-config-list" title="自动回复">
+			                            <span class="menu-text">自动回复</span>
+			                        </a>
+		                        </li>
+		                        <li>
+			                        <a href="admin/message/customServer/list" class="tab" target="custom-server-list" title="客服">
+			                            <span class="menu-text">客服</span>
+			                        </a>
+		                        </li>
+	                        </ul>
+	                    </li>
 					</ul>
 				</div>
 				<div class="page-content">

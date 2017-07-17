@@ -20,7 +20,6 @@ public class MenuServiceImpl implements MenuService {
 
 	@Override
 	public JSONObject getMenu(String accessToken) {
-		// TODO Auto-generated method stub
 		String url = "https://api.weixin.qq.com/cgi-bin/menu/get?access_token=" + accessToken;
 		JSONObject json = HttpRequestUtils.postAndReturnJson(url, null);
 		return json;
