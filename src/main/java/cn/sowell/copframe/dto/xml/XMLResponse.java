@@ -1,7 +1,8 @@
 package cn.sowell.copframe.dto.xml;
 
-import cn.sowell.copframe.xml.Dom4jNode;
-import cn.sowell.copframe.xml.XmlNode;
+import cn.sowell.copframe.utils.xml.Dom4jNode;
+import cn.sowell.copframe.utils.xml.XmlNode;
+
 
 public class XMLResponse {
 	private XmlNode root;
