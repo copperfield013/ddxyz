@@ -4,6 +4,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import cn.sowell.copframe.common.UserIdentifier;
+import cn.sowell.copframe.utils.SHA1;
 import cn.sowell.copframe.weixin.authentication.WxUserPrincipal;
 import cn.sowell.ddxyz.model.weixin.pojo.WeiXinUser;
 
@@ -45,6 +46,16 @@ public class WxUtils {
 			return (T) user;
 		}
 		return null;
+	}
+	
+	/**
+	 * sha1加密
+	 * @param upperCase
+	 * @return
+	 */
+	public static String sha1Encode(String upperCase) {
+		SHA1 sha1 = new SHA1();
+		return sha1.Digest(upperCase);
 	}
 	
 }

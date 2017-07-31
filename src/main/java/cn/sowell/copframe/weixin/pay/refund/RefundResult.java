@@ -1,6 +1,7 @@
 package cn.sowell.copframe.weixin.pay.refund;
 
-import cn.sowell.copframe.xml.XMLTag;
+import cn.sowell.copframe.utils.xml.XMLTag;
+
 
 public class RefundResult {
 	/**

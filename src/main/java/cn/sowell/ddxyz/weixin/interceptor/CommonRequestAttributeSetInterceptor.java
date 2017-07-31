@@ -51,6 +51,7 @@ public class CommonRequestAttributeSetInterceptor implements WebRequestIntercept
 			long resStamp = System.currentTimeMillis();
 			req.setAttribute("RES_STAMP", resStamp);
 			req.setAttribute("basePath", basePath);
+			req.setAttribute("WXAPP", configService.getWxApp());
 			if(matcher.match("/weixin", path) || matcher.match("/weixin/**", path)){
 				basePath = configService.getProjectURL();
 				//匹配微信端的请求

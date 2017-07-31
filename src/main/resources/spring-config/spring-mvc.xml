@@ -56,10 +56,10 @@ http://www.springframework.org/schema/context/spring-context-4.3.xsd">
 						</list>    
 					</property>    
 				</bean>
-				<!-- fastJson的json转换器 -->
-				<bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter4" />
 				<!-- 二进制流转换器 -->
    				<bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter"/> 
+				<!-- fastJson的json转换器 -->
+				<bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter4" />
         	</list>     
 		</property>
 	</bean>
@@ -87,6 +87,7 @@ http://www.springframework.org/schema/context/spring-context-4.3.xsd">
 	
 	<mvc:resources mapping="/media/**" location="/resources/media/" />
 	<mvc:resources mapping="/picture/**" location="/resources/picture/" />
+	<mvc:resources mapping="/qrcodes/**" location="/resources/qrcodes/" />
 	
 	
 	<import resource="spring-ddxyz.xml"/>

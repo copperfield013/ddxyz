@@ -11,6 +11,7 @@ public interface WeiXinConstants {
 
 	static final String PATH_YDD = PATH_BASE + "/ydd"; 
 	
+	static final String PATH_DELIVERY = PATH_BASE + "/delivery";
 	
 	
 	

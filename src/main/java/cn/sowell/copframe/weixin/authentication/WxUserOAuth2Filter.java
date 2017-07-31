@@ -89,7 +89,7 @@ public class WxUserOAuth2Filter implements Filter {
 					//保存当前的请求地址，用于本地认证后跳转
 					session.setAttribute(SystemConstants.WXREDIRECT_URL_KEY, reqURL);
 					//获得随机字符串，用于验证授权后的请求是不是当前执行的重定向引起的
-					String state = TextUtils.randomStr(5, 62);
+					String state = TextUtils.uuid(5, 62);
 					//保存随机字符串
 					session.setAttribute(SystemConstants.WXAUTHEN_STATE_KEY, state);
 					//验证授权后，请求的地址，并不是当前拦截的地址

@@ -73,18 +73,6 @@
 	                        </a>
 	                    </li>
 	                    <li>
-	                        <a href="admin/production/product-list" class="menu-dropdown tab" target="product-list" title="生产管理">
-	                        	<i class="menu-icon fa fa-desktop"></i>
-	                            <span class="menu-text">生产管理1</span>
-	                        </a>
-	                    </li>
-	                     <li>
-	                        <a href="admin/delivery/delivery_list" class="menu-dropdown tab" target="delivery-list" title="配送管理">
-	                        	<i class="menu-icon fa fa-truck"></i>
-	                            <span class="menu-text">配送管理</span>
-	                        </a>
-	                    </li>
-	                    <li>
 	                        <a href="#" class="menu-dropdown">
 	                            <i class="menu-icon fa fa-gears"></i>
 	                            <span class="menu-text">配送配置</span>

@@ -30,9 +30,13 @@ import cn.sowell.copframe.SystemConstants;
 import cn.sowell.copframe.common.UserIdentifier;
 import cn.sowell.copframe.dto.format.FormatUtils;
 import cn.sowell.copframe.dto.format.FrameDateFormat;
-import cn.sowell.copframe.exception.XMLException;
 import cn.sowell.copframe.utils.HttpRequestUtils;
 import cn.sowell.copframe.utils.TextUtils;
+import cn.sowell.copframe.utils.xml.Dom4jNode;
+import cn.sowell.copframe.utils.xml.XMLConvertConfig;
+import cn.sowell.copframe.utils.xml.XMLConverter;
+import cn.sowell.copframe.utils.xml.XMLException;
+import cn.sowell.copframe.utils.xml.XmlNode;
 import cn.sowell.copframe.weixin.common.service.WxConfigService;
 import cn.sowell.copframe.weixin.pay.exception.WeiXinPayException;
 import cn.sowell.copframe.weixin.pay.paied.WxPayStatus;
@@ -49,10 +53,6 @@ import cn.sowell.copframe.weixin.pay.prepay.UnifiedOrder;
 import cn.sowell.copframe.weixin.pay.refund.RefundRequest;
 import cn.sowell.copframe.weixin.pay.refund.RefundResult;
 import cn.sowell.copframe.weixin.pay.service.WxPayService;
-import cn.sowell.copframe.xml.Dom4jNode;
-import cn.sowell.copframe.xml.XMLConvertConfig;
-import cn.sowell.copframe.xml.XMLConverter;
-import cn.sowell.copframe.xml.XmlNode;
 import cn.sowell.ddxyz.model.common.core.Order;
 import cn.sowell.ddxyz.model.common.core.OrderRefundParameter;
 import cn.sowell.ddxyz.model.common.core.Product;
@@ -248,7 +248,7 @@ public class WxPayServiceImpl implements WxPayService{
 	private String generateOutRefundNo() {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(dateFormat.format(new Date(), "yyMMddHHmmss"));
-		buffer.append(TextUtils.randomStr(5, 10));
+		buffer.append(TextUtils.uuid(5, 10));
 		return buffer.toString();
 	}
 	

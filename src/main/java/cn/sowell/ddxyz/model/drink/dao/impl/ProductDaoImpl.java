@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -21,6 +22,7 @@ import cn.sowell.copframe.dto.format.FormatUtils;
 import cn.sowell.copframe.dto.format.FrameDateFormat;
 import cn.sowell.copframe.dto.page.CommonPageInfo;
 import cn.sowell.ddxyz.model.common.core.Order;
+import cn.sowell.ddxyz.model.common.pojo.PlainProduct;
 import cn.sowell.ddxyz.model.drink.dao.ProductDao;
 import cn.sowell.ddxyz.model.drink.pojo.criteria.ProductCriteria;
 import cn.sowell.ddxyz.model.drink.pojo.criteria.ProductionCriteria;
@@ -126,7 +128,8 @@ public class ProductDaoImpl implements ProductDao {
 				+ "d.c_cup_size, "
 				+ "p.c_price, "
 				+ "p.id product_id, "
-				+ "p.c_status product_status "
+				+ "p.c_status product_status, "
+				+ "p.c_dispense_code "
 				+ " From "
 				+ "t_order_base o, t_drink_product d, t_product_base p "
 				+ "WHERE p.id = d.product_id "
@@ -240,5 +243,12 @@ public class ProductDaoImpl implements ProductDao {
 		}
 	}
 
-
+	@Override
+	public PlainProduct getProductionByDispenseCode(String dispenseCode) {
+		String hql = "from PlainProduct p where p.dispenseCode = :dispenseCode";
+		Query query = sFactory.getCurrentSession().createQuery(hql);
+		query.setString("dispenseCode", dispenseCode);
+		return (PlainProduct) query.uniqueResult();
+	}
+	
 }

@@ -1,6 +1,7 @@
 package cn.sowell.ddxyz.api.dto.message;
 
-import cn.sowell.copframe.xml.XMLTag;
+import cn.sowell.copframe.utils.xml.XMLTag;
+
 
 /**
  * 

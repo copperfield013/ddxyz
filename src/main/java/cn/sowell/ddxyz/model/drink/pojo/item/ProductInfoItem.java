@@ -72,7 +72,9 @@ public class ProductInfoItem {
 	@Column(name="c_dispense_key")
 	private Integer dispenseKey;
 	
-
+	@Column(name="c_dispense_code")
+	private String dispenseCode;
+	
 	/**
 	 * DrinkAddition加料
 	 */
@@ -217,6 +219,14 @@ public class ProductInfoItem {
 
 	public void setDispenseKey(Integer dispenseKey) {
 		this.dispenseKey = dispenseKey;
+	}
+
+	public String getDispenseCode() {
+		return dispenseCode;
+	}
+
+	public void setDispenseCode(String dispenseCode) {
+		this.dispenseCode = dispenseCode;
 	}
 
 }

@@ -1,7 +1,7 @@
 package cn.sowell.copframe.weixin.pay.paied;
 
+import cn.sowell.copframe.utils.xml.XMLTag;
 import cn.sowell.copframe.weixin.pay.prepay.SignSetable;
-import cn.sowell.copframe.xml.XMLTag;
 
 public class WxPayStatusParam implements SignSetable{
 	@XMLTag(required=true, lengthLimit=32)

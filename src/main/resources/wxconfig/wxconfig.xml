@@ -2,7 +2,7 @@
 <config>
 	<app id="ddxyz" cname="点点新意">
 		<!-- 公众号微信号 -->
-		<wxcount>tea_more_zd</wxcount>
+		<wxaccount>tea_more_zd</wxaccount>
 		<!-- 公众号id -->
 		<appid>wx044790c2cb35fd68</appid>
 		<!-- 公众号秘钥 -->
@@ -22,7 +22,7 @@
 	</app>
 	<app id="ddxy" cname="点点心怡">
 		<!-- 公众号微信号 -->
-		<wxcount>diandianxinyi2</wxcount>
+		<wxaccount>diandianxinyi2</wxaccount>
 		<!-- 公众号id -->
 		<appid>wx0e4bec62d4d4420e</appid>
 		<!-- 公众号秘钥 -->

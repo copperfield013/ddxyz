@@ -2,15 +2,22 @@ package cn.sowell.copframe.weixin.common.service;
 
 import java.util.Map;
 
-import cn.sowell.copframe.xml.XmlNode;
+import cn.sowell.copframe.utils.xml.XmlNode;
+import cn.sowell.copframe.weixin.config.WxAppReadOnly;
 
 public interface WxConfigService {
+	
+	/**
+	 * 获得公众号的信息数据
+	 * @return
+	 */
+	WxAppReadOnly getWxApp();
 	
 	/**
 	 * 获得公众号的微信号
 	 * @return
 	 */
-	String getAppWxAcount();
+	String getAppWxAccount();
 	/**
 	 * 配置公众号时的唯一标识
 	 * @return

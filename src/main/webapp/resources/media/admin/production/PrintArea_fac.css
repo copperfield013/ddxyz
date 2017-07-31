@@ -59,28 +59,38 @@ div {
 div.print-desc.float-right {
 	float: right;
 }
-
-.print-part-area {
-    border-top: 1px dashed #000;
+.print-main-area{
+	border-top: 1px dashed #000;
     padding-top: 2px;
+}
+.print-part-area {
+    width: 70% !important;
 }
 .print-foot-area {
     position: absolute;
     bottom: 0;
     font-size: 0.8em;
     padding-top: 2px;
-}
-.print-amount-area {
-	padding-bottom: 5px;
-    text-align: right;
+    border-top: 1px dashed #000;
+	padding-top: 5px;
 }
 .print-addr-area{
-	border-top: 1px dashed #000;
-	padding-top: 10px;
+	width: 50% !important;
+}
+.print-contact-area{
+	width: 50% !important;
 }
 .print-greet {
     text-align: center;
     float: right;
 }
 .print-contact{
+}
+.print-qrcode-area{
+	width: 25% !important;
+	text-align: right;
+}
+img.qrcode{
+	height: 80px;
+	margin-top: 5px;
 }

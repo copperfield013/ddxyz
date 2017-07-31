@@ -9,8 +9,9 @@ import org.dom4j.DocumentException;
 import org.dom4j.io.SAXReader;
 import org.springframework.core.io.Resource;
 
-import cn.sowell.copframe.xml.Dom4jNode;
-import cn.sowell.copframe.xml.XmlNode;
+import cn.sowell.copframe.utils.xml.Dom4jNode;
+import cn.sowell.copframe.utils.xml.XmlNode;
+
 
 public class WxConfig {
 	private XmlNode node;
@@ -27,7 +28,7 @@ public class WxConfig {
 			WxApp app = new WxApp();
 			app.setId(appTag.getStrictAttribute("id"));
 			app.setCname(appTag.getAttribute("cname"));
-			app.setWxcount(appTag.getStrictFirstElement("wxcount").getText());
+			app.setWxAccount(appTag.getStrictFirstElement("wxaccount").getText());
 			app.setAppid(appTag.getStrictFirstElement("appid").getText());
 			app.setSecret(appTag.getStrictFirstElement("secret").getText());
 			XmlNode merchantNode = appTag.getFirstElement("merchant");
@@ -51,7 +52,7 @@ public class WxConfig {
 	 * @param id
 	 * @return
 	 */
-	public WxApp getApp(String id){
+	public WxAppReadOnly getApp(String id){
 		return appMap.get(id);
 	}
 	

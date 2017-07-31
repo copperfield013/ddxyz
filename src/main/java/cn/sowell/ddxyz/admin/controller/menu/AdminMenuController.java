@@ -13,7 +13,10 @@ import com.alibaba.fastjson.JSONObject;
 import cn.sowell.copframe.dto.ajax.AjaxPageResponse;
 import cn.sowell.copframe.dto.ajax.JsonRequest;
 import cn.sowell.copframe.dto.ajax.NoticeType;
+import cn.sowell.copframe.weixin.common.service.WxConfigService;
 import cn.sowell.copframe.weixin.common.service.WxCredentialService;
+import cn.sowell.copframe.weixin.config.WxApp;
+import cn.sowell.copframe.weixin.config.WxConfig;
 import cn.sowell.ddxyz.admin.AdminConstants;
 import cn.sowell.ddxyz.model.menu.service.MenuService;
 
@@ -23,8 +26,12 @@ public class AdminMenuController {
 	
 	@Resource
 	MenuService menuService;
+	
 	@Resource
 	WxCredentialService wxCredentialService;
+	
+	@Resource
+	WxConfigService configService;
 	
 	@RequestMapping("menu")
 	public String menu(Model model){

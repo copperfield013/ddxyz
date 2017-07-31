@@ -8,11 +8,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import cn.sowell.copframe.common.property.PropertyPlaceholder;
-import cn.sowell.copframe.utils.WXHTTPClient;
-import cn.sowell.copframe.weixin.authentication.WxUserPrincipal;
 import cn.sowell.copframe.weixin.authentication.WxAuthorizationAccessToken;
+import cn.sowell.copframe.weixin.authentication.WxUserPrincipal;
 import cn.sowell.copframe.weixin.common.service.WxConfigService;
 import cn.sowell.copframe.weixin.common.service.WxUserApiService;
+import cn.sowell.copframe.weixin.common.utils.WXHTTPClient;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;

@@ -1,6 +1,7 @@
 package cn.sowell.copframe.weixin.pay.prepay;
 
-import cn.sowell.copframe.xml.XMLTag;
+
+import cn.sowell.copframe.utils.xml.XMLTag;
 
 import com.alibaba.fastjson.JSON;
 /**

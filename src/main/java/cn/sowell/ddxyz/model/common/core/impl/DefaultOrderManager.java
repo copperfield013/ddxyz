@@ -202,7 +202,7 @@ public class DefaultOrderManager implements OrderManager, InitializingBean {
 	private String generateOrderCode(DeliveryLocation deliveryLocation) {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append((new SimpleDateFormat("yyMMddHHmmss")).format(new Date()));
-		buffer.append(TextUtils.randomStr(5, 10));
+		buffer.append(TextUtils.uuid(5, 10));
 		return buffer.toString();
 	}
 

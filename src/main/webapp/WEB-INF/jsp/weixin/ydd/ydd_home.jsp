@@ -3,7 +3,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-	<title>点点新意</title>
+	<title>${WXAPP.cname }</title>
 	<jsp:include page="/WEB-INF/jsp/weixin/common/weixin-include.jsp"></jsp:include>
 	
     <link rel="stylesheet" href="${basePath }media/weixin/main/css/index.css">

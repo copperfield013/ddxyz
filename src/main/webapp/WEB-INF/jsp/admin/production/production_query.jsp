@@ -310,7 +310,7 @@
 				    	
 				    	//打印产品
 				    	function printProduct(productIds){
-							Ajax.ajax('admin/production/product-print', {
+							Ajax.ajax('admin/production/print_tag', {
 								productIds : productIds
 							}, function(html){
 								var options = { 

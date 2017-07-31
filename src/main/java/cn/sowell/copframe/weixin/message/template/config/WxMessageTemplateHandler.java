@@ -6,7 +6,7 @@ import java.util.function.Consumer;
 
 import org.springframework.beans.BeanUtils;
 
-import cn.sowell.copframe.utils.PojoUtils;
+import cn.sowell.copframe.spring.binder.PojoUtils;
 import cn.sowell.copframe.weixin.message.exception.WxMessageConfigException;
 import cn.sowell.copframe.weixin.message.template.TemplateMessageDataItem;
 import cn.sowell.copframe.weixin.message.template.TemplateMessageRequestParameter;

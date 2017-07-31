@@ -10,9 +10,9 @@ import org.dom4j.DocumentException;
 import org.dom4j.io.SAXReader;
 import org.springframework.core.io.Resource;
 
+import cn.sowell.copframe.utils.xml.Dom4jNode;
+import cn.sowell.copframe.utils.xml.XmlNode;
 import cn.sowell.copframe.weixin.message.exception.WxMessageConfigException;
-import cn.sowell.copframe.xml.Dom4jNode;
-import cn.sowell.copframe.xml.XmlNode;
 
 public class WxMessageTemplateConfig {
 	private Map<String, WxMessageTemplate> templateMap = new LinkedHashMap<String, WxMessageTemplate>();

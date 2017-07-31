@@ -19,8 +19,8 @@ import org.springframework.util.StreamUtils;
 
 import cn.sowell.copframe.common.property.PropertyPlaceholder;
 import cn.sowell.copframe.dto.xml.XMLRequest;
-import cn.sowell.copframe.xml.Dom4jNode;
-import cn.sowell.copframe.xml.XmlNode;
+import cn.sowell.copframe.utils.xml.Dom4jNode;
+import cn.sowell.copframe.utils.xml.XmlNode;
 
 public class XmlRequestConverter implements HttpMessageConverter<XMLRequest>{
 

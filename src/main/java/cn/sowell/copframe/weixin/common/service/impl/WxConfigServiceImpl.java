@@ -11,11 +11,12 @@ import org.springframework.stereotype.Service;
 
 import cn.sowell.copframe.common.property.PropertyPlaceholder;
 import cn.sowell.copframe.utils.TextUtils;
+import cn.sowell.copframe.utils.xml.ValueUnprovidedExcepetion;
+import cn.sowell.copframe.utils.xml.XmlNode;
 import cn.sowell.copframe.weixin.common.service.WxConfigService;
 import cn.sowell.copframe.weixin.config.WxApp;
+import cn.sowell.copframe.weixin.config.WxAppReadOnly;
 import cn.sowell.copframe.weixin.config.WxConfig;
-import cn.sowell.copframe.xml.ValueUnprovidedExcepetion;
-import cn.sowell.copframe.xml.XmlNode;
 
 @Service
 public class WxConfigServiceImpl implements WxConfigService{
@@ -25,18 +26,28 @@ public class WxConfigServiceImpl implements WxConfigService{
 	@Resource
 	WxConfig wxConfig;
 	
-	WxApp APP(){
+	WxAppReadOnly APP(){
 		String wxapp = getAppKey();
-		WxApp app = wxConfig.getApp(wxapp);
+		WxAppReadOnly app = wxConfig.getApp(wxapp);
 		if(app == null){
 			throw new ValueUnprovidedExcepetion("没有找到" + wxapp +"对应的微信公众号");
 		}
 		return app;
 	}
 	
+	
 	@Override
-	public String getAppWxAcount() {
-		return APP().getWxAcount();
+	public WxAppReadOnly getWxApp() {
+		try {
+			return ((WxApp)APP()).clone();
+		} catch (CloneNotSupportedException e) {
+			logger.error("复制WxAPP时发生错误", e);
+			return null;
+		}
+	}
+	@Override
+	public String getAppWxAccount() {
+		return APP().getWxAccount();
 	}
 	
 	@Override
@@ -130,7 +141,7 @@ public class WxConfigServiceImpl implements WxConfigService{
 		}
 		logger.debug(concat.substring(0, concat.length() - keyLength - 1));
 		if("md5".equalsIgnoreCase(encodeType)){
-			return TextUtils.md5Encode(concat.toString()).toUpperCase();
+			return TextUtils.md5Encode(concat.toString(), PropertyPlaceholder.getProperty("charset")).toUpperCase();
 		}else if("sha1".equalsIgnoreCase(encodeType)){
 			return TextUtils.sha1Encode(concat.toString()).toUpperCase();
 		}

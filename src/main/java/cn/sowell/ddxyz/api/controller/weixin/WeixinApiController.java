@@ -14,10 +14,11 @@ import com.qq.weixin.mp.aes.AesException;
 import com.qq.weixin.mp.aes.WXBizMsgCrypt;
 
 import cn.sowell.copframe.dto.xml.XMLResponse;
-import cn.sowell.copframe.exception.XMLException;
+import cn.sowell.copframe.spring.binder.XMLNodeConverter;
+import cn.sowell.copframe.utils.xml.Dom4jNode;
+import cn.sowell.copframe.utils.xml.XMLException;
+import cn.sowell.copframe.utils.xml.XmlNode;
 import cn.sowell.copframe.weixin.common.service.WxConfigService;
-import cn.sowell.copframe.xml.Dom4jNode;
-import cn.sowell.copframe.xml.XmlNode;
 import cn.sowell.ddxyz.api.dto.message.WeiXinMessageEncryptedData;
 import cn.sowell.ddxyz.api.dto.message.WeiXinMessageParameter;
 import cn.sowell.ddxyz.model.message.pojo.MessageConfig;
@@ -46,7 +47,7 @@ public class WeixinApiController {
 				logger.info(xml);
 				String msg = pc.decryptMsg(msgParam.getMsg_signature(), msgParam.getTimestamp(), msgParam.getNonce(), xml);
 				XmlNode msgXml = new Dom4jNode(msg);
-				WeiXinMessageEncryptedData data = XmlNode.parseObject(msgXml, new WeiXinMessageEncryptedData());
+				WeiXinMessageEncryptedData data = XMLNodeConverter.parseObject(msgXml, new WeiXinMessageEncryptedData());
 				logger.info("解析后消息：");
 				logger.info(data.getContent());
 				

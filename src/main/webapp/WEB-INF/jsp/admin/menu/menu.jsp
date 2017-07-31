@@ -5,7 +5,7 @@
         <div class="ui-body">
         <div class="ui-content">
             <div class="menu-preview-area">
-                <div class=menu-preview-title>点点新意</div>
+                <div class=menu-preview-title>${WXAPP.cname }</div>
                     <!--底部菜单栏-->
                 <ul class=menu-preview-menu>
                     <!--具体菜单部分，需要js动态加载（依据加载数据）-->
