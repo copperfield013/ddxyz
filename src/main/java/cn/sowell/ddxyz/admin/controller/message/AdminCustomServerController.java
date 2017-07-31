@@ -39,7 +39,7 @@ public class AdminCustomServerController {
 	
 	@RequestMapping("/add")
 	public String add(Model model){
-		String wxAccount = wxConfigService.getAppWxcount();
+		String wxAccount = wxConfigService.getAppWxAcount();
 		model.addAttribute("wxAccount", wxAccount);
 		return AdminConstants.PATH_MESSAGE_CONFIG + "/customserver/add.jsp";
 	}
@@ -47,7 +47,7 @@ public class AdminCustomServerController {
 	@ResponseBody
 	@RequestMapping("/doAdd")
 	public AjaxPageResponse doAdd(@RequestParam String kf_account_prefix, @RequestParam String nickname){
-		String kf_account = kf_account_prefix + "@" + wxConfigService.getAppWxcount();
+		String kf_account = kf_account_prefix + "@" + wxConfigService.getAppWxAcount();
 		String text = "{\"kf_account\":\"" + kf_account + "\",\"nickname\":\"" + nickname + "\"}";
 		JSONObject jo = JSONObject.parseObject(text);
 		customServerService.addCustomServer(wxCredentialService.getAccessToken(), jo);
