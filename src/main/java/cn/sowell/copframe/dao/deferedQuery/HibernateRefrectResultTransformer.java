@@ -10,7 +10,7 @@ import org.hibernate.Query;
 import org.hibernate.transform.ResultTransformer;
 import org.springframework.beans.BeanUtils;
 
-import cn.sowell.copframe.utils.binder.FieldRefectUtils;
+import cn.sowell.copframe.spring.binder.FieldRefectUtils;
 /**
  * 
  * <p>Title: HibernateRefrectResultTransformer</p>
