@@ -72,7 +72,7 @@ i {
     border-radius: 50%;
     width: 1.5em;
     height: 1.5em;
-    line-height: 1.6em;
+    line-height: 1.5em;
     text-align: center;
     font-size: 15px;
     border: 1px solid #663300;
