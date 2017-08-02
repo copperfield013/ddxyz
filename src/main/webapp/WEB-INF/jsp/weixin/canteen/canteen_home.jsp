@@ -39,7 +39,7 @@ img {
     text-overflow: ellipsis;
 }
 .weekMenu h4:before {
-    content: '\e6f8';
+    content: '\e604';
 }
 .weekMenu p img {
     display: block;
