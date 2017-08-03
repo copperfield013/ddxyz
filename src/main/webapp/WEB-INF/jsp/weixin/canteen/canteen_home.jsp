@@ -34,9 +34,9 @@ img {
 .block p span {
     display: block;
     line-height: 30px;
-    overflow: hidden;
+    /* overflow: hidden;
     white-space: nowrap;
-    text-overflow: ellipsis;
+    text-overflow: ellipsis; */
 }
 .weekMenu h4:before {
     content: '\e604';
@@ -44,13 +44,13 @@ img {
 .weekMenu p img {
     display: block;
     float: left;
-    width: 130px;
-    height: 130px;
+    width: 110px;
+    height: 90px;
     margin-right: 20px;
 }
 .weekMenu p .name {
     font-size: 18px;
-    padding: 30px 0 10px;
+    padding-top: 0.5em;
 }
 .weekMenu p .price b {
     font-weight: normal;
@@ -67,13 +67,12 @@ img {
 .address p img {
     display: block;
     float: left;
-    width: 130px;
+    width: 110px;
     height: auto;
     margin-right: 20px;
 }
 .address p .name {
     font-size: 18px;
-    padding: 15px 0 5px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -108,7 +107,7 @@ footer .main {
             <h4>本周菜单</h4>
             	<p class="clearfix">
 	                <img src="${basePath }/media/weixin/main/image/thumb-shop1.jpg" alt="${drinkType.name }">
-	                <span class="name">烤鸭</span>
+	                <span class="name">西湖龙井大烤鸭</span>
 	                <span class="price">
 	                     <b>单价：<i>20元/只</i></b>
 	                </span>
