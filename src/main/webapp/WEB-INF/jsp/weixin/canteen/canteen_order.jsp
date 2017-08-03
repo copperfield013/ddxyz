@@ -15,11 +15,11 @@ i {
 	display:block;
 	clear:both;
 }
-.send-info {
-	padding:0.5em 1em;
-}
 .send-info p {
-	padding:0.5em 0;
+	height:3.6em;
+	line-height:3.6em;
+	border-bottom: 1px solid #E6E3E5;
+    padding: 0 1em;
 }
 .send-date,.send-address {
 	margin-left:1em;
@@ -28,23 +28,24 @@ i {
 	margin-left:5px;
 }
 .user-info p {
-	padding:0.5em 1em;
-	position:relative;
+	height:3.6em;
+	line-height:3.6em;
+	border-bottom: 1px solid #E6E3E5;
+    padding: 0 1em;
 }
-.user-name-wrap {
-	margin-top:0.5em;
+.user-info p.layout-flex {
+	display:flex;
 }
-.user-info p:last-child {
-	margin-bottom:0.5em;
-}
-.user-info p:after {
+
+.user-info p.layout-select:after {
+	font-family: icon;
 	display:inline-block;
-	content:"*";
-	color:#f74342;
-	position:absolute;
-	margin-left:1em;
-	height:2em;
-	line-height:2em;
+	content:"\e600";
+	color:#C8C8CD;
+	float:right;
+	margin-right:0.5em;
+	height:3.6em;
+	line-height:3.6em;
 }
 .form-label {
 	display:inline-block;
@@ -52,15 +53,17 @@ i {
 	margin-right:1em;
 }
 .form-input {
-	width:11em;
-	height:2em;
-	border:1px solid #eeeeee;
-	outline:none;
-	box-sizing:border-box;
-	text-ident:4px;
+	flex:1;
+	-webkit-appearance: none;
 }
 .booking-info p {
-	padding:0.5em 1em;
+	height: 3.6em;
+    line-height: 3.6em;
+    border-bottom: 1px solid #E6E3E5;
+    padding: 0 1em;
+}
+.booking-info p.layout-flex {
+	display:flex;
 }
 .operate-count {
 	display:inline-block;
@@ -114,9 +117,9 @@ i {
     text-align: center;
     color: #ffffff;
     border-radius: 0.8em;
+    margin-top:0.8em;
 }
 .order-info {
-	margin-top:15px;
 	position:relative;
 }
 .order-info:after {
@@ -215,11 +218,11 @@ footer .main {
     <!-- 用户信息 -->
     <div class="user-info">
         <h4>用户信息</h4>
-        <p class="user-name-wrap">
+        <p class="layout-flex">
         	<span class="user-name form-label">姓名</span>
         	<input id="userName" class="form-input input-box" type="text" name="userName" value="" placeholder="请输入您的姓名">
         </p>
-        <p>
+        <p class="layout-flex layout-select">
         	<span class="user-name form-label">部门</span>
         	<select id="userBranch" class="form-input">
     			<option value="1">清洁部门</option>
@@ -227,14 +230,14 @@ footer .main {
     			<option value="3">钻地部门</option>
 			</select>
         </p>
-        <p>
+        <p class="layout-flex">
         	<span class="user-name form-label">联系方式</span>
         	<input id="userTelphone" class="form-input input-box" type="text" name="userName" value="" placeholder="请输入您的联系方式">
         </p>
     </div>
     <div class="booking-info">
         <h4>预定信息</h4>
-        <p>
+        <p class="layout-flex layout-select">
         	<span class="dishs-kind form-label">菜品</span>
         	<select class="form-input" id="dishName">
     			<option value="1">烤鸭</option>
