@@ -37,7 +37,7 @@ i {
 	display:flex;
 }
 
-.user-info p.layout-select:after {
+p.layout-select:after {
 	font-family: icon;
 	display:inline-block;
 	content:"\e600";
