@@ -72,26 +72,22 @@ p.operate .operate-button {
 	width: 6em;
     height: 1.8em;
     line-height: 1.8em;
-    border: 1px solid #663300;
+    border: 1px solid #999999;
     display: inline-block;
     text-align: center;
-    border-radius: 0.6em;
-    font-weight: 700;
-    color: #663300;
-    box-shadow: 0px 0px 1px #663300;
+    border-radius: 1em;
+    color: #777777;
+ 
 }
 p.operate .operate-revise {
-	width: 4em;
+	width: 6em;
     height: 1.8em;
     line-height: 1.8em;
     border: 1px solid #f74342;
     display: inline-block;
     text-align: center;
-    border-radius: 0.6em;
-    margin-left: 0.5em;
+    border-radius: 1em;
     color: #f74342;
-    font-weight: 700;
-    box-shadow: 0px 0px 1px #f74342;
 }
 .timePoint,
 .time {
@@ -137,7 +133,7 @@ footer .main {
 				  		</p>
 				  		<p class="operate">				  				
 				  			<span class="operate-button">取消订单</span>	
-				  			<span class="operate-revise">修改</span>			  				
+				  			<span class="operate-revise">修改订单</span>			  				
 				  		</p>
 				   	</div>
 				   	
@@ -169,7 +165,7 @@ footer .main {
 				  		</p>
 				  		<p class="operate">				  				
 				  			<span class="operate-button">取消订单</span>	
-				  			<span class="operate-revise">修改</span>			  				
+				  			<span class="operate-revise">修改订单</span>			  				
 				  		</p>
 				   	</div>
 				   	
@@ -201,7 +197,7 @@ footer .main {
 				  		</p>
 				  		<p class="operate">				  				
 				  			<span class="operate-button">取消订单</span>	
-				  			<span class="operate-revise">修改</span>			  				
+				  			<span class="operate-revise">修改订单</span>			  				
 				  		</p>
 				   	</div>
 				</div>
