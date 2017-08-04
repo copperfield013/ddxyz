@@ -83,7 +83,7 @@ public class WxUserOAuth2Filter implements Filter {
 					String projectURL = configService.getProjectURL() ;
 					//获得当前请求的完整路径
 					String reqURL = projectURL + PropertyPlaceholder.getProperty("wx_oauth_def_uri");
-					if("get".equals(request.getMethod())){
+					if("get".equalsIgnoreCase(request.getMethod())){
 						reqURL = HttpRequestUtils.getCompleteURL(request);
 					}
 					//保存当前的请求地址，用于本地认证后跳转
