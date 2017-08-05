@@ -19,7 +19,7 @@ import javax.persistence.Table;
  * @date 2017年6月12日 上午9:14:13
  */
 @Entity
-@Table(name="t_delivery_timepoint")
+@Table(name="t_delivery_timepoint_count")
 public class PlainDeliveryTimePoint {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

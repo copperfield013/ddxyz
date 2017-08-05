@@ -25,6 +25,9 @@ public class PlainProduct{
 	@Column(name="wares_id")
 	private Long waresId;
 	
+	@Column(name="delivery_wares_id")
+	private Long deliveryWaresId;
+	
 	@Column(name="c_price")
 	private Integer price;
 	
@@ -139,6 +142,12 @@ public class PlainProduct{
 	}
 	public void setThumbUri(String thumbUri) {
 		this.thumbUri = thumbUri;
+	}
+	public Long getDeliveryWaresId() {
+		return deliveryWaresId;
+	}
+	public void setDeliveryWaresId(Long deliveryWaresId) {
+		this.deliveryWaresId = deliveryWaresId;
 	}
 	
 }

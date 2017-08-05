@@ -42,6 +42,9 @@
         <property name="acquireRetryDelay" value="1000"></property>  
         <property name="acquireRetryAttempts" value="60"></property>  
         <property name="breakAfterAcquireFailure" value="false"></property> 
+        <property name="testConnectionOnCheckin" value="false"></property> 
+        <property name="testConnectionOnCheckout" value="true"></property> 
+        <property name="preferredTestQuery" value="select 1"></property> 
     </bean>
 	
  

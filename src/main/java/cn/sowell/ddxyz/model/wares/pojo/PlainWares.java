@@ -18,7 +18,7 @@ import javax.persistence.Table;
  * @date 2017年4月11日 下午6:48:13
  */
 @Entity
-@Table(name="c_wares_base")
+@Table(name="t_wares_base")
 public class PlainWares {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -35,6 +35,9 @@ public class PlainWares {
 	
 	@Column(name="merchant_id")
 	private Long merchantId;
+	
+	@Column(name="c_thumb_uri")
+	private String thumbUri;
 	
 	@Column(name="create_time")
 	private Date createTime;
@@ -83,5 +86,11 @@ public class PlainWares {
 	}
 	public void setMerchantId(Long merchantId) {
 		this.merchantId = merchantId;
+	}
+	public String getThumbUri() {
+		return thumbUri;
+	}
+	public void setThumbUri(String thumbUri) {
+		this.thumbUri = thumbUri;
 	}
 }

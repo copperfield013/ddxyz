@@ -86,11 +86,11 @@ public class DefaultOrderManager implements OrderManager, InitializingBean {
 	
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		logger.info("初始化订单管理器");
+		/*logger.info("初始化订单管理器");
 		
 		//TODO: 设置其他初始数据
 		
-		logger.info("订单管理器初始化成功");
+		logger.info("订单管理器初始化成功");*/
 		
 	}
 	

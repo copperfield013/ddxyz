@@ -246,7 +246,7 @@ public class DataPersistenceDaoImpl implements DataPersistenceDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<PlainDeliveryPlan> getTheDayUsablePlan(Date theDay) {
-		String hql = "from PlainDeliveryPlan plan where plan.startDate <= :theDay and plan.endDate > :theDay and (plan.disabled is null or plan.disabled <> 1)";
+		String hql = "from PlainDeliveryPlan plan where plan.waresId is not null and plan.startDate <= :theDay and plan.endDate > :theDay and (plan.disabled is null or plan.disabled <> 1)";
 		Query query = sFactory.getCurrentSession().createQuery(hql);
 		query.setTimestamp("theDay", theDay);
 		return query.list();

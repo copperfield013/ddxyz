@@ -3,6 +3,7 @@ package cn.sowell.ddxyz.weixin.controller.canteen;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
 import cn.sowell.ddxyz.weixin.WeiXinConstants;
 
 @Controller
@@ -11,6 +12,7 @@ public class WeiXinCanteenController {
 	
 	@RequestMapping("/home")
 	public String home(){
+		
 		return WeiXinConstants.PATH_CANTEEN + "/canteen_home.jsp";
 	}
 	
