@@ -4,98 +4,10 @@
 <html lang="en">
 <head>
 	<title>${WXAPP.cname }</title>
+	<base>
 	<jsp:include page="/WEB-INF/jsp/weixin/common/weixin-include.jsp"></jsp:include>
+	<link href="media/weixin/canteen/css/canteen-home.css" type="text/css" rel="stylesheet" />
 </head>
-<style>
-body {
-	webkit-tap-highlight-color:rgba(255,255,255,0);
-}
-img {
-	width:100%;
-}
-.clearfix:after {
-	content:'';
-	display:block;
-	clear:both;
-}
-.block {
-   	margin: 20px 15px 40px;
-}
-.block h4 {
-    font-size: 17px;
-}
-.block h4:before {
-    font-family: icon;
-    margin-right: 8px;
-}
-.block p {
-	margin-top:20px;
-}
-.block p span {
-    display: block;
-    line-height: 30px;
-    /* overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis; */
-}
-.weekMenu h4:before {
-    content: '\e604';
-}
-.weekMenu p img {
-    display: block;
-    float: left;
-    width: 110px;
-    height: 90px;
-    margin-right: 20px;
-}
-.weekMenu p .name {
-    font-size: 18px;
-    padding-top: 0.5em;
-}
-.weekMenu p .price b {
-    font-weight: normal;
-    font-size: 16px;
-}
-.weekMenu p .price i {
-    font-style: normal;
-  
-}
-
-.address h4:before {
-    content: '\e750';
-}
-.address p img {
-    display: block;
-    float: left;
-    width: 110px;
-    height: auto;
-    margin-right: 20px;
-}
-.address p .name {
-    font-size: 18px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-}
-.address p .name:after {
-    font-family: icon;
-    content: '\e65b';
-    margin-left: .5em;
-}
-.address p .addr {
-    line-height: 1.5em;
-    height: 3em;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: normal;
-}
-footer .order-link {
-    color: #663300;
-}
-footer .main {
-    background-color: #663300;
-}
-</style>
 <body>
 	  <main>
         <!-- 头部banner -->

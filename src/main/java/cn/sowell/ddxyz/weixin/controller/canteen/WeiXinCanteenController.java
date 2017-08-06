@@ -1,14 +1,21 @@
 package cn.sowell.ddxyz.weixin.controller.canteen;
 
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.sowell.ddxyz.model.canteen.service.CanteenService;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
 import cn.sowell.ddxyz.weixin.WeiXinConstants;
 
 @Controller
 @RequestMapping(WeiXinConstants.URI_BASE + "/canteen")
 public class WeiXinCanteenController {
+	
+	@Resource
+	CanteenService canteenService;
+	
 	
 	@RequestMapping("/home")
 	public String home(){
@@ -18,6 +25,9 @@ public class WeiXinCanteenController {
 	
 	@RequestMapping("/order")
 	public String order(){
+		CanteenDelivery cDelivery = canteenService.getCanteenService();
+		
+		
 		return WeiXinConstants.PATH_CANTEEN + "/canteen_order.jsp";
 	}
 	
