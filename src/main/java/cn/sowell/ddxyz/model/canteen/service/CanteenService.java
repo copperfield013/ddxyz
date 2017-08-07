@@ -3,6 +3,8 @@ package cn.sowell.ddxyz.model.canteen.service;
 import java.util.Date;
 import java.util.List;
 
+import cn.sowell.ddxyz.model.canteen.pojo.CanteenDelivery;
+import cn.sowell.ddxyz.model.canteen.pojo.CanteenUserCacheInfo;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainCanteenOrder;
 import cn.sowell.ddxyz.model.canteen.pojo.param.CanteenOrderParameter;
 import cn.sowell.ddxyz.model.canteen.pojo.param.CanteenOrderUpdateParam;
@@ -39,6 +41,14 @@ public interface CanteenService {
 	
 	
 	PlainCanteenOrder updateOrder(CanteenOrderUpdateParam uParam);
+
+	/**
+	 * 获得该礼拜的配送，如果该礼拜添加了多个配送，那么只取第一个
+	 * @return
+	 */
+	CanteenDelivery getDeliveryOfThisWeek();
+
+	CanteenUserCacheInfo getUserCacheInfo(Long userId);
 	
 	
 }

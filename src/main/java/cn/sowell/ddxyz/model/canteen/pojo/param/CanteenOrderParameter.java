@@ -1,5 +1,6 @@
 package cn.sowell.ddxyz.model.canteen.pojo.param;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.alibaba.fastjson.JSON;
@@ -27,9 +28,7 @@ public class CanteenOrderParameter {
 	
 	
 	public static CanteenOrderParameter fromJson(JSONObject jo){
-		CanteenOrderParameter obj = JSON.toJavaObject(jo, CanteenOrderParameter.class);
-		return obj;
-		
+		return JSON.toJavaObject(jo, CanteenOrderParameter.class);
 	}
 	
 	public String getReceiverName() {

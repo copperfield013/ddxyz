@@ -18,6 +18,7 @@
 <!-- fromXu End -->
 
 <script src="${basePath }media/weixin/main/js/jquery-3.1.1.min.js"></script>
+<script src="${basePath }media/common/plugins/jquery.tmpl.js"></script>
 <%--<script src="${basePath }media/weixin/plugins/jquery.mobile-1.4.5/jquery.mobile-1.4.5.js"></script> --%>
 <!-- SeaJS -->
 <script src="${basePath }media/sea-debug.js"></script>

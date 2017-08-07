@@ -33,6 +33,9 @@ public class PlainWares {
 	@Column(name="c_base_price")
 	private Integer basePrice;
 	
+	@Column(name="c_price_unit")
+	private String priceUnit;
+	
 	@Column(name="merchant_id")
 	private Long merchantId;
 	
@@ -92,5 +95,11 @@ public class PlainWares {
 	}
 	public void setThumbUri(String thumbUri) {
 		this.thumbUri = thumbUri;
+	}
+	public String getPriceUnit() {
+		return priceUnit;
+	}
+	public void setPriceUnit(String priceUnit) {
+		this.priceUnit = priceUnit;
 	}
 }

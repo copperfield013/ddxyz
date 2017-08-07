@@ -50,10 +50,16 @@ public class PlainDeliveryPlan {
 	private Integer maxCount;
 	
 	/**
-	 * 提前关闭时间
+	 * 预定提前关闭时间
 	 */
 	@Column(name="c_lead_minutes")
 	private Integer leadMinutes;
+	
+	/**
+	 * 领取有效时间
+	 */
+	@Column(name="c_claim_minutes")
+	private Integer claimMinutes;
 	
 	/**
 	 * 周期开始时间
@@ -69,6 +75,9 @@ public class PlainDeliveryPlan {
 	
 	@Column(name="c_disabled")
 	private Integer disabled;
+	
+	@Column(name="c_type")
+	private String type;
 	
 	@Column(name="create_time")
 	private Date createTime;
@@ -148,5 +157,17 @@ public class PlainDeliveryPlan {
 	}
 	public void setLocation(PlainLocation location) {
 		this.location = location;
+	}
+	public Integer getClaimMinutes() {
+		return claimMinutes;
+	}
+	public void setClaimMinutes(Integer claimMinutes) {
+		this.claimMinutes = claimMinutes;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
 	}
 }

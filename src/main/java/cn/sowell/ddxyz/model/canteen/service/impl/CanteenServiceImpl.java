@@ -18,6 +18,9 @@ import org.springframework.stereotype.Service;
 import cn.sowell.copframe.utils.CollectionUtils;
 import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.ddxyz.model.canteen.dao.CanteenDao;
+import cn.sowell.ddxyz.model.canteen.pojo.CanteenDelivery;
+import cn.sowell.ddxyz.model.canteen.pojo.CanteenDeliveyWares;
+import cn.sowell.ddxyz.model.canteen.pojo.CanteenUserCacheInfo;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainCanteenOrder;
 import cn.sowell.ddxyz.model.canteen.pojo.param.CanteenOrderItem;
 import cn.sowell.ddxyz.model.canteen.pojo.param.CanteenOrderParameter;
@@ -87,6 +90,7 @@ public class CanteenServiceImpl implements CanteenService {
 						pDelivery.setWaresId(plan.getWaresId());
 						//配送计划id
 						pDelivery.setDeliveryPlanId(plan.getId());
+						pDelivery.setType(plan.getType());
 						//生成配送时间
 						Calendar cal = (Calendar) theDay.clone();
 						cal.set(Calendar.HOUR_OF_DAY, hour);
@@ -94,10 +98,16 @@ public class CanteenServiceImpl implements CanteenService {
 						cal.set(Calendar.SECOND, 0);
 						cal.set(Calendar.MILLISECOND, 0);
 						pDelivery.setTimePoint(cal.getTime());
-						//配送关闭时间
-						cal.add(Calendar.MINUTE, -plan.getLeadMinutes());
-						pDelivery.setCloseTime(cal.getTime());
-						
+						//配送预定关闭时间
+						Calendar orderCloseTime = (Calendar) cal.clone();
+						orderCloseTime.add(Calendar.MINUTE, -plan.getLeadMinutes());
+						pDelivery.setCloseTime(orderCloseTime.getTime());
+						if(plan.getClaimMinutes() != null){
+							//领取结束时间
+							Calendar claimEndTime = (Calendar) cal.clone();
+							claimEndTime.add(Calendar.MINUTE, plan.getClaimMinutes());
+							pDelivery.setClaimEndTime(claimEndTime.getTime());
+						}
 						
 						List<PlainDeliveryWares> dWaresList = new ArrayList<PlainDeliveryWares>();
 						map.put(pDelivery, dWaresList);
@@ -232,5 +242,30 @@ public class CanteenServiceImpl implements CanteenService {
 	public PlainCanteenOrder updateOrder(CanteenOrderUpdateParam uParam) {
 		return null;
 	}
-
+	
+	@Override
+	public CanteenDelivery getDeliveryOfThisWeek() {
+		PlainDelivery pDelivery = cDao.getDeliveryOfThisWeek(new Date());
+		CanteenDelivery cDelivery = new CanteenDelivery();
+		cDelivery.setDeliveryId(pDelivery.getId());
+		cDelivery.setLocationName(pDelivery.getLocationName());
+		cDelivery.setTimePointStart(pDelivery.getTimePoint());
+		cDelivery.setTimePointEnd(pDelivery.getClaimEndTime());
+		
+		List<CanteenDeliveyWares> waresList = cDao.getCanteenDeliveryWares(pDelivery.getId());
+		cDelivery.setWaresList(waresList);
+		return cDelivery;
+	}
+	
+	@Override
+	public CanteenUserCacheInfo getUserCacheInfo(Long userId) {
+		PlainCanteenOrder order = cDao.getLastOrderOfUser(userId);
+		CanteenUserCacheInfo userInfo = new CanteenUserCacheInfo();
+		PlainOrder pOrde = order.getpOrder();
+		userInfo.setName(pOrde.getReceiverName());
+		userInfo.setContact(pOrde.getReceiverContact());
+		userInfo.setDepart(order.getDepart());
+		return userInfo;
+	}
+	
 }

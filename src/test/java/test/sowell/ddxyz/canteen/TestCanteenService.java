@@ -12,6 +12,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import cn.sowell.copframe.dto.format.FrameDateFormat;
+import cn.sowell.ddxyz.model.canteen.pojo.CanteenDelivery;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainCanteenOrder;
 import cn.sowell.ddxyz.model.canteen.pojo.param.CanteenOrderItem;
 import cn.sowell.ddxyz.model.canteen.pojo.param.CanteenOrderParameter;
@@ -64,7 +65,7 @@ public class TestCanteenService {
 	
 	@Test
 	public void testGenerateDelivery(){
-		canteenService.generateTheDayDeliveries(dateFormat.incDay(new Date(), 1));
+		canteenService.generateTheDayDeliveries(dateFormat.incDay(new Date(), 4));
 	}
 	
 	
@@ -100,6 +101,13 @@ public class TestCanteenService {
 	}
 	
 	
+	
+	
+	@Test
+	public void testDeliveryWares() {
+		CanteenDelivery delivery = canteenService.getDeliveryOfThisWeek();
+		System.out.println(delivery);
+	}
 	
 	
 	

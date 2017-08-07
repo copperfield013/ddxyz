@@ -32,6 +32,10 @@ public class PlainDelivery {
 	@Column(name="c_close_time")
 	private Date closeTime;
 	
+	//领取结束时间
+	@Column(name="c_clain_end_time")
+	private Date claimEndTime;
+	
 	//最多配送量
 	@Column(name="c_max_count")
 	private Integer maxCount;
@@ -43,6 +47,9 @@ public class PlainDelivery {
 	//当前状态
 	@Column(name="c_status")
 	private int status = 0;
+	
+	@Column(name="c_type")
+	private String type;
 	
 	@Column(name="wares_id")
 	private Long waresId;
@@ -137,6 +144,18 @@ public class PlainDelivery {
 	}
 	public void setCloseTime(Date closeTime) {
 		this.closeTime = closeTime;
+	}
+	public Date getClaimEndTime() {
+		return claimEndTime;
+	}
+	public void setClaimEndTime(Date claimEndTime) {
+		this.claimEndTime = claimEndTime;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
 	}
 	
 	

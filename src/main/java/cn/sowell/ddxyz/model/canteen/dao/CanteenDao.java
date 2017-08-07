@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import cn.sowell.ddxyz.model.canteen.pojo.CanteenDeliveyWares;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainCanteenOrder;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlan;
@@ -47,6 +48,21 @@ public interface CanteenDao {
 			List<PlainDeliveryPlan> plans);
 
 	void saveWares(PlainWares wares);
+
+	/**
+	 * 获得日期当周的配送对象
+	 * @param date
+	 * @return
+	 */
+	PlainDelivery getDeliveryOfThisWeek(Date date);
+	/**
+	 * 根据配送对象获得其所属的所有配送商品信息
+	 * @param deliveryId
+	 * @return
+	 */
+	List<CanteenDeliveyWares> getCanteenDeliveryWares(Long deliveryId);
+
+	PlainCanteenOrder getLastOrderOfUser(Long userId);
 
 
 }
