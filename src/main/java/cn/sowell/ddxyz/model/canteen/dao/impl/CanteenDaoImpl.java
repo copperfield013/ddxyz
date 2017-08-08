@@ -201,7 +201,7 @@ public class CanteenDaoImpl implements CanteenDao{
 						"	t_canteen_order co" +
 						" LEFT JOIN t_order_base o ON co.order_id = o.id" +
 						" WHERE" +
-						"	o.order_user_id = : userId" +
+						"	o.order_user_id = :userId" +
 						" ORDER BY" +
 						"	o.create_time DESC";
 		

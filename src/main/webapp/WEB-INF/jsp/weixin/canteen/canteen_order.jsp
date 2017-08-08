@@ -24,7 +24,7 @@
         	<span class="user-name form-label">姓名</span>
         	<input id="receiverName" class="form-input input-box" type="text" value="${userInfo.name }" placeholder="请输入您的姓名">
         </p>
-        <p class="layout-flex layout-select">
+        <p class="layout-flex">
         	<span class="user-name form-label">部门</span>
         	<input id="depart" class="form-input input-box" type="text" value="${userInfo.depart }" placeholder="请输入您所在部门">
         </p>
@@ -166,7 +166,7 @@
 				$('.order-info').append($row);
 				var num = $('.order-info .data-row').length;
 	    		totalPrice = calculate(num);
-	    		$('.price').text(totalPrice);
+	    		$('.price').text(parseFloat(totalPrice).toFixed(2));
 	    		deleteRow();
 			})
 			
@@ -218,7 +218,7 @@
 					depart		: depart,
 					contact		: contact,
 					comment		: comment,
-					totalPrice	: totalPrice,
+					totalPrice	: parseFloat(totalPrice) * 100,
 					orderItems	: orderItems
 				};
 				

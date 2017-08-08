@@ -89,8 +89,7 @@ p.operate .operate-revise {
     border-radius: 1em;
     color: #f74342;
 }
-.timePoint,
-.time {
+.timePoint, .time, .location {
 	float:left;
 }
 footer .order-link {
@@ -124,12 +123,11 @@ footer .main {
 				            <span class="price">￥251.0</span>				       
 				    	</p>
 				  		<p class="result">
-				  			<span class="timePoint">时间档：18点</span>
-				  			<span class="location">配送地点：天虹商场</span>
+				  			<span class="timePoint">领取时间：2017-08-11 16:00:00</span>
+				  			<span class="money">总价：<b>￥0.01</b></span>
 				  		</p>
 				  		<p class="result">
-				  			<span class="time">创建时间：2017-05-09 16:12:33</span>
-				  			<span class="money">总价：<b>￥0.01</b></span>
+				  			<span class="location">领取地点：东部软件园</span>
 				  		</p>
 				  		<p class="operate">				  				
 				  			<span class="operate-button">取消订单</span>	

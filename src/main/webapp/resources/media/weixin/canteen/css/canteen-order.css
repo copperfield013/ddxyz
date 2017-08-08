@@ -27,6 +27,7 @@ i {
 }
 .user-info p.layout-flex {
 	display:flex;
+	align-items: center;
 }
 
 p.layout-select:after {
@@ -47,6 +48,8 @@ p.layout-select:after {
 .form-input {
 	flex:1;
 	-webkit-appearance: none;
+	height: 1.2em;
+    line-height: 1.2em;
 }
 .booking-info p {
 	height: 3.6em;
@@ -56,6 +59,7 @@ p.layout-select:after {
 }
 .booking-info p.layout-flex {
 	display:flex;
+	align-items: center;
 }
 .operate-count {
 	display:inline-block;
