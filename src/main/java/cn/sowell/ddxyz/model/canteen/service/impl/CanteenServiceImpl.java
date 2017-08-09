@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -20,11 +21,11 @@ import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.ddxyz.model.canteen.dao.CanteenDao;
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenDelivery;
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenDeliveyWares;
+import cn.sowell.ddxyz.model.canteen.pojo.CanteenOrderUpdateItem;
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenUserCacheInfo;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainCanteenOrder;
 import cn.sowell.ddxyz.model.canteen.pojo.param.CanteenOrderItem;
 import cn.sowell.ddxyz.model.canteen.pojo.param.CanteenOrderParameter;
-import cn.sowell.ddxyz.model.canteen.pojo.param.CanteenOrderUpdateParam;
 import cn.sowell.ddxyz.model.canteen.service.CanteenService;
 import cn.sowell.ddxyz.model.common.core.Order;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
@@ -147,7 +148,7 @@ public class CanteenServiceImpl implements CanteenService {
 	}
 	
 	private List<PlainProduct> initOrder(PlainOrder pOrder, CanteenOrderParameter coParam) {
-		pOrder.setCommment(coParam.getComment());
+		pOrder.setComment(coParam.getComment());
 		pOrder.setCreateTime(new Date());
 		pOrder.setDeliveryId(coParam.getDeliveryId());
 		
@@ -168,20 +169,33 @@ public class CanteenServiceImpl implements CanteenService {
 		
 		List<PlainProduct> products = new ArrayList<PlainProduct>();
 		for (CanteenOrderItem item : coParam.getOrderItems()) {
-			PlainWares wares = cDao.getWares(item.getWaresId());
-			for (int i = 0; i < item.getCount(); i++) {
-				PlainProduct product = new PlainProduct();
-				product.setDeliveryWaresId(item.getDeliveryWaresId());
-				product.setWaresId(wares.getId());
-				product.setName(wares.getName());
-				product.setPrice(item.getPrice(wares));
-				product.setThumbUri(wares.getThumbUri());
-				product.setCreateTime(pOrder.getCreateTime());
-				products.add(product);
-			}
+			products.addAll(createProducts(item));
 		}
 		return products;
 	}
+	
+	/**
+	 * 
+	 * @param item
+	 * @return
+	 */
+	private List<PlainProduct> createProducts(CanteenOrderItem item){
+		PlainWares wares = cDao.getWares(item.getWaresId());
+		Date createTime = new Date();
+		List<PlainProduct> products = new ArrayList<PlainProduct>();
+		for (int i = 0; i < item.getCount(); i++) {
+			PlainProduct product = new PlainProduct();
+			product.setDeliveryWaresId(item.getDeliveryWaresId());
+			product.setWaresId(wares.getId());
+			product.setName(wares.getName());
+			product.setPrice(item.getPrice(wares));
+			product.setThumbUri(wares.getThumbUri());
+			product.setCreateTime(createTime);
+			products.add(product);
+		}
+		return products;
+	}
+	
 
 	private String generateOrderCode() {
 		StringBuffer buffer = new StringBuffer();
@@ -239,11 +253,6 @@ public class CanteenServiceImpl implements CanteenService {
 	}
 	
 	@Override
-	public PlainCanteenOrder updateOrder(CanteenOrderUpdateParam uParam) {
-		return null;
-	}
-	
-	@Override
 	public CanteenDelivery getDeliveryOfThisWeek() {
 		PlainDelivery pDelivery = cDao.getDeliveryOfThisWeek(new Date());
 		CanteenDelivery cDelivery = new CanteenDelivery();
@@ -260,12 +269,195 @@ public class CanteenServiceImpl implements CanteenService {
 	@Override
 	public CanteenUserCacheInfo getUserCacheInfo(Long userId) {
 		PlainCanteenOrder order = cDao.getLastOrderOfUser(userId);
-		CanteenUserCacheInfo userInfo = new CanteenUserCacheInfo();
-		PlainOrder pOrde = order.getpOrder();
-		userInfo.setName(pOrde.getReceiverName());
-		userInfo.setContact(pOrde.getReceiverContact());
-		userInfo.setDepart(order.getDepart());
-		return userInfo;
+		if(order != null){
+			CanteenUserCacheInfo userInfo = new CanteenUserCacheInfo();
+			PlainOrder pOrde = order.getpOrder();
+			userInfo.setName(pOrde.getReceiverName());
+			userInfo.setContact(pOrde.getReceiverContact());
+			userInfo.setUserId(userId);
+			userInfo.setDepart(order.getDepart());
+			return userInfo;
+		}
+		return null;
+	}
+	
+	@Override
+	public List<CanteenOrderUpdateItem> getOrderItems(Long orderId) {
+		List<PlainProduct> products = cDao.getProducts(orderId);
+		Map<Long, CanteenOrderUpdateItem> itemMap = new LinkedHashMap<Long, CanteenOrderUpdateItem>();
+		products.forEach(product->{
+			CanteenOrderUpdateItem item = itemMap.get(product.getDeliveryWaresId());
+			if(item == null){
+				item = new CanteenOrderUpdateItem();
+				item.setCount(1);
+				item.setWaresName(product.getName());
+				item.setdWaresId(product.getDeliveryWaresId());
+				item.setUnitPrice(product.getPrice());
+				itemMap.put(product.getDeliveryWaresId(), item);
+			}else{
+				item.setCount(item.getCount() + 1);
+			}
+		});
+		return new ArrayList<CanteenOrderUpdateItem>(itemMap.values());
+		
+	}
+	
+	@Override
+	public PlainCanteenOrder getCanteenOrder(Long orderId) {
+		PlainCanteenOrder cOrder = cDao.getCanteenOrder(orderId);
+		if(cOrder != null){
+			PlainOrder order = cDao.getOrder(orderId);
+			cOrder.setpOrder(order);
+		}
+		return cOrder;
+	}
+	
+	@Override
+	public CanteenDelivery getCanteenDelivery(Long deliveryId) {
+		PlainDelivery delivery = cDao.getDelivery(deliveryId);
+		if(delivery != null){
+			CanteenDelivery result = new CanteenDelivery();
+			result.setDeliveryId(deliveryId);
+			result.setLocationName(delivery.getLocationName());
+			result.setTimePointStart(delivery.getTimePoint());
+			result.setTimePointEnd(delivery.getClaimEndTime());
+			List<CanteenDeliveyWares> waresList = cDao.getCanteenDeliveryWares(deliveryId);
+			result.setWaresList(waresList);
+			return result;
+		}
+		return null;
+	}
+	
+	@Override
+	public PlainCanteenOrder updateOrder(CanteenOrderParameter param) throws OrderResourceApplyException {
+		//获得原本的订单对象
+		Long orderId = param.getOriginOrderId();
+		//获得原始的canteen订单对象
+		PlainCanteenOrder cOrder = cDao.getCanteenOrder(orderId);
+		if(cOrder != null){
+			PlainOrder pOrder = cDao.getOrder(orderId);
+			cOrder.setpOrder(pOrder);
+			replaceOrder(param, cOrder);
+			cDao.updateOrder(cOrder);
+			
+			
+			//获得原始的订单明细
+			List<CanteenOrderUpdateItem> originOrderItems = getOrderItems(orderId);
+			
+			Map<Long, CanteenOrderUpdateItem> originDWaresItemMap = CollectionUtils.toMap(originOrderItems, item->item.getdWaresId());
+			
+			
+			//需要添加的节点列表
+			Map<Long, Integer> addItems = new LinkedHashMap<Long, Integer>();
+			
+			//获得参数中需要更新的所有节点
+			Map<Long, CanteenOrderItem> updateWaresItemMap = new LinkedHashMap<Long, CanteenOrderItem>();
+			for (CanteenOrderItem orderItem : param.getOrderItems()) {
+				CanteenOrderItem exist = updateWaresItemMap.get(orderItem.getDeliveryWaresId());
+				if(exist == null){
+					exist = new CanteenOrderItem();
+					exist.setDeliveryWaresId(orderItem.getDeliveryWaresId());
+					exist.setWaresId(orderItem.getWaresId());
+					exist.setCount(orderItem.getCount());
+					updateWaresItemMap.put(exist.getDeliveryWaresId(), exist);
+				}else{
+					exist.setCount(exist.getCount() + 1);
+				}
+			}
+			
+			Set<Long> originDWaresIdSet = originDWaresItemMap.keySet();
+			//遍历更新的节点，与原始节点相比，count大于原始的话，说明要增加
+			updateWaresItemMap.forEach((deliveryWaresId, item)->{
+				CanteenOrderUpdateItem originDWaresItem = originDWaresItemMap.get(deliveryWaresId);
+				if(originDWaresItem != null){
+					originDWaresIdSet.remove(deliveryWaresId);
+					addItems.put(deliveryWaresId, item.getCount() - originDWaresItem.getCount());
+				}else{
+					addItems.put(deliveryWaresId, item.getCount());
+				}
+			});
+			//origin中与update的差集，即被删除的节点
+			originDWaresIdSet.forEach(originDwaresId->{
+				addItems.put(originDwaresId, -originDWaresItemMap.get(originDwaresId).getCount());
+			});
+			
+			//更新该订单的所有节点
+			updateProduct(orderId, addItems);
+			return null;
+			
+		}
+		return null;
+	}
+	
+	/**
+	 * 覆盖订单的字段
+	 * @param param
+	 * @param cOrder
+	 */
+	private void replaceOrder(CanteenOrderParameter param,
+			PlainCanteenOrder cOrder) {
+		cOrder.setDepart(param.getDepart());
+		PlainOrder pOrder = cOrder.getpOrder();
+		
+		pOrder.setComment(param.getComment());
+		pOrder.setReceiverContact(param.getContact());
+		pOrder.setReceiverName(param.getReceiverName());
+		pOrder.setTotalPrice(param.getTotalPrice());
+		
+	}
+
+	private void updateProduct(Long orderId, Map<Long, Integer> addItems) throws OrderResourceApplyException {
+		//根据订单id获得系统内订单的所有产品的idmap，key是配送产品的id
+		Map<Long, List<Long>> dWaresProductIdMap = cDao.getDeliveryWaresProductIdsMap(orderId);
+		
+		for (Entry<Long, Integer> entry : addItems.entrySet()) {
+			Long dWaresId = entry.getKey();
+			Integer count = entry.getValue();
+			if(count > 0){
+				//添加
+				//申请资源
+				applyResource(dWaresId, count);
+				//添加订单的产品
+				cDao.appendProduct(orderId, dWaresId, count);
+			}else if(count < 0){
+				//删除
+				List<Long> productIds = dWaresProductIdMap.get(dWaresId);
+				List<Long> delList = productIds.subList(0, -count);
+				//删除前几个产品
+				cDao.deleteProducts(delList);
+				//释放资源
+				applyResource(dWaresId, count);
+			}
+		}
+		
+	}
+
+	/**
+	 * 配送商品的资源申请。如果余量不足，则抛出异常
+	 * @param dWaresId 商品配送的id
+	 * @param count 需要申请（释放）的资源数
+	 * @throws OrderResourceApplyException 
+	 */
+	private synchronized void applyResource(long dWaresId, int count) throws OrderResourceApplyException {
+		//获得余量
+		Integer remain = cDao.getDeliveryWaresRemain(dWaresId);
+		
+		if(remain != null){
+			if(remain > count){
+				cDao.addCurrentCount(dWaresId, count);
+			}else{
+				throw new OrderResourceApplyException("资源不足", remain, count);
+			}
+		}
+	}
+	
+	@Override
+	public CanteenUserCacheInfo getOrderUserInfo(Long orderId) {
+		return cDao.getOrderUserInfo(orderId);
+		
+		
+				
+				
 	}
 	
 }

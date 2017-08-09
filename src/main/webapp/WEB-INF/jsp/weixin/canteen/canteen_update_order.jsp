@@ -22,15 +22,15 @@
         <h4>用户信息</h4>
         <p class="layout-flex">
         	<span class="user-name form-label">姓名</span>
-        	<input id="receiverName" class="form-input input-box" type="text" value="${userInfo.name }" placeholder="请输入您的姓名">
+        	<input id="receiverName" class="form-input input-box" type="text" value="${user.name }" placeholder="请输入您的姓名">
         </p>
         <p class="layout-flex">
         	<span class="user-name form-label">部门</span>
-        	<input id="depart" class="form-input input-box" type="text" value="${userInfo.depart }" placeholder="请输入您所在部门">
+        	<input id="depart" class="form-input input-box" type="text" value="${user.depart }" placeholder="请输入您所在部门">
         </p>
         <p class="layout-flex">
         	<span class="user-name form-label">联系方式</span>
-        	<input id="contact" class="form-input input-box" type="text" value="${userInfo.contact }" placeholder="请输入您的联系方式">
+        	<input id="contact" class="form-input input-box" type="text" value="${user.contact }" placeholder="请输入您的联系方式">
         </p>
     </div>
     <div class="booking-info">
@@ -74,7 +74,7 @@
     </div>
     <p class="remarks">
     	<span>备注</span>
-    	<textarea id="comment" class="input-box" placeholder="请输入备注详情"></textarea>
+    	<textarea id="comment" class="input-box" placeholder="请输入备注详情">${order.comment }</textarea>
     </p>
 </main>
 </form>
@@ -90,7 +90,7 @@
 			<li class="goods-operate">删除</li>
 		</ul>
 	</script>
-	<script>
+		<script>
 		$(function(){
 			var delivery = $.parseJSON('${delivery.json}');
 			var dWaresCountMap = {};
@@ -168,7 +168,23 @@
 					count +=1;
 				}
 				$('.dishCount').text(count);
-			})
+			});
+			
+			function addItem(params){
+				params.unitPrice = parseFloat(params.unitPrice / 100).toFixed(2); 
+				var $row = $('#data-row').tmpl(params);
+				
+				$('.order-info').append($row);
+				var num = $('.order-info .data-row').length;
+	    		totalPrice = calculate(num);
+	    		$('.price').text(parseFloat(totalPrice).toFixed(2));
+			}
+			
+			var items = $.parseJSON('${orderItemsJson}');
+			
+			for(var i in items){
+				addItem(items[i]);
+			}
 			
 			//添加菜品到订单事件绑定
 			$('.add').on('click',function(){
@@ -242,25 +258,26 @@
 				});
 				
 				var parameter = {
-					deliveryId	: '${delivery.deliveryId}',
-					userId		: '${user.id}',
-					receiverName: receiverName,
-					depart		: depart,
-					contact		: contact,
-					comment		: comment,
-					totalPrice	: parseFloat(totalPrice) * 100,
-					orderItems	: orderItems
-				};
-				
+						originOrderId: '${order.id}',
+						deliveryId	: '${delivery.deliveryId}',
+						userId		: '${user.userId}',
+						receiverName: receiverName,
+						depart		: depart,
+						contact		: contact,
+						comment		: comment,
+						totalPrice	: parseFloat(totalPrice) * 100,
+						orderItems	: orderItems
+					};
+					
 				seajs.use(['ajax'], function(Ajax){
-					Ajax.postJson('weixin/canteen/doOrder', parameter, function(data){
-						console.log(data);
+					Ajax.postJson('weixin/canteen/doUpdateOrder', parameter, function(data){
+						alert(data.status);
 					});
 				});
-				
 			});
 			
 		})
 	</script>
+	
 </body>
 </html>

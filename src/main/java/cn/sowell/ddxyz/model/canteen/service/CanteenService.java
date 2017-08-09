@@ -4,10 +4,10 @@ import java.util.Date;
 import java.util.List;
 
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenDelivery;
+import cn.sowell.ddxyz.model.canteen.pojo.CanteenOrderUpdateItem;
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenUserCacheInfo;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainCanteenOrder;
 import cn.sowell.ddxyz.model.canteen.pojo.param.CanteenOrderParameter;
-import cn.sowell.ddxyz.model.canteen.pojo.param.CanteenOrderUpdateParam;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlan;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlanWares;
 import cn.sowell.ddxyz.model.common2.core.OrderResourceApplyException;
@@ -39,8 +39,13 @@ public interface CanteenService {
 	 */
 	PlainCanteenOrder createOrder(CanteenOrderParameter coParam) throws OrderResourceApplyException;
 	
-	
-	PlainCanteenOrder updateOrder(CanteenOrderUpdateParam uParam);
+	/**
+	 * 
+	 * @param uParam
+	 * @return
+	 * @throws OrderResourceApplyException 
+	 */
+	PlainCanteenOrder updateOrder(CanteenOrderParameter uParam) throws OrderResourceApplyException;
 
 	/**
 	 * 获得该礼拜的配送，如果该礼拜添加了多个配送，那么只取第一个
@@ -49,6 +54,33 @@ public interface CanteenService {
 	CanteenDelivery getDeliveryOfThisWeek();
 
 	CanteenUserCacheInfo getUserCacheInfo(Long userId);
+
 	
+	/**
+	 * 获得该订单对应的明细表
+	 * @param orderId
+	 * @return
+	 */
+	List<CanteenOrderUpdateItem> getOrderItems(Long orderId);
 	
+	/**
+	 * 根据订单id获得对应的canteen订单对象
+	 * @param orderId
+	 * @return
+	 */
+	PlainCanteenOrder getCanteenOrder(Long orderId);
+
+	/**
+	 * 根据配送id获得对应的canteen配送对象
+	 * @param orderId
+	 * @return
+	 */
+	CanteenDelivery getCanteenDelivery(Long deliveryId);
+	
+	/**
+	 * 获得订单的用户信息
+	 * @param orderId
+	 * @return
+	 */
+	CanteenUserCacheInfo getOrderUserInfo(Long orderId);
 }

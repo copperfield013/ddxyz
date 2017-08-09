@@ -3,6 +3,7 @@ package cn.sowell.ddxyz.model.canteen.dao.impl;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,13 +17,18 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.ResultTransformer;
+import org.hibernate.type.LongType;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.Assert;
 
+import cn.sowell.copframe.dao.deferedQuery.ColumnMapResultTransformer;
 import cn.sowell.copframe.dao.deferedQuery.DeferedParamQuery;
 import cn.sowell.copframe.dao.deferedQuery.HibernateRefrectResultTransformer;
+import cn.sowell.copframe.dao.deferedQuery.SimpleMapWrapper;
 import cn.sowell.copframe.utils.CollectionUtils;
 import cn.sowell.ddxyz.model.canteen.dao.CanteenDao;
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenDeliveyWares;
+import cn.sowell.ddxyz.model.canteen.pojo.CanteenUserCacheInfo;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainCanteenOrder;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlan;
@@ -30,6 +36,7 @@ import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlanWares;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryWares;
 import cn.sowell.ddxyz.model.common.pojo.PlainOrder;
 import cn.sowell.ddxyz.model.common.pojo.PlainProduct;
+import cn.sowell.ddxyz.model.common2.core.OrderResourceApplyException;
 import cn.sowell.ddxyz.model.wares.pojo.PlainWares;
 
 @Repository
@@ -44,6 +51,14 @@ public class CanteenDaoImpl implements CanteenDao{
 		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
 		query.setInteger("count", updateCount)
 				.setLong("dWaresId", deliveryWaresId)
+				.executeUpdate();
+	}
+	@Override
+	public void addCurrentCount(long dWaresId, int addition) {
+		String sql = "update t_delivery_wares set c_current_count = c_current_count + :addition where id = :dWaresId";
+		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
+		query.setInteger("addition", addition)
+				.setLong("dWaresId", dWaresId)
 				.executeUpdate();
 	}
 
@@ -228,6 +243,137 @@ public class CanteenDaoImpl implements CanteenDao{
 			}
 		});
 		return (PlainCanteenOrder) query.uniqueResult();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PlainProduct> getProducts(Long orderId) {
+		return sFactory.getCurrentSession()
+					.createCriteria(PlainProduct.class)
+					.add(Restrictions.eq("orderId", orderId))
+					.list();
+	}
+	
+	@Override
+	public PlainCanteenOrder getCanteenOrder(Long orderId) {
+		return sFactory.getCurrentSession().get(PlainCanteenOrder.class, orderId);
+	}
+	
+	@Override
+	public PlainOrder getOrder(Long orderId) {
+		return sFactory.getCurrentSession().get(PlainOrder.class, orderId);
+	}
+	
+	
+	
+	@Override
+	public void appendProduct(Long orderId, Long dWaresId, int count) {
+		Assert.notNull(orderId);
+		PlainDeliveryWares deliveryWares = getDeliveryWare(dWaresId);
+		if(deliveryWares != null){
+			PlainWares wares = getWares(deliveryWares.getWaresId());
+			Session session = sFactory.getCurrentSession();
+			Date createTime = new Date();
+			for (int i = 0; i < count; i++) {
+				PlainProduct product = new PlainProduct();
+				product.setDeliveryWaresId(dWaresId);
+				product.setWaresId(wares.getId());
+				product.setName(wares.getName());
+				product.setPrice(wares.getBasePrice());
+				product.setThumbUri(wares.getThumbUri());
+				product.setCreateTime(createTime);
+				product.setOrderId(orderId);
+				session.save(product);
+			}
+		}
+	}
+	
+	@Override
+	public void deleteProducts(List<Long> delList) {
+		String sql = "delete from t_product_base where id in (:ids)";
+		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
+		query.setParameterList("ids", delList);
+		query.executeUpdate();
+	}
+	
+	@SuppressWarnings("serial")
+	@Override
+	public Map<Long, List<Long>> getDeliveryWaresProductIdsMap(Long orderId) {
+		String sql = "select p.id, p.delivery_wares_id from t_product_base p where p.order_id = :orderId";
+		Session session = sFactory.getCurrentSession();
+		
+		SQLQuery productQuery = session.createSQLQuery(sql);
+		productQuery.setLong("orderId", orderId);
+		Map<Long, List<Long>> dWaresProductListMap = new HashMap<Long, List<Long>>();
+		productQuery.setResultTransformer(new ColumnMapResultTransformer<byte[]>() {
+
+			@Override
+			protected byte[] build(SimpleMapWrapper mapWrapper) {
+				Long dWaresId = mapWrapper.getLong("delivery_wares_id");
+				List<Long> productIdList = dWaresProductListMap.get(dWaresId);
+				if(productIdList == null){
+					productIdList = new ArrayList<Long>();
+					dWaresProductListMap.put(dWaresId, productIdList);
+				}
+				productIdList.add(mapWrapper.getLong("id"));
+				return null;
+			}
+		}).list();
+		
+		return dWaresProductListMap;
+	}
+	
+	
+	@Override
+	public Integer getDeliveryWaresRemain(long dWaresId) throws OrderResourceApplyException {
+		PlainDeliveryWares deliveryWares = getDeliveryWare(dWaresId);
+		if(deliveryWares == null){
+			throw new OrderResourceApplyException("没有找到deliveryWaresId[" + dWaresId + "]对应的商品配送");
+		}
+		if(deliveryWares.getMaxCount() == null){
+			return null;
+		}else{
+			return deliveryWares.getMaxCount() - deliveryWares.getCurrentCount();
+		}
+	}
+	
+	@SuppressWarnings("serial")
+	@Override
+	public CanteenUserCacheInfo getOrderUserInfo(Long orderId) {
+		String sql = 
+				"SELECT" +
+				"	co.c_depart," +
+				"	o.c_receiver_name," +
+				"	o.order_user_id," +
+				"	o.c_receiver_contact" +
+				" FROM" +
+				"	t_canteen_order co LEFT JOIN t_order_base o ON co.order_id = o.id" +
+				" WHERE" +
+				"	o.id = :orderId";
+		
+		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
+		query.setLong("orderId", orderId);
+		query.setResultTransformer(new ColumnMapResultTransformer<CanteenUserCacheInfo>() {
+
+			@Override
+			protected CanteenUserCacheInfo build(SimpleMapWrapper mapWrapper) {
+				CanteenUserCacheInfo user = new CanteenUserCacheInfo();
+				user.setUserId(mapWrapper.getLong("order_user_id"));
+				user.setContact(mapWrapper.getString("c_receiver_contact"));
+				user.setDepart(mapWrapper.getString("c_depart"));
+				user.setName(mapWrapper.getString("c_receiver_name"));
+				return user;
+			}
+		});
+		return (CanteenUserCacheInfo) query.uniqueResult();
+	}
+	
+	
+	@Override
+	public void updateOrder(PlainCanteenOrder cOrder) {
+		Session session = sFactory.getCurrentSession();
+		session.update(cOrder);
+		session.update(cOrder.getpOrder());
 	}
 	
 }

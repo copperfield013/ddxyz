@@ -72,7 +72,7 @@ public class PlainOrder implements OrderDetail{
 	private String receiverName;
 	
 	@Column(name="c_comment")
-	private String commment;
+	private String comment;
 	
 	@Column(name="c_pay_time")
 	private Date payTime;
@@ -185,11 +185,11 @@ public class PlainOrder implements OrderDetail{
 	public void setCanceledStatus(String canceledStatus) {
 		this.canceledStatus = canceledStatus;
 	}
-	public String getCommment() {
-		return commment;
+	public String getComment() {
+		return comment;
 	}
-	public void setCommment(String commment) {
-		this.commment = commment;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 	public String getReceiverContact() {
 		return receiverContact;

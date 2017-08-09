@@ -1,6 +1,5 @@
 package cn.sowell.ddxyz.model.canteen.pojo.param;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.alibaba.fastjson.JSON;
@@ -25,6 +24,8 @@ public class CanteenOrderParameter {
 	private String comment;
 	
 	private Integer totalPrice;
+	
+	private Long originOrderId;
 	
 	
 	public static CanteenOrderParameter fromJson(JSONObject jo){
@@ -84,6 +85,14 @@ public class CanteenOrderParameter {
 
 	public void setTotalPrice(Integer totalPrice) {
 		this.totalPrice = totalPrice;
+	}
+
+	public Long getOriginOrderId() {
+		return originOrderId;
+	}
+
+	public void setOriginOrderId(Long originOrderId) {
+		this.originOrderId = originOrderId;
 	}
 
 }

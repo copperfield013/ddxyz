@@ -238,7 +238,7 @@ public class DefaultOrderManager implements OrderManager, InitializingBean {
 		pOrder.setUpdateTime(pOrder.getCreateTime());
 		DefaultOrder order = new DefaultOrder(pOrder, delivery, this, productManager, dpService);
 		pOrder.setOrderStatus(Order.STATUS_DEFAULT);
-		pOrder.setCommment(orderParameter.getComment());
+		pOrder.setComment(orderParameter.getComment());
 		order.setDispenseResourceRequest(orderParameter.getDispenseResourceRequest());
 		ReceiverInfo receiver = orderParameter.getReceiver();
 		if(receiver != null){
