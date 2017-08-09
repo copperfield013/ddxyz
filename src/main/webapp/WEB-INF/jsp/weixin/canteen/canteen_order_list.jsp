@@ -7,6 +7,9 @@
     <jsp:include page="/WEB-INF/jsp/weixin/common/weixin-include.jsp"></jsp:include>
 </head>
 <style>
+body,html {
+	webkit-tap-highlight-color:rgba(0,0,0,0);
+}
 .page-list {
 	padding:0 8px;
 }
@@ -93,29 +96,24 @@ p.operate .operate-revise {
 	float:left;
 }
 .order-detail-wrap {
-	/* transition:all linear .2s;
-	-ms-transition:all linear .2s;
-	-moz-transition:all linear .2s;
-	-webkit-transition:all linear .2s;
-	-o-transition:all linear .2s; */
 	font-size:12px;
-	height:30px;
+	display:none;
 	overflow:hidden;
-	font-weight:700;
+	
 }
 .order-detail-wrap.active {
-	height:auto;
+	display:block;
 }
 .circle-point-icon {
-	display:inline-block;
-	width:16px;
-	height:16px;
-	line-height:16px;
+	color:#999999;
+	float:left;
+	width:1.4em;
+	height:1.4em;
+	line-height:1.4em;
 	text-align:center;
-	font-size:16px;
-	font-family:icon;
+	font-size:1.4em;	
 	vertical-align:middle;
-	margin-top:-2px;
+	margin-top:0.3em;
 	transition:all linear .2s;
 	-ms-transition:all linear .2s;
 	-moz-transition:all linear .2s;
@@ -126,8 +124,14 @@ p.operate .operate-revise {
 	-moz-transform:rotate(90deg); 	
 	-webkit-transform:rotate(90deg); 
 	-o-transform:rotate(90deg); 	
+	webkit-tap-highlight-color:rgba(0,0,0,0);
 }
-.order-detail-wrap.active .circle-point-icon {
+.circle-point-icon:before {
+	font-family:icon;
+	content:"\e600";	
+	webkit-tap-highlight-color:rgba(0,0,0,0);
+}
+.circle-point-icon.active {
 	transform:rotate(-90deg);
 	-ms-transform:rotate(-90deg); 	
 	-moz-transform:rotate(-90deg); 	
@@ -149,48 +153,7 @@ footer .main {
 		<div class="ui-body">
 			<div class="ui-content">
 				<div id="order-list"  class="page-list">
-					<div class="order">
-				   		<p class="number">订单号：170509161232		
-				   		</p>				   		
-				   		<p class="detail">
-				    		<img src="http://192.168.1.129:8080/ddxyz/media/weixin/main/image/h_milk_tea_2h.png" alt="奶茶">
-				            <span class="name">烤鸭<i>x1</i></span>
-				            <span class="price">￥20.0</span>				       
-				    	</p>
-				    	<p class="detail">
-				    		<img src="http://192.168.1.129:8080/ddxyz/media/weixin/main/image/h_milk_tea_2h.png" alt="奶茶">
-				            <span class="name">鸡爪<i>x2</i></span>
-				            <span class="price">￥40.0</span>				       
-				    	</p>
-				    	<p class="detail">
-				    		<img src="http://192.168.1.129:8080/ddxyz/media/weixin/main/image/h_milk_tea_2h.png" alt="奶茶">
-				            <span class="name">小龙虾<i>x5</i></span>
-				            <span class="price">￥251.0</span>				       
-				    	</p>
-				  		<p class="result">
-				  			<span class="timePoint">领取时间：2017-08-11 16:00:00</span>
-				  			<span class="money">总价：<b>￥0.01</b></span>
-				  		</p>
-				  		<p class="result">
-				  			<span class="location">领取地点：东部软件园</span>
-				  		</p>
-				  		<div class="order-detail-wrap">
-				  			<p class="order-detail">
-					  			<span class="order-detail-text">显示详情</span>
-					  			<i class="circle-point-icon">&#xe600;</i>
-				  			</p>
-				  			<p class="hideinfo">
-				  				<span class="ordertime">创建时间：2017-08-11 14:00:00</span>
-				  				<span class="takemen">收货人：张荣波</span>
-				  				<span class="takePhone">联系号码：13588888888</span>
-				  				<span class="takeport">部门：研发部</span>
-				  			</p>
-				  		</div>				  		
-				  		<p class="operate">				  				
-				  			<span class="operate-button">取消订单</span>	
-				  			<span class="operate-revise">修改订单</span>			  				
-				  		</p>
-				   	</div>
+					
 				   	<div class="order">
 				   		<p class="number">订单号：170509161232		
 				   		</p>				   		
@@ -216,11 +179,7 @@ footer .main {
 				  		<p class="result">
 				  			<span class="location">领取地点：东部软件园</span>
 				  		</p>
-				  		<div class="order-detail-wrap">
-				  			<p class="order-detail">
-					  			<span class="order-detail-text">详情</span>
-					  			<i class="circle-point-icon">&#xe600;</i>
-				  			</p>
+				  		<div class="order-detail-wrap">	
 				  			<p class="hideinfo">
 				  				<span class="ordertime">创建时间：2017-08-11 14:00:00</span>
 				  				<span class="takemen">收货人：张荣波</span>
@@ -228,53 +187,13 @@ footer .main {
 				  				<span class="takeport">部门：研发部</span>
 				  			</p>
 				  		</div>				  		
-				  		<p class="operate">				  				
+				  		<p class="operate">
+				  			<i class="circle-point-icon"></i>			  				
 				  			<span class="operate-button">取消订单</span>	
 				  			<span class="operate-revise">修改订单</span>			  				
 				  		</p>
 				   	</div>
-				   	<div class="order">
-				   		<p class="number">订单号：170509161232		
-				   		</p>				   		
-				   		<p class="detail">
-				    		<img src="http://192.168.1.129:8080/ddxyz/media/weixin/main/image/h_milk_tea_2h.png" alt="奶茶">
-				            <span class="name">烤鸭<i>x1</i></span>
-				            <span class="price">￥20.0</span>				       
-				    	</p>
-				    	<p class="detail">
-				    		<img src="http://192.168.1.129:8080/ddxyz/media/weixin/main/image/h_milk_tea_2h.png" alt="奶茶">
-				            <span class="name">鸡爪<i>x2</i></span>
-				            <span class="price">￥40.0</span>				       
-				    	</p>
-				    	<p class="detail">
-				    		<img src="http://192.168.1.129:8080/ddxyz/media/weixin/main/image/h_milk_tea_2h.png" alt="奶茶">
-				            <span class="name">小龙虾<i>x5</i></span>
-				            <span class="price">￥251.0</span>				       
-				    	</p>
-				  		<p class="result">
-				  			<span class="timePoint">领取时间：2017-08-11 16:00:00</span>
-				  			<span class="money">总价：<b>￥0.01</b></span>
-				  		</p>
-				  		<p class="result">
-				  			<span class="location">领取地点：东部软件园</span>
-				  		</p>
-				  		<div class="order-detail-wrap">
-				  			<p class="order-detail">
-					  			<span class="order-detail-text">详情</span>
-					  			<i class="circle-point-icon">&#xe600;</i>
-				  			</p>
-				  			<p class="hideinfo">
-				  				<span class="ordertime">创建时间：2017-08-11 14:00:00</span>
-				  				<span class="takemen">收货人：张荣波</span>
-				  				<span class="takePhone">联系号码：13588888888</span>
-				  				<span class="takeport">部门：研发部</span>
-				  			</p>
-				  		</div>				  		
-				  		<p class="operate">				  				
-				  			<span class="operate-button">取消订单</span>	
-				  			<span class="operate-revise">修改订单</span>			  				
-				  		</p>
-				   	</div>
+				   	
 				</div>
 			</div>
 		</div>
@@ -285,12 +204,14 @@ footer .main {
 	</footer>
 <script>
 	$(function(){
-		$('.order-detail').on('click',function(){
-			var isOpen = $(this).parent().hasClass('active');
+		$('.circle-point-icon').on('click',function(){
+			var isOpen = $('.order-detail-wrap').hasClass('active');
 			if( isOpen ){
-				$(this).parent().removeClass('active').find('.order-detail-text').text('显示详情');
+				$('.order-detail-wrap').removeClass('active');
+				$(this).removeClass("active");
 			}else {
-				$(this).parent().addClass('active').find('.order-detail-text').text('隐藏详情');
+				$('.order-detail-wrap').addClass('active');
+				$(this).addClass("active")
 			}			
 		})
 	})
