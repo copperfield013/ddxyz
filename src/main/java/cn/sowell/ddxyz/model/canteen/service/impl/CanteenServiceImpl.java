@@ -293,6 +293,7 @@ public class CanteenServiceImpl implements CanteenService {
 				item.setWaresName(product.getName());
 				item.setdWaresId(product.getDeliveryWaresId());
 				item.setUnitPrice(product.getPrice());
+				item.setThumbUri(product.getThumbUri());
 				itemMap.put(product.getDeliveryWaresId(), item);
 			}else{
 				item.setCount(item.getCount() + 1);
@@ -454,10 +455,6 @@ public class CanteenServiceImpl implements CanteenService {
 	@Override
 	public CanteenUserCacheInfo getOrderUserInfo(Long orderId) {
 		return cDao.getOrderUserInfo(orderId);
-		
-		
-				
-				
 	}
 	
 }
