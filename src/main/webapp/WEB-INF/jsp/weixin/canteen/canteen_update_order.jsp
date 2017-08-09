@@ -271,11 +271,15 @@
 					
 				seajs.use(['ajax'], function(Ajax){
 					Ajax.postJson('weixin/canteen/doUpdateOrder', parameter, function(data){
-						alert(data.status);
+						if(data.status === 'suc'){
+							alert('订单修改成功');
+							location.href = 'weixin/canteen/order_list';
+						}else{
+							alert('订单修改失败');
+						}
 					});
 				});
 			});
-			
 		})
 	</script>
 	

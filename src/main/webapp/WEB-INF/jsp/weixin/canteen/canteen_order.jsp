@@ -168,7 +168,7 @@
 					count +=1;
 				}
 				$('.dishCount').text(count);
-			})
+			});
 			
 			//添加菜品到订单事件绑定
 			$('.add').on('click',function(){
@@ -198,7 +198,7 @@
 	    		addDeliveryWaresCountInPage(dWaresId, dishCount);
 	    		refreshRemain();
 	    		return false;
-			})
+			});
 			
 			//输入框绑定事件
 			$('.input-box').on('focus',function(e){
@@ -254,13 +254,16 @@
 				
 				seajs.use(['ajax'], function(Ajax){
 					Ajax.postJson('weixin/canteen/doOrder', parameter, function(data){
-						console.log(data);
+						if(data.status === 'suc'){
+							alert('订单创建成功');
+							location.href = 'weixin/canteen/order_list';
+						}else{
+							alert('订单创建失败');
+						}
 					});
 				});
-				
 			});
-			
-		})
+		});
 	</script>
 </body>
 </html>
