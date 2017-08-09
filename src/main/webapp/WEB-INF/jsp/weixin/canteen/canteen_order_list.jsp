@@ -92,6 +92,51 @@ p.operate .operate-revise {
 .timePoint, .time, .location {
 	float:left;
 }
+.order-detail-wrap {
+	/* transition:all linear .2s;
+	-ms-transition:all linear .2s;
+	-moz-transition:all linear .2s;
+	-webkit-transition:all linear .2s;
+	-o-transition:all linear .2s; */
+	font-size:12px;
+	height:30px;
+	overflow:hidden;
+	font-weight:700;
+}
+.order-detail-wrap.active {
+	height:auto;
+}
+.circle-point-icon {
+	display:inline-block;
+	width:16px;
+	height:16px;
+	line-height:16px;
+	text-align:center;
+	font-size:16px;
+	font-family:icon;
+	vertical-align:middle;
+	margin-top:-2px;
+	transition:all linear .2s;
+	-ms-transition:all linear .2s;
+	-moz-transition:all linear .2s;
+	-webkit-transition:all linear .2s;
+	-o-transition:all linear .2s;
+	transform:rotate(90deg);
+	-ms-transform:rotate(90deg); 	
+	-moz-transform:rotate(90deg); 	
+	-webkit-transform:rotate(90deg); 
+	-o-transform:rotate(90deg); 	
+}
+.order-detail-wrap.active .circle-point-icon {
+	transform:rotate(-90deg);
+	-ms-transform:rotate(-90deg); 	
+	-moz-transform:rotate(-90deg); 	
+	-webkit-transform:rotate(-90deg); 
+	-o-transform:rotate(-90deg); 	
+}
+.hideinfo>span {
+	display:block;
+}
 footer .order-link {
     color: #663300;
 }
@@ -129,12 +174,23 @@ footer .main {
 				  		<p class="result">
 				  			<span class="location">领取地点：东部软件园</span>
 				  		</p>
+				  		<div class="order-detail-wrap">
+				  			<p class="order-detail">
+					  			<span class="order-detail-text">显示详情</span>
+					  			<i class="circle-point-icon">&#xe600;</i>
+				  			</p>
+				  			<p class="hideinfo">
+				  				<span class="ordertime">创建时间：2017-08-11 14:00:00</span>
+				  				<span class="takemen">收货人：张荣波</span>
+				  				<span class="takePhone">联系号码：13588888888</span>
+				  				<span class="takeport">部门：研发部</span>
+				  			</p>
+				  		</div>				  		
 				  		<p class="operate">				  				
 				  			<span class="operate-button">取消订单</span>	
 				  			<span class="operate-revise">修改订单</span>			  				
 				  		</p>
 				   	</div>
-				   	
 				   	<div class="order">
 				   		<p class="number">订单号：170509161232		
 				   		</p>				   		
@@ -154,19 +210,29 @@ footer .main {
 				            <span class="price">￥251.0</span>				       
 				    	</p>
 				  		<p class="result">
-				  			<span class="timePoint">时间档：18点</span>
-				  			<span class="location">配送地点：天虹商场</span>
-				  		</p>
-				  		<p class="result">
-				  			<span class="time">创建时间：2017-05-09 16:12:33</span>
+				  			<span class="timePoint">领取时间：2017-08-11 16:00:00</span>
 				  			<span class="money">总价：<b>￥0.01</b></span>
 				  		</p>
+				  		<p class="result">
+				  			<span class="location">领取地点：东部软件园</span>
+				  		</p>
+				  		<div class="order-detail-wrap">
+				  			<p class="order-detail">
+					  			<span class="order-detail-text">详情</span>
+					  			<i class="circle-point-icon">&#xe600;</i>
+				  			</p>
+				  			<p class="hideinfo">
+				  				<span class="ordertime">创建时间：2017-08-11 14:00:00</span>
+				  				<span class="takemen">收货人：张荣波</span>
+				  				<span class="takePhone">联系号码：13588888888</span>
+				  				<span class="takeport">部门：研发部</span>
+				  			</p>
+				  		</div>				  		
 				  		<p class="operate">				  				
 				  			<span class="operate-button">取消订单</span>	
 				  			<span class="operate-revise">修改订单</span>			  				
 				  		</p>
 				   	</div>
-				   	
 				   	<div class="order">
 				   		<p class="number">订单号：170509161232		
 				   		</p>				   		
@@ -186,13 +252,24 @@ footer .main {
 				            <span class="price">￥251.0</span>				       
 				    	</p>
 				  		<p class="result">
-				  			<span class="timePoint">时间档：18点</span>
-				  			<span class="location">配送地点：天虹商场</span>
-				  		</p>
-				  		<p class="result">
-				  			<span class="time">创建时间：2017-05-09 16:12:33</span>
+				  			<span class="timePoint">领取时间：2017-08-11 16:00:00</span>
 				  			<span class="money">总价：<b>￥0.01</b></span>
 				  		</p>
+				  		<p class="result">
+				  			<span class="location">领取地点：东部软件园</span>
+				  		</p>
+				  		<div class="order-detail-wrap">
+				  			<p class="order-detail">
+					  			<span class="order-detail-text">详情</span>
+					  			<i class="circle-point-icon">&#xe600;</i>
+				  			</p>
+				  			<p class="hideinfo">
+				  				<span class="ordertime">创建时间：2017-08-11 14:00:00</span>
+				  				<span class="takemen">收货人：张荣波</span>
+				  				<span class="takePhone">联系号码：13588888888</span>
+				  				<span class="takeport">部门：研发部</span>
+				  			</p>
+				  		</div>				  		
 				  		<p class="operate">				  				
 				  			<span class="operate-button">取消订单</span>	
 				  			<span class="operate-revise">修改订单</span>			  				
@@ -206,5 +283,17 @@ footer .main {
 	    <a href="weixin/canteen/home" class="order-link">首页</a>
 	    <a href="weixin/canteen/order" class="main">立即下单</a>
 	</footer>
+<script>
+	$(function(){
+		$('.order-detail').on('click',function(){
+			var isOpen = $(this).parent().hasClass('active');
+			if( isOpen ){
+				$(this).parent().removeClass('active').find('.order-detail-text').text('显示详情');
+			}else {
+				$(this).parent().addClass('active').find('.order-detail-text').text('隐藏详情');
+			}			
+		})
+	})
+</script>
 </body>
 </html>
