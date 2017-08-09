@@ -8,7 +8,7 @@
 </head>
 <style>
 body,html {
-	webkit-tap-highlight-color:rgba(0,0,0,0);
+	-webkit-tap-highlight-color:rgba(0,0,0,0);
 }
 .page-list {
 	padding:0 8px;
@@ -124,12 +124,11 @@ p.operate .operate-revise {
 	-moz-transform:rotate(90deg); 	
 	-webkit-transform:rotate(90deg); 
 	-o-transform:rotate(90deg); 	
-	webkit-tap-highlight-color:rgba(0,0,0,0);
+	-webkit-tap-highlight-color:rgba(0,0,0,0);
 }
 .circle-point-icon:before {
 	font-family:icon;
 	content:"\e600";	
-	webkit-tap-highlight-color:rgba(0,0,0,0);
 }
 .circle-point-icon.active {
 	transform:rotate(-90deg);
