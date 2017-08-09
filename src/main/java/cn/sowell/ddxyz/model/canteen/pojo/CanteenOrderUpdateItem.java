@@ -5,6 +5,7 @@ public class CanteenOrderUpdateItem {
 	private Integer count;
 	private Integer unitPrice;
 	private Long dWaresId;
+	private String thumbUri;
 	public String getWaresName() {
 		return waresName;
 	}
@@ -28,5 +29,11 @@ public class CanteenOrderUpdateItem {
 	}
 	public void setdWaresId(Long dWaresId) {
 		this.dWaresId = dWaresId;
+	}
+	public String getThumbUri() {
+		return thumbUri;
+	}
+	public void setThumbUri(String thumbUri) {
+		this.thumbUri = thumbUri;
 	}
 }

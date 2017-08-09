@@ -61,9 +61,10 @@ public class WeiXinCanteenController {
 		JsonResponse jRes = new JsonResponse();
 		CanteenOrderParameter parameter = CanteenOrderParameter.fromJson(jReq.getJsonObject());
 		try {
-			PlainCanteenOrder order = canteenService.createOrder(parameter);
-			System.out.println(order);
+			canteenService.createOrder(parameter);
+			jRes.setStatus("suc");
 		} catch (OrderResourceApplyException e) {
+			jRes.setStatus("error");
 			logger.error("创建订单时发生错误", e);
 		}
 		return jRes;
