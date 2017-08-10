@@ -43,4 +43,10 @@ public interface AdminConstants {
 	 * 自动回复
 	 */
 	final String PATH_MESSAGE_CONFIG = PATH_BASE + "/message";
+
+
+	/**
+	 * 餐厅模块
+	 */
+	final String PATH_CANTEEN = PATH_BASE + "/canteen";
 }

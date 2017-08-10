@@ -28,7 +28,11 @@ public class PlainDelivery {
 	@Column(name="c_time_point")
 	private Date timePoint;
 	
-	//配送关闭时间
+	//预定开始时间
+	@Column(name="c_open_time")
+	private Date openTime;
+	
+	//预定关闭时间
 	@Column(name="c_close_time")
 	private Date closeTime;
 	
@@ -156,6 +160,12 @@ public class PlainDelivery {
 	}
 	public void setType(String type) {
 		this.type = type;
+	}
+	public Date getOpenTime() {
+		return openTime;
+	}
+	public void setOpenTime(Date openTime) {
+		this.openTime = openTime;
 	}
 	
 	

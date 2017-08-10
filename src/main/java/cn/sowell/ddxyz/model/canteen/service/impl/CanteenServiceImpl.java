@@ -39,8 +39,10 @@ import cn.sowell.ddxyz.model.common.pojo.PlainOrder;
 import cn.sowell.ddxyz.model.common.pojo.PlainProduct;
 import cn.sowell.ddxyz.model.common.utils.DeliveryPeriodUtils;
 import cn.sowell.ddxyz.model.common2.core.C2OrderResource;
+import cn.sowell.ddxyz.model.common2.core.OrderOperateException;
 import cn.sowell.ddxyz.model.common2.core.OrderResourceApplyException;
 import cn.sowell.ddxyz.model.wares.pojo.PlainWares;
+import cn.sowell.ddxyz.model.weixin.pojo.WeiXinUser;
 
 @Service
 public class CanteenServiceImpl implements CanteenService {
@@ -488,4 +490,22 @@ public class CanteenServiceImpl implements CanteenService {
 		return result;
 	}
 	
+	@Override
+	public void cancelOrder(WeiXinUser operateUser, Long orderId) throws OrderOperateException {
+		PlainCanteenOrder order = getCanteenOrder(orderId);
+		if(order != null){
+			String cancelStatus = order.getpOrder().getCanceledStatus();
+			if(cancelStatus != null){
+				throw new OrderOperateException("订单[" + orderId + "]已经被取消，取消状态为[" + cancelStatus + "]");
+			}
+			if(!operateUser.getId().equals(order.getpOrder().getOrderUserId())){
+				throw new OrderOperateException("订单[" + orderId + "]的下单用户[" + order.getpOrder().getOrderUserId() + "]与当前取消的用户[" + operateUser.getId() + "]不符");
+			}
+			//订单当前必须
+			cDao.setOrderCanceled(orderId, Order.CAN_STATUS_CANCELED);
+		}
+	}
+	
+	
 }
+

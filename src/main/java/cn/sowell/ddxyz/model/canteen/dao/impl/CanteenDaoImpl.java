@@ -17,7 +17,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.ResultTransformer;
-import org.hibernate.type.LongType;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 
@@ -28,6 +27,7 @@ import cn.sowell.copframe.dao.deferedQuery.SimpleMapWrapper;
 import cn.sowell.copframe.dao.deferedQuery.sqlFunc.WrapForCountFunction;
 import cn.sowell.copframe.dao.utils.QueryUtils;
 import cn.sowell.copframe.dto.format.FormatUtils;
+import cn.sowell.copframe.dto.format.FrameDateFormat;
 import cn.sowell.copframe.dto.page.CommonPageInfo;
 import cn.sowell.copframe.utils.CollectionUtils;
 import cn.sowell.ddxyz.model.canteen.dao.CanteenDao;
@@ -48,6 +48,10 @@ public class CanteenDaoImpl implements CanteenDao{
 
 	@Resource
 	SessionFactory sFactory;
+	
+	
+	@Resource
+	FrameDateFormat dateFormat;
 	
 	@Override
 	public void updateCurrentCount(Long deliveryWaresId, int updateCount) {
@@ -164,17 +168,9 @@ public class CanteenDaoImpl implements CanteenDao{
 	
 	@Override
 	public PlainDelivery getDeliveryOfThisWeek(Date date) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 0);
-		cal.setFirstDayOfWeek(Calendar.MONDAY);
-		Date start = cal.getTime();
-		cal.add(Calendar.WEEK_OF_YEAR, 1);
-		cal.add(Calendar.MILLISECOND, -1);
-		Date end = cal.getTime();
+		Date
+			start = dateFormat.getTheDayOfWeek(Calendar.MONDAY, 0),
+			end = dateFormat.getTheDayOfWeek(new Date(), Calendar.MONDAY, 6, 23, 59, 59);
 		
 		Criteria criteria = sFactory.getCurrentSession().createCriteria(PlainDelivery.class);
 		criteria.add(Restrictions.between("timePoint", start, end))
@@ -195,6 +191,7 @@ public class CanteenDaoImpl implements CanteenDao{
 						"	wb.c_name waresname," +
 						"	wb.c_base_price price," +
 						"   wb.c_price_unit price_unit," +
+						"   wb.c_thumb_uri thumburi," +
 						"	w.c_max_count maxcount," +
 						"	w.c_current_count currencount" +
 						" FROM" +
@@ -379,6 +376,17 @@ public class CanteenDaoImpl implements CanteenDao{
 		session.update(cOrder);
 		session.update(cOrder.getpOrder());
 	}
+	
+	@Override
+	public void setOrderCanceled(long orderId, String cancelStatus) {
+		String sql = "update t_order_base set c_canceled_status = :cancelStatus where id = :orderId";
+		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
+		query.setString("cancelStatus", cancelStatus)
+			.setLong("orderId", orderId)
+			.executeUpdate();
+	}
+	
+	
 	
 	@SuppressWarnings("unchecked")
 	@Override

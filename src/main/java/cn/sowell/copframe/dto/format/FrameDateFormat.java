@@ -2,6 +2,7 @@ package cn.sowell.copframe.dto.format;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 /**
  * 
@@ -122,5 +123,25 @@ public interface FrameDateFormat {
 	 * @return
 	 */
 	boolean inDay(Date date, Date theDay);
+	
+	/**
+	 * 
+	 * @param base 某一天为基础，计算该周的星期几
+	 * @param startDayOfWeek 该周的星期几，以这天为起始{@link Calendar#MONDAY}...
+	 * @param dayAddition 以startDayOfWeek为初始，向后的天数。例如startDayOfWeek为星期一，dayAddition为2时，则计算出来的是星期三
+	 * @param HH 小时（24小时）
+	 * @param mm 分钟
+	 * @param ss 秒
+	 */
+	Date getTheDayOfWeek(Date base,int startDayOfWeek, int dayAddition, int HH, int mm, int ss);
 
+	/**
+	 * @param startDayOfWeek 该周的星期几，以这天为起始{@link Calendar#MONDAY}...
+	 * @param dayAddition 以startDayOfWeek为初始，向后的天数。例如startDayOfWeek为星期一，dayAddition为2时，则计算出来的是星期三
+	 * @return
+	 * @see #getTheDayOfWeek(int, int, int, int, int)
+	 */
+	Date getTheDayOfWeek(int startDayOfWeek, int dayAddition);
+
+	
 }

@@ -11,52 +11,33 @@
 <body>
 	  <main>
         <!-- 头部banner -->
-        <header>
+        <%-- <header>
             <img src="${basePath }media/weixin/main/image/banner-index.jpg" alt="点点心意">
-        </header>
+        </header> --%>
         <!-- 本周菜单 -->
         <div class="block weekMenu">
             <h4>本周菜单</h4>
-            	<p class="clearfix">
-	                <img src="${basePath }/media/weixin/main/image/thumb-shop1.jpg" alt="${drinkType.name }">
-	                <span class="name">西湖龙井大烤鸭</span>
-	                <span class="price">
-	                     <b>单价：<i>20元/只</i></b>
-	                </span>
-	            </p>
-	            <p class="clearfix">
-	                <img src="${basePath }/media/weixin/main/image/thumb-shop2.jpg" alt="${drinkType.name }">
-	                <span class="name">鸡爪</span>
-	                <span class="price">
-	                     <b>单价：<i>20</i>元/斤</b>
-	                </span>
-	            </p>
-	            <p class="clearfix">
-	                <img src="${basePath }/media/weixin/main/image/thumb-shop1.jpg" alt="${drinkType.name }">
-	                <span class="name">小龙虾</span>
-	                <span class="price">
-	                    <b>单价：<i>50元</i>/斤</b>
-	                </span>
-	            </p>
+            	<c:forEach items="${delivery.waresList }" var="dWares">
+	            	<p class="clearfix">
+		                <img src="${basePath }${dWares.thumbUri}" alt="${dWares.waresName }">
+		                <span class="name">${dWares.waresName }</span>
+		                <span class="price">
+		                     <b>单价：<i><fmt:formatNumber value="${dWares.price/100 }" pattern="0.00" /> ${dWares.priceUnit }</i></b>
+		                </span>
+		            </p>
+            	</c:forEach>
+            
         </div>
         <!-- 领取地址 -->
         <div class="block address">
-            <h4>领取地址</h4>           	
-	           <p class="clearfix">
-	               <img src="http://192.168.1.129:8080/ddxyz/media/weixin/main/image/thumb-shop1.jpg" alt="${deliveryLocation.name }">
-	               <span class="name">东部软件园</span>
-	               <span class="addr">地址：东部软件园东部软件园东部软件园</span>
-	           </p>
-	           <p class="clearfix">
-	               <img src="http://192.168.1.129:8080/ddxyz/media/weixin/main/image/thumb-shop1.jpg" alt="${deliveryLocation.name }">
-	               <span class="name">浙江大学西溪校区</span>
-	               <span class="addr">地址：东部软件园东部软件园东部软件园</span>
-	           </p>
-	           <p class="clearfix">
-	               <img src="http://192.168.1.129:8080/ddxyz/media/weixin/main/image/thumb-shop1.jpg" alt="${deliveryLocation.name }">
-	               <span class="name">浙江大学紫荆港校区</span>
-	               <span class="addr">地址：东部软件园东部软件园东部软件园</span>
-	           </p>
+            <h4>领取地址</h4>         
+				<c:forEach items="${locations }" var="location">
+					<p class="clearfix">
+					    <img src="${location.pictureUrl }" alt="${location.name }">
+					    <span class="name">${location.name }</span>
+					    <span class="addr">地址：${location.address }</span>
+					</p>
+				</c:forEach>
         </div>
     </main>
     <footer>

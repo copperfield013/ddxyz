@@ -16,6 +16,9 @@ public interface DdxyzConstants {
 	final long MERCHANT_ID = 1;
 	final long WARES_ID = 1;
 	
+	
+	final long CANTEEN_MERCHANT_ID = 2;
+	
 	//新订单信息类型，用于在用户付款成功后，系统给商户客服发送微信消息
 	final String MSGTYPE_NEWORDER = "new_order";
 	

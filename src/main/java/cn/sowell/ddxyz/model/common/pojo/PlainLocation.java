@@ -40,6 +40,9 @@ public class PlainLocation {
 	@Column(name="c_disabled")
 	private Integer disabled;
 	
+	@Column(name="c_type")
+	private String type;
+	
 	@Column(name="create_time")
 	private Date createTime;
 	
@@ -111,5 +114,11 @@ public class PlainLocation {
 	}
 	public void setDisabled(Integer disabled) {
 		this.disabled = disabled;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
 	}
 }

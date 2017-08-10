@@ -25,6 +25,10 @@ public class CanteenDeliveyWares {
 	private Integer currentCount;
 	
 	
+	@Column(name="thumburi")
+	private String thumbUri;
+	
+	
 	public Long getdWaresId() {
 		return dWaresId;
 	}
@@ -66,5 +70,11 @@ public class CanteenDeliveyWares {
 	}
 	public void setPriceUnit(String priceUnit) {
 		this.priceUnit = priceUnit;
+	}
+	public String getThumbUri() {
+		return thumbUri;
+	}
+	public void setThumbUri(String thumbUri) {
+		this.thumbUri = thumbUri;
 	}
 }

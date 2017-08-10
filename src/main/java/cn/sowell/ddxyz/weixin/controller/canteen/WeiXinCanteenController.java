@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.fastjson.JSON;
-
 import cn.sowell.copframe.common.UserIdentifier;
 import cn.sowell.copframe.dto.ajax.JsonRequest;
 import cn.sowell.copframe.dto.ajax.JsonResponse;
@@ -25,11 +23,16 @@ import cn.sowell.ddxyz.model.canteen.pojo.CanteenOrderUpdateItem;
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenUserCacheInfo;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainCanteenOrder;
 import cn.sowell.ddxyz.model.canteen.pojo.param.CanteenOrderParameter;
+import cn.sowell.ddxyz.model.canteen.service.CanteenConfigService;
 import cn.sowell.ddxyz.model.canteen.service.CanteenService;
+import cn.sowell.ddxyz.model.common.pojo.PlainLocation;
 import cn.sowell.ddxyz.model.common.pojo.PlainOrder;
+import cn.sowell.ddxyz.model.common2.core.OrderOperateException;
 import cn.sowell.ddxyz.model.common2.core.OrderResourceApplyException;
 import cn.sowell.ddxyz.model.weixin.pojo.WeiXinUser;
 import cn.sowell.ddxyz.weixin.WeiXinConstants;
+
+import com.alibaba.fastjson.JSON;
 
 @Controller
 @RequestMapping(WeiXinConstants.URI_BASE + "/canteen")
@@ -38,12 +41,17 @@ public class WeiXinCanteenController {
 	@Resource
 	CanteenService canteenService;
 	
+	@Resource
+	CanteenConfigService canteenConfigService;
 	
 	Logger logger = Logger.getLogger(WeiXinCanteenController.class);
 	
 	@RequestMapping("/home")
-	public String home(){
-		
+	public String home(Model model){
+		CanteenDelivery delivery = canteenService.getDeliveryOfThisWeek();
+		List<PlainLocation> locations = canteenConfigService.getCanteenDeliveryLocations();
+		model.addAttribute("delivery", delivery);
+		model.addAttribute("locations", locations);
 		return WeiXinConstants.PATH_CANTEEN + "/canteen_home.jsp";
 	}
 	
@@ -113,6 +121,23 @@ public class WeiXinCanteenController {
 		}
 		return jRes;
 	}
+	
+	@ResponseBody
+	@RequestMapping("/doCancelOrder/{orderId}")
+	public JsonResponse doCancelOrder(@PathVariable Long orderId){
+		JsonResponse jRes = new JsonResponse();
+		WeiXinUser operateUser = WxUtils.getCurrentUser(WeiXinUser.class);
+		try {
+			canteenService.cancelOrder(operateUser, orderId);
+			jRes.setStatus("suc");
+		} catch (OrderOperateException e) {
+			jRes.setStatus("error");
+			logger.error("取消订单失败", e);
+		}
+		return jRes;
+		
+	}
+	
 	
 	@RequestMapping("/order_data")
 	public String orderData(CommonPageInfo pageInfo, Model model){

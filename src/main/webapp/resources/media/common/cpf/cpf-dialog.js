@@ -281,15 +281,17 @@ define(function(require, exports, module){
 		$($CPF.getParam('dialogEventSelector'), $page).each(function(){
 			var $this = $(this),
 				title = $this.attr('title'),
-				url = $this.attr('href')
+				url = $this.attr('href'),
+				target = $this.attr('target')
 				;
 			$(this).click(function(e){
 				e.preventDefault();
-				var dialog = new Dialog({
+				Dialog.openDialog(url, title, target);
+				/*var dialog = new Dialog({
 					title	: title,
 					url		: url
 				});
-				dialog.getDom().modal();
+				dialog.getDom().modal();*/
 				return false;
 			});
 		});

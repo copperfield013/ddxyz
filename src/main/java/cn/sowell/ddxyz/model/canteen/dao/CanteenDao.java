@@ -137,6 +137,13 @@ public interface CanteenDao {
 	 * @param count
 	 */
 	void addCurrentCount(long dWaresId, int addition);
+	
+	/**
+	 * 设置订单的取消状态
+	 * @param orderId 订单主键
+	 * @param canStatusCanceled 不能为空的取消状态
+	 */
+	void setOrderCanceled(long orderId, String canStatusCanceled);
 
 	/**
 	 * 根据用户id和分页数据获得订单列表

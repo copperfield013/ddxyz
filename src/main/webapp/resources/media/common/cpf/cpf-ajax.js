@@ -236,6 +236,7 @@ define(function(require, exports, module){
 	}
 	
 	function commonHandleSucAjax(data, textStatus, jqXHR){
+		//处理session超时
 		if($CPF.getParam('ajaxSessionValid')){
 			var sessionStatus = jqXHR.getResponseHeader('cpf-session-status');
 			if(sessionStatus === 'invalid'){

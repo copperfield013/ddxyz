@@ -186,4 +186,26 @@ public class AbstractFrameDateFormat implements FrameDateFormat{
 		return false;
 	}
 	
+	
+	@Override
+	public Date getTheDayOfWeek(Date base, int startDayOfWeek, int dayAddition, int HH,
+			int mm, int ss) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(base);
+		int sub = startDayOfWeek - cal.get(Calendar.DAY_OF_WEEK);
+		cal.add(Calendar.DAY_OF_WEEK, sub);
+		
+		cal.add(Calendar.DATE, dayAddition);
+		cal.set(Calendar.HOUR_OF_DAY, HH);
+		cal.set(Calendar.MINUTE, mm);
+		cal.set(Calendar.SECOND, ss);
+		cal.set(Calendar.MILLISECOND, 0);
+		return cal.getTime();
+	}
+	
+	@Override
+	public Date getTheDayOfWeek(int startDayOfWeek, int dayAddition) {
+		return getTheDayOfWeek(new Date(), startDayOfWeek, dayAddition, 0, 0, 0);
+	}
+	
 }

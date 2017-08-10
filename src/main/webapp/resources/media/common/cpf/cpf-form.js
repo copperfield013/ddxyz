@@ -27,8 +27,13 @@ define(function(require, exports, module){
 				return;
 			}
 			var validator = $this.data('bootstrapValidator');
-			if(validator){
-				validator.validate();
+			if(validator && $this.is('.validate-form')){
+				try{
+					validator.validate();
+				}catch(e){
+					console.error(e);
+					return false;
+				}
 				if(!validator.isValid()){
 					return false;
 				}

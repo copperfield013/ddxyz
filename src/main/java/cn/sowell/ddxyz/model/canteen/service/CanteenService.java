@@ -14,8 +14,10 @@ import cn.sowell.ddxyz.model.canteen.pojo.param.CanteenOrderParameter;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlan;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlanWares;
 import cn.sowell.ddxyz.model.common.pojo.PlainOrder;
+import cn.sowell.ddxyz.model.common2.core.OrderOperateException;
 import cn.sowell.ddxyz.model.common2.core.OrderResourceApplyException;
 import cn.sowell.ddxyz.model.wares.pojo.PlainWares;
+import cn.sowell.ddxyz.model.weixin.pojo.WeiXinUser;
 
 public interface CanteenService {
 	
@@ -87,6 +89,16 @@ public interface CanteenService {
 	 * @return
 	 */
 	CanteenUserCacheInfo getOrderUserInfo(Long orderId);
+
+	/**
+	 * 取消订单<br/>
+	 * 当当前订单已经被取消，或者执行操作的用户operateUser和创建订单的user不一致时，都会抛出异常
+	 * @param operateUser 当前执行取消操作的用户
+	 * @param orderId 取消的订单id
+	 * @throws OrderOperateException 当取消失败时抛出异常
+	 */
+	void cancelOrder(WeiXinUser operateUser, Long orderId) throws OrderOperateException;
+	
 	
 	/**
 	 * 获取分页后的订单信息

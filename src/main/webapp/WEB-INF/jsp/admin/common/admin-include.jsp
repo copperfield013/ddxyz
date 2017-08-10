@@ -15,5 +15,6 @@
 
 <!-- jQuery -->
 <script src="${basePath }media/jquery-1.11.3.js"></script>
+<script src="${basePath }media/common/plugins/jquery.tmpl.js"></script>
 <!-- SeaJS -->
 <script src="${basePath }media/sea-debug.js"></script>

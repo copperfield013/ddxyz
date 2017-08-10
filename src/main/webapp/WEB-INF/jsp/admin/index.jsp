@@ -148,7 +148,21 @@
 			                        </a>
 		                        </li>
 	                        </ul>
-	                    </li>
+	                   </li>
+	                   <li>
+	                        <a href="#" class="menu-dropdown">
+	                            <i class="menu-icon fa fa-desktop"></i>
+	                            <span class="menu-text">食堂管理</span>
+	                            <i class="menu-expand"></i>
+	                        </a>
+	                        <ul class="submenu">
+	                        	<li>
+			                        <a href="admin/canteen/config/wares_list" class="tab" target="wares-public" title="餐品发布">
+			                            <span class="menu-text">餐品发布</span>
+			                        </a>
+		                        </li>
+	                        </ul>
+	                   </li>
 					</ul>
 				</div>
 				<div class="page-content">
