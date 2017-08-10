@@ -5,11 +5,13 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.dom4j.CDATA;
 import org.springframework.stereotype.Repository;
 
 import cn.sowell.ddxyz.DdxyzConstants;
 import cn.sowell.ddxyz.model.canteen.dao.CanteenConfigDao;
 import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenDeliveryWaresListCriteria;
+import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenWeekDeliveryCriteria;
 import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenDeliveryWaresListItem;
 import cn.sowell.ddxyz.model.canteen.service.CanteenConfigService;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
@@ -73,7 +75,13 @@ public class CanteenConfigServiceImpl implements CanteenConfigService{
 			throw new RuntimeException("配送地址不存在");
 		}
 		
-		
+	}
+
+	@Override
+	public PlainDelivery getCanteenDeliveryOfTheWeek(CanteenWeekDeliveryCriteria criteria) {
+		return configDao.getCanteenDeliveryOfTheWeek(criteria);
 		
 	}
+	
+	
 }

@@ -12,7 +12,15 @@
 		<a class="btn btn-primary tab" 
 			href="admin/canteen/config/batch_delivery" title="批量生成配送"
 			target="canteen-config-batch-delivery">批量生成</a>
+		<span style="float: right;">
+			<fmt:formatDate value="${criteria.startDate }" pattern="yyyy-MM-dd"/>
+			~
+			<fmt:formatDate value="${criteria.endDateIncluded }" pattern="yyyy-MM-dd"/>
+		</span>
 	</form>
+	<div>
+		
+	</div>
 	<table class="table">
 		<thead>
 			<tr>

@@ -28,7 +28,9 @@ import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.ddxyz.DdxyzConstants;
 import cn.sowell.ddxyz.admin.AdminConstants;
 import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenDeliveryWaresListCriteria;
+import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenWeekDeliveryCriteria;
 import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenDeliveryWaresListItem;
+import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenWeekDeliveryWaresItem;
 import cn.sowell.ddxyz.model.canteen.service.CanteenConfigService;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryWares;
@@ -51,10 +53,46 @@ public class AdminCanteenConfigController {
 	Logger logger = Logger.getLogger(AdminCanteenConfigController.class);
 	
 	
+	@RequestMapping("/week_delivery")
+	public String weekDelivery(CanteenWeekDeliveryCriteria criteria) {
+		//根据日期参数构造日期范围条件
+		if(criteria.getStartDate() == null && criteria.getEndDate() == null) {
+			if(TextUtils.hasText(criteria.getDate())) {
+				Date date = dateFormat.parse(criteria.getDate());
+				if(date != null) {
+					criteria.setStartDate(dateFormat.getTheDayOfWeek(date, Calendar.MONDAY, 0, 0, 0, 0));
+					criteria.setEndDate(dateFormat.incDay(criteria.getStartDate(), 7));
+				}
+			}else {
+				criteria.setStartDate(dateFormat.getTheDayOfWeek(Calendar.MONDAY, 0));
+				criteria.setEndDate(dateFormat.incDay(criteria.getStartDate(), 7));
+			}
+		}
+		PlainDelivery delivery = canteenConfigService.getCanteenDeliveryOfTheWeek(criteria);
+		List<CanteenWeekDeliveryWaresItem> items = canteenConfigService.getCanteenDeliveryWaresItems(delivery);
+		
+		return AdminConstants.PATH_CANTEEN + "/canteen_week_delivery.jsp";
+	}
+	
+	
 	@RequestMapping("/wares_list")
 	public String waresList(Model model, CanteenDeliveryWaresListCriteria criteria){
+		if(criteria.getStartDate() == null && criteria.getEndDate() == null) {
+			if(TextUtils.hasText(criteria.getDate())) {
+				Date date = dateFormat.parse(criteria.getDate());
+				if(date != null) {
+					criteria.setStartDate(dateFormat.getTheDayOfWeek(date, Calendar.MONDAY, 0, 0, 0, 0));
+					criteria.setEndDate(dateFormat.incDay(criteria.getStartDate(), 7));
+				}
+			}else {
+				criteria.setStartDate(dateFormat.getTheDayOfWeek(Calendar.MONDAY, 0));
+				criteria.setEndDate(dateFormat.incDay(criteria.getStartDate(), 7));
+			}
+		}
+		
 		List<CanteenDeliveryWaresListItem> deliveryWaresList = canteenConfigService.getDeliveryWaresList(criteria);
 		model.addAttribute("deliveryWaresList", deliveryWaresList);
+		model.addAttribute("criteria", criteria);
 		return AdminConstants.PATH_CANTEEN + "/canteen_ware_list.jsp";
 	}
 	

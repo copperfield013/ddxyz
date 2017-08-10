@@ -3,6 +3,7 @@ package cn.sowell.ddxyz.model.canteen.service;
 import java.util.List;
 
 import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenDeliveryWaresListCriteria;
+import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenWeekDeliveryCriteria;
 import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenDeliveryWaresListItem;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryWares;
@@ -48,5 +49,12 @@ public interface CanteenConfigService {
 	 */
 	void saveCanteenDelivery(PlainDelivery delivery,
 			List<PlainDeliveryWares> dWaresList);
+
+	/**
+	 * 根据条件对象获得该时间范围内的第一条配送
+	 * @param criteria
+	 * @return
+	 */
+	PlainDelivery getCanteenDeliveryOfTheWeek(CanteenWeekDeliveryCriteria criteria);
 
 }

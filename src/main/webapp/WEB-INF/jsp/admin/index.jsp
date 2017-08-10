@@ -161,6 +161,11 @@
 			                            <span class="menu-text">餐品发布</span>
 			                        </a>
 		                        </li>
+	                        	<li>
+			                        <a href="admin/canteen/config/week_delivery" class="tab" target="canteen-week-delivery" title="本周产品">
+										<span class="menu-text">本周产品</span>
+			                        </a>
+		                        </li>
 	                        </ul>
 	                   </li>
 					</ul>

@@ -3,6 +3,7 @@ package cn.sowell.ddxyz.model.canteen.dao;
 import java.util.List;
 
 import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenDeliveryWaresListCriteria;
+import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenWeekDeliveryCriteria;
 import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenDeliveryWaresListItem;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryWares;
@@ -62,6 +63,14 @@ public interface CanteenConfigDao {
 	 * @return
 	 */
 	PlainLocation getDeliveryLocation(Long locationId);
+
+
+	/**
+	 * 
+	 * @param criteria
+	 * @return
+	 */
+	PlainDelivery getCanteenDeliveryOfTheWeek(CanteenWeekDeliveryCriteria criteria);
 
 
 }

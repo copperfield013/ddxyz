@@ -1,5 +1,7 @@
 package cn.sowell.ddxyz.model.canteen.dao.impl;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -13,8 +15,10 @@ import org.springframework.stereotype.Repository;
 
 import cn.sowell.copframe.dao.deferedQuery.DeferedParamQuery;
 import cn.sowell.copframe.dao.deferedQuery.HibernateRefrectResultTransformer;
+import cn.sowell.copframe.dto.format.FrameDateFormat;
 import cn.sowell.ddxyz.model.canteen.dao.CanteenConfigDao;
 import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenDeliveryWaresListCriteria;
+import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenWeekDeliveryCriteria;
 import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenDeliveryWaresListItem;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryWares;
@@ -26,6 +30,9 @@ public class CanteenConfigDaoImpl implements CanteenConfigDao {
 	@Resource
 	SessionFactory sFactory;
 
+	@Resource
+	FrameDateFormat dateFormat;
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<PlainLocation> getDeliveryLocations(String type,
@@ -70,6 +77,15 @@ public class CanteenConfigDaoImpl implements CanteenConfigDao {
 		DeferedParamQuery dQuery = new DeferedParamQuery(sql);
 		dQuery.setParam("type", "canteen");
 		
+		if(criteria.getStartDate() != null) {
+			dQuery.appendCondition("and d.c_time_point >= :startDate")
+					.setParam("startDate", criteria.getStartDate());
+		}
+		if(criteria.getEndDate() != null) {
+			dQuery.appendCondition("and d.c_time_point < :endDate")
+					.setParam("endDate", criteria.getEndDate())
+					;
+		}
 		SQLQuery query = dQuery.createSQLQuery(sFactory.getCurrentSession(), false, null);
 		query.setResultTransformer(HibernateRefrectResultTransformer.getInstance(CanteenDeliveryWaresListItem.class));
 		
@@ -110,6 +126,12 @@ public class CanteenConfigDaoImpl implements CanteenConfigDao {
 	@Override
 	public PlainLocation getDeliveryLocation(Long locationId) {
 		return sFactory.getCurrentSession().get(PlainLocation.class, locationId);
+	}
+	
+	@Override
+	public PlainDelivery getCanteenDeliveryOfTheWeek(CanteenWeekDeliveryCriteria criteria) {
+		
+		
 	}
 	
 }

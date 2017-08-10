@@ -3,7 +3,7 @@ package cn.sowell.ddxyz.model.canteen.pojo.criteria;
 import java.util.Calendar;
 import java.util.Date;
 
-public class CanteenDeliveryWaresListCriteria {
+public class CanteenWeekDeliveryCriteria {
 	private String date;
 
 	private Date startDate;
@@ -42,5 +42,4 @@ public class CanteenDeliveryWaresListCriteria {
 		}
 		return null;
 	}
-	
 }
