@@ -2,7 +2,10 @@ package cn.sowell.ddxyz.model.canteen.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
+import cn.sowell.copframe.common.UserIdentifier;
+import cn.sowell.copframe.dto.page.CommonPageInfo;
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenDelivery;
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenOrderUpdateItem;
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenUserCacheInfo;
@@ -10,6 +13,7 @@ import cn.sowell.ddxyz.model.canteen.pojo.PlainCanteenOrder;
 import cn.sowell.ddxyz.model.canteen.pojo.param.CanteenOrderParameter;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlan;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlanWares;
+import cn.sowell.ddxyz.model.common.pojo.PlainOrder;
 import cn.sowell.ddxyz.model.common2.core.OrderResourceApplyException;
 import cn.sowell.ddxyz.model.wares.pojo.PlainWares;
 
@@ -83,4 +87,26 @@ public interface CanteenService {
 	 * @return
 	 */
 	CanteenUserCacheInfo getOrderUserInfo(Long orderId);
+	
+	/**
+	 * 获取分页后的订单信息
+	 * @param user
+	 * @param pageInfo
+	 * @return
+	 */
+	List<PlainOrder> getWaresPageList(UserIdentifier user, CommonPageInfo pageInfo);
+	
+	/**
+	 * 获取订单中商品简略信息
+	 * @param orderList
+	 * @return
+	 */
+	Map<PlainOrder, List<CanteenOrderUpdateItem>> getCanteenOrderUpdateItemList(List<PlainOrder> orderList);
+	
+	/**
+	 * 获取订单列表中所有订单对应的canteen订单对象
+	 * @param orderList
+	 * @return
+	 */
+	Map<PlainOrder, PlainCanteenOrder> getPlainCanteenOrderMap(List<PlainOrder> orderList);
 }

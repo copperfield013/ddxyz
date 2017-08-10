@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,8 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import cn.sowell.copframe.common.UserIdentifier;
+import cn.sowell.copframe.dto.page.CommonPageInfo;
 import cn.sowell.copframe.utils.CollectionUtils;
 import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.ddxyz.model.canteen.dao.CanteenDao;
@@ -455,6 +458,34 @@ public class CanteenServiceImpl implements CanteenService {
 	@Override
 	public CanteenUserCacheInfo getOrderUserInfo(Long orderId) {
 		return cDao.getOrderUserInfo(orderId);
+			
+	}
+	
+	
+	public List<PlainOrder> getWaresPageList(UserIdentifier user, CommonPageInfo pageInfo){
+		List<PlainOrder> orderList = cDao.getOrderPageList((long) user.getId(), pageInfo);
+		return orderList;
+	}
+	
+	public Map<PlainOrder, List<CanteenOrderUpdateItem>> getCanteenOrderUpdateItemList(List<PlainOrder> orderList){
+		Map<PlainOrder, List<CanteenOrderUpdateItem>> result = new HashMap<PlainOrder, List<CanteenOrderUpdateItem>>();
+		if(orderList != null && orderList.size() > 0){
+			for(PlainOrder plainOrder : orderList){
+				result.put(plainOrder, getOrderItems(plainOrder.getId()));
+			}
+		}
+		return result;
+	}
+
+	@Override
+	public Map<PlainOrder, PlainCanteenOrder> getPlainCanteenOrderMap(List<PlainOrder> orderList) {
+		Map<PlainOrder, PlainCanteenOrder> result = new HashMap<>();
+		if(orderList != null && orderList.size() > 0){
+			for(PlainOrder plainOrder : orderList){
+				result.put(plainOrder, getCanteenOrder(plainOrder.getId()));
+			}
+		}
+		return result;
 	}
 	
 }

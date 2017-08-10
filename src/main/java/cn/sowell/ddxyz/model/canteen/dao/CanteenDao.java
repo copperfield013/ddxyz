@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import cn.sowell.copframe.dto.page.CommonPageInfo;
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenDeliveyWares;
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenUserCacheInfo;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainCanteenOrder;
@@ -137,6 +138,12 @@ public interface CanteenDao {
 	 */
 	void addCurrentCount(long dWaresId, int addition);
 
-
+	/**
+	 * 根据用户id和分页数据获得订单列表
+	 * @param id
+	 * @param pageInfo
+	 * @return
+	 */
+	List<PlainOrder> getOrderPageList(long userId, CommonPageInfo pageInfo);
 
 }

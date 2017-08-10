@@ -5,6 +5,7 @@
 <head>
     <title>订单列表</title>
     <jsp:include page="/WEB-INF/jsp/weixin/common/weixin-include.jsp"></jsp:include>
+    <script src="${basePath }media/weixin/main/js/ix.js?"></script>
 </head>
 <style>
 body,html {
@@ -124,11 +125,12 @@ p.operate .operate-revise {
 	-moz-transform:rotate(90deg); 	
 	-webkit-transform:rotate(90deg); 
 	-o-transform:rotate(90deg); 	
-	-webkit-tap-highlight-color:rgba(0,0,0,0);
+	webkit-tap-highlight-color:rgba(0,0,0,0);
 }
 .circle-point-icon:before {
 	font-family:icon;
 	content:"\e600";	
+	webkit-tap-highlight-color:rgba(0,0,0,0);
 }
 .circle-point-icon.active {
 	transform:rotate(-90deg);
@@ -153,7 +155,7 @@ footer .main {
 			<div class="ui-content">
 				<div id="order-list"  class="page-list">
 					
-				   	<div class="order">
+				   <!-- 	<div class="order">
 				   		<p class="number">订单号：170509161232		
 				   		</p>				   		
 				   		<p class="detail">
@@ -191,7 +193,7 @@ footer .main {
 				  			<span class="operate-button">取消订单</span>	
 				  			<span class="operate-revise">修改订单</span>			  				
 				  		</p>
-				   	</div>
+				   	</div> -->
 				   	
 				</div>
 			</div>
@@ -201,19 +203,30 @@ footer .main {
 	    <a href="weixin/canteen/home" class="order-link">首页</a>
 	    <a href="weixin/canteen/order" class="main">立即下单</a>
 	</footer>
-<script>
-	$(function(){
-		$('.circle-point-icon').on('click',function(){
-			var isOpen = $('.order-detail-wrap').hasClass('active');
-			if( isOpen ){
-				$('.order-detail-wrap').removeClass('active');
-				$(this).removeClass("active");
-			}else {
-				$('.order-detail-wrap').addClass('active');
-				$(this).addClass("active")
-			}			
+	<script type="text/javascript">
+		$(function(){
+			/* $('.circle-point-icon').on('click',function(){
+				var isOpen = $('.order-detail-wrap').hasClass('active');
+				if( isOpen ){
+					$('.order-detail-wrap').removeClass('active');
+					$(this).removeClass("active");
+				}else {
+					$('.order-detail-wrap').addClass('active');
+					$(this).addClass("active")
+				}			
+			}); */
+			ix.list('order-list', {
+				url	: 'weixin/canteen/order_data',
+				data: {
+					// 自定义参数
+				},
+				pageNo : 'pageNo', // 当前页码的key
+				callback : function(boxs){
+					 // 回调 this是当前容器，boxs是加载的数据项
+				}
+			});
+			seajs.use('ydd/ydd-order-list');
 		})
-	})
-</script>
+	</script>
 </body>
 </html>

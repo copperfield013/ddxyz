@@ -25,6 +25,10 @@ import cn.sowell.copframe.dao.deferedQuery.ColumnMapResultTransformer;
 import cn.sowell.copframe.dao.deferedQuery.DeferedParamQuery;
 import cn.sowell.copframe.dao.deferedQuery.HibernateRefrectResultTransformer;
 import cn.sowell.copframe.dao.deferedQuery.SimpleMapWrapper;
+import cn.sowell.copframe.dao.deferedQuery.sqlFunc.WrapForCountFunction;
+import cn.sowell.copframe.dao.utils.QueryUtils;
+import cn.sowell.copframe.dto.format.FormatUtils;
+import cn.sowell.copframe.dto.page.CommonPageInfo;
 import cn.sowell.copframe.utils.CollectionUtils;
 import cn.sowell.ddxyz.model.canteen.dao.CanteenDao;
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenDeliveyWares;
@@ -374,6 +378,24 @@ public class CanteenDaoImpl implements CanteenDao{
 		Session session = sFactory.getCurrentSession();
 		session.update(cOrder);
 		session.update(cOrder.getpOrder());
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PlainOrder> getOrderPageList(long userId, CommonPageInfo pageInfo) {
+		String hql = "from PlainOrder o where o.orderUserId = :userId order by o.createTime desc";
+		DeferedParamQuery dQuery = new DeferedParamQuery(hql);
+		dQuery.setParam("userId", userId);
+		Session session = sFactory.getCurrentSession();
+		Query countQuery = dQuery.createQuery(session, false, new WrapForCountFunction());
+		Integer count = FormatUtils.toInteger(countQuery.uniqueResult());
+		pageInfo.setCount(count);
+		if(count > 0){
+			Query query = dQuery.createQuery(sFactory.getCurrentSession(), false, null);
+			QueryUtils.setPagingParamWithCriteria(query, pageInfo);
+			return query.list();
+		}
+		return new ArrayList<PlainOrder>();
 	}
 	
 }
