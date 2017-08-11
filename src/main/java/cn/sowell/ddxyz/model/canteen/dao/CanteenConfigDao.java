@@ -1,10 +1,12 @@
 package cn.sowell.ddxyz.model.canteen.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenDeliveryWaresListCriteria;
 import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenWeekDeliveryCriteria;
 import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenDeliveryWaresListItem;
+import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenWeekDeliveryWaresItem;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryWares;
 import cn.sowell.ddxyz.model.common.pojo.PlainLocation;
@@ -70,7 +72,19 @@ public interface CanteenConfigDao {
 	 * @param criteria
 	 * @return
 	 */
-	PlainDelivery getCanteenDeliveryOfTheWeek(CanteenWeekDeliveryCriteria criteria);
+	PlainDelivery getCanteenDelivery(CanteenWeekDeliveryCriteria criteria);
+
+
+	List<CanteenWeekDeliveryWaresItem> getCanteenDeliveryWaresItems(
+			Long deliveryId);
+
+	/**
+	 * 根据时间范围获得唯一的canteen配送对象
+	 * @param startTime
+	 * @param endTime
+	 * @return
+	 */
+	PlainDelivery getCanteenDelivery(Date startTime, Date endTime);
 
 
 }

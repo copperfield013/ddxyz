@@ -1,5 +1,6 @@
 package cn.sowell.ddxyz.model.canteen.dao.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -156,11 +157,17 @@ public class CanteenConfigDaoImpl implements CanteenConfigDao {
 	@Override
 	public PlainDelivery getCanteenDelivery(
 			CanteenWeekDeliveryCriteria criteria) {
-		if(criteria.getStartDate() != null && criteria.getEndDate() != null){
+		return getCanteenDelivery(criteria.getStartDate(), criteria.getEndDate());
+	}
+	
+	
+	@Override
+	public PlainDelivery getCanteenDelivery(Date startTime, Date endTime) {
+		if(startTime != null && endTime != null){
 			String hql = "from PlainDelivery d where d.timePoint >= :startTime and d.timePoint < :endTime and d.type = :type";
 			Query query = sFactory.getCurrentSession().createQuery(hql);
-				query.setTimestamp("startTime", criteria.getStartDate())
-					.setTimestamp("endTime", criteria.getEndDate())
+				query.setTimestamp("startTime", startTime)
+					.setTimestamp("endTime", endTime)
 					.setString("type", "canteen")
 					.setMaxResults(1)
 				;

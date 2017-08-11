@@ -53,20 +53,6 @@ public class AdminCanteenConfigController {
 	
 	@RequestMapping("/week_delivery")
 	public String weekDelivery(CanteenWeekDeliveryCriteria criteria, Model model) {
-		//根据日期参数构造日期范围条件
-		if(criteria.getStartDate() == null && criteria.getEndDate() == null) {
-			if(TextUtils.hasText(criteria.getDate())) {
-				Date date = dateFormat.parse(criteria.getDate());
-				if(date != null) {
-					criteria.setStartDate(dateFormat.getTheDayOfWeek(date, Calendar.MONDAY, 0, 0, 0, 0));
-					criteria.setEndDate(dateFormat.incDay(criteria.getStartDate(), 7));
-				}
-			}else {
-				criteria.setDate(dateFormat.formatDate(new Date()));
-				criteria.setStartDate(dateFormat.getTheDayOfWeek(Calendar.MONDAY, 0));
-				criteria.setEndDate(dateFormat.incDay(criteria.getStartDate(), 7));
-			}
-		}
 		PlainDelivery delivery = canteenConfigService.getCanteenDelivery(criteria);
 		if(delivery != null){
 			List<CanteenWeekDeliveryWaresItem> items = canteenConfigService.getCanteenDeliveryWaresItems(delivery.getId());
@@ -74,35 +60,12 @@ public class AdminCanteenConfigController {
 		}
 		model.addAttribute("delivery", delivery);
 		model.addAttribute("criteria", criteria);
-		return AdminConstants.PATH_CANTEEN + "/canteen_week_delivery.jsp";
+		return AdminConstants.PATH_CANTEEN + "/config/canteen_week_delivery.jsp";
 	}
-	
-	
-	/*@RequestMapping("/wares_list")
-	public String waresList(Model model, CanteenDeliveryWaresListCriteria criteria){
-		if(criteria.getStartDate() == null && criteria.getEndDate() == null) {
-			if(TextUtils.hasText(criteria.getDate())) {
-				Date date = dateFormat.parse(criteria.getDate());
-				if(date != null) {
-					criteria.setStartDate(dateFormat.getTheDayOfWeek(date, Calendar.MONDAY, 0, 0, 0, 0));
-					criteria.setEndDate(dateFormat.incDay(criteria.getStartDate(), 7));
-				}
-			}else {
-				criteria.setStartDate(dateFormat.getTheDayOfWeek(Calendar.MONDAY, 0));
-				criteria.setEndDate(dateFormat.incDay(criteria.getStartDate(), 7));
-			}
-		}
-		
-		List<CanteenDeliveryWaresListItem> deliveryWaresList = canteenConfigService.getDeliveryWaresList(criteria);
-		model.addAttribute("deliveryWaresList", deliveryWaresList);
-		model.addAttribute("criteria", criteria);
-		return AdminConstants.PATH_CANTEEN + "/canteen_ware_list.jsp";
-	}*/
-	
 	
 	@RequestMapping("/batch_delivery")
 	public String batchDelivery(){
-		return AdminConstants.PATH_CANTEEN + "/canteen_batch_delivery.jsp";
+		return AdminConstants.PATH_CANTEEN + "/config/canteen_batch_delivery.jsp";
 	}
 	
 	@ResponseBody
@@ -132,7 +95,7 @@ public class AdminCanteenConfigController {
 				model.addAttribute("locations", locations);
 			}
 		}
-		return AdminConstants.PATH_CANTEEN + "/canteen_generate_delivery.jsp";
+		return AdminConstants.PATH_CANTEEN + "/config/canteen_generate_delivery.jsp";
 	}
 	
 	
@@ -189,7 +152,7 @@ public class AdminCanteenConfigController {
 	
 	@RequestMapping("/create_wares")
 	public String createWares(){
-		return AdminConstants.PATH_CANTEEN + "/canteen_create_wares.jsp";
+		return AdminConstants.PATH_CANTEEN + "/config/canteen_create_wares.jsp";
 	}
 	
 	@ResponseBody

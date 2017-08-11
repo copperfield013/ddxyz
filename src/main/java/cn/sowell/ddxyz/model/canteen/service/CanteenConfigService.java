@@ -1,10 +1,12 @@
 package cn.sowell.ddxyz.model.canteen.service;
 
+import java.util.Date;
 import java.util.List;
 
+import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenCriteria;
 import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenDeliveryWaresListCriteria;
-import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenWeekDeliveryCriteria;
 import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenDeliveryWaresListItem;
+import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenWeekDeliveryWaresItem;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryWares;
 import cn.sowell.ddxyz.model.common.pojo.PlainLocation;
@@ -50,11 +52,28 @@ public interface CanteenConfigService {
 	void saveCanteenDelivery(PlainDelivery delivery,
 			List<PlainDeliveryWares> dWaresList);
 
+	
+	/**
+	 * 根据配送id获得该配送的所有商品配送信息
+	 * @param waresId
+	 * @return
+	 */
+	List<CanteenWeekDeliveryWaresItem> getCanteenDeliveryWaresItems(
+			Long deliveryId);
+
+	/**
+	 * 根据时间范围获得唯一的配送对象
+	 * @param startTime
+	 * @param endTime
+	 * @return
+	 */
+	PlainDelivery getCanteenDelivery(Date startTime, Date endTime);
+	
 	/**
 	 * 根据条件对象获得该时间范围内的第一条配送
 	 * @param criteria
 	 * @return
 	 */
-	PlainDelivery getCanteenDeliveryOfTheWeek(CanteenWeekDeliveryCriteria criteria);
+	PlainDelivery getCanteenDelivery(CanteenCriteria criteria);
 
 }

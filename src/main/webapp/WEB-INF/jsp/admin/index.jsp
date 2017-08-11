@@ -161,6 +161,16 @@
 										<span class="menu-text">本周产品</span>
 			                        </a>
 		                        </li>
+	                        	<li>
+			                        <a href="admin/canteen/manage/week_table" class="tab" target="canteen-week-table" title="订单周表">
+										<span class="menu-text">订单周表</span>
+			                        </a>
+		                        </li>
+	                        	<li>
+			                        <a href="admin/canteen/manage/week_orders" class="tab" target="canteen-week-orders" title="订单列表">
+										<span class="menu-text">订单列表</span>
+			                        </a>
+		                        </li>
 	                        </ul>
 	                   </li>
 					</ul>

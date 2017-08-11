@@ -1,17 +1,19 @@
 package cn.sowell.ddxyz.model.canteen.service.impl;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.dom4j.CDATA;
 import org.springframework.stereotype.Repository;
 
+import cn.sowell.copframe.dto.format.FrameDateFormat;
+import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.ddxyz.DdxyzConstants;
 import cn.sowell.ddxyz.model.canteen.dao.CanteenConfigDao;
+import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenCriteria;
 import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenDeliveryWaresListCriteria;
-import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenWeekDeliveryCriteria;
 import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenDeliveryWaresListItem;
 import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenWeekDeliveryWaresItem;
 import cn.sowell.ddxyz.model.canteen.service.CanteenConfigService;
@@ -25,6 +27,8 @@ public class CanteenConfigServiceImpl implements CanteenConfigService{
 	
 	@Resource
 	CanteenConfigDao configDao;
+	@Resource
+	FrameDateFormat dateFormat;
 	
 	
 	@Override
@@ -79,9 +83,8 @@ public class CanteenConfigServiceImpl implements CanteenConfigService{
 	}
 
 	@Override
-	public PlainDelivery getCanteenDelivery(CanteenWeekDeliveryCriteria criteria) {
-		return configDao.getCanteenDelivery(criteria);
-		
+	public PlainDelivery getCanteenDelivery(Date startTime, Date endTime){
+		return configDao.getCanteenDelivery(startTime, endTime);
 	}
 	
 	@Override
@@ -89,4 +92,25 @@ public class CanteenConfigServiceImpl implements CanteenConfigService{
 			Long deliveryId) {
 		return configDao.getCanteenDeliveryWaresItems(deliveryId);
 	}
+	
+	@Override
+	public PlainDelivery getCanteenDelivery(CanteenCriteria criteria) {
+		//根据日期参数构造日期范围条件
+		if(criteria.getStartDate() == null && criteria.getEndDate() == null) {
+			if(TextUtils.hasText(criteria.getDate())) {
+				Date date = dateFormat.parse(criteria.getDate());
+				if(date != null) {
+					criteria.setStartDate(dateFormat.getTheDayOfWeek(date, Calendar.MONDAY, 0, 0, 0, 0));
+					criteria.setEndDate(dateFormat.incDay(criteria.getStartDate(), 7));
+				}
+			}else {
+				criteria.setDate(dateFormat.formatDate(new Date()));
+				criteria.setStartDate(dateFormat.getTheDayOfWeek(Calendar.MONDAY, 0));
+				criteria.setEndDate(dateFormat.incDay(criteria.getStartDate(), 7));
+			}
+		}
+		PlainDelivery delivery = getCanteenDelivery(criteria.getStartDate(), criteria.getEndDate());
+		return delivery;
+	}
+	
 }
