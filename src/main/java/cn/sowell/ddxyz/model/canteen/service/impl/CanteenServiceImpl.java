@@ -27,6 +27,7 @@ import cn.sowell.ddxyz.model.canteen.pojo.CanteenDeliveyWares;
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenOrderUpdateItem;
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenUserCacheInfo;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainCanteenOrder;
+import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenOrderInfoItem;
 import cn.sowell.ddxyz.model.canteen.pojo.param.CanteenOrderItem;
 import cn.sowell.ddxyz.model.canteen.pojo.param.CanteenOrderParameter;
 import cn.sowell.ddxyz.model.canteen.service.CanteenService;
@@ -471,32 +472,21 @@ public class CanteenServiceImpl implements CanteenService {
 	}
 	
 	
-	public List<PlainOrder> getWaresPageList(UserIdentifier user, CommonPageInfo pageInfo){
-		List<PlainOrder> orderList = cDao.getOrderPageList((long) user.getId(), pageInfo);
+	public List<CanteenOrderInfoItem> getWaresPageList(UserIdentifier user, CommonPageInfo pageInfo){
+		List<CanteenOrderInfoItem> orderList = cDao.getOrderPageList((long) user.getId(), pageInfo);
 		return orderList;
 	}
 	
-	public Map<PlainOrder, List<CanteenOrderUpdateItem>> getCanteenOrderUpdateItemList(List<PlainOrder> orderList){
-		Map<PlainOrder, List<CanteenOrderUpdateItem>> result = new HashMap<PlainOrder, List<CanteenOrderUpdateItem>>();
+	public Map<CanteenOrderInfoItem, List<CanteenOrderUpdateItem>> getCanteenOrderUpdateItemList(List<CanteenOrderInfoItem> orderList){
+		Map<CanteenOrderInfoItem, List<CanteenOrderUpdateItem>> result = new HashMap<CanteenOrderInfoItem, List<CanteenOrderUpdateItem>>();
 		if(orderList != null && orderList.size() > 0){
-			for(PlainOrder plainOrder : orderList){
-				result.put(plainOrder, getOrderItems(plainOrder.getId()));
+			for(CanteenOrderInfoItem canteenOrderInfoItem : orderList){
+				result.put(canteenOrderInfoItem, getOrderItems(canteenOrderInfoItem.getOrderId()));
 			}
 		}
 		return result;
 	}
 
-	@Override
-	public Map<PlainOrder, PlainCanteenOrder> getPlainCanteenOrderMap(List<PlainOrder> orderList) {
-		Map<PlainOrder, PlainCanteenOrder> result = new HashMap<>();
-		if(orderList != null && orderList.size() > 0){
-			for(PlainOrder plainOrder : orderList){
-				result.put(plainOrder, getCanteenOrder(plainOrder.getId()));
-			}
-		}
-		return result;
-	}
-	
 	@Override
 	public void cancelOrder(WeiXinUser operateUser, Long orderId) throws OrderOperateException {
 		PlainCanteenOrder order = getCanteenOrder(orderId);

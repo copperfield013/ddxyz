@@ -22,6 +22,7 @@ import cn.sowell.ddxyz.model.canteen.pojo.CanteenDelivery;
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenOrderUpdateItem;
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenUserCacheInfo;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainCanteenOrder;
+import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenOrderInfoItem;
 import cn.sowell.ddxyz.model.canteen.pojo.param.CanteenOrderParameter;
 import cn.sowell.ddxyz.model.canteen.service.CanteenConfigService;
 import cn.sowell.ddxyz.model.canteen.service.CanteenService;
@@ -142,12 +143,10 @@ public class WeiXinCanteenController {
 	@RequestMapping("/order_data")
 	public String orderData(CommonPageInfo pageInfo, Model model){
 		UserIdentifier user =  WxUtils.getCurrentUser(UserIdentifier.class);
-		List<PlainOrder> orderList = canteenService.getWaresPageList(user, pageInfo);
-		Map<PlainOrder, List<CanteenOrderUpdateItem>> waresList = canteenService.getCanteenOrderUpdateItemList(orderList);
-		Map<PlainOrder, PlainCanteenOrder> canteenOrderMap = canteenService.getPlainCanteenOrderMap(orderList);
+		List<CanteenOrderInfoItem> orderList = canteenService.getWaresPageList(user, pageInfo);
+		Map<CanteenOrderInfoItem, List<CanteenOrderUpdateItem>> waresList = canteenService.getCanteenOrderUpdateItemList(orderList);
 		model.addAttribute("orderList", orderList);
 		model.addAttribute("waresList", waresList);
-		model.addAttribute("canteenOrderMap", canteenOrderMap);
 		return WeiXinConstants.PATH_CANTEEN + "/canteen_order_data.jsp";
 	}
 	

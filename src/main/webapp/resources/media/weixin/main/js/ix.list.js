@@ -25,7 +25,7 @@ IX.extend({
         // scroll event to load more
         $list.closest('main').scroll(function(e) {
             var scroll_height = $list.closest('.ui-content').outerHeight() - $(this).outerHeight();
-            console.log("this scrollTop is :" + $(this).scrollTop() + ", scroll_height is :" + scroll_height);
+            //console.log("this scrollTop is :" + $(this).scrollTop() + ", scroll_height is :" + scroll_height);
             if(!$list.hasClass('nomore')
                     && scroll_height > 0
                     && $(this).scrollTop() >= scroll_height) {

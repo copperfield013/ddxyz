@@ -12,7 +12,7 @@
 			</p>
 		</c:forEach>
 		<p class="result">
-  			<span class="timePoint">领取时间：<fmt:formatDate value="${orderItem.timePoint }" pattern="HH:mm:ss" /></span>
+  			<span class="timePoint">领取时间：<fmt:formatDate value="${orderItem.timePoint }" pattern="yyyy-MM-dd HH:mm:ss" /></span>
   			<span class="money">总价：<b>￥${orderItem.totalPrice/100 }</b></span>
   		</p>
   		<p class="result">
@@ -20,10 +20,11 @@
   		</p>
   		<div class="order-detail-wrap">	
   			<p class="hideinfo">
-  				<span class="ordertime">创建时间：<fmt:formatDate value="${orderItem.createTime }" pattern="yyyy-MM-dd HH:mm:ss" /></span>
   				<span class="takemen">收货人：${orderItem.receiverName }</span>
+  				<span class="takeport">部门：${orderItem.depart }</span>
   				<span class="takePhone">联系号码：${orderItem.receiverContact }</span>
-  				<span class="takeport">部门：${canteenOrderMap[orderItem].depart }</span>
+  				<span class="closetime">领取截止时间：<fmt:formatDate value="${orderItem.deliveryEndTime }" pattern="yyyy-MM-dd HH:mm:ss" /></span>
+  				<span class="ordertime">创建时间：<fmt:formatDate value="${orderItem.createTime }" pattern="yyyy-MM-dd HH:mm:ss" /></span>
   			</p>
   		</div>	
   		<p class="operate">		

@@ -24,7 +24,7 @@ IX.extend({
                 }
             },
             error: function(xhr, ajaxOptions, thrownError) {
-                ix.alert('error : ' + xhr.responseText);
+                //ix.alert('error : ' + xhr.responseText);
                 console.error("Http status: " + xhr.status + " " + xhr.statusText + "\n" +
                         "server response : " + xhr.responseText);
             }

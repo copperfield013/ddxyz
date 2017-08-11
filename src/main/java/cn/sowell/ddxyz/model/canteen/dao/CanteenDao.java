@@ -8,6 +8,7 @@ import cn.sowell.copframe.dto.page.CommonPageInfo;
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenDeliveyWares;
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenUserCacheInfo;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainCanteenOrder;
+import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenOrderInfoItem;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlan;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlanWares;
@@ -151,6 +152,6 @@ public interface CanteenDao {
 	 * @param pageInfo
 	 * @return
 	 */
-	List<PlainOrder> getOrderPageList(long userId, CommonPageInfo pageInfo);
+	List<CanteenOrderInfoItem> getOrderPageList(long userId, CommonPageInfo pageInfo);
 
 }

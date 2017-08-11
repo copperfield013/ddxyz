@@ -34,6 +34,7 @@ import cn.sowell.ddxyz.model.canteen.dao.CanteenDao;
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenDeliveyWares;
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenUserCacheInfo;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainCanteenOrder;
+import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenOrderInfoItem;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlan;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlanWares;
@@ -390,20 +391,42 @@ public class CanteenDaoImpl implements CanteenDao{
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<PlainOrder> getOrderPageList(long userId, CommonPageInfo pageInfo) {
-		String hql = "from PlainOrder o where o.orderUserId = :userId order by o.createTime desc";
-		DeferedParamQuery dQuery = new DeferedParamQuery(hql);
+	public List<CanteenOrderInfoItem> getOrderPageList(long userId, CommonPageInfo pageInfo) {
+		String sql = "SELECT "
+				+ "	co.order_id,"
+				+ "	co.c_depart,"
+				+ "	co.c_order_close_time,"
+				+ "	ob.c_order_code,"
+				+ "	ob.c_location_name,"
+				+ "	ob.c_time_point,"
+				+ "	ob.c_status,"
+				+ "	ob.c_canceled_status,"
+				+ "	ob.c_total_price,"
+				+ "	ob.c_receiver_contact,"
+				+ "	ob.c_receiver_address,"
+				+ "	ob.c_receiver_name,"
+				+ "	ob.create_time"
+				+ "	FROM"
+				+ "	t_canteen_order co"
+				+ "	LEFT JOIN "
+				+ "	t_order_base ob"
+				+ "	on co.order_id = ob.id "
+				+ "	WHERE"
+				+ " ob.order_user_id = :userId "
+				+ "	ORDER BY ob.create_time DESC";
+		DeferedParamQuery dQuery = new DeferedParamQuery(sql);
 		dQuery.setParam("userId", userId);
 		Session session = sFactory.getCurrentSession();
-		Query countQuery = dQuery.createQuery(session, false, new WrapForCountFunction());
+		Query countQuery = dQuery.createSQLQuery(session, false, new WrapForCountFunction());
 		Integer count = FormatUtils.toInteger(countQuery.uniqueResult());
 		pageInfo.setCount(count);
 		if(count > 0){
-			Query query = dQuery.createQuery(sFactory.getCurrentSession(), false, null);
+			Query query = dQuery.createSQLQuery(sFactory.getCurrentSession(), false, null);
 			QueryUtils.setPagingParamWithCriteria(query, pageInfo);
+			query.setResultTransformer(HibernateRefrectResultTransformer.getInstance(CanteenOrderInfoItem.class));
 			return query.list();
 		}
-		return new ArrayList<PlainOrder>();
+		return new ArrayList<CanteenOrderInfoItem>();
 	}
 	
 }

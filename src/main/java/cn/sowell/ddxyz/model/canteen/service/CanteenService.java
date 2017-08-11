@@ -10,6 +10,7 @@ import cn.sowell.ddxyz.model.canteen.pojo.CanteenDelivery;
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenOrderUpdateItem;
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenUserCacheInfo;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainCanteenOrder;
+import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenOrderInfoItem;
 import cn.sowell.ddxyz.model.canteen.pojo.param.CanteenOrderParameter;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlan;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlanWares;
@@ -106,19 +107,12 @@ public interface CanteenService {
 	 * @param pageInfo
 	 * @return
 	 */
-	List<PlainOrder> getWaresPageList(UserIdentifier user, CommonPageInfo pageInfo);
+	List<CanteenOrderInfoItem> getWaresPageList(UserIdentifier user, CommonPageInfo pageInfo);
 	
 	/**
 	 * 获取订单中商品简略信息
 	 * @param orderList
 	 * @return
 	 */
-	Map<PlainOrder, List<CanteenOrderUpdateItem>> getCanteenOrderUpdateItemList(List<PlainOrder> orderList);
-	
-	/**
-	 * 获取订单列表中所有订单对应的canteen订单对象
-	 * @param orderList
-	 * @return
-	 */
-	Map<PlainOrder, PlainCanteenOrder> getPlainCanteenOrderMap(List<PlainOrder> orderList);
+	Map<CanteenOrderInfoItem, List<CanteenOrderUpdateItem>> getCanteenOrderUpdateItemList(List<CanteenOrderInfoItem> orderList);
 }
