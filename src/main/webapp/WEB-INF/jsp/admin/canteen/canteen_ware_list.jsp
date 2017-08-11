@@ -69,7 +69,8 @@
 		seajs.use(['ajax', 'dialog', 'utils'], function(Ajax, Dialog, utils){
 			var $page = $('#canteen-wares-list');
 			$('.timeRange', $page).datepicker({
-				format	:	'yyyy-mm-dd'
+				format		: 'yyyy-mm-dd',
+				weekStart	: 1
 			});
 		});
 		

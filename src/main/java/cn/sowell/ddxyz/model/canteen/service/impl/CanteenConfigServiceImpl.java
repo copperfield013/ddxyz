@@ -13,6 +13,7 @@ import cn.sowell.ddxyz.model.canteen.dao.CanteenConfigDao;
 import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenDeliveryWaresListCriteria;
 import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenWeekDeliveryCriteria;
 import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenDeliveryWaresListItem;
+import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenWeekDeliveryWaresItem;
 import cn.sowell.ddxyz.model.canteen.service.CanteenConfigService;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryWares;
@@ -78,10 +79,14 @@ public class CanteenConfigServiceImpl implements CanteenConfigService{
 	}
 
 	@Override
-	public PlainDelivery getCanteenDeliveryOfTheWeek(CanteenWeekDeliveryCriteria criteria) {
-		return configDao.getCanteenDeliveryOfTheWeek(criteria);
+	public PlainDelivery getCanteenDelivery(CanteenWeekDeliveryCriteria criteria) {
+		return configDao.getCanteenDelivery(criteria);
 		
 	}
 	
-	
+	@Override
+	public List<CanteenWeekDeliveryWaresItem> getCanteenDeliveryWaresItems(
+			Long deliveryId) {
+		return configDao.getCanteenDeliveryWaresItems(deliveryId);
+	}
 }

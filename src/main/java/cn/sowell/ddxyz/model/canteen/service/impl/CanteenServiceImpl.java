@@ -139,20 +139,20 @@ public class CanteenServiceImpl implements CanteenService {
 	public synchronized PlainCanteenOrder createOrder(CanteenOrderParameter coParam) throws OrderResourceApplyException {
 		//申请订单资源
 		applyForOrderResource(coParam);
-		//根据得到的订单资源创建订单
-		PlainOrder pOrder = new PlainOrder();
-		List<PlainProduct> products = initOrder(pOrder, coParam);
-		
 		PlainCanteenOrder cOrder = new PlainCanteenOrder();
-		cOrder.setDepart(coParam.getDepart());
-		cOrder.setpOrder(pOrder);
+		//根据得到的订单资源创建订单
+		List<PlainProduct> products = initOrder(cOrder, coParam);
+		
+		
 		//订单持久化
 		cDao.createOrder(cOrder, products);
 		//返回订单
 		return cOrder;
 	}
 	
-	private List<PlainProduct> initOrder(PlainOrder pOrder, CanteenOrderParameter coParam) {
+	private List<PlainProduct> initOrder(PlainCanteenOrder cOrder, CanteenOrderParameter coParam) {
+		
+		PlainOrder pOrder = new PlainOrder();
 		pOrder.setComment(coParam.getComment());
 		pOrder.setCreateTime(new Date());
 		pOrder.setDeliveryId(coParam.getDeliveryId());
@@ -171,6 +171,13 @@ public class CanteenServiceImpl implements CanteenService {
 		pOrder.setReceiverContact(coParam.getContact());
 		
 		pOrder.setTotalPrice(coParam.getTotalPrice());
+		
+		cOrder.setDepart(coParam.getDepart());
+		cOrder.setpOrder(pOrder);
+		cOrder.setDeliveryEndTime(delivery.getClaimEndTime());
+		cOrder.setOrderOpenTime(delivery.getOpenTime());
+		cOrder.setOrderCloseTime(delivery.getCloseTime());
+		
 		
 		List<PlainProduct> products = new ArrayList<PlainProduct>();
 		for (CanteenOrderItem item : coParam.getOrderItems()) {

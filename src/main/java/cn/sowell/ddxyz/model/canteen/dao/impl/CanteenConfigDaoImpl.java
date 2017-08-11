@@ -1,7 +1,5 @@
 package cn.sowell.ddxyz.model.canteen.dao.impl;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -20,6 +18,7 @@ import cn.sowell.ddxyz.model.canteen.dao.CanteenConfigDao;
 import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenDeliveryWaresListCriteria;
 import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenWeekDeliveryCriteria;
 import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenDeliveryWaresListItem;
+import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenWeekDeliveryWaresItem;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryWares;
 import cn.sowell.ddxyz.model.common.pojo.PlainLocation;
@@ -128,10 +127,47 @@ public class CanteenConfigDaoImpl implements CanteenConfigDao {
 		return sFactory.getCurrentSession().get(PlainLocation.class, locationId);
 	}
 	
+	
+	@SuppressWarnings("unchecked")
 	@Override
-	public PlainDelivery getCanteenDeliveryOfTheWeek(CanteenWeekDeliveryCriteria criteria) {
-		
-		
+	public List<CanteenWeekDeliveryWaresItem> getCanteenDeliveryWaresItems(
+			Long deliveryId) {
+		String sql = 
+				"	SELECT" +
+						"		w.c_name wares_name," +
+						"		w.c_base_price," +
+						"		w.c_price_unit," +
+						"		w.id wares_id," +
+						"		dw.id dwares_id," +
+						"		dw.c_max_count," + 
+						"		dw.c_current_count," +
+						"		dw.c_disabled" +
+						"	FROM" +
+						"	t_delivery_wares dw " +
+						"	LEFT JOIN t_wares_base w ON dw.wares_id = w.id" +
+						"	WHERE" +
+						"		dw.delivery_id = :deliveryId" ;
+		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
+		query.setLong("deliveryId", deliveryId);
+		query.setResultTransformer(HibernateRefrectResultTransformer.getInstance(CanteenWeekDeliveryWaresItem.class));
+		return query.list();
+	}
+
+	@Override
+	public PlainDelivery getCanteenDelivery(
+			CanteenWeekDeliveryCriteria criteria) {
+		if(criteria.getStartDate() != null && criteria.getEndDate() != null){
+			String hql = "from PlainDelivery d where d.timePoint >= :startTime and d.timePoint < :endTime and d.type = :type";
+			Query query = sFactory.getCurrentSession().createQuery(hql);
+				query.setTimestamp("startTime", criteria.getStartDate())
+					.setTimestamp("endTime", criteria.getEndDate())
+					.setString("type", "canteen")
+					.setMaxResults(1)
+				;
+			return (PlainDelivery) query.uniqueResult();
+		}else{
+			throw new RuntimeException("startTime和endTime条件都不能为空");
+		}
 	}
 	
 }

@@ -27,9 +27,7 @@ import cn.sowell.copframe.dto.format.FrameDateFormat;
 import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.ddxyz.DdxyzConstants;
 import cn.sowell.ddxyz.admin.AdminConstants;
-import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenDeliveryWaresListCriteria;
 import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenWeekDeliveryCriteria;
-import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenDeliveryWaresListItem;
 import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenWeekDeliveryWaresItem;
 import cn.sowell.ddxyz.model.canteen.service.CanteenConfigService;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
@@ -54,7 +52,7 @@ public class AdminCanteenConfigController {
 	
 	
 	@RequestMapping("/week_delivery")
-	public String weekDelivery(CanteenWeekDeliveryCriteria criteria) {
+	public String weekDelivery(CanteenWeekDeliveryCriteria criteria, Model model) {
 		//根据日期参数构造日期范围条件
 		if(criteria.getStartDate() == null && criteria.getEndDate() == null) {
 			if(TextUtils.hasText(criteria.getDate())) {
@@ -64,18 +62,23 @@ public class AdminCanteenConfigController {
 					criteria.setEndDate(dateFormat.incDay(criteria.getStartDate(), 7));
 				}
 			}else {
+				criteria.setDate(dateFormat.formatDate(new Date()));
 				criteria.setStartDate(dateFormat.getTheDayOfWeek(Calendar.MONDAY, 0));
 				criteria.setEndDate(dateFormat.incDay(criteria.getStartDate(), 7));
 			}
 		}
-		PlainDelivery delivery = canteenConfigService.getCanteenDeliveryOfTheWeek(criteria);
-		List<CanteenWeekDeliveryWaresItem> items = canteenConfigService.getCanteenDeliveryWaresItems(delivery);
-		
+		PlainDelivery delivery = canteenConfigService.getCanteenDelivery(criteria);
+		if(delivery != null){
+			List<CanteenWeekDeliveryWaresItem> items = canteenConfigService.getCanteenDeliveryWaresItems(delivery.getId());
+			model.addAttribute("deliveryWaresItems", items);
+		}
+		model.addAttribute("delivery", delivery);
+		model.addAttribute("criteria", criteria);
 		return AdminConstants.PATH_CANTEEN + "/canteen_week_delivery.jsp";
 	}
 	
 	
-	@RequestMapping("/wares_list")
+	/*@RequestMapping("/wares_list")
 	public String waresList(Model model, CanteenDeliveryWaresListCriteria criteria){
 		if(criteria.getStartDate() == null && criteria.getEndDate() == null) {
 			if(TextUtils.hasText(criteria.getDate())) {
@@ -94,7 +97,7 @@ public class AdminCanteenConfigController {
 		model.addAttribute("deliveryWaresList", deliveryWaresList);
 		model.addAttribute("criteria", criteria);
 		return AdminConstants.PATH_CANTEEN + "/canteen_ware_list.jsp";
-	}
+	}*/
 	
 	
 	@RequestMapping("/batch_delivery")
@@ -112,16 +115,23 @@ public class AdminCanteenConfigController {
 	
 	
 	@RequestMapping("/generate_delivery")
-	public String generateDelivery(Model model){
-		List<PlainWares> canteenWaresList = canteenConfigService.getWaresList(DdxyzConstants.CANTEEN_MERCHANT_ID, false);
-		List<PlainLocation> locations = canteenConfigService.getCanteenDeliveryLocations();
-		Calendar cal = Calendar.getInstance();
-		cal.setFirstDayOfWeek(Calendar.MONDAY);
-		model.addAttribute("Monday", dateFormat.getTheDayOfWeek(Calendar.MONDAY, 0));
-		model.addAttribute("Sunday", dateFormat.getTheDayOfWeek(Calendar.MONDAY, 6));
-		
-		model.addAttribute("waresList", canteenWaresList);
-		model.addAttribute("locations", locations);
+	public String generateDelivery(Model model, @RequestParam String date){
+		Date theDay = dateFormat.parse(date);
+		if(theDay != null){
+			Date Monday = dateFormat.getTheDayOfWeek(theDay, Calendar.MONDAY, 0, 0, 0, 0);
+			CanteenWeekDeliveryCriteria criteria = new CanteenWeekDeliveryCriteria();
+			criteria.setStartDate(Monday);
+			criteria.setEndDate(dateFormat.incDay(Monday, 7));
+			PlainDelivery delivery = canteenConfigService.getCanteenDelivery(criteria);
+			if(delivery == null){
+				model.addAttribute("Monday", Monday);
+				model.addAttribute("Sunday", dateFormat.incDay(Monday, 6));
+				List<PlainWares> canteenWaresList = canteenConfigService.getWaresList(DdxyzConstants.CANTEEN_MERCHANT_ID, false);
+				List<PlainLocation> locations = canteenConfigService.getCanteenDeliveryLocations();
+				model.addAttribute("waresList", canteenWaresList);
+				model.addAttribute("locations", locations);
+			}
+		}
 		return AdminConstants.PATH_CANTEEN + "/canteen_generate_delivery.jsp";
 	}
 	

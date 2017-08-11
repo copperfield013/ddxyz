@@ -27,6 +27,9 @@ public class PlainDeliveryWares {
 	@Column(name="c_current_count")
 	private Integer currentCount;
 	
+	@Column(name="c_disabled")
+	private Integer disabled;
+	
 	
 	public Long getId() {
 		return id;
@@ -57,5 +60,11 @@ public class PlainDeliveryWares {
 	}
 	public void setCurrentCount(Integer currentCount) {
 		this.currentCount = currentCount;
+	}
+	public Integer getDisabled() {
+		return disabled;
+	}
+	public void setDisabled(Integer disabled) {
+		this.disabled = disabled;
 	}
 }
