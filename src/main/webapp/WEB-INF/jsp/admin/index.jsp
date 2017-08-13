@@ -157,6 +157,11 @@
 	                        </a>
 	                        <ul class="submenu">
 	                        	<li>
+			                        <a href="admin/canteen/wares/list" class="tab" target="canteen-wares-list" title="餐品管理">
+										<span class="menu-text">餐品管理</span>
+			                        </a>
+		                        </li>
+	                        	<li>
 			                        <a href="admin/canteen/config/week_delivery" class="tab" target="canteen-week-delivery" title="本周产品">
 										<span class="menu-text">本周产品</span>
 			                        </a>

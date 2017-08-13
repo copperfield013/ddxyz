@@ -44,13 +44,6 @@ public class CanteenConfigServiceImpl implements CanteenConfigService{
 	}
 	
 	
-	@Override
-	public void saveWares(PlainWares wares) {
-		wares.setMerchantId(DdxyzConstants.CANTEEN_MERCHANT_ID);
-		wares.setCreateTime(new Date());
-		configDao.saveWares(wares);
-	}
-	
 	
 	@Override
 	public List<PlainWares> getWaresList(long canteenMerchantId, Boolean disabled) {

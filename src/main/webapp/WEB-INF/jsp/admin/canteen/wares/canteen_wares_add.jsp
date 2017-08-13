@@ -4,7 +4,7 @@
 	<div class="page-body">
 		<div class="row">
 			<div class="col-lg-12">
-				<form class="bv-form form-horizontal validate-form" action="admin/canteen/config/do_create_wares">
+				<form class="bv-form form-horizontal validate-form" action="admin/canteen/wares/do_add">
 					<div class="form-group">
 						<label class="col-lg-2 control-label" for="waresName">商品名称</label>
 						<div class="col-lg-3">

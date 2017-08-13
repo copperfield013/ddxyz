@@ -1,6 +1,5 @@
 package cn.sowell.ddxyz.admin.controller.canteen;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -15,16 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.multipart.MultipartFile;
 
 import cn.sowell.copframe.common.file.FileUploadUtils;
 import cn.sowell.copframe.dto.ajax.AjaxPageResponse;
 import cn.sowell.copframe.dto.ajax.JsonResponse;
-import cn.sowell.copframe.dto.ajax.NoticeType;
-import cn.sowell.copframe.dto.ajax.PageAction;
 import cn.sowell.copframe.dto.format.FormatUtils;
 import cn.sowell.copframe.dto.format.FrameDateFormat;
-import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.ddxyz.DdxyzConstants;
 import cn.sowell.ddxyz.admin.AdminConstants;
 import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenWeekDeliveryCriteria;
@@ -149,44 +144,4 @@ public class AdminCanteenConfigController {
 		}
 		
 	}
-	
-	@RequestMapping("/create_wares")
-	public String createWares(){
-		return AdminConstants.PATH_CANTEEN + "/config/canteen_create_wares.jsp";
-	}
-	
-	@ResponseBody
-	@RequestMapping("/do_create_wares")
-	public AjaxPageResponse doCreateWares(
-			@RequestParam("thumb") MultipartFile file,
-			@RequestParam("waresName") String waresName, 
-			@RequestParam("unitPrice") Float unitPrice, 
-			@RequestParam("priceUnit") String priceUnit
-			){
-		AjaxPageResponse response = new AjaxPageResponse();
-		PlainWares wares = new PlainWares();
-		wares.setBasePrice((int)(unitPrice * 100));
-		wares.setPriceUnit(priceUnit);
-		wares.setName(waresName);
-		
-		String[] nameSplit = file.getOriginalFilename().split("\\.");
-		String suffix = nameSplit[nameSplit.length - 1];
-		String fileName = "f_" + TextUtils.uuid(10, 36) + "." + suffix;
-		try {
-			wares.setThumbUri(fUploadUtils.saveFile(fileName, file.getInputStream()));
-			canteenConfigService.saveWares(wares);
-			response.setLocalPageAction(PageAction.CLOSE);
-			response.setNotice("创建成功");
-			response.setNoticeType(NoticeType.SUC);
-			response.setTargetPageId("canteen-batch-delivery");
-			response.setTargetPageAction(PageAction.REFRESH);
-		} catch (IOException e) {
-			logger.error("上传文件失败", e);
-			response.setNotice("创建失败");
-			response.setNoticeType(NoticeType.ERROR);
-		}
-		return response;
-	}
-	
-	
 }

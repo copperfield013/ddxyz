@@ -92,11 +92,6 @@ public class CanteenConfigDaoImpl implements CanteenConfigDao {
 		return query.list();
 	}
 	
-	@Override
-	public void saveWares(PlainWares wares) {
-		sFactory.getCurrentSession().save(wares);
-	}
-	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<PlainWares> getWaresList(long merchantId, Boolean disabled) {
@@ -181,5 +176,4 @@ public class CanteenConfigDaoImpl implements CanteenConfigDao {
 	public PlainDelivery getDelivery(Long deliveryId) {
 		return sFactory.getCurrentSession().get(PlainDelivery.class, deliveryId);
 	}
-	
 }

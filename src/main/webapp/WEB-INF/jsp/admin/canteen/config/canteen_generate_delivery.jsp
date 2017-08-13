@@ -67,7 +67,6 @@
 					</div>
 					<div class="form-group">
 						<div class="col-lg-offset-2 col-lg-2">
-							<a class="btn dialog" target="canteen-create-wares" href="admin/canteen/config/create_wares" title="创建餐品">创建餐品</a>
 							<input type="submit" class="btn btn-primary" id="delivery-wares-create-button" value="提交" />
 						</div>
 					</div>

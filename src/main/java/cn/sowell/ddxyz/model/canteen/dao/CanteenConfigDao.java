@@ -30,12 +30,6 @@ public interface CanteenConfigDao {
 			CanteenDeliveryWaresListCriteria criteria);
 
 	/**
-	 * 持久化商品
-	 * @param wares
-	 */
-	void saveWares(PlainWares wares);
-
-	/**
 	 * 获得该店铺的所有商品
 	 * @param canteenMerchantId
 	 * @param disabled 为true时，获得所有禁用的商品，为false时，获得所有可用的商品。传入null返回所有商品

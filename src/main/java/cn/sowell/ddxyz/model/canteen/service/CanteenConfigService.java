@@ -31,12 +31,6 @@ public interface CanteenConfigService {
 
 
 	/**
-	 * 创建商品
-	 * @param wares
-	 */
-	void saveWares(PlainWares wares);
-
-	/**
 	 * 获得门店的所有商品
 	 * @param canteenMerchantId
 	 * @param disabled
