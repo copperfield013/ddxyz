@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.dom4j.CDATA;
 import org.springframework.stereotype.Repository;
 
 import cn.sowell.copframe.dto.format.FrameDateFormat;
@@ -111,6 +112,11 @@ public class CanteenConfigServiceImpl implements CanteenConfigService{
 		}
 		PlainDelivery delivery = getCanteenDelivery(criteria.getStartDate(), criteria.getEndDate());
 		return delivery;
+	}
+
+	@Override
+	public PlainDelivery getDelivery(Long deliveryId) {
+		return configDao.getDelivery(deliveryId);
 	}
 	
 }

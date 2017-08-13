@@ -82,7 +82,7 @@
 										<td>${i.index + 1 }</td>
 										<td>${item.waresName }</td>
 										<td><fmt:formatNumber value="${item.unitPrice/100 }" pattern="0.00"/>元/${item.priceUnit }</td>
-										<td>${item.currentCount }/${item.maxCount == null && item.maxCount ==0 ? '不限' :item.maxCount }</td>
+										<td>${item.currentCount }/${item.maxCount == null || item.maxCount ==0 ? '不限' :item.maxCount }</td>
 										<td>
 											<a>暂停预定</a>
 											<a>删除</a>

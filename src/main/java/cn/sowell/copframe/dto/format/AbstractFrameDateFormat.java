@@ -190,16 +190,25 @@ public class AbstractFrameDateFormat implements FrameDateFormat{
 	@Override
 	public Date getTheDayOfWeek(Date base, int startDayOfWeek, int dayAddition, int HH,
 			int mm, int ss) {
+		return getTheDayOfWeek(base, startDayOfWeek, dayAddition, HH, mm, ss, 0);
+	}
+	
+	public Date getTheDayOfWeek(Date base, int startDayOfWeek, int dayAddition, int HH,
+			int mm, int ss, int mss) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(base);
-		int sub = startDayOfWeek - cal.get(Calendar.DAY_OF_WEEK);
+		int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+		if(dayOfWeek == Calendar.SUNDAY) {
+			dayOfWeek = Calendar.SUNDAY + 7;
+		}
+		int sub = startDayOfWeek - dayOfWeek;
 		cal.add(Calendar.DAY_OF_WEEK, sub);
 		
 		cal.add(Calendar.DATE, dayAddition);
 		cal.set(Calendar.HOUR_OF_DAY, HH);
 		cal.set(Calendar.MINUTE, mm);
 		cal.set(Calendar.SECOND, ss);
-		cal.set(Calendar.MILLISECOND, 0);
+		cal.set(Calendar.MILLISECOND, mss);
 		return cal.getTime();
 	}
 	
@@ -207,5 +216,16 @@ public class AbstractFrameDateFormat implements FrameDateFormat{
 	public Date getTheDayOfWeek(int startDayOfWeek, int dayAddition) {
 		return getTheDayOfWeek(new Date(), startDayOfWeek, dayAddition, 0, 0, 0);
 	}
+	
+	@Override
+	public Date[] getTheWeekRange(Date date, Integer weekStart) {
+		if(weekStart == null) weekStart = Calendar.MONDAY;
+		Date[] result = new Date[2];
+		
+		result[0] = getTheDayOfWeek(date, weekStart, 0, 0, 0, 0);
+		result[1] = getTheDayOfWeek(date, weekStart, 6, 23, 59, 59, 0);
+		return result;
+	}
+	
 	
 }

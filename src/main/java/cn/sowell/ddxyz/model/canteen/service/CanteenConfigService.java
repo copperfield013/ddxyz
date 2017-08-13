@@ -76,4 +76,11 @@ public interface CanteenConfigService {
 	 */
 	PlainDelivery getCanteenDelivery(CanteenCriteria criteria);
 
+	/**
+	 * 根据配送id获得配送对象
+	 * @param deliveryId
+	 * @return
+	 */
+	PlainDelivery getDelivery(Long deliveryId);
+
 }

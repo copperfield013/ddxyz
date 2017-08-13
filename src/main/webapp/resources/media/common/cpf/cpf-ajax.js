@@ -244,7 +244,22 @@ define(function(require, exports, module){
 			}
 		}
 	}
+	
+	function download(url){
+		var $downloadFrame = $('#cpf-download-frame');
+		if($downloadFrame.length === 0){
+			$downloadFrame = $('<iframe>');
+			$downloadFrame.attr('width', 0).attr('height', 0).css('display', 'none');
+			$downloadFrame.attr('src', url);
+			$downloadFrame.appendTo(document.body);
+		}else{
+			$downloadFrame[0].contentWindow.location.href = url;
+		}
+		
+	}
+	
 	exports.ajax = ajax;
 	exports.postJson = postJson;
 	exports.AjaxPageResponse = AjaxPageResponse;
+	exports.download = download;
 });

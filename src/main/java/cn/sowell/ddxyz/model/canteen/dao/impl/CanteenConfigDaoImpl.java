@@ -177,4 +177,9 @@ public class CanteenConfigDaoImpl implements CanteenConfigDao {
 		}
 	}
 	
+	@Override
+	public PlainDelivery getDelivery(Long deliveryId) {
+		return sFactory.getCurrentSession().get(PlainDelivery.class, deliveryId);
+	}
+	
 }

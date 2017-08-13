@@ -86,5 +86,8 @@ public interface CanteenConfigDao {
 	 */
 	PlainDelivery getCanteenDelivery(Date startTime, Date endTime);
 
+	
+	PlainDelivery getDelivery(Long deliveryId);
+
 
 }

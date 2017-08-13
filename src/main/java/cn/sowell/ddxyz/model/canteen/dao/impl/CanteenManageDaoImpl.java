@@ -97,7 +97,9 @@ public class CanteenManageDaoImpl implements CanteenManageDao{
 		SQLQuery countQuery = dQuery.createSQLQuery(session, false, new WrapForCountFunction());
 		
 		int count = FormatUtils.toInteger(countQuery.uniqueResult());
-		pageInfo.setCount(count);
+		if(pageInfo != null) {
+			pageInfo.setCount(count);
+		}
 		if(count > 0){
 			SQLQuery query = dQuery.createSQLQuery(session, false, null);
 			QueryUtils.setPagingParamWithCriteria(query, pageInfo);

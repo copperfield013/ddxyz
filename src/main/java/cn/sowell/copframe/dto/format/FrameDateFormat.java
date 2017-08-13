@@ -142,6 +142,14 @@ public interface FrameDateFormat {
 	 * @see #getTheDayOfWeek(int, int, int, int, int)
 	 */
 	Date getTheDayOfWeek(int startDayOfWeek, int dayAddition);
+	
+	/**
+	 * 获得日期参数所在周的时间范围
+	 * @param date
+	 * @param weekStart 每周的第一天是哪天， 默认{@link Calendar#MONDAY}
+	 * @return
+	 */
+	Date[] getTheWeekRange(Date date, Integer weekStart);
 
 	
 }

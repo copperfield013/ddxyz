@@ -17,6 +17,9 @@
 	#canteen-week-orders .head-operate{
 		float: right; 
 	}
+	#canteen-week-orders .head-operate>.btn{
+		margin: 0, 5px;
+	}
 </style>
 <nav style="padding: 1em 0" id="canteen-week-orders">
 	<form class="form-inline" action="admin/canteen/manage/week_orders" >
@@ -75,7 +78,10 @@
 					<div class="panel-heading">
 						<h3 class="panel-title">
 							商品列表
-							<a id="export" class="btn btn-xs btn-info head-operate" href="#">导出</a>
+							<span class="head-operate">
+								<a id="print-all" class="btn btn-xs btn-info" href="#">打印全部</a>
+								<a id="export" class="btn btn-xs btn-info " href="#">导出</a>
+							</span>
 						</h3>
 						
 					</div>
@@ -90,6 +96,7 @@
 									<th>手机号</th>
 									<th>订单明细</th>
 									<th>应收款</th>
+									<th>操作</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -106,6 +113,9 @@
 											</c:forEach>
 										</td>
 										<td><fmt:formatNumber value="${item.totalPrice / 100 }" pattern="0.00" />元</td>
+										<td>
+											<a class="print-order-tag" href="#">打印</a>
+										</td>
 									</tr>
 								</c:forEach>
 							</tbody>
@@ -116,19 +126,105 @@
 			</div>
 		</c:if>
 	</div>
+	<script type="text/x-jquery-tmpl" id="print-table">
+		<div class="wrapper">
+			<div class="table-page">
+				<table>
+					<colgroup>
+						<col width="20%" />
+						<col width="20%" />
+						<col width="20%" />
+						<col width="20%" />
+						<col width="20%" />
+					</colgroup>
+					<tbody>
+						<tr>
+							<td colspan="5">订单明细</td>
+						</tr>
+						<tr>
+							<td>订单号:</td>
+							<td colspan="4">\${orderCode }</td>
+						</tr>
+						<tr>
+							<td colspan="5">
+								{{each(i, orderItem) orderItems}}
+									<div>\${orderItem.waresName }×\${orderItem.count }</div>
+								{{/each}}
+							</td>
+						</tr>
+						<tr>
+							<td>领取人:</td>
+							<td colspan="2">\${receiverName }</td>
+							<td>部门:</td>
+							<td>\${depart }</td>
+						</tr>
+						<tr>
+							<td>联系号码:</td>
+							<td colspan="2">\${receiverContact }</td>
+							<td>总价:</td>
+							<td>\${totalPrice}元</td>
+						</tr>
+					</tbody>
+				</table>
+			<div>
+		</div>	
+	</script>
+	
 </nav>
 <script>
 	$(function(){
 		seajs.use(['ajax', 'dialog', 'utils'], function(Ajax, Dialog, utils){
 			var $page = $('#canteen-week-orders');
+			console.log($page);
 			$('#selectDate', $page).datepicker({
 				format		: 'yyyy-mm-dd',
 				weekStart	: 1
 			});
 			$('#export', $page).click(function(){
-				location.href = 'admin/canteen/manage/export_orders/${delivery.id}';
+				Ajax.download('admin/canteen/manage/export_orders/${delivery.id}');
+				return false;
 			});
-			
+			$('.print-order-tag', $page).click(function(){
+				var orderId = $(this).closest('tr').attr('order-id');
+				Ajax.ajax('admin/canteen/manage/order_tag', {
+					orderId	: orderId
+				}, {
+					whenSuc	: function(data){
+						var $printPage = $('#print-table', $page).tmpl(data);
+						$printPage.printArea({ 
+				    		mode 		: "iframe", 
+				    		extraHead 	: '<meta charset="utf-8" />,<meta http-equiv="X-UA-Compatible" content="chrome=1"/>',
+				    		extraCss	: $('base').attr('href') + 'media/admin/canteen/css/order-tag.css',
+				    		posWidth	: '60mm',
+				    		posHeight	: '40mm'
+				    	});
+					}
+				});
+				
+				
+			});
+			$('#print-all', $page).click(function(){
+				Ajax.ajax('admin/canteen/manage/order_tag_all',{
+					deliveryId	: '${delivery.id}'
+				}, {
+					whenSuc	: function(data){
+						var orders = data.orders;
+						var $container = $('<div>');
+						for(var i in orders){
+							var $printPage = $('#print-table', $page).tmpl(orders[i]);
+							$container.append($printPage);
+						}
+						$container.printArea({ 
+				    		mode 		: "iframe", 
+				    		extraHead 	: '<meta charset="utf-8" />,<meta http-equiv="X-UA-Compatible" content="chrome=1"/>',
+				    		extraCss	: $('base').attr('href') + 'media/admin/canteen/css/order-tag.css',
+				    		posWidth	: '60mm',
+				    		posHeight	: '40mm'
+				    	});
+						
+					}
+				});
+			});
 		});
 		
 	});
