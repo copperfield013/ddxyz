@@ -14,7 +14,6 @@ import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenOrderInfoItem;
 import cn.sowell.ddxyz.model.canteen.pojo.param.CanteenOrderParameter;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlan;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlanWares;
-import cn.sowell.ddxyz.model.common.pojo.PlainOrder;
 import cn.sowell.ddxyz.model.common2.core.OrderOperateException;
 import cn.sowell.ddxyz.model.common2.core.OrderResourceApplyException;
 import cn.sowell.ddxyz.model.wares.pojo.PlainWares;
@@ -97,8 +96,9 @@ public interface CanteenService {
 	 * @param operateUser 当前执行取消操作的用户
 	 * @param orderId 取消的订单id
 	 * @throws OrderOperateException 当取消失败时抛出异常
+	 * @throws OrderResourceApplyException 
 	 */
-	void cancelOrder(WeiXinUser operateUser, Long orderId) throws OrderOperateException;
+	void cancelOrder(WeiXinUser operateUser, Long orderId) throws OrderOperateException, OrderResourceApplyException;
 	
 	
 	/**

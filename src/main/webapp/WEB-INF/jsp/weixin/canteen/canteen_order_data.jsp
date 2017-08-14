@@ -30,7 +30,7 @@
   		<p class="operate">		
   			<i class="circle-point-icon" onclick="lookMore(this)"></i>		 
   			<c:if test="${orderItem.orderStatus < 2 && orderItem.canceledStatus == null }">
-	  			<!-- <span class="operate-button">取消订单</span> -->
+	  			<span class="operate-button">取消订单</span>
 	  			<span class="operate-revise">修改订单</span>
   			</c:if> 				
   		</p>

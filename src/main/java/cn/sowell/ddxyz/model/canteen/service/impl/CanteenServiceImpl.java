@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -491,7 +492,7 @@ public class CanteenServiceImpl implements CanteenService {
 	}
 
 	@Override
-	public void cancelOrder(WeiXinUser operateUser, Long orderId) throws OrderOperateException {
+	public void cancelOrder(WeiXinUser operateUser, Long orderId) throws OrderOperateException, OrderResourceApplyException {
 		PlainCanteenOrder order = getCanteenOrder(orderId);
 		if(order != null){
 			String cancelStatus = order.getpOrder().getCanceledStatus();
@@ -503,6 +504,17 @@ public class CanteenServiceImpl implements CanteenService {
 			}
 			//订单当前必须
 			cDao.setOrderCanceled(orderId, Order.CAN_STATUS_CANCELED);
+			//释放资源
+			//根据订单id获得系统内订单的所有产品的idmap，key是配送产品的id
+			Map<Long, List<Long>> dWaresProductIdMap = cDao.getDeliveryWaresProductIdsMap(orderId);
+			HashSet<Long> cancelProductIds = new HashSet<Long>();
+			for (Entry<Long, List<Long>> entry : dWaresProductIdMap.entrySet()) {
+				cancelProductIds.addAll(entry.getValue());
+				applyResource(entry.getKey(), -entry.getValue().size());
+			}
+			cDao.setProductCalceled(cancelProductIds);
+		}else{
+			throw new OrderOperateException("订单[id=" + orderId + "]不存在");
 		}
 	}
 	

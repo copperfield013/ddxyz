@@ -27,8 +27,6 @@ import cn.sowell.ddxyz.model.canteen.pojo.param.CanteenOrderParameter;
 import cn.sowell.ddxyz.model.canteen.service.CanteenDeliveryService;
 import cn.sowell.ddxyz.model.canteen.service.CanteenService;
 import cn.sowell.ddxyz.model.common.pojo.PlainLocation;
-import cn.sowell.ddxyz.model.common.pojo.PlainOrder;
-import cn.sowell.ddxyz.model.common2.core.OrderOperateException;
 import cn.sowell.ddxyz.model.common2.core.OrderResourceApplyException;
 import cn.sowell.ddxyz.model.weixin.pojo.WeiXinUser;
 import cn.sowell.ddxyz.weixin.WeiXinConstants;
@@ -131,7 +129,7 @@ public class WeiXinCanteenController {
 		try {
 			canteenService.cancelOrder(operateUser, orderId);
 			jRes.setStatus("suc");
-		} catch (OrderOperateException e) {
+		} catch (Exception e) {
 			jRes.setStatus("error");
 			logger.error("取消订单失败", e);
 		}

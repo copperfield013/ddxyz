@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -35,6 +36,7 @@ import cn.sowell.ddxyz.model.canteen.pojo.CanteenDeliveyWares;
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenUserCacheInfo;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainCanteenOrder;
 import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenOrderInfoItem;
+import cn.sowell.ddxyz.model.common.core.Product;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlan;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlanWares;
@@ -437,6 +439,15 @@ public class CanteenDaoImpl implements CanteenDao{
 			return query.list();
 		}
 		return new ArrayList<CanteenOrderInfoItem>();
+	}
+	
+	@Override
+	public void setProductCalceled(Set<Long> cancelProductIds) {
+		String sql = "update t_product_base set c_canceled_status = :canceledStatus where id in (:cancelProductIds)";
+		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
+		query.setString("canceledStatus", Product.CAN_STATUS_ORDER_CANCEL)
+			.setParameterList("cancelProductIds", cancelProductIds);
+		query.executeUpdate();
 	}
 	
 }

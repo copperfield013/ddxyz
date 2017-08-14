@@ -25,7 +25,7 @@
 	        <div class="navbar-inner">
 	            <div class="navbar-container">
 	                <div class="navbar-header pull-left">
-	                    <a href="#" class="navbar-brand">
+	                    <a href="admin/logout" class="navbar-brand">
 	                        <small>
 	                            <img src="media/admin/main/image/ydd-logo.png" alt="" />
 	                        </small>
@@ -33,6 +33,9 @@
 	                </div>
 	                <div class="sidebar-collapse" id="sidebar-collapse">
 	                    <i class="collapse-icon fa fa-bars"></i>
+	                </div>
+	                <div class="cmd-right">
+	                	<a href="javascript:location.href='admin/logout';">退出登录</a>
 	                </div>
 				</div>
 			</div>

@@ -312,7 +312,10 @@
 						count			: count
 					});
 				});
-				
+				if(orderItems.length == 0){
+					alert('请至少添加一个商品后提交');
+					return false;
+				}
 				var parameter = {
 					deliveryId	: '${delivery.deliveryId}',
 					userId		: '${user.id}',

@@ -19,11 +19,6 @@ public class AdminMainController {
 		return "/admin/common/login.jsp";
 	}
 	
-	@RequestMapping("/logout")
-	public String logout(){
-		return "/admin/common/logout.jsp";
-	}
-	
 	@RequestMapping({"/", ""})
 	public String index(){
 		return "/admin/index.jsp";

@@ -3,6 +3,7 @@ package cn.sowell.ddxyz.model.canteen.dao;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import cn.sowell.copframe.dto.page.CommonPageInfo;
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenDeliveyWares;
@@ -153,5 +154,11 @@ public interface CanteenDao {
 	 * @return
 	 */
 	List<CanteenOrderInfoItem> getOrderPageList(long userId, CommonPageInfo pageInfo);
+	
+	/**
+	 * 将所有产品设置状态为取消
+	 * @param cancelProductIds
+	 */
+	void setProductCalceled(Set<Long> cancelProductIds);
 
 }

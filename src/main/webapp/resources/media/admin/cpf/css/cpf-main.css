@@ -256,3 +256,19 @@ label.form-control-title {
     bottom: 0;
     z-index: 100;
 }
+
+.cmd-right {
+    float: right;
+    top: 0;
+    bottom: 0;
+    position: absolute;
+    right: 1em;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 45px;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+.cmd-right a{
+    color: #fff !important;
+}
