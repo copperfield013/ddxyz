@@ -5,7 +5,7 @@
 <head>
     <title>订单列表</title>
     <jsp:include page="/WEB-INF/jsp/weixin/common/weixin-include.jsp"></jsp:include>
-    <script src="${basePath }media/weixin/main/js/ix.js?"></script>
+    <script src="${basePath }media/weixin/main/js/ix.js"></script>
 </head>
 <style>
 body,html {
@@ -153,49 +153,7 @@ footer .main {
 	<main>
 		<div class="ui-body">
 			<div class="ui-content">
-				<div id="order-list"  class="page-list">
-					
-				   <!-- 	<div class="order">
-				   		<p class="number">订单号：170509161232		
-				   		</p>				   		
-				   		<p class="detail">
-				    		<img src="http://192.168.1.129:8080/ddxyz/media/weixin/main/image/h_milk_tea_2h.png" alt="奶茶">
-				            <span class="name">烤鸭<i>x1</i></span>
-				            <span class="price">￥20.0</span>				       
-				    	</p>
-				    	<p class="detail">
-				    		<img src="http://192.168.1.129:8080/ddxyz/media/weixin/main/image/h_milk_tea_2h.png" alt="奶茶">
-				            <span class="name">鸡爪<i>x2</i></span>
-				            <span class="price">￥40.0</span>				       
-				    	</p>
-				    	<p class="detail">
-				    		<img src="http://192.168.1.129:8080/ddxyz/media/weixin/main/image/h_milk_tea_2h.png" alt="奶茶">
-				            <span class="name">小龙虾<i>x5</i></span>
-				            <span class="price">￥251.0</span>				       
-				    	</p>
-				  		<p class="result">
-				  			<span class="timePoint">领取时间：2017-08-11 16:00:00</span>
-				  			<span class="money">总价：<b>￥0.01</b></span>
-				  		</p>
-				  		<p class="result">
-				  			<span class="location">领取地点：东部软件园</span>
-				  		</p>
-				  		<div class="order-detail-wrap">	
-				  			<p class="hideinfo">
-				  				<span class="ordertime">创建时间：2017-08-11 14:00:00</span>
-				  				<span class="takemen">收货人：张荣波</span>
-				  				<span class="takePhone">联系号码：13588888888</span>
-				  				<span class="takeport">部门：研发部</span>
-				  			</p>
-				  		</div>				  		
-				  		<p class="operate">
-				  			<i class="circle-point-icon"></i>			  				
-				  			<span class="operate-button">取消订单</span>	
-				  			<span class="operate-revise">修改订单</span>			  				
-				  		</p>
-				   	</div> -->
-				   	
-				</div>
+				<div id="order-list"  class="page-list"></div>
 			</div>
 		</div>
 	</main>
@@ -205,16 +163,6 @@ footer .main {
 	</footer>
 	<script type="text/javascript">
 		$(function(){
-			/* $('.circle-point-icon').on('click',function(){
-				var isOpen = $('.order-detail-wrap').hasClass('active');
-				if( isOpen ){
-					$('.order-detail-wrap').removeClass('active');
-					$(this).removeClass("active");
-				}else {
-					$('.order-detail-wrap').addClass('active');
-					$(this).addClass("active")
-				}			
-			}); */
 			ix.list('order-list', {
 				url	: 'weixin/canteen/order_data',
 				data: {
@@ -226,7 +174,29 @@ footer .main {
 				}
 			});
 			seajs.use('ydd/ydd-order-list');
+			
+			/* $('.circle-point-icon').on('click',function(){
+				var  isOpen = $(this).hasClass('active');
+				if( isOpen ){
+					$(this).parent().prev('.order-detail-wrap').removeClass('active');
+					$(this).removeClass("active");
+				}else {
+					$(this).parent().prev('.order-detail-wrap').addClass('active');
+					$(this).addClass("active")
+				}
+			}); */
 		})
+		
+		function lookMore(obj){
+			var  isOpen = $(obj).hasClass('active');
+			if( isOpen ){
+				$(obj).parent().prev('.order-detail-wrap').removeClass('active');
+				$(obj).removeClass("active");
+			}else {
+				$(obj).parent().prev('.order-detail-wrap').addClass('active');
+				$(obj).addClass("active")
+			}
+		}
 	</script>
 </body>
 </html>

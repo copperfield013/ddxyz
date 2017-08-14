@@ -28,21 +28,9 @@
   			</p>
   		</div>	
   		<p class="operate">		
-  			<i class="circle-point-icon"></i>		  				
+  			<i class="circle-point-icon" onclick="lookMore(this)"></i>		  				
   			<span class="operate-button">取消订单</span>	
   			<span class="operate-revise">修改订单</span>			  				
   		</p>
 	</div>
 </c:forEach>
-<script>
-	$('.circle-point-icon').on('click',function(){
-		var  isOpen = $(this).hasClass('active');
-		if( isOpen ){
-			$(this).parent().prev('.order-detail-wrap').removeClass('active');
-			$(this).removeClass("active");
-		}else {
-			$(this).parent().prev('.order-detail-wrap').addClass('active');
-			$(this).addClass("active")
-		}
-	});
-</script>
