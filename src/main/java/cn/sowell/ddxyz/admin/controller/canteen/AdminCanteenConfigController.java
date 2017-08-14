@@ -24,18 +24,16 @@ import cn.sowell.ddxyz.DdxyzConstants;
 import cn.sowell.ddxyz.admin.AdminConstants;
 import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenWeekDeliveryCriteria;
 import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenWeekDeliveryWaresItem;
-import cn.sowell.ddxyz.model.canteen.service.CanteenConfigService;
+import cn.sowell.ddxyz.model.canteen.service.CanteenDeliveryService;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryWares;
 import cn.sowell.ddxyz.model.common.pojo.PlainLocation;
 import cn.sowell.ddxyz.model.wares.pojo.PlainWares;
 
-@Controller
-@RequestMapping(AdminConstants.URI_BASE + "/canteen/config")
 public class AdminCanteenConfigController {
 	
 	@Resource
-	CanteenConfigService canteenConfigService;
+	CanteenDeliveryService canteenConfigService;
 	
 	@Resource
 	FileUploadUtils fUploadUtils;
@@ -88,6 +86,7 @@ public class AdminCanteenConfigController {
 				List<PlainLocation> locations = canteenConfigService.getCanteenDeliveryLocations();
 				model.addAttribute("waresList", canteenWaresList);
 				model.addAttribute("locations", locations);
+				model.addAttribute("criteria", criteria);
 			}
 		}
 		return AdminConstants.PATH_CANTEEN + "/config/canteen_generate_delivery.jsp";
@@ -140,7 +139,7 @@ public class AdminCanteenConfigController {
 		if(errMsg != null){
 			return AjaxPageResponse.FAILD(errMsg);
 		}else{
-			return AjaxPageResponse.CLOSE_AND_REFRESH_PAGE("创建成功", "wares-public");
+			return AjaxPageResponse.CLOSE_AND_REFRESH_PAGE("创建成功", "canteen-week-delivery");
 		}
 		
 	}

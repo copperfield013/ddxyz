@@ -65,7 +65,7 @@ public interface CanteenDao {
 	 * @param deliveryId
 	 * @return
 	 */
-	List<CanteenDeliveyWares> getCanteenDeliveryWares(Long deliveryId);
+	List<CanteenDeliveyWares> getCanteenDeliveryWares(Long deliveryId, Boolean disabled);
 
 	PlainCanteenOrder getLastOrderOfUser(Long userId);
 	

@@ -69,6 +69,7 @@ public class CanteenManageServiceImpl implements CanteenManageService{
 		row.createCell(4).setCellValue("手机号");
 		row.createCell(5).setCellValue("订单明细");
 		row.createCell(6).setCellValue("应收款");
+		row.createCell(7).setCellValue("备注");
 	}
 	
 	private void writeOrderRow(PlainDelivery delivery, CanteenDeliveryOrdersItem item, Row row) {
@@ -78,9 +79,10 @@ public class CanteenManageServiceImpl implements CanteenManageService{
 		row.createCell(3).setCellValue(item.getDepart());
 		row.createCell(4).setCellValue(item.getReceiverContact());
 		ArrayList<String> waresItems = CollectionUtils.toList(item.getWaresItemsList(), wItem->wItem.getWaresName() + "×" + wItem.getCount());
-		String detail = CollectionUtils.toChain(waresItems, "\\r\\n");
+		String detail = CollectionUtils.toChain(waresItems, "\r\n");
 		row.createCell(5, Cell.CELL_TYPE_STRING).setCellValue(detail);
 		row.createCell(6).setCellValue(TextUtils.formatFloat(item.getTotalPrice() / 100, "0.00"));
+		row.createCell(7).setCellValue(item.getComment());
 	}
 	
 	

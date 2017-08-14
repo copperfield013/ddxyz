@@ -32,7 +32,7 @@ import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenCriteria;
 import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenWeekTableCriteria;
 import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenDeliveryOrdersItem;
 import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenWeekTableItem;
-import cn.sowell.ddxyz.model.canteen.service.CanteenConfigService;
+import cn.sowell.ddxyz.model.canteen.service.CanteenDeliveryService;
 import cn.sowell.ddxyz.model.canteen.service.CanteenManageService;
 import cn.sowell.ddxyz.model.canteen.service.CanteenService;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
@@ -45,7 +45,7 @@ public class AdminCanteenManageController {
 	FrameDateFormat dateFormat;
 	
 	@Resource
-	CanteenConfigService canteenConfigService;
+	CanteenDeliveryService canteenConfigService;
 
 	@Resource
 	CanteenManageService canteenManageService;

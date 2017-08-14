@@ -15,6 +15,7 @@
 			<password-encoder hash="md5" />
 		</authentication-provider>
 	</authentication-manager>
+	<beans:bean id="webexpressionHandler" class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler" />
 	<!-- 拦截管理界面请求 -->
 	<http pattern="/admin/login" security="none" />
 	<http pattern="/admin/**" use-expressions="false" auto-config="true" authentication-manager-ref="authenticationManager">

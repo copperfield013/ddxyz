@@ -12,7 +12,7 @@ import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryWares;
 import cn.sowell.ddxyz.model.common.pojo.PlainLocation;
 import cn.sowell.ddxyz.model.wares.pojo.PlainWares;
 
-public interface CanteenConfigService {
+public interface CanteenDeliveryService {
 
 	/**
 	 * 获得餐厅的所有配送地址
@@ -76,5 +76,21 @@ public interface CanteenConfigService {
 	 * @return
 	 */
 	PlainDelivery getDelivery(Long deliveryId);
+
+
+	/**
+	 * 修改并持久化一个配送
+	 * @param delivery
+	 * @param dWaresList
+	 */
+	void updateCanteenDelivery(PlainDelivery delivery,
+			List<PlainDeliveryWares> dWaresList);
+
+	/**
+	 * 禁用（启用）某个商品配送
+	 * @param deliveryWaresId
+	 * @param disable
+	 */
+	void disableDeliveryWares(Long deliveryWaresId, boolean disable);
 
 }

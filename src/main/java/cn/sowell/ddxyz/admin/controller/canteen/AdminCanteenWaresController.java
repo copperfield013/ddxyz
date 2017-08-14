@@ -86,7 +86,7 @@ public class AdminCanteenWaresController {
 	@RequestMapping("/do_update")
 	public AjaxPageResponse doUpdate(
 			@RequestParam("waresId") Long waresId,
-			@RequestParam(value="file", required=false) MultipartFile file,
+			@RequestParam(value="thumb", required=false) MultipartFile file,
 			@RequestParam(value="waresName") String waresName, 
 			@RequestParam(value="unitPrice") Float unitPrice, 
 			@RequestParam(value="priceUnit") String priceUnit) {

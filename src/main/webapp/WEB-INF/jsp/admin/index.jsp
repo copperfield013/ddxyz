@@ -47,137 +47,141 @@
 	                			<span class="menu-text">主页面</span>
 	                		</a>
 	                	</li>
-						 <li>
-	                        <a href="#" class="menu-dropdown">
-	                            <i class="menu-icon fa fa-bookmark"></i>
-	                            <span class="menu-text">订单管理</span>
-	                            <i class="menu-expand"></i>
-	                        </a>
-							<ul class="submenu">
-                               	<li>
-                               		<a class="tab" href="admin/order-manage/order-list" target="order-list" title="订单查看">
-                               			<span class="menu-text">订单查看</span>
-                               		</a>
-                               	</li>
-                               	<li>
-                               		<a class="tab" href="admin/order-manage/order-statistics" target="orer-statistics" title="订单统计">
-                               			<span class="menu-text">订单统计</span>
-                               		</a>
-                               	</li>
-							</ul>
-	                    </li>
-	                    <li>
-	                        <a href="admin/production/main" class="menu-dropdown tab" target="product-main" title="生产管理">
-	                        	<i class="menu-icon fa fa-beer"></i>
-	                            <span class="menu-text">生产管理</span>
-	                        </a>
-	                    </li>
-	                    <li>
-	                        <a href="#" class="menu-dropdown">
-	                            <i class="menu-icon fa fa-gears"></i>
-	                            <span class="menu-text">配送配置</span>
-	                            <i class="menu-expand"></i>
-	                        </a>
-							<ul class="submenu">
-                               	<li>
-                               		<a class="tab" href="admin/config/plan/plan-list" target="delivery-plan-list" title="配送计划">
-                               			<span class="menu-text">配送计划</span>
-                               		</a>
-                               	</li>
-                               	<li>
-                               		<a class="tab" href="admin/config/info/list?from=index" target="delivery-info-list" title="配送列表">
-                               			<span class="menu-text">配送列表</span>
-                               		</a>
-                               	</li>
-                               	<li>
-                               		<a class="tab" href="admin/config/location/list" target="delivery-location-list" title="配送地点配置">
-                               			<span class="menu-text">配送地点配置</span>
-                               		</a>
-                               	</li>
-							</ul>
-	                    </li>
-	                    <li>
-	                        <a href="#" class="menu-dropdown">
-	                            <i class="menu-icon fa fa-desktop"></i>
-	                            <span class="menu-text">门店配置</span>
-	                            <i class="menu-expand"></i>
-	                        </a>
-	                        <ul class="submenu">
-                               	<li>
-                               		<a class="tab" href="admin/merchant/rule/list" target="merchant-disabled-rule-list" title="规则列表">
-                               			<span class="menu-text">规则列表</span>
-                               		</a>
-                               	</li>
-							</ul>
-	                    </li>
-	                    <li>
-	                    	<a href="#" class="menu-dropdown">
-	                    		<i class="menu-icon fa fa-code"></i>
-	                    		<span class="menu-text">测试</span>
-	                    		<i class="menu-expand"></i>
-	                    	</a>
-	                    	<ul class="submenu">
-                               	<li>
-                               		<a class="tab" href="admin/test/upload" target="testUpload" title="上传测试">
-                               			<span class="menu-text">上传测试</span>
-                               		</a>
-                               	</li>
-							</ul>
-	                    </li>
-	                    <li>
-	                        <a href="admin/menu/menu" class="menu-dropdown tab" target="admin-menu-add" title="增加菜单">
-	                            <i class="menu-icon fa fa-desktop"></i>
-	                            <span class="menu-text">自定义菜单</span>
-	                        </a>
-	                    </li>
-	                    <li>
-	                        <a href="#" class="menu-dropdown">
-	                            <i class="menu-icon fa fa-desktop"></i>
-	                            <span class="menu-text">消息与客服</span>
-	                            <i class="menu-expand"></i>
-	                        </a>
-	                        <ul class="submenu">
-	                        	<li>
-			                        <a href="admin/message/autoReply/list" class="tab" target="message-config-list" title="自动回复">
-			                            <span class="menu-text">自动回复</span>
-			                        </a>
-		                        </li>
-		                        <li>
-			                        <a href="admin/message/customServer/list" class="tab" target="custom-server-list" title="客服">
-			                            <span class="menu-text">客服</span>
-			                        </a>
-		                        </li>
-	                        </ul>
-	                   </li>
-	                   <li>
-	                        <a href="#" class="menu-dropdown">
-	                            <i class="menu-icon fa fa-desktop"></i>
-	                            <span class="menu-text">食堂管理</span>
-	                            <i class="menu-expand"></i>
-	                        </a>
-	                        <ul class="submenu">
-	                        	<li>
-			                        <a href="admin/canteen/wares/list" class="tab" target="canteen-wares-list" title="餐品管理">
-										<span class="menu-text">餐品管理</span>
-			                        </a>
-		                        </li>
-	                        	<li>
-			                        <a href="admin/canteen/config/week_delivery" class="tab" target="canteen-week-delivery" title="本周产品">
-										<span class="menu-text">本周产品</span>
-			                        </a>
-		                        </li>
-	                        	<li>
-			                        <a href="admin/canteen/manage/week_table" class="tab" target="canteen-week-table" title="订单周表">
-										<span class="menu-text">订单周表</span>
-			                        </a>
-		                        </li>
-	                        	<li>
-			                        <a href="admin/canteen/manage/week_orders" class="tab" target="canteen-week-orders" title="订单列表">
-										<span class="menu-text">订单列表</span>
-			                        </a>
-		                        </li>
-	                        </ul>
-	                   </li>
+	                	<sec:authorize access="hasRole('ROLE_YDD')">
+							 <li>
+		                        <a href="#" class="menu-dropdown">
+		                            <i class="menu-icon fa fa-bookmark"></i>
+		                            <span class="menu-text">订单管理</span>
+		                            <i class="menu-expand"></i>
+		                        </a>
+								<ul class="submenu">
+	                               	<li>
+	                               		<a class="tab" href="admin/order-manage/order-list" target="order-list" title="订单查看">
+	                               			<span class="menu-text">订单查看</span>
+	                               		</a>
+	                               	</li>
+	                               	<li>
+	                               		<a class="tab" href="admin/order-manage/order-statistics" target="orer-statistics" title="订单统计">
+	                               			<span class="menu-text">订单统计</span>
+	                               		</a>
+	                               	</li>
+								</ul>
+		                    </li>
+		                    <li>
+		                        <a href="admin/production/main" class="menu-dropdown tab" target="product-main" title="生产管理">
+		                        	<i class="menu-icon fa fa-beer"></i>
+		                            <span class="menu-text">生产管理</span>
+		                        </a>
+		                    </li>
+		                    <li>
+		                        <a href="#" class="menu-dropdown">
+		                            <i class="menu-icon fa fa-gears"></i>
+		                            <span class="menu-text">配送配置</span>
+		                            <i class="menu-expand"></i>
+		                        </a>
+								<ul class="submenu">
+	                               	<li>
+	                               		<a class="tab" href="admin/config/plan/plan-list" target="delivery-plan-list" title="配送计划">
+	                               			<span class="menu-text">配送计划</span>
+	                               		</a>
+	                               	</li>
+	                               	<li>
+	                               		<a class="tab" href="admin/config/info/list?from=index" target="delivery-info-list" title="配送列表">
+	                               			<span class="menu-text">配送列表</span>
+	                               		</a>
+	                               	</li>
+	                               	<li>
+	                               		<a class="tab" href="admin/config/location/list" target="delivery-location-list" title="配送地点配置">
+	                               			<span class="menu-text">配送地点配置</span>
+	                               		</a>
+	                               	</li>
+								</ul>
+		                    </li>
+		                    <li>
+		                        <a href="#" class="menu-dropdown">
+		                            <i class="menu-icon fa fa-desktop"></i>
+		                            <span class="menu-text">门店配置</span>
+		                            <i class="menu-expand"></i>
+		                        </a>
+		                        <ul class="submenu">
+	                               	<li>
+	                               		<a class="tab" href="admin/merchant/rule/list" target="merchant-disabled-rule-list" title="规则列表">
+	                               			<span class="menu-text">规则列表</span>
+	                               		</a>
+	                               	</li>
+								</ul>
+		                    </li>
+		                    <li>
+		                    	<a href="#" class="menu-dropdown">
+		                    		<i class="menu-icon fa fa-code"></i>
+		                    		<span class="menu-text">测试</span>
+		                    		<i class="menu-expand"></i>
+		                    	</a>
+		                    	<ul class="submenu">
+	                               	<li>
+	                               		<a class="tab" href="admin/test/upload" target="testUpload" title="上传测试">
+	                               			<span class="menu-text">上传测试</span>
+	                               		</a>
+	                               	</li>
+								</ul>
+		                    </li>
+		                    <li>
+		                        <a href="admin/menu/menu" class="menu-dropdown tab" target="admin-menu-add" title="增加菜单">
+		                            <i class="menu-icon fa fa-desktop"></i>
+		                            <span class="menu-text">自定义菜单</span>
+		                        </a>
+		                    </li>
+		                    <li>
+		                        <a href="#" class="menu-dropdown">
+		                            <i class="menu-icon fa fa-desktop"></i>
+		                            <span class="menu-text">消息与客服</span>
+		                            <i class="menu-expand"></i>
+		                        </a>
+		                        <ul class="submenu">
+		                        	<li>
+				                        <a href="admin/message/autoReply/list" class="tab" target="message-config-list" title="自动回复">
+				                            <span class="menu-text">自动回复</span>
+				                        </a>
+			                        </li>
+			                        <li>
+				                        <a href="admin/message/customServer/list" class="tab" target="custom-server-list" title="客服">
+				                            <span class="menu-text">客服</span>
+				                        </a>
+			                        </li>
+		                        </ul>
+		                   </li>
+	                	</sec:authorize>
+	                	<sec:authorize access="hasRole('ROLE_CANTEEN')">
+		                   <li>
+		                        <a href="#" class="menu-dropdown">
+		                            <i class="menu-icon fa fa-desktop"></i>
+		                            <span class="menu-text">食堂管理</span>
+		                            <i class="menu-expand"></i>
+		                        </a>
+		                        <ul class="submenu">
+		                        	<li>
+				                        <a href="admin/canteen/wares/list" class="tab" target="canteen-wares-list" title="餐品管理">
+											<span class="menu-text">餐品管理</span>
+				                        </a>
+			                        </li>
+		                        	<li>
+				                        <a href="admin/canteen/delivery/week_delivery" class="tab" target="canteen-week-delivery" title="本周产品">
+											<span class="menu-text">本周产品</span>
+				                        </a>
+			                        </li>
+		                        	<li>
+				                        <a href="admin/canteen/manage/week_table" class="tab" target="canteen-week-table" title="订单周表">
+											<span class="menu-text">订单周表</span>
+				                        </a>
+			                        </li>
+		                        	<li>
+				                        <a href="admin/canteen/manage/week_orders" class="tab" target="canteen-week-orders" title="订单列表">
+											<span class="menu-text">订单列表</span>
+				                        </a>
+			                        </li>
+		                        </ul>
+		                   </li>
+	                	</sec:authorize>
 					</ul>
 				</div>
 				<div class="page-content">

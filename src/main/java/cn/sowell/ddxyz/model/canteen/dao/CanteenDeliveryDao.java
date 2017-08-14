@@ -2,6 +2,7 @@ package cn.sowell.ddxyz.model.canteen.dao;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenDeliveryWaresListCriteria;
 import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenWeekDeliveryCriteria;
@@ -12,7 +13,7 @@ import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryWares;
 import cn.sowell.ddxyz.model.common.pojo.PlainLocation;
 import cn.sowell.ddxyz.model.wares.pojo.PlainWares;
 
-public interface CanteenConfigDao {
+public interface CanteenDeliveryDao {
 	/**
 	 * 获得所有配送地址
 	 * @param string
@@ -82,6 +83,36 @@ public interface CanteenConfigDao {
 
 	
 	PlainDelivery getDelivery(Long deliveryId);
+
+	/**
+	 * 更新
+	 * @param originDelivery
+	 */
+	void update(Object obj);
+
+
+	/**
+	 * 获得配送的所有商品配送
+	 * @param id
+	 * @return
+	 */
+	List<PlainDeliveryWares> getDeliveryWaresList(Long delivery);
+
+
+	/**
+	 * 从数据库中移除对应配送
+	 * @param delIdSet
+	 */
+	void removeDeliveryWares(Set<Long> delIdSet);
+
+
+	void create(Object dWares);
+
+
+	void disableDeliveryWares(Long deliveryWaresId, boolean disable);
+
+
+	
 
 
 }

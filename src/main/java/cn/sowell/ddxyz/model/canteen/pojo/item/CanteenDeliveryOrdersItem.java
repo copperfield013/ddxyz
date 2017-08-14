@@ -23,6 +23,9 @@ public class CanteenDeliveryOrdersItem {
 	@Column(name="c_total_price")
 	private Integer totalPrice;
 	
+	@Column(name="c_comment")
+	private String comment;
+	
 	private List<CanteenDeliveryOrderWaresItem> waresItemsList;
 	
 	
@@ -67,6 +70,12 @@ public class CanteenDeliveryOrdersItem {
 	}
 	public void setTotalPrice(Integer totalPrice) {
 		this.totalPrice = totalPrice;
+	}
+	public String getComment() {
+		return comment;
+	}
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 	
 }

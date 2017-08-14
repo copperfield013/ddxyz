@@ -115,7 +115,7 @@
 <body>
 <form class="validate" action="index.html" method="post">
 <c:if test="${isDisabled }">
-	<div class=shade>
+	<div class="shade">
 		<div>
 			<div class="shade-operation">
 				<span class="shade-warn">!</span>

@@ -84,7 +84,8 @@ public class CanteenManageDaoImpl implements CanteenManageDao{
 				"	ob.c_receiver_name," +
 				"	co.c_depart," +
 				"	ob.c_receiver_contact," +
-				"	ob.c_total_price" +
+				"	ob.c_total_price," +
+				"	ob.c_comment" +
 				"	from t_canteen_order co " +
 				"	left join t_order_base ob on co.order_id = ob.id" +
 				"	where ob.delivery_id = :deliveryId" +

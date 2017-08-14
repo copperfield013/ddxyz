@@ -24,11 +24,11 @@
 		</div>
 	</div>
 </c:set>
-<div id="canteen-batch-delivery">
+<div id="canteen-delivery-add">
 	<div class="page-body">
 		<div class="row">
 			<div class="col-lg-12">
-				<form class="form-horizontal" action="admin/canteen/config/do_generate_delivery" method="post">
+				<form class="form-horizontal" action="admin/canteen/delivery/do_add" method="post">
 					<div class="form-group">
 						<label class="col-lg-2 control-label" for="code">预定时间</label>
 						<div class="col-lg-3">
@@ -79,8 +79,20 @@
 <script>
 	$(function(){
 		seajs.use(['ajax', 'dialog', 'utils'], function(Ajax, Dialog, utils){
-			console.log('canteen-batch-delivery');
-			var nav = $("#canteen-batch-delivery");
+			console.log('canteen-delivery-add');
+			var nav = $("#canteen-delivery-add");
+			var START_TIME = new Date(Number('${criteria.startDate.time}')),
+				END_TIME = new Date(Number('${criteria.endDate.time - 1}'));
+			var accessTimeRange = utils.formatDate(START_TIME, 'yyyy-MM-dd hh:mm:ss') + '~' + utils.formatDate(END_TIME, 'yyyy-MM-dd hh:mm:ss');
+			function checkTimeInRange(range){
+				var split = range.split('~');
+				var startTime = new Date(split[0]),
+					endTime = new Date(split[1]);
+				if(startTime >= START_TIME && endTime <= END_TIME){
+					return true;
+				}
+				return false;
+			}
 			
 			$('form', nav).on('cpf-submit', function(e){
 				var orderTimeRange = $('#orderTimeRange', nav).val(),
@@ -91,11 +103,17 @@
 				}else if(!deliveryTimeRange){
 					errMsg = '分发时间范围不能为空';
 				}else{
-					var dWaresList = getDeliveryWaresList();
-					if(dWaresList.length == 0){
-						errMsg = '至少选择一个餐品';
+					if(!checkTimeInRange(orderTimeRange)){
+						errMsg = '预定时间范围应在' + accessTimeRange;
+					}else if(!checkTimeInRange(deliveryTimeRange)){
+						errMsg = '分发时间范围应在' + accessTimeRange;
 					}else{
-						return true;
+						var dWaresList = getDeliveryWaresList();
+						if(dWaresList.length == 0){
+							errMsg = '至少选择一个餐品';
+						}else{
+							return true;
+						}
 					}
 				}
 				if(errMsg){
@@ -116,7 +134,10 @@
 					applyLabel	: '确定',
 	                cancelLabel: '取消',
 	                fromLabel: '从',
-	                toLabel: '到'
+	                toLabel: '到',
+					daysOfWeek : [ '日', '一', '二', '三', '四', '五', '六' ],  
+	                monthNames : [ '一月', '二月', '三月', '四月', '五月', '六月',  
+	                        '七月', '八月', '九月', '十月', '十一月', '十二月' ]
 				}
 			});
 			$('#add-wares', nav).click(function(){

@@ -6,8 +6,82 @@
     <title>下单</title>
     <jsp:include page="/WEB-INF/jsp/weixin/common/weixin-include.jsp"></jsp:include>
     <link href="media/weixin/canteen/css/canteen-order.css" type="text/css" rel="stylesheet">
+    <style>
+    	.shade {
+    		position:absolute;
+    		top:0;
+    		bottom:0;
+    		left:0;
+    		right:0;
+    		background-color:rgba(0,0,0,0.2);
+    		z-index:9;
+    	}
+    	.shade >div {
+    		font-size:20px;
+    		width: 12em;
+		    height: 6em;
+		    border-radius: 0.4em;
+		    background-color: rgba(250,250,250,1);
+		    position: absolute;
+		    top: 30%;
+		    left: 50%;
+		    margin-left: -6em;	
+		    text-align: center;
+		    padding-top:0.5em;
+			
+    	}
+    	.shade >div >p {
+    		padding:0;
+    		margin:0;
+    		height:1.6em
+    	}
+    	.shade >div >div.shade-operation {
+    		margin-bottom:0.5em;
+    	}
+    	.shade >div >div.shade-operation:after{
+    		content:'';
+    		display:block;
+    		clear:both;
+    	}
+    	.shade span.shade-warn {
+    		display:block;
+    		float:left;
+    		margin-left:1em;
+    		width:1.1em;
+    		height:1.1em;
+    		line-height:1.1em;
+    		text-align:center;
+    		border-radius:50%;
+    		color:#F0B840;
+    		border:2px solid #F0B840;
+    	}
+    	.shade span.shade-close {
+    		font-size:40px;
+    		display:block;
+    		float:right;
+    		margin-right:0.5em;
+    		width:0.55em;
+    		height:0.55em;
+    		line-height:0.55em;
+    		text-align:center;
+    		color:#004621;
+    	}
+    </style>
+	
 </head>
 <body>
+<c:if test="${delivery == null }">
+	<div class="shade">
+		<div>
+			<div class="shade-operation">
+				<span class="shade-warn">!</span>
+				<span id="shade-close" class="shade-close">×</span>
+			</div>
+			<p>等待商家发布</p>
+			<p>暂停接单!</p>
+		</div>
+	</div>
+</c:if>
 <form class="validate" action="index.html" method="post">
 <main class="form">
     <!-- 配送信息 -->
@@ -124,8 +198,6 @@
 				$('.price-unit').text(wares.priceUnit);
 				refreshRemain();
 			}).trigger('change');
-			
-			
 			
 			
 			//计算总价
@@ -251,17 +323,18 @@
 					totalPrice	: parseFloat(totalPrice) * 100,
 					orderItems	: orderItems
 				};
-				
-				seajs.use(['ajax'], function(Ajax){
-					Ajax.postJson('weixin/canteen/doOrder', parameter, function(data){
-						if(data.status === 'suc'){
-							alert('订单创建成功');
-							location.href = 'weixin/canteen/order_list';
-						}else{
-							alert('订单创建失败');
-						}
+				if(confirm('确认提交订单？')){
+					seajs.use(['ajax'], function(Ajax){
+						Ajax.postJson('weixin/canteen/doOrder', parameter, function(data){
+							if(data.status === 'suc'){
+								alert('订单创建成功');
+								location.href = 'weixin/canteen/order_list';
+							}else{
+								alert('订单创建失败');
+							}
+						});
 					});
-				});
+				}
 			});
 		});
 	</script>

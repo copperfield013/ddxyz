@@ -24,7 +24,7 @@ import cn.sowell.ddxyz.model.canteen.pojo.CanteenUserCacheInfo;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainCanteenOrder;
 import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenOrderInfoItem;
 import cn.sowell.ddxyz.model.canteen.pojo.param.CanteenOrderParameter;
-import cn.sowell.ddxyz.model.canteen.service.CanteenConfigService;
+import cn.sowell.ddxyz.model.canteen.service.CanteenDeliveryService;
 import cn.sowell.ddxyz.model.canteen.service.CanteenService;
 import cn.sowell.ddxyz.model.common.pojo.PlainLocation;
 import cn.sowell.ddxyz.model.common.pojo.PlainOrder;
@@ -43,7 +43,7 @@ public class WeiXinCanteenController {
 	CanteenService canteenService;
 	
 	@Resource
-	CanteenConfigService canteenConfigService;
+	CanteenDeliveryService canteenConfigService;
 	
 	Logger logger = Logger.getLogger(WeiXinCanteenController.class);
 	

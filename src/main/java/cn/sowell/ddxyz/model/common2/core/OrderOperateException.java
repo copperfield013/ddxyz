@@ -3,7 +3,7 @@ package cn.sowell.ddxyz.model.common2.core;
 public class OrderOperateException extends Exception {
 
 	public OrderOperateException(String string) {
-		// TODO Auto-generated constructor stub
+		super(string);
 	}
 
 	/**

@@ -1,5 +1,23 @@
 <%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/jsp/common/base_empty.jsp"%>
+<style>
+	#canteen-wares-list a.waresName {
+		position: relative;
+	}
+	#canteen-wares-list img.wares-thumb {
+	    width: 100px;
+	    height: 100px;
+	    position: absolute;
+	    left: 0;
+	    top: 1.5em;
+	    display: none;
+	    z-index: 1000;
+	}
+	#canteen-wares-list a.waresName:HOVER>img.wares-thumb {
+		display: block !important;
+	}
+}
+</style>
 <nav style="padding: 1em 0" id="canteen-wares-list">
 	<form class="form-inline" action="admin/canteen/manage/week_orders" >
 		<div>
@@ -22,7 +40,7 @@
 				<c:forEach items="${waresList }" var="wares" varStatus="i">
 					<tr data-id="${wares.id }">
 						<td>${i.index + 1 }</td>
-						<td>${wares.name }</td>
+						<td><a class="waresName" href="#">${wares.name }<img class="wares-thumb" src="${basePath }${wares.thumbUri }"></a></td>
 						<td><fmt:formatNumber value="${wares.basePrice / 100}" pattern="0.00" /></td>
 						<td>${wares.priceUnit }</td>
 						<td><fmt:formatDate value="${wares.createTime }" pattern="yyyy-MM-dd HH:mm:ss"/> </td>
@@ -41,7 +59,6 @@
 		seajs.use(['ajax', 'dialog', 'utils'], function(Ajax, Dialog, utils){
 			var $page = $('#canteen-wares-list');
 			console.log($page);
-			
 			$('.wares-enable', $page).click(function(){
 				disableWares(this, 'enable');
 			});

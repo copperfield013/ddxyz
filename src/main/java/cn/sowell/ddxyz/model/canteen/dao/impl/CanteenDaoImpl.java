@@ -184,7 +184,7 @@ public class CanteenDaoImpl implements CanteenDao{
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<CanteenDeliveyWares> getCanteenDeliveryWares(Long deliveryId) {
+	public List<CanteenDeliveyWares> getCanteenDeliveryWares(Long deliveryId, Boolean disabled) {
 		String sql = 
 				"SELECT" +
 						"	w.id dwaresid," +
@@ -202,6 +202,16 @@ public class CanteenDaoImpl implements CanteenDao{
 						" where d.id = :deliveryId";
 		DeferedParamQuery dQuery = new DeferedParamQuery(sql);
 		dQuery.setParam("deliveryId", deliveryId);
+		if(disabled != null){
+			if(disabled){
+				dQuery.appendCondition("and w.c_disabled = :disabled");
+				dQuery.appendCondition("and wb.c_disabled = :disabled");
+			}else{
+				dQuery.appendCondition("and (w.c_disabled is null or w.c_disabled <> :disabled)");
+				dQuery.appendCondition("and (wb.c_disabled is null or wb.c_disabled <> :disabled)");
+			}
+			dQuery.setParam("disabled", 1);
+		}
 		SQLQuery query = dQuery.createSQLQuery(sFactory.getCurrentSession(), false, null);
 		query.setResultTransformer(HibernateRefrectResultTransformer.getInstance(CanteenDeliveyWares.class));
 		return query.list();

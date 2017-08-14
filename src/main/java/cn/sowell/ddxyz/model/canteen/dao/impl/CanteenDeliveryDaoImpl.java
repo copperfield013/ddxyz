@@ -2,6 +2,7 @@ package cn.sowell.ddxyz.model.canteen.dao.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -10,12 +11,13 @@ import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.type.StandardBasicTypes;
 import org.springframework.stereotype.Repository;
 
 import cn.sowell.copframe.dao.deferedQuery.DeferedParamQuery;
 import cn.sowell.copframe.dao.deferedQuery.HibernateRefrectResultTransformer;
 import cn.sowell.copframe.dto.format.FrameDateFormat;
-import cn.sowell.ddxyz.model.canteen.dao.CanteenConfigDao;
+import cn.sowell.ddxyz.model.canteen.dao.CanteenDeliveryDao;
 import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenDeliveryWaresListCriteria;
 import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenWeekDeliveryCriteria;
 import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenDeliveryWaresListItem;
@@ -26,7 +28,7 @@ import cn.sowell.ddxyz.model.common.pojo.PlainLocation;
 import cn.sowell.ddxyz.model.wares.pojo.PlainWares;
 
 @Repository
-public class CanteenConfigDaoImpl implements CanteenConfigDao {
+public class CanteenDeliveryDaoImpl implements CanteenDeliveryDao {
 	@Resource
 	SessionFactory sFactory;
 
@@ -175,5 +177,43 @@ public class CanteenConfigDaoImpl implements CanteenConfigDao {
 	@Override
 	public PlainDelivery getDelivery(Long deliveryId) {
 		return sFactory.getCurrentSession().get(PlainDelivery.class, deliveryId);
+	}
+	
+	@Override
+	public void update(Object obj) {
+		sFactory.getCurrentSession().update(obj);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PlainDeliveryWares> getDeliveryWaresList(Long deliveryId) {
+		Criteria criteria = sFactory.getCurrentSession().createCriteria(PlainDeliveryWares.class);
+		return criteria.add(Restrictions.eq("deliveryId", deliveryId)).list();
+	}
+	
+	@Override
+	public void removeDeliveryWares(Set<Long> delIdSet) {
+		String sql = "delete from t_delivery_wares where id in (:delIds)";
+		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
+		query.setParameterList("delIds", delIdSet);
+		query.executeUpdate();
+	}
+	
+	@Override
+	public void create(Object dWares) {
+		sFactory.getCurrentSession().save(dWares);
+	}
+
+	@Override
+	public void disableDeliveryWares(Long deliveryWaresId, boolean disable) {
+		String sql = "update t_delivery_wares set c_disabled = :disable where id = :dwId";
+		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
+		query.setLong("dwId", deliveryWaresId);
+		if(disable){
+			query.setLong("disable", 1);
+		}else{
+			query.setParameter("disable", null, StandardBasicTypes.LONG);
+		}
+		query.executeUpdate();
 	}
 }

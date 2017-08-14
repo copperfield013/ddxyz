@@ -268,15 +268,18 @@ public class CanteenServiceImpl implements CanteenService {
 	@Override
 	public CanteenDelivery getDeliveryOfThisWeek() {
 		PlainDelivery pDelivery = cDao.getDeliveryOfThisWeek(new Date());
-		CanteenDelivery cDelivery = new CanteenDelivery();
-		cDelivery.setDeliveryId(pDelivery.getId());
-		cDelivery.setLocationName(pDelivery.getLocationName());
-		cDelivery.setTimePointStart(pDelivery.getTimePoint());
-		cDelivery.setTimePointEnd(pDelivery.getClaimEndTime());
-		
-		List<CanteenDeliveyWares> waresList = cDao.getCanteenDeliveryWares(pDelivery.getId());
-		cDelivery.setWaresList(waresList);
-		return cDelivery;
+		if(pDelivery != null){
+			CanteenDelivery cDelivery = new CanteenDelivery();
+			cDelivery.setDeliveryId(pDelivery.getId());
+			cDelivery.setLocationName(pDelivery.getLocationName());
+			cDelivery.setTimePointStart(pDelivery.getTimePoint());
+			cDelivery.setTimePointEnd(pDelivery.getClaimEndTime());
+			
+			List<CanteenDeliveyWares> waresList = cDao.getCanteenDeliveryWares(pDelivery.getId(), false);
+			cDelivery.setWaresList(waresList);
+			return cDelivery;
+		}
+		return null;
 	}
 	
 	@Override
@@ -335,7 +338,7 @@ public class CanteenServiceImpl implements CanteenService {
 			result.setLocationName(delivery.getLocationName());
 			result.setTimePointStart(delivery.getTimePoint());
 			result.setTimePointEnd(delivery.getClaimEndTime());
-			List<CanteenDeliveyWares> waresList = cDao.getCanteenDeliveryWares(deliveryId);
+			List<CanteenDeliveyWares> waresList = cDao.getCanteenDeliveryWares(deliveryId, false);
 			result.setWaresList(waresList);
 			return result;
 		}

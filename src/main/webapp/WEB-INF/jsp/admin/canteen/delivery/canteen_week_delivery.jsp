@@ -9,15 +9,20 @@
 	}
 </style>
 <nav style="padding: 1em 0" id="canteen-week-delivery">
-	<form class="form-inline" action="admin/canteen/config/week_delivery" >
+	<form class="form-inline" action="admin/canteen/delivery/week_delivery" >
 		<div class="form-group">
 			<label class="form-control-title" for="contactName">日期</label>
 			<input type="text" class="form-control" id="selectDate" name="date" readonly="readonly" css-cursor="text" value="${criteria.date }" />
 		</div>
 		<button type="submit" class="btn btn-default">查询</button>
-		<c:if test="${delivery == null }">
-			<a class="btn btn-primary tab" href="admin/canteen/config/generate_delivery?date=${criteria.date }" title="创建配送" target="canteen-batch-delivery" >创建</a>
-		</c:if>
+		<c:choose>
+			<c:when test="${delivery == null }">
+				<a class="btn btn-primary tab" href="admin/canteen/delivery/add?date=${criteria.date }" title="创建配送" target="canteen-delivery-add" >创建</a>
+			</c:when>
+			<c:otherwise>
+				<a class="btn btn-primary tab" href="admin/canteen/delivery/update/${delivery.id }" title="修改" target="canteen-delivery-update" >修改</a>
+			</c:otherwise>
+		</c:choose>
 	</form>
 	<div class="row" style="margin-top: 1em;">
 		<div class="col-lg-4">
@@ -78,14 +83,13 @@
 							</thead>
 							<tbody>
 								<c:forEach items="${deliveryWaresItems }" var="item" varStatus="i">
-									<tr>
+									<tr data-id="${item.deliveryWaresId }">
 										<td>${i.index + 1 }</td>
 										<td>${item.waresName }</td>
 										<td><fmt:formatNumber value="${item.unitPrice/100 }" pattern="0.00"/>元/${item.priceUnit }</td>
 										<td>${item.currentCount }/${item.maxCount == null || item.maxCount ==0 ? '不限' :item.maxCount }</td>
 										<td>
-											<a>暂停预定</a>
-											<a>删除</a>
+											<a class="dwares-${item.disabled == 1? 'enable': 'disable' }" href="#">${item.disabled == 1? '恢复预定': '暂停预定' }</a>
 										</td>
 									</tr>
 								</c:forEach>
@@ -103,8 +107,30 @@
 			var $page = $('#canteen-week-delivery');
 			$('#selectDate', $page).datepicker({
 				format		: 'yyyy-mm-dd',
-				weekStart	: 1
+				weekStart	: 1,
+				daysOfWeek : [ '日', '一', '二', '三', '四', '五', '六' ],  
+                monthNames : [ '一月', '二月', '三月', '四月', '五月', '六月',  
+                        '七月', '八月', '九月', '十月', '十一月', '十二月' ]
 			});
+			
+			$('.dwares-enable', $page).click(function(){
+				disableWares(this, 'enable');
+			});
+			$('.dwares-disable', $page).click(function(){
+				disableWares(this, 'disable');
+			});
+			function disableWares(dom, disabled){
+				Dialog.confirm('确定' + (disabled == 'disable' ? '暂停预定？': '恢复预定？'), function(yes){
+					if(yes){
+						var dwaresId = $(dom).closest('tr').attr('data-id');
+						Ajax.ajax('admin/canteen/delivery/disable_wares/' + disabled + '/' + dwaresId, {}, {
+							page	: $page.getLocatePage()
+						});
+					}	
+				});
+				
+			}
+			
 		});
 		
 	});

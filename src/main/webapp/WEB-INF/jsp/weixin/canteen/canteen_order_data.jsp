@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/jsp/common/base_empty.jsp"%>
 <c:forEach items="${orderList }" var="orderItem">
-	<div class="order">
+	<div class="order" data-id="${orderItem.orderId }">
 		<p class-="number">订单号：${orderItem.orderCode }
 		</p>
 		<c:forEach items="${waresList[orderItem] }" var="item">
@@ -28,9 +28,11 @@
   			</p>
   		</div>	
   		<p class="operate">		
-  			<i class="circle-point-icon" onclick="lookMore(this)"></i>		  				
-  			<span class="operate-button">取消订单</span>	
-  			<span class="operate-revise">修改订单</span>			  				
+  			<i class="circle-point-icon" onclick="lookMore(this)"></i>		 
+  			<c:if test="${orderItem.orderStatus < 2 && orderItem.canceledStatus == null }">
+	  			<!-- <span class="operate-button">取消订单</span> -->
+	  			<span class="operate-revise">修改订单</span>
+  			</c:if> 				
   		</p>
 	</div>
 </c:forEach>
