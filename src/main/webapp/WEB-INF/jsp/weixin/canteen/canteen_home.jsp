@@ -46,17 +46,17 @@
         	<p>
         		<span>
         			下单时间：
-        			<fmt:formatDate value="${pDelivery.openTime }" pattern="yyyy-MM-dd HH:mm:ss" />
+        			<fmt:formatDate value="${pDelivery.openTime }" pattern="MM月dd日HH时mm分" />
         			~
-        			<fmt:formatDate value="${pDelivery.closeTime }" pattern="yyyy-MM-dd HH:mm:ss" />
+        			<fmt:formatDate value="${pDelivery.closeTime }" pattern="MM月dd日HH时mm分" />
         		</span>
         	</p>
         	<p>
         		<span>
         			领取时间：
-        			<fmt:formatDate value="${pDelivery.timePoint }" pattern="yyyy-MM-dd HH:mm:ss" />
+        			<fmt:formatDate value="${pDelivery.timePoint }" pattern="MM月dd日HH时mm分" />
         			~
-        			<fmt:formatDate value="${pDelivery.claimEndTime }" pattern="yyyy-MM-dd HH:mm:ss" />
+        			<fmt:formatDate value="${pDelivery.claimEndTime }" pattern="MM月dd日HH时mm分" />
         			
         		</span>
         	</p>

@@ -408,6 +408,7 @@ public class CanteenDaoImpl implements CanteenDao{
 				+ "	co.order_id,"
 				+ "	co.c_depart,"
 				+ "	co.c_order_close_time,"
+				+ "	co.c_delivery_end_time,"
 				+ "	ob.c_order_code,"
 				+ "	ob.c_location_name,"
 				+ "	ob.c_time_point,"

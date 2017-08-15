@@ -3,7 +3,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title>下单</title>
+    <title>修改订单</title>
     <jsp:include page="/WEB-INF/jsp/weixin/common/weixin-include.jsp"></jsp:include>
     <link href="media/weixin/canteen/css/canteen-order.css" type="text/css" rel="stylesheet">
 </head>
@@ -12,10 +12,18 @@
 <main class="form">
     <!-- 配送信息 -->
     <div class="send-info">
-    	
-        <p>领取时间<span class="send-date"><fmt:formatDate value="${delivery.timePointStart }" pattern="yyyy-MM-dd"/></span>
-        <span class="send-time"><fmt:formatDate value="${delivery.timePointStart }" pattern="HH:mm"/>~<fmt:formatDate value="${delivery.timePointEnd }" pattern="HH:mm"/></span></p>
-        <p>领取地址<span class="send-address">${delivery.locationName }</span></p>
+    	<p>
+        	<span class="stat-label">领取时间</span>
+        	<span class="send-date stat-value">
+        		<span><fmt:formatDate value="${delivery.timePointStart }" pattern="MM月dd日HH时mm分"/></span>
+        		~
+        		<span><fmt:formatDate value="${delivery.timePointEnd }" pattern="MM月dd日HH时mm分"/></span>
+        	</span>
+        </p>
+        <p>
+        	<span class="stat-label">领取地址</span>
+        	<span class="send-address stat-value">${delivery.locationName }</span>
+        </p>
     </div>
     <!-- 用户信息 -->
     <div class="user-info">
@@ -121,7 +129,7 @@
 				var deliveryWaresId = $(this).val();
 				var wares = getDeliveryWares(deliveryWaresId);
 				$('.unit-price').text(parseFloat(wares.price/100).toFixed(2));
-				$('.price-unit').text(wares.priceUnit);
+				$('.price-unit').text('元/' + wares.priceUnit);
 				refreshRemain();
 			}).trigger('change');
 			

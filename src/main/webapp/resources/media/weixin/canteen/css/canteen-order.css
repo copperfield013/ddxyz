@@ -8,16 +8,20 @@ i {
 	clear:both;
 }
 .send-info p {
-	height:3.6em;
 	line-height:3.6em;
 	border-bottom: 1px solid #E6E3E5;
     padding: 0 1em;
+    float: left;
+    width: 100%;
 }
 .send-date,.send-address {
 	margin-left:1em;
 }
 .send-time {
 	margin-left:5px;
+}
+.user-info{
+	clear: left;
 }
 .user-info p {
 	height:3.6em;
@@ -200,4 +204,20 @@ footer .order-link {
 }
 footer .main {
     background-color: #663300;
+}
+
+span.stat-label {
+    display: block;
+    float: left;
+    width: 20%;
+    min-width: 5em;
+}
+span.stat-value {
+    display: block;
+    float: left;
+    margin-left: 0;
+    width: 75%;
+}
+span.stat-value span{
+	white-space: nowrap;
 }

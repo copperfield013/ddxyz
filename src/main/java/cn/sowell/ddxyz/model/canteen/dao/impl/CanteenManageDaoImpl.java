@@ -56,7 +56,10 @@ public class CanteenManageDaoImpl implements CanteenManageDao{
 						" WHERE" +
 						"	ob.delivery_id = :deliveryId and ob.c_canceled_status is null" +
 						" GROUP BY" +
-						"	p.delivery_wares_id, co.order_id";
+						"	p.delivery_wares_id, co.order_id" + 
+						" order by ob.create_time desc "
+						
+						;
 		DeferedParamQuery dQuery = new DeferedParamQuery(sql);
 		dQuery.setParam("deliveryId", deliveryId);
 		Session session = sFactory.getCurrentSession();
@@ -89,7 +92,7 @@ public class CanteenManageDaoImpl implements CanteenManageDao{
 				"	from t_canteen_order co " +
 				"	left join t_order_base ob on co.order_id = ob.id" +
 				"	where ob.delivery_id = :deliveryId and ob.c_canceled_status is null" +
-				"	order by co.c_depart asc";
+				"	order by co.c_depart asc, ob.create_time desc";
 		
 		DeferedParamQuery dQuery = new DeferedParamQuery(sql);
 		dQuery.setParam("deliveryId", deliveryId);
