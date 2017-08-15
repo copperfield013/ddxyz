@@ -275,7 +275,7 @@ public class CanteenServiceImpl implements CanteenService {
 			cDelivery.setLocationName(pDelivery.getLocationName());
 			cDelivery.setTimePointStart(pDelivery.getTimePoint());
 			cDelivery.setTimePointEnd(pDelivery.getClaimEndTime());
-			
+			cDelivery.setPlainDelivery(pDelivery);
 			List<CanteenDeliveyWares> waresList = cDao.getCanteenDeliveryWares(pDelivery.getId(), false);
 			cDelivery.setWaresList(waresList);
 			return cDelivery;

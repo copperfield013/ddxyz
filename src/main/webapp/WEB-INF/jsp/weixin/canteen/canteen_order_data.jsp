@@ -2,7 +2,11 @@
 <%@ include file="/WEB-INF/jsp/common/base_empty.jsp"%>
 <c:forEach items="${orderList }" var="orderItem">
 	<div class="order" data-id="${orderItem.orderId }">
-		<p class-="number">订单号：${orderItem.orderCode }
+		<p class="head">
+			<span class="order-code">订单号：${orderItem.orderCode }</span>
+			<c:if test="${orderItem.canceledStatus != null }">
+				<span class="order-status">已取消</span>
+			</c:if>
 		</p>
 		<c:forEach items="${waresList[orderItem] }" var="item">
 			<p class="detail">

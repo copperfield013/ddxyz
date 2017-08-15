@@ -29,4 +29,11 @@ public interface CanteenManageDao {
 	List<CanteenDeliveryOrdersItem> queryDeliveryOrderItems(long deliveryId,
 			CommonPageInfo pageInfo);
 
+	/**
+	 * 计算该配送下所有没有取消的订单的总金额
+	 * @param deliveryId
+	 * @return 返回计算后的总金额，单位为分
+	 */
+	Integer amountDelivery(long deliveryId);
+
 }

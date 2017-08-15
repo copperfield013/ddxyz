@@ -54,7 +54,7 @@ public class CanteenManageDaoImpl implements CanteenManageDao{
 						" LEFT JOIN t_product_base p ON ob.id = p.order_id" +
 						" LEFT JOIN t_wares_base w ON p.wares_id = w.id" +
 						" WHERE" +
-						"	ob.delivery_id = :deliveryId" +
+						"	ob.delivery_id = :deliveryId and ob.c_canceled_status is null" +
 						" GROUP BY" +
 						"	p.delivery_wares_id, co.order_id";
 		DeferedParamQuery dQuery = new DeferedParamQuery(sql);
@@ -88,7 +88,7 @@ public class CanteenManageDaoImpl implements CanteenManageDao{
 				"	ob.c_comment" +
 				"	from t_canteen_order co " +
 				"	left join t_order_base ob on co.order_id = ob.id" +
-				"	where ob.delivery_id = :deliveryId" +
+				"	where ob.delivery_id = :deliveryId and ob.c_canceled_status is null" +
 				"	order by co.c_depart asc";
 		
 		DeferedParamQuery dQuery = new DeferedParamQuery(sql);
@@ -135,4 +135,13 @@ public class CanteenManageDaoImpl implements CanteenManageDao{
 		query.setResultTransformer(HibernateRefrectResultTransformer.getInstance(CanteenDeliveryOrderWaresItem.class));
 		return query.list();
 	}
+	
+	@Override
+	public Integer amountDelivery(long deliveryId) {
+		String sql = "select sum(o.c_total_price) from t_order_base o where o.delivery_id = :deliveryId and o.c_canceled_status is null";
+		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
+		query.setLong("deliveryId", deliveryId);
+		return FormatUtils.toInteger(query.uniqueResult());
+	}
+	
 }

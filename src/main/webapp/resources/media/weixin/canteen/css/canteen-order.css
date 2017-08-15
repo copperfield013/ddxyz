@@ -94,8 +94,7 @@ p.layout-select:after {
 .dishs-text {
 	margin:0 0.5em;
 }
-.surplus-count-label,
-.surplus-count		  {
+.remain-container		  {
 	color:#f74342;
 	font-size:12px;
 	display: inline-block;

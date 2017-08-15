@@ -28,9 +28,6 @@
 			<input type="text" class="form-control" id="selectDate" name="date" readonly="readonly" css-cursor="text" value="${criteria.date }" />
 		</div>
 		<button type="submit" class="btn btn-default">查询</button>
-		<c:if test="${delivery == null }">
-			<a class="btn btn-primary tab" href="admin/canteen/config/generate_delivery?date=${criteria.date }" title="创建配送" target="canteen-batch-delivery" >创建</a>
-		</c:if>
 	</form>
 	<div class="row" style="margin-top: 1em;">
 		<div class="col-lg-4">
@@ -60,6 +57,10 @@
 							<div class="row delivery-row">
 								<label class="col-lg-4 ">分发点：</label>
 								<div class="col-lg-8 ">${delivery.locationName }</div>
+							</div>
+							<div class="row delivery-row">
+								<label class="col-lg-4 ">订单总金额：</label>
+								<div class="col-lg-8 "><fmt:formatNumber value="${totalAmount /100 }" pattern="0.00" />元</div>
 							</div>
 						</c:when>
 						<c:otherwise>

@@ -145,6 +145,9 @@ public class CanteenManageServiceImpl implements CanteenManageService{
 		return jo;
 	}
 	
-	
+	@Override
+	public Integer amountDelivery(long deliveryId) {
+		return manageDao.amountDelivery(deliveryId);
+	}
 
 }

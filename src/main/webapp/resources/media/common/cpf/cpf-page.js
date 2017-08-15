@@ -25,6 +25,9 @@ define(function(require, exports, module){
 	});
 	
 	$CPF.putPageInitSequeue(5, function($page){
+		$('a.jump[href]', $page).click(function(){
+			location.href = $(this).attr('href');
+		});
 		var page = $($page).getLocatePage();
 		if(page instanceof Page){
 			if(page.getType() === 'dialog'){
@@ -38,55 +41,57 @@ define(function(require, exports, module){
 				$('a[href],button[href]', $page).click(function(){
 					if(!$(this).is('.tab,.dialog')){
 						var href = $(this).attr('href');
-						if(href !== '#'){
-							goPage(this, page);
+						if(href && href !== '#'){
+							if(href.indexOf('~') === 0){
+								location.href = href.substr(1);
+							}else{
+								goPage(this, page);
+							}
 						}
 					}
 				});
 			}
-			
-			function goPage(dom, targetPage){
-				var target = $(dom).attr('target'),
-					href = $(dom).attr('href'),
-					title = $(dom).attr('title'),
-					pageType = $(dom).attr('page-type') || 'dialog'
-					;
-				if(target && target.startsWith('@')){
-					var pageId = target.substr(1);
-					//根据id获得获得对应的Page对象
-					targetPage = Page.getPage(pageId);
-					if(!(targetPage instanceof Page)){
-						//没有找到Page对象，那么就创建一个
-						if(pageType === 'dialog'){
-							var Dialog = require('dialog');
-							var dialog = new Dialog({
-								id		: pageId,
-								title	: title
-							});
-							targetPage = dialog.getPage();
-						}else if(pageType === 'tab'){
-							var Tab = require('tab');
-							var tab = new Tab({
-								id		: pageId,
-								title	: title
-							});
-							tab.insert();
-							targetPage = tab.getPage();
-						}
-					}
-				}
-				targetPage.loadContent(href, title);
-				var tPageType = targetPage.getType();
-				if(tPageType === 'dialog'){
-					targetPage.getPageObj().show();
-				}else if(tPageType === 'tab'){
-					targetPage.getPageObj().activate();
+		}
+		
+	});
+	function goPage(dom, targetPage){
+		var target = $(dom).attr('target'),
+			href = $(dom).attr('href'),
+			title = $(dom).attr('title'),
+			pageType = $(dom).attr('page-type') || 'dialog'
+			;
+		if(target && target.startsWith('@')){
+			var pageId = target.substr(1);
+			//根据id获得获得对应的Page对象
+			targetPage = Page.getPage(pageId);
+			if(!(targetPage instanceof Page)){
+				//没有找到Page对象，那么就创建一个
+				if(pageType === 'dialog'){
+					var Dialog = require('dialog');
+					var dialog = new Dialog({
+						id		: pageId,
+						title	: title
+					});
+					targetPage = dialog.getPage();
+				}else if(pageType === 'tab'){
+					var Tab = require('tab');
+					var tab = new Tab({
+						id		: pageId,
+						title	: title
+					});
+					tab.insert();
+					targetPage = tab.getPage();
 				}
 			}
-			
 		}
-	});
-	
+		targetPage.loadContent(href, title);
+		var tPageType = targetPage.getType();
+		if(tPageType === 'dialog'){
+			targetPage.getPageObj().show();
+		}else if(tPageType === 'tab'){
+			targetPage.getPageObj().activate();
+		}
+	}
 	
 	
 	var pageMap = {};

@@ -55,5 +55,11 @@ public interface CanteenManageService {
 	 * @return
 	 */
 	JSONObject toOrderTagObject(List<CanteenDeliveryOrdersItem> items);
-	
+
+	/**
+	 * 计算该配送下所有未取消的订单的总金额
+	 * @param id
+	 * @return
+	 */
+	Integer amountDelivery(long id);
 }

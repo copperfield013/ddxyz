@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import cn.sowell.copframe.utils.CollectionUtils;
+import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -15,6 +16,8 @@ public class CanteenDelivery {
 	private String locationName;
 	private Date timePointStart;
 	private Date timePointEnd;
+	
+	private PlainDelivery plainDelivery;
 	
 	@JSONField(serialize=false)
 	List<CanteenDeliveyWares> waresList;
@@ -67,6 +70,16 @@ public class CanteenDelivery {
 
 	public void setWaresList(List<CanteenDeliveyWares> waresList) {
 		this.waresList = waresList;
+	}
+
+
+	public PlainDelivery getPlainDelivery() {
+		return plainDelivery;
+	}
+
+
+	public void setPlainDelivery(PlainDelivery plainDelivery) {
+		this.plainDelivery = plainDelivery;
 	}
 
 

@@ -119,7 +119,7 @@
         </p>
         <p>
         	<span class="form-label">单价</span>
-        	<span class="unit-price">20</span><i class="price-unit">元/只</i>
+        	<span class="unit-price"></span><i class="price-unit"></i>
         </p>
         <p>
         	<span class="dishs-count form-label">数量</span>
@@ -130,8 +130,10 @@
         	</span>
         </p>
         <p class="clearfix remain-row">
-        	<span class="surplus-count-label">可供余量：</span>
-        	<span class="surplus-count">10</span>
+        	<span class="remain-container" style="visibility: hidden;">
+	        	<span class="surplus-count-label">可供余量：</span>
+    	    	<span class="surplus-count"></span>
+        	</span>
         	<span class="add">添加</span>
         </p>
         <div class="order-info" id="order-items">
@@ -185,9 +187,9 @@
 				var dWares = getDeliveryWares(dWaresId);
 				if(dWares.maxCount && dWares.maxCount > 0){
 					$('.surplus-count').text(dWares.maxCount - dWares.currentCount - getDeliveryWaresCountInPage(dWaresId));
-					$('.remain-container').show();
+					$('.remain-container').css('visibility', 'visible');
 				}else{
-					$('.remain-container').hide();
+					$('.remain-container').css('visibility', 'hidden');
 				}
 			}
 			
@@ -195,7 +197,7 @@
 				var deliveryWaresId = $(this).val();
 				var wares = getDeliveryWares(deliveryWaresId);
 				$('.unit-price').text(parseFloat(wares.price/100).toFixed(2));
-				$('.price-unit').text(wares.priceUnit);
+				$('.price-unit').text('元/' + wares.priceUnit);
 				refreshRemain();
 			}).trigger('change');
 			

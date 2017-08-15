@@ -81,6 +81,8 @@ public class AdminCanteenManageController {
 			List<CanteenDeliveryOrdersItem> items = canteenManageService.queryDeliveryOrderItems(delivery.getId(), pageInfo);
 			model.addAttribute("orderItems", items);
 		}
+		Integer totalAmount = canteenManageService.amountDelivery(delivery.getId());
+		model.addAttribute("totalAmount", totalAmount);
 		model.addAttribute("delivery", delivery);
 		model.addAttribute("criteria", criteria);
 		model.addAttribute("pageInfo", pageInfo);
