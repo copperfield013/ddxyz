@@ -21,7 +21,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import cn.sowell.copframe.SystemConstants;
 import cn.sowell.copframe.common.property.PropertyPlaceholder;
-import cn.sowell.copframe.dto.format.FormatUtils;
 import cn.sowell.copframe.utils.HttpRequestUtils;
 import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.copframe.weixin.common.service.WxConfigService;
@@ -64,9 +63,9 @@ public class WxUserOAuth2Filter implements Filter {
 			if(authentication == null || authentication instanceof AnonymousAuthenticationToken){
 				//从session中获得认证对象
 				WeiXinUser user = null;
-				String debugUserId = PropertyPlaceholder.getProperty("debug_user_id");
-				if(configService.isDebug() && TextUtils.isInteger(debugUserId)){
-					user = userService.getWeiXinUserById(FormatUtils.toLong(debugUserId));
+				Long debugUserId = configService.getDebugUserId();
+				if(configService.isDebug() && debugUserId != null){
+					user = userService.getWeiXinUserById(debugUserId);
 				}
 				if(user == null){
 					user = (WeiXinUser) session.getAttribute(SystemConstants.WXUSER_KEY);

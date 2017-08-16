@@ -12,6 +12,7 @@ import cn.sowell.ddxyz.model.canteen.pojo.CanteenUserCacheInfo;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainCanteenOrder;
 import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenOrderInfoItem;
 import cn.sowell.ddxyz.model.canteen.pojo.param.CanteenOrderParameter;
+import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlan;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlanWares;
 import cn.sowell.ddxyz.model.common2.core.OrderOperateException;
@@ -115,4 +116,11 @@ public interface CanteenService {
 	 * @return
 	 */
 	Map<CanteenOrderInfoItem, List<CanteenOrderUpdateItem>> getCanteenOrderUpdateItemList(List<CanteenOrderInfoItem> orderList);
+	/**
+	 * 判断该配送是否已经超过预定时间
+	 * @param delivery
+	 * @return
+	 */
+	boolean checkDeliveryOrderOvertime(PlainDelivery delivery, Date theTime);
+
 }

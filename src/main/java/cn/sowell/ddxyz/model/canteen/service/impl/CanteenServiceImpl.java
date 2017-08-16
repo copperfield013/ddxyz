@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import cn.sowell.copframe.common.UserIdentifier;
 import cn.sowell.copframe.dto.page.CommonPageInfo;
+import cn.sowell.copframe.utils.Assert;
 import cn.sowell.copframe.utils.CollectionUtils;
 import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.ddxyz.model.canteen.dao.CanteenDao;
@@ -204,6 +205,7 @@ public class CanteenServiceImpl implements CanteenService {
 			product.setName(wares.getName());
 			product.setPrice(item.getPrice(wares));
 			product.setThumbUri(wares.getThumbUri());
+			product.setPriceUnit(wares.getPriceUnit());
 			product.setCreateTime(createTime);
 			products.add(product);
 		}
@@ -224,7 +226,7 @@ public class CanteenServiceImpl implements CanteenService {
 			throw new OrderResourceApplyException("不存在id为[" + coParam.getDeliveryId() + "]的delivery");
 		}
 		Date now = new Date();
-		if((delivery.getCloseTime() != null && now.after(delivery.getCloseTime())) || now.after(delivery.getTimePoint())){
+		if((delivery.getCloseTime() != null && now.after(delivery.getCloseTime())) || now.after(delivery.getOpenTime())){
 			throw new OrderResourceApplyException("当前时间不在下单范围内[" + delivery.getTimePoint() + "~" + delivery.getCloseTime() +"]");
 		}
 		
@@ -518,6 +520,17 @@ public class CanteenServiceImpl implements CanteenService {
 		}
 	}
 	
-	
+	@Override
+	public boolean checkDeliveryOrderOvertime(PlainDelivery delivery, Date theTime) {
+		Assert.notNull(delivery);
+		boolean afterOpen = true, beforeClose = true;
+		if(delivery.getOpenTime() != null){
+			afterOpen = delivery.getOpenTime().before(theTime) || delivery.getOpenTime().equals(theTime);
+		}
+		if(delivery.getCloseTime() != null){
+			beforeClose = delivery.getCloseTime().after(theTime);
+		}
+		return !(afterOpen && beforeClose);
+	}
 }
 

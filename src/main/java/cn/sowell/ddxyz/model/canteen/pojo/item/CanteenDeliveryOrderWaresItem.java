@@ -30,6 +30,11 @@ public class CanteenDeliveryOrderWaresItem {
 	
 	@Column(name="p_count")
 	private Integer count;
+	
+	@Column(name="c_price_unit")
+	private String priceUnit;
+	
+	
 	public String getWaresName() {
 		return waresName;
 	}
@@ -59,5 +64,11 @@ public class CanteenDeliveryOrderWaresItem {
 	}
 	public void setOrderId(Long orderId) {
 		this.orderId = orderId;
+	}
+	public String getPriceUnit() {
+		return priceUnit;
+	}
+	public void setPriceUnit(String priceUnit) {
+		this.priceUnit = priceUnit;
 	}
 }

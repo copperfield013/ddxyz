@@ -1,5 +1,8 @@
 package cn.sowell.ddxyz.model.weixin.pojo;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -114,11 +117,19 @@ public class WeiXinUser implements WxUserPrincipal, UserIdentifier{
 	}
 	@Override
 	public String getNickname() {
-		return nickname;
+		try {
+			return URLDecoder.decode(nickname, "utf-8");
+		} catch (UnsupportedEncodingException e) {
+			return nickname;
+		}
 	}
 	@Override
 	public void setNickname(String nickname) {
-		this.nickname = nickname;
+		try {
+			this.nickname = URLEncoder.encode(nickname, "utf-8");
+		} catch (UnsupportedEncodingException e) {
+			this.nickname = "未识别编码微信用户";
+		}
 	}
 	@Override
 	public String getSex() {

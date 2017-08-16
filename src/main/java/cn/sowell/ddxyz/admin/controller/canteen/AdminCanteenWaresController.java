@@ -89,24 +89,32 @@ public class AdminCanteenWaresController {
 			@RequestParam(value="thumb", required=false) MultipartFile file,
 			@RequestParam(value="waresName") String waresName, 
 			@RequestParam(value="unitPrice") Float unitPrice, 
-			@RequestParam(value="priceUnit") String priceUnit) {
+			@RequestParam(value="priceUnit") String priceUnit,
+			@RequestParam(value="hasThumb", required=false) Boolean hasThumb) {
 		try {
+			PlainWares originWares = waresService.getPlainObject(PlainWares.class, waresId);
+			
 			PlainWares wares = new PlainWares();
 			wares.setId(waresId);
 			wares.setBasePrice((int)(unitPrice * 100));
 			wares.setPriceUnit(priceUnit);
 			wares.setName(waresName);
 			
-			if(file !=null) {
-				String[] nameSplit = file.getOriginalFilename().split("\\.");
-				String suffix = nameSplit[nameSplit.length - 1];
-				String fileName = "f_" + TextUtils.uuid(10, 36) + "." + suffix;
-				try {
-					wares.setThumbUri(fUploadUtils.saveFile(fileName, file.getInputStream()));
-				} catch (IOException e) {
-					logger.error("上传文件失败", e);
+			if(hasThumb != null && hasThumb){
+				if(file !=null) {
+					String[] nameSplit = file.getOriginalFilename().split("\\.");
+					String suffix = nameSplit[nameSplit.length - 1];
+					String fileName = "f_" + TextUtils.uuid(10, 36) + "." + suffix;
+					try {
+						wares.setThumbUri(fUploadUtils.saveFile(fileName, file.getInputStream()));
+					} catch (IOException e) {
+						logger.error("上传文件失败", e);
+					}
+				}else{
+					wares.setThumbUri(originWares.getThumbUri());
 				}
 			}
+			
 			waresService.updateWares(wares);
 			return AjaxPageResponse.CLOSE_AND_REFRESH_PAGE("修改成功", "canteen-wares-list");
 		} catch (Exception e) {

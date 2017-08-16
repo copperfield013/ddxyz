@@ -19,5 +19,7 @@ public interface WxAppReadOnly {
 	public String getWxAccount();
 
 	public WxMsgConfig getMsgConfig();
+	
+	public Long getDebugUserId();
 
 }

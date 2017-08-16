@@ -128,7 +128,7 @@ public class CanteenManageDaoImpl implements CanteenManageDao{
 	private List<CanteenDeliveryOrderWaresItem> getOrderWaresItemList(
 			Set<Long> orderIdSet) {
 		String sql = 
-				"	select p.order_id, p.c_name, p.wares_id, p.delivery_wares_id, count(p.id) p_count" +
+				"	select p.order_id, p.c_name, p.wares_id, p.delivery_wares_id, count(p.id) p_count, p.c_price_unit" +
 				"	from t_product_base p" +
 				"	where p.order_id in (:orderIds)" +
 				"	group by p.order_id, p.delivery_wares_id";

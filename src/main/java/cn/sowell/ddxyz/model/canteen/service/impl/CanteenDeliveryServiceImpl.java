@@ -160,6 +160,7 @@ public class CanteenDeliveryServiceImpl implements CanteenDeliveryService{
 			}else{
 				dWares.setCurrentCount(0);
 				dWares.setDeliveryId(delivery.getId());
+				addSet.add(dWares);
 			}
 		}
 		//删除

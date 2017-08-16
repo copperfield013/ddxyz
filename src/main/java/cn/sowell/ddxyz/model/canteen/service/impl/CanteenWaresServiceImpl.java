@@ -44,7 +44,6 @@ public class CanteenWaresServiceImpl implements CanteenWaresService{
 		Assert.notNull(origin);
 		origin.setName(wares.getName());
 		origin.setBasePrice(wares.getBasePrice());
-		origin.setPriceUnit(wares.getPriceUnit());
 		origin.setThumbUri(wares.getThumbUri());
 		waresDao.update(origin);
 	}

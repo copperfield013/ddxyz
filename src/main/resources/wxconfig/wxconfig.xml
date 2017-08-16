@@ -7,6 +7,7 @@
 		<appid>wx044790c2cb35fd68</appid>
 		<!-- 公众号秘钥 -->
 		<secret>d95a6a5fbd494504b6825402596f3b80</secret>
+		<def-user-id>14</def-user-id>
 		<merchant>
 			<!-- 商户id -->
 			<id>1338312901</id>
@@ -27,6 +28,8 @@
 		<appid>wx0e4bec62d4d4420e</appid>
 		<!-- 公众号秘钥 -->
 		<secret>65bb55f623c8d4e5d089cbbd4d3bdc61</secret>
+		<!--  -->
+		<def-user-id>20</def-user-id>
 		<merchant>
 			<!-- 商户id -->
 			<id>1448386602</id>

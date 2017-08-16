@@ -182,4 +182,9 @@ public class WxConfigServiceImpl implements WxConfigService{
 		return "true".equals(PropertyPlaceholder.getProperty("debug"));
 	}
 	
+	@Override
+	public Long getDebugUserId() {
+		return APP().getDebugUserId();
+	}
+	
 }

@@ -31,6 +31,9 @@ public class PlainProduct{
 	@Column(name="c_price")
 	private Integer price;
 	
+	@Column(name="c_price_unit")
+	private String priceUnit;
+	
 	@Column(name="c_dispense_code")
 	private String dispenseCode;
 	
@@ -148,6 +151,12 @@ public class PlainProduct{
 	}
 	public void setDeliveryWaresId(Long deliveryWaresId) {
 		this.deliveryWaresId = deliveryWaresId;
+	}
+	public String getPriceUnit() {
+		return priceUnit;
+	}
+	public void setPriceUnit(String priceUnit) {
+		this.priceUnit = priceUnit;
 	}
 	
 }

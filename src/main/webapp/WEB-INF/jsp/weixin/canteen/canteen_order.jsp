@@ -66,19 +66,38 @@
     		text-align:center;
     		color:#004621;
     	}
+    	.overtime-shade p.time-range{
+    		font-size: 0.5em;
+    		color: #999;
+    	}
     </style>
 	
 </head>
 <body>
+<c:set var="pDelivery" value="${delivery.plainDelivery }" />
 <c:if test="${delivery == null }">
 	<div class="shade">
 		<div>
 			<div class="shade-operation">
 				<span class="shade-warn">!</span>
-				<span id="shade-close" class="shade-close">×</span>
 			</div>
 			<p>等待商家发布</p>
 			<p>暂停接单!</p>
+		</div>
+	</div>
+</c:if>
+<c:if test="${delivery != null && overtime }">
+	<div class="shade overtime-shade">
+		<div>
+			<div class="shade-operation">
+				<span class="shade-warn">!</span>
+			</div>
+			<p>本周下单时间已结束</p>
+			<p class="time-range">
+				<fmt:formatDate value="${pDelivery.openTime }" pattern="MM月dd日HH时mm分" />
+       			~
+       			<fmt:formatDate value="${pDelivery.closeTime }" pattern="MM月dd日HH时mm分" />
+			</p>
 		</div>
 	</div>
 </c:if>

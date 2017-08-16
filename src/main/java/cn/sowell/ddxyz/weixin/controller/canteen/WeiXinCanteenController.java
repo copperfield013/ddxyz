@@ -1,5 +1,6 @@
 package cn.sowell.ddxyz.weixin.controller.canteen;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -59,6 +60,10 @@ public class WeiXinCanteenController {
 		WeiXinUser user = WxUtils.getCurrentUser(WeiXinUser.class);
 		CanteenDelivery delivery = canteenService.getDeliveryOfThisWeek();
 		CanteenUserCacheInfo userInfo = canteenService.getUserCacheInfo(user.getId());
+		if(delivery != null){
+			boolean overTime = canteenService.checkDeliveryOrderOvertime(delivery.getPlainDelivery(), new Date());
+			model.addAttribute("overtime", overTime);
+		}
 		model.addAttribute("delivery", delivery);
 		model.addAttribute("user", user);
 		model.addAttribute("userInfo", userInfo);

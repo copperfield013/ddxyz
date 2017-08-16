@@ -80,7 +80,8 @@
 						<h3 class="panel-title">
 							商品列表
 							<span class="head-operate">
-								<a id="print-all" class="btn btn-xs btn-info" href="#">打印全部</a>
+								<a id="print-all" class="btn btn-xs btn-info" href="#">打印标签</a>
+								<a id="print-orders" class="btn btn-xs btn-info" href="#">打印全部</a>
 								<a id="export" class="btn btn-xs btn-info " href="#">导出</a>
 							</span>
 						</h3>
@@ -110,7 +111,7 @@
 										<td>${item.receiverContact }</td>
 										<td>
 											<c:forEach items="${item.waresItemsList }" var="waresItem">
-												<span class="order-wares-item">${waresItem.waresName }×${waresItem.count }</span>
+												<span class="order-wares-item">${waresItem.waresName }×${waresItem.count }·${waresItem.priceUnit }</span>
 											</c:forEach>
 										</td>
 										<td><fmt:formatNumber value="${item.totalPrice / 100 }" pattern="0.00" />元</td>
@@ -228,6 +229,24 @@
 						
 					}
 				});
+			});
+			
+			$('#print-orders', $page).click(function(){
+				Ajax.ajax('admin/canteen/manage/print_orders/${delivery.id}', {}, 
+					function(data, responseType){
+						if(responseType === 'html'){
+							var $printPage = $('<div>');
+							$printPage.append(data);
+							$printPage.printArea({ 
+					    		mode 		: "iframe", 
+					    		extraHead 	: '<meta charset="utf-8" />,<meta http-equiv="X-UA-Compatible" content="chrome=1"/>',
+					    		extraCss	: $('base').attr('href') + 'media/admin/canteen/css/print-orders.css',
+					    		posWidth	: '210mm',
+					    		posHeight	: '297mm'
+					    	});
+						}
+					}
+				);
 			});
 		});
 		

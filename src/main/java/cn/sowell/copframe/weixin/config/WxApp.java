@@ -9,6 +9,7 @@ public class WxApp implements Cloneable, WxAppReadOnly{
 	private String merchantId;
 	private String payKey;
 	private String pkcs12FilePath;
+	private Long debugUserId;
 	private WxMsgConfig msgConfig = new WxMsgConfig();
 	
 	@Override
@@ -87,5 +88,11 @@ public class WxApp implements Cloneable, WxAppReadOnly{
 	}
 	public void setMsgConfig(WxMsgConfig msgConfig) {
 		this.msgConfig = msgConfig;
+	}
+	public Long getDebugUserId() {
+		return debugUserId;
+	}
+	public void setDebugUserId(Long debugUserId) {
+		this.debugUserId = debugUserId;
 	}
 }

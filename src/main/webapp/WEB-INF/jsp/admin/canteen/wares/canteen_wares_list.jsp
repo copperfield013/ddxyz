@@ -12,6 +12,7 @@
 	    top: 1.5em;
 	    display: none;
 	    z-index: 1000;
+	    border: 1px solid #ccc;
 	}
 	#canteen-wares-list a.waresName:HOVER>img.wares-thumb {
 		display: block !important;
@@ -40,7 +41,17 @@
 				<c:forEach items="${waresList }" var="wares" varStatus="i">
 					<tr data-id="${wares.id }">
 						<td>${i.index + 1 }</td>
-						<td><a class="waresName" href="#">${wares.name }<img class="wares-thumb" src="${basePath }${wares.thumbUri }"></a></td>
+						<c:set var="src">
+							<c:choose>
+								<c:when test="${wares.thumbUri != null }">
+									${basePath }${wares.thumbUri }
+								</c:when>
+								<c:otherwise>
+									${basePath }media/admin/canteen/image/no-img.png
+								</c:otherwise>
+							</c:choose>
+						</c:set>
+						<td><a class="waresName" href="#">${wares.name }<img class="wares-thumb" src="${src }"></a></td>
 						<td><fmt:formatNumber value="${wares.basePrice / 100}" pattern="0.00" /></td>
 						<td>${wares.priceUnit }</td>
 						<td><fmt:formatDate value="${wares.createTime }" pattern="yyyy-MM-dd HH:mm:ss"/> </td>

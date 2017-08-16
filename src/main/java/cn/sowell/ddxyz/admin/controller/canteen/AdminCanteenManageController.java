@@ -3,6 +3,7 @@ package cn.sowell.ddxyz.admin.controller.canteen;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -125,6 +126,27 @@ public class AdminCanteenManageController {
 		header.add("content-type", "application/vnd.ms-excel;charset=utf-8");
 		return new ResponseEntity<byte[]>(byteArray, header, HttpStatus.CREATED);
 	}
+	
+	
+	@RequestMapping("/print_orders/{deliveryId}")
+	public String printOrdersPage(@PathVariable Long deliveryId, Model model){
+		//根据id获得配送对象
+		PlainDelivery delivery = canteenConfigService.getDelivery(deliveryId);
+		
+		if(delivery != null){
+			//根据配送对象
+			List<CanteenDeliveryOrdersItem> items = canteenManageService.queryDeliveryOrderItems(delivery.getId(), null);
+			
+			model.addAttribute("delivery", delivery);
+			model.addAttribute("items", items);
+		}
+		Date[] range = dateFormat.getTheWeekRange(delivery.getTimePoint(), Calendar.MONDAY);
+		model.addAttribute("Monday", range[0]);
+		model.addAttribute("Sunday", range[1]);
+		return AdminConstants.PATH_CANTEEN + "/manage/canteen_print_orders.jsp";
+	}
+	
+	
 	
 	@ResponseBody
 	@RequestMapping("/order_tag")

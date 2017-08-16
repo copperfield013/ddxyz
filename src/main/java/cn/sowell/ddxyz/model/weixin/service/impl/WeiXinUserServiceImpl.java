@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import cn.sowell.copframe.common.property.PropertyPlaceholder;
@@ -24,6 +25,8 @@ public class WeiXinUserServiceImpl implements WeiXinUserService{
 	
 	@Resource
 	WxConfigService configService;
+	
+	Logger logger = Logger.getLogger(WeiXinUserServiceImpl.class);
 	
 	@Override
 	public WeiXinUser getWeiXinUserByOpenid(String openid) {

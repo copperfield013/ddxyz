@@ -116,5 +116,10 @@ public interface WxConfigService {
 	 * @return
 	 */
 	String getMsgEncodingAESKey();
+	/**
+	 * 获得当前公众号的默认微信用户id
+	 * @return
+	 */
+	Long getDebugUserId();
 
 }

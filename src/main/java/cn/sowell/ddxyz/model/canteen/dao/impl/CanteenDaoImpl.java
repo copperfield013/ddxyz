@@ -176,9 +176,10 @@ public class CanteenDaoImpl implements CanteenDao{
 			end = dateFormat.getTheDayOfWeek(new Date(), Calendar.MONDAY, 6, 23, 59, 59);
 		
 		Criteria criteria = sFactory.getCurrentSession().createCriteria(PlainDelivery.class);
-		criteria.add(Restrictions.between("timePoint", start, end))
-			.add(Restrictions.eq("type", "canteen"))
-			.setMaxResults(1);
+		criteria.add(Restrictions.ge("openTime", start))
+				.add(Restrictions.le("closeTime", end))
+				.add(Restrictions.eq("type", "canteen"))
+				.setMaxResults(1);
 		
 		return (PlainDelivery) criteria.uniqueResult();
 	}

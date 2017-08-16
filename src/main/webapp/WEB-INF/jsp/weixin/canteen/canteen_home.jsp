@@ -9,6 +9,7 @@
 	<link href="media/weixin/canteen/css/canteen-home.css" type="text/css" rel="stylesheet" />
 </head>
 <body>
+	<c:set var="pDelivery" value="${delivery.plainDelivery }" />
 	<c:if test="${delivery == null }">
 		<div class="shade">
 			<div>
@@ -21,13 +22,15 @@
 			</div>
 		</div>
 	</c:if>
-	<c:set var="pDelivery" value="${delivery.plainDelivery }" />
 	  <main>
         <!-- 头部banner -->
         <%-- <header>
             <img src="${basePath }media/weixin/main/image/banner-index.jpg" alt="点点心意">
         </header> --%>
         <!-- 本周菜单 -->
+        <header>
+            <img src="${basePath }media/weixin/canteen/image/banner-canteen.png" alt="林业厅之家">
+        </header>
         <div class="block weekMenu">
             <h4>本周菜单</h4>
             	<c:forEach items="${delivery.waresList }" var="dWares">
@@ -42,7 +45,7 @@
             
         </div>
         <div class="block time-range">
-        	<h4>下单和领取领取时间</h4>
+        	<h4>下单和领取时间</h4>
         	<p>
         		<span>
         			下单时间：
