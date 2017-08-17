@@ -25,31 +25,16 @@
         	<span class="send-address stat-value">${delivery.locationName }</span>
         </p>
     </div>
-    <!-- 用户信息 -->
-    <div class="user-info">
-        <h4>用户信息</h4>
-        <p class="layout-flex">
-        	<span class="user-name form-label">姓名</span>
-        	<input id="receiverName" class="form-input input-box" type="text" value="${user.name }" placeholder="请输入您的姓名">
-        </p>
-        <p class="layout-flex">
-        	<span class="user-name form-label">部门</span>
-        	<input id="depart" class="form-input input-box" type="text" value="${user.depart }" placeholder="请输入您所在部门">
-        </p>
-        <p class="layout-flex">
-        	<span class="user-name form-label">联系方式</span>
-        	<input id="contact" class="form-input input-box" type="text" value="${user.contact }" placeholder="请输入您的联系方式">
-        </p>
-    </div>
     <div class="booking-info">
         <h4>预定信息</h4>
         <p class="layout-flex layout-select">
         	<span class="dishs-kind form-label">菜品</span>
-        	<select class="form-input" id="waresName">
+        	<select class="form-input" id="waresName" name="waresName">
         		<c:forEach items="${delivery.waresList }" var="cWares">
         			<option value="${cWares.dWaresId }">${cWares.waresName }</option>
         		</c:forEach>
 			</select>
+			<label style="color: #666" for="waresName">菜品选择</label>
         </p>
         <p>
         	<span class="form-label">单价</span>
@@ -64,8 +49,10 @@
         	</span>
         </p>
         <p class="clearfix remain-row">
-        	<span class="surplus-count-label">可供余量：</span>
-        	<span class="surplus-count">10</span>
+        	<span class="remain-container" style="visibility: hidden;">
+	        	<span class="surplus-count-label">可供余量：</span>
+    	    	<span class="surplus-count"></span>
+        	</span>
         	<span class="add">添加</span>
         </p>
         <div class="order-info" id="order-items">
@@ -84,6 +71,23 @@
     	<span>备注</span>
     	<textarea id="comment" class="input-box" placeholder="请输入备注详情">${order.comment }</textarea>
     </p>
+    <!-- 用户信息 -->
+    <div class="user-info" style="margin-bottom: 3em;">
+        <h4>用户信息</h4>
+        <p class="layout-flex">
+        	<span class="user-name form-label">姓名</span>
+        	<input id="receiverName" class="form-input input-box" type="text" value="${user.name }" placeholder="请输入您的姓名">
+        </p>
+        <p class="layout-flex">
+        	<span class="user-name form-label">部门</span>
+        	<input id="depart" class="form-input input-box" type="text" value="${user.depart }" placeholder="请输入您所在部门">
+        </p>
+        <p class="layout-flex">
+        	<span class="user-name form-label">联系方式</span>
+        	<input id="contact" class="form-input input-box" type="text" value="${user.contact }" placeholder="请输入您的联系方式">
+        </p>
+    </div>
+   
 </main>
 </form>
 	<footer>
@@ -119,9 +123,9 @@
 				var dWares = getDeliveryWares(dWaresId);
 				if(dWares.maxCount && dWares.maxCount > 0){
 					$('.surplus-count').text(dWares.maxCount - dWares.currentCount - getDeliveryWaresCountInPage(dWaresId));
-					$('.remain-container').show();
+					$('.remain-container').css('visibility', 'visible');
 				}else{
-					$('.remain-container').hide();
+					$('.remain-container').css('visibility', 'hidden');
 				}
 			}
 			
@@ -132,8 +136,6 @@
 				$('.price-unit').text('元/' + wares.priceUnit);
 				refreshRemain();
 			}).trigger('change');
-			
-			
 			
 			
 			//计算总价
@@ -168,12 +170,13 @@
 			$('.operate-count').on('click','i',function(e){
 				e.stopPropagation();
 				var _this = $(this).attr("class");
-				var count = parseFloat($('.dishCount').text());
-				var maxCount = parseFloat($('.surplus-count').text());
-				if( _this === 'dishs-minus' && count >1){
-					count -=1;
-				}else if( _this === 'dishs-plus' && count < maxCount){
-					count +=1;
+				var $this = $(this);
+				var count = parseInt($('.dishCount').text());
+				var maxCount = parseInt($('.surplus-count').text()) || 1000;
+				if($this.is('.dishs-minus') && count >1){
+					count --;
+				}else if( $this.is('.dishs-plus') && count < maxCount){
+					count ++;
 				}
 				$('.dishCount').text(count);
 			});
@@ -222,7 +225,7 @@
 	    		addDeliveryWaresCountInPage(dWaresId, dishCount);
 	    		refreshRemain();
 	    		return false;
-			})
+			});
 			
 			//输入框绑定事件
 			$('.input-box').on('focus',function(e){
@@ -237,6 +240,18 @@
 				}
 			});
 			
+			function dropToBottom(){
+				$('main')[0].scrollTop = $('main')[0].scrollHeight;
+				var showAlert = setInterval(function(){
+					$('.user-info').toggleClass('alert-info');
+				}, 500);
+				setTimeout(function(){
+					$('.user-info').addClass('alert-info')
+					clearInterval(showAlert);
+				}, 3000);
+				
+			}
+			
 			$('#submit').click(function(){
 				var receiverName = $('#receiverName').val(),
 					depart = $('#depart').val(),
@@ -246,10 +261,12 @@
 				
 				if(!receiverName){
 					alert('请输入收货人姓名');
+					dropToBottom();
 					return false;
 				}
 				if(!contact){
 					alert('请输入联系方式');
+					dropToBottom();
 					return false;
 				}
 				var orderItems = [];
@@ -261,10 +278,13 @@
 					orderItems.push({
 						deliveryWaresId	: dWaresId,
 						waresId			: waresId,
-						count			: count
+						count			: parseInt(count)
 					});
 				});
-				
+				if(orderItems.length == 0){
+					alert('请至少添加一个商品后提交');
+					return false;
+				}
 				var parameter = {
 						originOrderId: '${order.id}',
 						deliveryId	: '${delivery.deliveryId}',
@@ -276,19 +296,45 @@
 						totalPrice	: parseFloat(totalPrice) * 100,
 						orderItems	: orderItems
 					};
-					
-				seajs.use(['ajax'], function(Ajax){
-					Ajax.postJson('weixin/canteen/doUpdateOrder', parameter, function(data){
-						if(data.status === 'suc'){
-							alert('订单修改成功');
-							location.href = 'weixin/canteen/order_list';
-						}else{
-							alert('订单修改失败');
-						}
+				var orderDetail = 
+					'领取人：' + receiverName + '\n' + 
+					'联系号码：' + contact + '\n' + 
+					'部门：' + depart + '\n' + 
+					'总金额：' + totalPrice + '元\n明细：'
+					;
+				var totalCountMap = {};
+				for(var i in orderItems){
+					var orderItem = orderItems[i];
+					var countItem = totalCountMap['id_' + orderItem.deliveryWaresId];
+					if(!countItem){
+						countItem = {
+							dWares 	: getDeliveryWares(orderItem.deliveryWaresId),
+							count 	: orderItem.count
+						};
+						totalCountMap['id_' + orderItem.deliveryWaresId] = countItem;
+					}else{
+						countItem.count += orderItem.count;
+					}
+				}
+				for(var i in totalCountMap){
+					orderDetail += totalCountMap[i].dWares.waresName + '×' + totalCountMap[i].count + ',';
+				}
+				orderDetail = orderDetail.substr(0, orderDetail.length - 1);
+				
+				if(confirm('确认提交订单？\n' + orderDetail)){
+					seajs.use(['ajax'], function(Ajax){
+						Ajax.postJson('weixin/canteen/doUpdateOrder', parameter, function(data){
+							if(data.status === 'suc'){
+								alert('订单修改成功');
+								location.href = 'weixin/canteen/order_list';
+							}else{
+								alert('订单修改失败');
+							}
+						});
 					});
-				});
+				}
 			});
-		})
+		});
 	</script>
 	
 </body>

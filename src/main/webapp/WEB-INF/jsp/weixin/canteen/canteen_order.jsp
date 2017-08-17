@@ -6,72 +6,6 @@
     <title>下单</title>
     <jsp:include page="/WEB-INF/jsp/weixin/common/weixin-include.jsp"></jsp:include>
     <link href="media/weixin/canteen/css/canteen-order.css" type="text/css" rel="stylesheet">
-    <style>
-    	.shade {
-    		position:absolute;
-    		top:0;
-    		bottom:0;
-    		left:0;
-    		right:0;
-    		background-color:rgba(0,0,0,0.2);
-    		z-index:9;
-    	}
-    	.shade >div {
-    		font-size:20px;
-    		width: 12em;
-		    height: 6em;
-		    border-radius: 0.4em;
-		    background-color: rgba(250,250,250,1);
-		    position: absolute;
-		    top: 30%;
-		    left: 50%;
-		    margin-left: -6em;	
-		    text-align: center;
-		    padding-top:0.5em;
-			
-    	}
-    	.shade >div >p {
-    		padding:0;
-    		margin:0;
-    		height:1.6em
-    	}
-    	.shade >div >div.shade-operation {
-    		margin-bottom:0.5em;
-    	}
-    	.shade >div >div.shade-operation:after{
-    		content:'';
-    		display:block;
-    		clear:both;
-    	}
-    	.shade span.shade-warn {
-    		display:block;
-    		float:left;
-    		margin-left:1em;
-    		width:1.1em;
-    		height:1.1em;
-    		line-height:1.1em;
-    		text-align:center;
-    		border-radius:50%;
-    		color:#F0B840;
-    		border:2px solid #F0B840;
-    	}
-    	.shade span.shade-close {
-    		font-size:40px;
-    		display:block;
-    		float:right;
-    		margin-right:0.5em;
-    		width:0.55em;
-    		height:0.55em;
-    		line-height:0.55em;
-    		text-align:center;
-    		color:#004621;
-    	}
-    	.overtime-shade p.time-range{
-    		font-size: 0.5em;
-    		color: #999;
-    	}
-    </style>
-	
 </head>
 <body>
 <c:set var="pDelivery" value="${delivery.plainDelivery }" />
@@ -120,14 +54,14 @@
     </div>
     <div class="booking-info">
         <h4>预定信息</h4>
-        <p class="layout-flex layout-select" id="wares-select">
-        	<span class="dishs-kind form-label">菜品</span>
-        	<select class="form-input" id="waresName">
+        <p class="layout-flex layout-select">
+        	<label class="dishs-kind form-label" for="waresName">菜品</label>
+        	<select class="form-input" id="waresName" name="waresName">
         		<c:forEach items="${delivery.waresList }" var="cWares">
         			<option value="${cWares.dWaresId }">${cWares.waresName }</option>
         		</c:forEach>
 			</select>
-			<span style="color: #666">菜品选择</span>
+			<label style="color: #666" for="waresName">菜品选择</label>
         </p>
         <p>
         	<span class="form-label">单价</span>
@@ -176,7 +110,7 @@
         	<input id="depart" class="form-input input-box" type="text" value="${userInfo.depart }" placeholder="请输入您所在部门">
         </p>
         <p class="layout-flex">
-        	<span class="user-name form-label">联系方式</span>
+        	<span class="user-name form-label">联系号码</span>
         	<input id="contact" class="form-input input-box" type="text" value="${userInfo.contact }" placeholder="请输入您的联系方式">
         </p>
     </div>
@@ -230,6 +164,7 @@
 				refreshRemain();
 			}).trigger('change');
 			
+			
 			//计算总价
 			function calculate(num){
 				var totalPrice = 0;
@@ -266,9 +201,9 @@
 				var count = parseInt($('.dishCount').text());
 				var maxCount = parseInt($('.surplus-count').text()) || 1000;
 				if($this.is('.dishs-minus') && count >1){
-					count -=1;
+					count --;
 				}else if( $this.is('.dishs-plus') && count < maxCount){
-					count +=1;
+					count ++;
 				}
 				$('.dishCount').text(count);
 			});
@@ -322,8 +257,9 @@
 					$('.user-info').toggleClass('alert-info');
 				}, 500);
 				setTimeout(function(){
+					$('.user-info').addClass('alert-info')
 					clearInterval(showAlert);
-				}, 5000);
+				}, 3000);
 				
 			}
 			
@@ -353,7 +289,7 @@
 					orderItems.push({
 						deliveryWaresId	: dWaresId,
 						waresId			: waresId,
-						count			: count
+						count			: parseInt(count)
 					});
 				});
 				if(orderItems.length == 0){
@@ -370,7 +306,32 @@
 					totalPrice	: parseFloat(totalPrice) * 100,
 					orderItems	: orderItems
 				};
-				if(confirm('确认提交订单？')){
+				var orderDetail = 
+					'领取人：' + receiverName + '\n' + 
+					'联系号码：' + contact + '\n' + 
+					'部门：' + depart + '\n' + 
+					'总金额：' + totalPrice + '元\n明细：'
+					;
+				var totalCountMap = {};
+				for(var i in orderItems){
+					var orderItem = orderItems[i];
+					var countItem = totalCountMap['id_' + orderItem.deliveryWaresId];
+					if(!countItem){
+						countItem = {
+							dWares 	: getDeliveryWares(orderItem.deliveryWaresId),
+							count 	: orderItem.count
+						};
+						totalCountMap['id_' + orderItem.deliveryWaresId] = countItem;
+					}else{
+						countItem.count += orderItem.count;
+					}
+				}
+				for(var i in totalCountMap){
+					orderDetail += totalCountMap[i].dWares.waresName + '×' + totalCountMap[i].count + ',';
+				}
+				orderDetail = orderDetail.substr(0, orderDetail.length - 1);
+				
+				if(confirm('确认提交订单？\n' + orderDetail)){
 					seajs.use(['ajax'], function(Ajax){
 						Ajax.postJson('weixin/canteen/doOrder', parameter, function(data){
 							if(data.status === 'suc'){
