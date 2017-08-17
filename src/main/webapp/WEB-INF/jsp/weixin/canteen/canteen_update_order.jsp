@@ -8,6 +8,22 @@
     <link href="media/weixin/canteen/css/canteen-order.css" type="text/css" rel="stylesheet">
 </head>
 <body>
+<c:set var="pDelivery" value="${delivery.plainDelivery }" />
+<c:if test="${pDelivery != null && overtime }">
+	<div class="shade overtime-shade">
+		<div>
+			<div class="shade-operation">
+				<span class="shade-warn">!</span>
+			</div>
+			<p>不在该订单的可修改时间</p>
+			<p class="time-range">
+				<fmt:formatDate value="${pDelivery.openTime }" pattern="MM月dd日HH时mm分" />
+       			~
+       			<fmt:formatDate value="${pDelivery.closeTime }" pattern="MM月dd日HH时mm分" />
+			</p>
+		</div>
+	</div>
+</c:if>
 <form class="validate" action="index.html" method="post">
 <main class="form">
     <!-- 配送信息 -->

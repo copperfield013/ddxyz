@@ -4,6 +4,18 @@ import java.util.Date;
 
 import javax.persistence.Column;
 
+import cn.sowell.ddxyz.model.canteen.dao.impl.CanteenDeliveryDaoImpl;
+
+/**
+ * 
+ * <p>Title: CanteenDeliveryWaresListItem</p>
+ * <p>Description: </p><p>
+ * 
+ * </p>
+ * @author Copperfield Zhang
+ * @date 2017年8月17日 下午5:12:33
+ * @see {@link CanteenDeliveryDaoImpl #queryDeliveryWaresList(cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenDeliveryWaresListCriteria)}
+ */
 public class CanteenDeliveryWaresListItem {
 	
 	@Column(name="wares_name")

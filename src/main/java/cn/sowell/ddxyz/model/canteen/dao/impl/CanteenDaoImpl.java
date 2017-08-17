@@ -408,11 +408,12 @@ public class CanteenDaoImpl implements CanteenDao{
 		String sql = "SELECT "
 				+ "	co.order_id,"
 				+ "	co.c_depart,"
-				+ "	co.c_order_close_time,"
-				+ "	co.c_delivery_end_time,"
+				+ "	db.c_open_time c_order_open_time,"
+				+ "	db.c_close_time c_order_close_time,"
+				+ "	db.c_clain_end_time c_delivery_end_time,"
 				+ "	ob.c_order_code,"
 				+ "	ob.c_location_name,"
-				+ "	ob.c_time_point,"
+				+ "	db.c_time_point,"
 				+ "	ob.c_status,"
 				+ "	ob.c_canceled_status,"
 				+ "	ob.c_total_price,"
@@ -426,6 +427,9 @@ public class CanteenDaoImpl implements CanteenDao{
 				+ "	LEFT JOIN "
 				+ "	t_order_base ob"
 				+ "	on co.order_id = ob.id "
+				+ " left join "
+				+ " t_delivery_base db"
+				+ " on ob.delivery_id = db.id"
 				+ "	WHERE"
 				+ " ob.order_user_id = :userId "
 				+ "	ORDER BY ob.create_time DESC";
@@ -452,5 +456,4 @@ public class CanteenDaoImpl implements CanteenDao{
 			.setParameterList("cancelProductIds", cancelProductIds);
 		query.executeUpdate();
 	}
-	
 }

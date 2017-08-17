@@ -1,8 +1,12 @@
 package cn.sowell.ddxyz.model.canteen.pojo.item;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.Column;
+
+import cn.sowell.copframe.utils.date.CommonDateFormat;
+import cn.sowell.ddxyz.model.canteen.dao.impl.CanteenDaoImpl;
 /**
  * 
  * <p>Title: CanteenOrderInfoItem</p>
@@ -11,7 +15,7 @@ import javax.persistence.Column;
  * </p>
  * @author Copperfield Zhang
  * @date 2017年8月17日 上午11:06:17
- * @see
+ * @see {@link CanteenDaoImpl #getOrderPageList(long, cn.sowell.copframe.dto.page.CommonPageInfo)}
  */
 public class CanteenOrderInfoItem {
 	
@@ -56,7 +60,13 @@ public class CanteenOrderInfoItem {
 	
 	@Column(name="c_comment")
 	private String comment;
-
+	
+	@Column(name="c_order_open_time")
+	private Date orderOpenTime;
+	
+	@Column(name="c_order_close_time")
+	private Date orderCloseTime;
+	
 	public Long getOrderId() {
 		return orderId;
 	}
@@ -167,5 +177,26 @@ public class CanteenOrderInfoItem {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public Date getOrderOpenTime() {
+		return orderOpenTime;
+	}
+
+	public void setOrderOpenTime(Date orderOpenTime) {
+		this.orderOpenTime = orderOpenTime;
+	}
+
+	public Date getOrderCloseTime() {
+		return orderCloseTime;
+	}
+
+	public void setOrderCloseTime(Date orderCloseTime) {
+		this.orderCloseTime = orderCloseTime;
+	}
+
+	static CommonDateFormat dateformat = new CommonDateFormat();
+	public Date getOrderWeekLastMoment() {
+		return dateformat.getTheDayOfWeek(this.timePoint, Calendar.SUNDAY, 0, 23, 59, 59);
 	}
 }

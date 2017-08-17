@@ -18,6 +18,7 @@ import cn.sowell.copframe.common.UserIdentifier;
 import cn.sowell.copframe.dto.ajax.JsonRequest;
 import cn.sowell.copframe.dto.ajax.JsonResponse;
 import cn.sowell.copframe.dto.page.CommonPageInfo;
+import cn.sowell.copframe.utils.date.FrameDateFormat;
 import cn.sowell.copframe.weixin.common.utils.WxUtils;
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenDelivery;
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenOrderUpdateItem;
@@ -45,6 +46,9 @@ public class WeiXinCanteenController {
 	CanteenDeliveryService canteenConfigService;
 	
 	Logger logger = Logger.getLogger(WeiXinCanteenController.class);
+	
+	@Resource
+	FrameDateFormat dateformat;
 	
 	@RequestMapping("/home")
 	public String home(Model model){
@@ -92,6 +96,18 @@ public class WeiXinCanteenController {
 	}
 	
 	
+	@RequestMapping("/order_data")
+	public String orderData(CommonPageInfo pageInfo, Model model){
+		UserIdentifier user =  WxUtils.getCurrentUser(UserIdentifier.class);
+		List<CanteenOrderInfoItem> orderList = canteenService.getWaresPageList(user, pageInfo);
+		Map<CanteenOrderInfoItem, List<CanteenOrderUpdateItem>> waresList = canteenService.getCanteenOrderUpdateItemList(orderList);
+		Date now = new Date();
+		model.addAttribute("now", now);
+		model.addAttribute("orderList", orderList);
+		model.addAttribute("waresList", waresList);
+		return WeiXinConstants.PATH_CANTEEN + "/canteen_order_data.jsp";
+	}
+	
 	@RequestMapping("/update_order/{orderId}")
 	public String updateOrder(@PathVariable Long orderId, Model model){
 		//根据orderId获得订单对象
@@ -101,6 +117,10 @@ public class WeiXinCanteenController {
 		//根据orderId获得其所有的商品列表
 		List<CanteenOrderUpdateItem> orderItems = canteenService.getOrderItems(orderId);
 		CanteenUserCacheInfo user = canteenService.getOrderUserInfo(orderId);
+		if(delivery != null){
+			boolean overTime = canteenService.checkDeliveryOrderOvertime(delivery.getPlainDelivery(), new Date());
+			model.addAttribute("overtime", overTime);
+		}
 		model.addAttribute("delivery", delivery);
 		model.addAttribute("order", cOrder.getpOrder());
 		model.addAttribute("cOrder", cOrder);
@@ -143,14 +163,6 @@ public class WeiXinCanteenController {
 	}
 	
 	
-	@RequestMapping("/order_data")
-	public String orderData(CommonPageInfo pageInfo, Model model){
-		UserIdentifier user =  WxUtils.getCurrentUser(UserIdentifier.class);
-		List<CanteenOrderInfoItem> orderList = canteenService.getWaresPageList(user, pageInfo);
-		Map<CanteenOrderInfoItem, List<CanteenOrderUpdateItem>> waresList = canteenService.getCanteenOrderUpdateItemList(orderList);
-		model.addAttribute("orderList", orderList);
-		model.addAttribute("waresList", waresList);
-		return WeiXinConstants.PATH_CANTEEN + "/canteen_order_data.jsp";
-	}
+	
 	
 }

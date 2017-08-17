@@ -177,9 +177,6 @@ public class CanteenServiceImpl implements CanteenService {
 		
 		cOrder.setDepart(coParam.getDepart());
 		cOrder.setpOrder(pOrder);
-		cOrder.setDeliveryEndTime(delivery.getClaimEndTime());
-		cOrder.setOrderOpenTime(delivery.getOpenTime());
-		cOrder.setOrderCloseTime(delivery.getCloseTime());
 		
 		
 		List<PlainProduct> products = new ArrayList<PlainProduct>();
@@ -343,6 +340,7 @@ public class CanteenServiceImpl implements CanteenService {
 			result.setTimePointEnd(delivery.getClaimEndTime());
 			List<CanteenDeliveyWares> waresList = cDao.getCanteenDeliveryWares(deliveryId, false);
 			result.setWaresList(waresList);
+			result.setPlainDelivery(delivery);
 			return result;
 		}
 		return null;
@@ -497,6 +495,13 @@ public class CanteenServiceImpl implements CanteenService {
 	public void cancelOrder(WeiXinUser operateUser, Long orderId) throws OrderOperateException, OrderResourceApplyException {
 		PlainCanteenOrder order = getCanteenOrder(orderId);
 		if(order != null){
+			PlainDelivery delivery = cDao.getDelivery(order.getpOrder().getDeliveryId());
+			if(delivery != null){
+				if(checkDeliveryOrderOvertime(delivery, new Date())){
+					throw new OrderOperateException("超过当前下单时间，不能取消");
+				}
+			}
+			
 			String cancelStatus = order.getpOrder().getCanceledStatus();
 			if(cancelStatus != null){
 				throw new OrderOperateException("订单[" + orderId + "]已经被取消，取消状态为[" + cancelStatus + "]");

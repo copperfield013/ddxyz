@@ -14,6 +14,7 @@
 		<div>
 			<div class="shade-operation">
 				<span class="shade-warn">!</span>
+				<span class="shade-close">×</span>
 			</div>
 			<p>等待商家发布</p>
 			<p>暂停接单!</p>
@@ -25,6 +26,7 @@
 		<div>
 			<div class="shade-operation">
 				<span class="shade-warn">!</span>
+				<span class="shade-close">×</span>
 			</div>
 			<p>本周下单时间已结束</p>
 			<p class="time-range">
@@ -131,18 +133,31 @@
 	</script>
 	<script>
 		$(function(){
-			var delivery = $.parseJSON('${delivery.json}');
+			$('.shade-close').click(function(){
+				$(this).closest('.shade').remove();
+				location.href = 'weixin/canteen/home';
+			});
+			var delivery = {};
+			try{
+				delivery = $.parseJSON('${delivery.json}');
+			}catch(e){}
 			var dWaresCountMap = {};
 			
 			function getDeliveryWares(deliveryWaresId){
-				return delivery.waresMap['id_' + deliveryWaresId];
+				if(deliveryWaresId){
+					return delivery.waresMap['id_' + deliveryWaresId];
+				}
 			}
 			function getDeliveryWaresCountInPage(deliveryWaresId){
-				return dWaresCountMap['id_' + deliveryWaresId] || 0;
+				if(deliveryWaresId){
+					return dWaresCountMap['id_' + deliveryWaresId] || 0;
+				}
 			}
 			function addDeliveryWaresCountInPage(deliveryWaresId, count){
-				var currCount = getDeliveryWaresCountInPage(deliveryWaresId) || 0;
-				dWaresCountMap['id_' + deliveryWaresId] = currCount + parseInt(count);
+				if(deliveryWaresId){
+					var currCount = getDeliveryWaresCountInPage(deliveryWaresId) || 0;
+					dWaresCountMap['id_' + deliveryWaresId] = currCount + parseInt(count);
+				}
 			}
 			
 			function refreshRemain(){
@@ -262,6 +277,7 @@
 				}, 3000);
 				
 			}
+			
 			
 			$('#submit').click(function(){
 				var receiverName = $('#receiverName').val(),

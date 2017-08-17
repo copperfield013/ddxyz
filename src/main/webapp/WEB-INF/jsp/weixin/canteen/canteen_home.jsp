@@ -80,5 +80,12 @@
         <a href="weixin/canteen/order_list" class="order-link">订单</a>
         <a href="weixin/canteen/order" class="main">立即下单</a>
     </footer>
+    <script type="text/javascript">
+    	$(function(){
+    		$('#shade-close').click(function(){
+    			$('.shade').remove();
+    		});
+    	});
+    </script>
 </body>
 </html>

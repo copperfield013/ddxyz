@@ -145,3 +145,6 @@ footer .main {
 .head>.order-status{
 	float: right;
 }
+.history-order,.history-order p.detail {
+    background-color: rgba(200,200,200,0.3);
+}
