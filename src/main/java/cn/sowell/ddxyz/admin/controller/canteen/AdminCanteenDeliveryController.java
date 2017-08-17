@@ -19,8 +19,8 @@ import com.alibaba.fastjson.JSON;
 
 import cn.sowell.copframe.common.file.FileUploadUtils;
 import cn.sowell.copframe.dto.ajax.AjaxPageResponse;
-import cn.sowell.copframe.dto.format.FormatUtils;
-import cn.sowell.copframe.dto.format.FrameDateFormat;
+import cn.sowell.copframe.utils.FormatUtils;
+import cn.sowell.copframe.utils.date.FrameDateFormat;
 import cn.sowell.ddxyz.DdxyzConstants;
 import cn.sowell.ddxyz.admin.AdminConstants;
 import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenWeekDeliveryCriteria;
@@ -143,12 +143,10 @@ public class AdminCanteenDeliveryController {
 		if(delivery != null){
 			Date theDay = delivery.getTimePoint();
 			if(theDay != null){
-				Date Monday = dateFormat.getTheDayOfWeek(theDay, Calendar.MONDAY, 0, 0, 0, 0);
+				Date[] range = dateFormat.getTheWeekRange(theDay, Calendar.MONDAY);
 				CanteenWeekDeliveryCriteria criteria = new CanteenWeekDeliveryCriteria();
-				criteria.setStartDate(Monday);
-				criteria.setEndDate(dateFormat.incDay(Monday, 7));
-				model.addAttribute("Monday", Monday);
-				model.addAttribute("Sunday", dateFormat.incDay(Monday, 6));
+				criteria.setStartDate(range[0]);
+				criteria.setEndDate(range[1]);
 				List<PlainWares> canteenWaresList = deliveryService.getWaresList(DdxyzConstants.CANTEEN_MERCHANT_ID, false);
 				List<PlainLocation> locations = deliveryService.getCanteenDeliveryLocations();
 				List<CanteenWeekDeliveryWaresItem> items = deliveryService.getCanteenDeliveryWaresItems(delivery.getId());

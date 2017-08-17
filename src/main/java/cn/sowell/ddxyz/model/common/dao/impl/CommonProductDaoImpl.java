@@ -12,7 +12,7 @@ import org.hibernate.type.StandardBasicTypes;
 import org.springframework.stereotype.Repository;
 
 import cn.sowell.copframe.dao.deferedQuery.DeferedParamQuery;
-import cn.sowell.copframe.dto.format.FormatUtils;
+import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.ddxyz.model.common.dao.CommonProductDao;
 import cn.sowell.ddxyz.model.common.pojo.PlainProduct;
 import cn.sowell.ddxyz.model.common.pojo.criteria.ProductCriteria;

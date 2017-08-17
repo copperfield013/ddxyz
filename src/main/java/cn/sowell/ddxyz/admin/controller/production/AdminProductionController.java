@@ -17,22 +17,18 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import cn.sowell.copframe.dto.ajax.JsonResponse;
-import cn.sowell.copframe.dto.format.FormatUtils;
-import cn.sowell.copframe.dto.format.FrameDateFormat;
-import cn.sowell.copframe.dto.format.OfDateFormat;
 import cn.sowell.copframe.dto.page.CommonPageInfo;
 import cn.sowell.copframe.utils.CollectionUtils;
+import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.copframe.utils.HttpRequestUtils;
+import cn.sowell.copframe.utils.date.FrameDateFormat;
 import cn.sowell.copframe.utils.qrcode.QrCodeUtils;
 import cn.sowell.ddxyz.DdxyzConstants;
 import cn.sowell.ddxyz.admin.AdminConstants;
@@ -63,7 +59,7 @@ public class AdminProductionController {
 	ProductService productService;
 	
 	@Resource
-	OfDateFormat dateformat;
+	FrameDateFormat dateformat;
 	
 	@Resource
 	FrameDateFormat fdFormat;

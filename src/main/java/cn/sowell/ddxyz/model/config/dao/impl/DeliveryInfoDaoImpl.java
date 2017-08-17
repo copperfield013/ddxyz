@@ -8,7 +8,6 @@ import javax.annotation.Resource;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.persister.entity.Queryable;
 import org.hibernate.type.StandardBasicTypes;
 import org.springframework.stereotype.Repository;
 
@@ -17,8 +16,8 @@ import cn.sowell.copframe.dao.deferedQuery.DeferedParamSnippet;
 import cn.sowell.copframe.dao.deferedQuery.HibernateRefrectResultTransformer;
 import cn.sowell.copframe.dao.deferedQuery.sqlFunc.WrapForCountFunction;
 import cn.sowell.copframe.dao.utils.QueryUtils;
-import cn.sowell.copframe.dto.format.FormatUtils;
 import cn.sowell.copframe.dto.page.CommonPageInfo;
+import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
 import cn.sowell.ddxyz.model.config.dao.DeliveryInfoDao;
 import cn.sowell.ddxyz.model.config.pojo.criteria.DeliveryInfoCriteria;

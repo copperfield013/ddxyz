@@ -2,7 +2,6 @@ package cn.sowell.copframe.messageConverter;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,9 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
-import org.springframework.util.StreamUtils;
 
-import cn.sowell.copframe.common.property.PropertyPlaceholder;
 import cn.sowell.copframe.dto.xml.XMLRequest;
 import cn.sowell.copframe.utils.xml.Dom4jNode;
 import cn.sowell.copframe.utils.xml.XmlNode;

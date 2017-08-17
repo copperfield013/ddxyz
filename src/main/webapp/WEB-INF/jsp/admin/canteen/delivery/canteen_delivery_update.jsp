@@ -127,8 +127,8 @@
 				timePicker12Hour	: false,
 				timePickerIncrement : 5,
 				separator			: '~',
-				minDate				: '<fmt:formatDate value="${Monday }" pattern="yyyy-MM-dd"/>',
-				maxDate				: '<fmt:formatDate value="${Sunday }" pattern="yyyy-MM-dd"/>',
+				minDate				: '<fmt:formatDate value="${criteria.startDate }" pattern="yyyy-MM-dd HH:mm:ss"/>',
+				maxDate				: '<fmt:formatDate value="${criteria.endDate }" pattern="yyyy-MM-dd HH:mm:ss"/>',
 				locale				: {
 					applyLabel	: '确定',
 	                cancelLabel: '取消',

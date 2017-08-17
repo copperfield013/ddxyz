@@ -12,7 +12,7 @@ import org.springframework.util.Assert;
 
 import cn.sowell.copframe.dao.deferedQuery.ColumnMapResultTransformer;
 import cn.sowell.copframe.dao.deferedQuery.SimpleMapWrapper;
-import cn.sowell.copframe.dto.format.FormatUtils;
+import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.ddxyz.model.weixin.dao.WeiXinUserDao;
 import cn.sowell.ddxyz.model.weixin.pojo.WeiXinUser;
 

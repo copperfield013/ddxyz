@@ -11,7 +11,8 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import org.springframework.web.util.WebUtils;
 
-import cn.sowell.copframe.dto.format.FormatUtils;
+import cn.sowell.copframe.utils.FormatUtils;
+
 
 
 public class PageInfoArgumentResolver implements HandlerMethodArgumentResolver{

@@ -2,7 +2,7 @@ package cn.sowell.ddxyz.model.drink.pojo.criteria;
 
 import java.util.Date;
 
-import cn.sowell.copframe.dto.format.OfDateFormat;
+import cn.sowell.copframe.utils.date.CommonDateFormat;
 
 public class DeliveryCriteria {
 
@@ -23,7 +23,7 @@ public class DeliveryCriteria {
 	 */
 	private String timeRange;
 	
-	OfDateFormat dateformat = new OfDateFormat();
+	CommonDateFormat dateformat = new CommonDateFormat();
 	
 	public Date getStartTime() {
 		return startTime;

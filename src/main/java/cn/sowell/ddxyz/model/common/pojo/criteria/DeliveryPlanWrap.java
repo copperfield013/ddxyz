@@ -1,7 +1,8 @@
 package cn.sowell.ddxyz.model.common.pojo.criteria;
 
 
-import cn.sowell.copframe.dto.format.OfDateFormat;
+import cn.sowell.copframe.utils.date.CommonDateFormat;
+import cn.sowell.copframe.utils.date.FrameDateFormat;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlan;
 
 public class DeliveryPlanWrap {
@@ -13,7 +14,7 @@ public class DeliveryPlanWrap {
 	
 	private PlainDeliveryPlan plan =  new PlainDeliveryPlan();
 	
-	OfDateFormat dateformat = new OfDateFormat();
+	FrameDateFormat dateformat = new CommonDateFormat();
 	
 
 	public void setWaresId(Long waresId) {

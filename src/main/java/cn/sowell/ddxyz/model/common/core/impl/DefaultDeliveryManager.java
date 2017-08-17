@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 
-import cn.sowell.copframe.dto.format.FrameDateFormat;
+import cn.sowell.copframe.utils.date.FrameDateFormat;
 import cn.sowell.copframe.utils.range.ComparableSingleRange;
 import cn.sowell.copframe.utils.range.DateRange;
 import cn.sowell.copframe.weixin.common.service.WxConfigService;

@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Comparator;
 import java.util.function.ToLongFunction;
 
-import cn.sowell.copframe.dto.format.FormatUtils;
+import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.ddxyz.model.common.core.Delivery;
 import cn.sowell.ddxyz.model.common.core.DispenseCode;
 

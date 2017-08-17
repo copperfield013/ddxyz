@@ -28,10 +28,10 @@ import org.springframework.util.StringUtils;
 
 import cn.sowell.copframe.SystemConstants;
 import cn.sowell.copframe.common.UserIdentifier;
-import cn.sowell.copframe.dto.format.FormatUtils;
-import cn.sowell.copframe.dto.format.FrameDateFormat;
+import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.copframe.utils.HttpRequestUtils;
 import cn.sowell.copframe.utils.TextUtils;
+import cn.sowell.copframe.utils.date.FrameDateFormat;
 import cn.sowell.copframe.utils.xml.Dom4jNode;
 import cn.sowell.copframe.utils.xml.XMLConvertConfig;
 import cn.sowell.copframe.utils.xml.XMLConverter;

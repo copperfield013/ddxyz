@@ -56,7 +56,6 @@ public class AdminCanteenWaresController {
 			@RequestParam("unitPrice") Float unitPrice, 
 			@RequestParam("priceUnit") String priceUnit
 			){
-		AjaxPageResponse response = new AjaxPageResponse();
 		PlainWares wares = new PlainWares();
 		wares.setBasePrice((int)(unitPrice * 100));
 		wares.setPriceUnit(priceUnit);

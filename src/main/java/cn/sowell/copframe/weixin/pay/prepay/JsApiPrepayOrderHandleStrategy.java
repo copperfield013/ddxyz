@@ -4,8 +4,8 @@ import java.util.Date;
 
 import javax.annotation.Resource;
 
-import cn.sowell.copframe.dto.format.FrameDateFormat;
 import cn.sowell.copframe.utils.TextUtils;
+import cn.sowell.copframe.utils.date.FrameDateFormat;
 import cn.sowell.copframe.weixin.common.service.WxConfigService;
 import cn.sowell.copframe.weixin.pay.service.WxPayService;
 

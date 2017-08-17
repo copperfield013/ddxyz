@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 
 import cn.sowell.copframe.dao.deferedQuery.DeferedParamQuery;
 import cn.sowell.copframe.dao.deferedQuery.HibernateRefrectResultTransformer;
-import cn.sowell.copframe.dto.format.FrameDateFormat;
+import cn.sowell.copframe.utils.date.FrameDateFormat;
 import cn.sowell.ddxyz.model.canteen.dao.CanteenDeliveryDao;
 import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenDeliveryWaresListCriteria;
 import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenWeekDeliveryCriteria;

@@ -2,7 +2,7 @@ package cn.sowell.ddxyz.model.config.pojo.criteria;
 
 import java.util.Date;
 
-import cn.sowell.copframe.dto.format.OfDateFormat;
+import cn.sowell.copframe.utils.date.CommonDateFormat;
 
 public class DeliveryInfoCriteria {
 	
@@ -15,7 +15,7 @@ public class DeliveryInfoCriteria {
 	
 	private String locationName;
 	
-	OfDateFormat dateformat = new OfDateFormat();
+	CommonDateFormat dateformat = new CommonDateFormat();
 	
 	public String getReceiveTime() {
 		return receiveTime;

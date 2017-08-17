@@ -3,7 +3,16 @@ package cn.sowell.ddxyz.model.canteen.pojo.item;
 import java.util.Date;
 
 import javax.persistence.Column;
-
+/**
+ * 
+ * <p>Title: CanteenOrderInfoItem</p>
+ * <p>Description: </p><p>
+ * 
+ * </p>
+ * @author Copperfield Zhang
+ * @date 2017年8月17日 上午11:06:17
+ * @see
+ */
 public class CanteenOrderInfoItem {
 	
 	@Column(name="order_id")
@@ -45,6 +54,8 @@ public class CanteenOrderInfoItem {
 	@Column(name="create_time")
 	private Date createTime;
 	
+	@Column(name="c_comment")
+	private String comment;
 
 	public Long getOrderId() {
 		return orderId;
@@ -148,5 +159,13 @@ public class CanteenOrderInfoItem {
 	
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 }

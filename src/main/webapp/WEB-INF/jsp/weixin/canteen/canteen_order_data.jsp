@@ -27,6 +27,7 @@
   				<span class="takemen">收货人：${orderItem.receiverName }</span>
   				<span class="takeport">部门：${orderItem.depart }</span>
   				<span class="takePhone">联系号码：${orderItem.receiverContact }</span>
+  				<span class="comment">备注：${orderItem.comment }</span>
   				<span class="closetime">领取截止时间：<fmt:formatDate value="${orderItem.deliveryEndTime }" pattern="yyyy-MM-dd HH:mm:ss" /></span>
   				<span class="ordertime">创建时间：<fmt:formatDate value="${orderItem.createTime }" pattern="yyyy-MM-dd HH:mm:ss" /></span>
   			</p>

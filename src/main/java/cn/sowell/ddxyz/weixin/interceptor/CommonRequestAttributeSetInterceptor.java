@@ -13,7 +13,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.context.request.WebRequestInterceptor;
 
 import cn.sowell.copframe.common.property.PropertyPlaceholder;
-import cn.sowell.copframe.dto.format.FormatUtils;
+import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.copframe.utils.HttpRequestUtils;
 import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.copframe.weixin.common.service.WxConfigService;

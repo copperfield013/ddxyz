@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import org.springframework.util.Assert;
 
-import cn.sowell.copframe.dto.format.FormatUtils;
+import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.ddxyz.model.common.core.DispenseCode;
 import cn.sowell.ddxyz.model.common.core.Product;
 import cn.sowell.ddxyz.model.common.core.ProductDataHandler;

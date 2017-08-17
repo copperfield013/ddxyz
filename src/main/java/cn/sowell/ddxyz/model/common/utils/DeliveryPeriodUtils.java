@@ -12,12 +12,12 @@ import java.util.TreeSet;
 import org.apache.log4j.Logger;
 import org.quartz.CronExpression;
 
-import cn.sowell.copframe.dto.format.FormatUtils;
-import cn.sowell.copframe.dto.format.FrameDateFormat;
-import cn.sowell.copframe.dto.format.OfDateFormat;
+import cn.sowell.copframe.utils.FormatUtils;
+import cn.sowell.copframe.utils.date.CommonDateFormat;
+import cn.sowell.copframe.utils.date.FrameDateFormat;
 
 public class DeliveryPeriodUtils {
-	static FrameDateFormat dateFormat = new OfDateFormat();
+	static FrameDateFormat dateFormat = new CommonDateFormat();
 	static Logger logger = Logger.getLogger(DeliveryPeriodUtils.class);
 	/**
 	 * 

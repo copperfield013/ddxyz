@@ -6,7 +6,6 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.hibernate.Query;
-import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.type.StandardBasicTypes;
@@ -16,8 +15,8 @@ import cn.sowell.copframe.dao.deferedQuery.DeferedParamQuery;
 import cn.sowell.copframe.dao.deferedQuery.DeferedParamSnippet;
 import cn.sowell.copframe.dao.deferedQuery.sqlFunc.WrapForCountFunction;
 import cn.sowell.copframe.dao.utils.QueryUtils;
-import cn.sowell.copframe.dto.format.FormatUtils;
 import cn.sowell.copframe.dto.page.CommonPageInfo;
+import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.ddxyz.model.merchant.dao.MerchantDisabledRuleDao;
 import cn.sowell.ddxyz.model.merchant.pojo.MerchantDisabledRule;
 

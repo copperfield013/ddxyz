@@ -118,31 +118,16 @@
         	<span class="send-address stat-value">${delivery.locationName }</span>
         </p>
     </div>
-    <!-- 用户信息 -->
-    <div class="user-info">
-        <h4>用户信息</h4>
-        <p class="layout-flex">
-        	<span class="user-name form-label">姓名</span>
-        	<input id="receiverName" class="form-input input-box" type="text" value="${userInfo.name }" placeholder="请输入您的姓名">
-        </p>
-        <p class="layout-flex">
-        	<span class="user-name form-label">部门</span>
-        	<input id="depart" class="form-input input-box" type="text" value="${userInfo.depart }" placeholder="请输入您所在部门">
-        </p>
-        <p class="layout-flex">
-        	<span class="user-name form-label">联系方式</span>
-        	<input id="contact" class="form-input input-box" type="text" value="${userInfo.contact }" placeholder="请输入您的联系方式">
-        </p>
-    </div>
     <div class="booking-info">
         <h4>预定信息</h4>
-        <p class="layout-flex layout-select">
+        <p class="layout-flex layout-select" id="wares-select">
         	<span class="dishs-kind form-label">菜品</span>
         	<select class="form-input" id="waresName">
         		<c:forEach items="${delivery.waresList }" var="cWares">
         			<option value="${cWares.dWaresId }">${cWares.waresName }</option>
         		</c:forEach>
 			</select>
+			<span style="color: #666">菜品选择</span>
         </p>
         <p>
         	<span class="form-label">单价</span>
@@ -175,10 +160,27 @@
         	<span>总价：</span><span class="price" id="total-price">0.0</span>
         </p>
     </div>
-    <p class="remarks">
+     <p class="remarks">
     	<span>备注</span>
     	<textarea id="comment" class="input-box" placeholder="请输入备注详情"></textarea>
     </p>
+    <!-- 用户信息 -->
+    <div class="user-info" style="margin-bottom: 3em;">
+        <h4>用户信息</h4>
+        <p class="layout-flex">
+        	<span class="user-name form-label">姓名</span>
+        	<input id="receiverName" class="form-input input-box" type="text" value="${userInfo.name }" placeholder="请输入您的姓名">
+        </p>
+        <p class="layout-flex">
+        	<span class="user-name form-label">部门</span>
+        	<input id="depart" class="form-input input-box" type="text" value="${userInfo.depart }" placeholder="请输入您所在部门">
+        </p>
+        <p class="layout-flex">
+        	<span class="user-name form-label">联系方式</span>
+        	<input id="contact" class="form-input input-box" type="text" value="${userInfo.contact }" placeholder="请输入您的联系方式">
+        </p>
+    </div>
+   
 </main>
 </form>
 	<footer>
@@ -228,7 +230,6 @@
 				refreshRemain();
 			}).trigger('change');
 			
-			
 			//计算总价
 			function calculate(num){
 				var totalPrice = 0;
@@ -261,11 +262,12 @@
 			$('.operate-count').on('click','i',function(e){
 				e.stopPropagation();
 				var _this = $(this).attr("class");
-				var count = parseFloat($('.dishCount').text());
-				var maxCount = parseFloat($('.surplus-count').text());
-				if( _this === 'dishs-minus' && count >1){
+				var $this = $(this);
+				var count = parseInt($('.dishCount').text());
+				var maxCount = parseInt($('.surplus-count').text()) || 1000;
+				if($this.is('.dishs-minus') && count >1){
 					count -=1;
-				}else if( _this === 'dishs-plus' && count < maxCount){
+				}else if( $this.is('.dishs-plus') && count < maxCount){
 					count +=1;
 				}
 				$('.dishCount').text(count);
@@ -314,6 +316,17 @@
 				}
 			});
 			
+			function dropToBottom(){
+				$('main')[0].scrollTop = $('main')[0].scrollHeight;
+				var showAlert = setInterval(function(){
+					$('.user-info').toggleClass('alert-info');
+				}, 500);
+				setTimeout(function(){
+					clearInterval(showAlert);
+				}, 5000);
+				
+			}
+			
 			$('#submit').click(function(){
 				var receiverName = $('#receiverName').val(),
 					depart = $('#depart').val(),
@@ -323,10 +336,12 @@
 				
 				if(!receiverName){
 					alert('请输入收货人姓名');
+					dropToBottom();
 					return false;
 				}
 				if(!contact){
 					alert('请输入联系方式');
+					dropToBottom();
 					return false;
 				}
 				var orderItems = [];

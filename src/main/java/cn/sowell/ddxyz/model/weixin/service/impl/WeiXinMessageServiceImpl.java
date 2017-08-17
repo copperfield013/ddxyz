@@ -8,8 +8,8 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import cn.sowell.copframe.dto.format.FormatUtils;
-import cn.sowell.copframe.dto.format.FrameDateFormat;
+import cn.sowell.copframe.utils.FormatUtils;
+import cn.sowell.copframe.utils.date.FrameDateFormat;
 import cn.sowell.copframe.utils.text.TextHandler;
 import cn.sowell.copframe.weixin.common.service.WxConfigService;
 import cn.sowell.copframe.weixin.message.exception.WeiXinMessageException;

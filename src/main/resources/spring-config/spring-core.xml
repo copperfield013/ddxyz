@@ -10,7 +10,7 @@
 	     http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd">
 
 	<!-- 默认日期时间格式 -->
-	<bean id="dateFormat" class="cn.sowell.copframe.dto.format.OfDateFormat" />
+	<bean id="dateFormat" class="cn.sowell.copframe.utils.date.CommonDateFormat" />
 	
 	<!-- 微信模块的service -->
 	<context:component-scan base-package="cn.sowell.copframe.weixin.*.service.impl" />

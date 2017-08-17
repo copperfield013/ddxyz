@@ -3,7 +3,8 @@
 import java.util.Date;
 import java.util.Map;
 
-import cn.sowell.copframe.dto.format.FormatUtils;
+import cn.sowell.copframe.utils.FormatUtils;
+
 /**
  * 封装map对象，并能通过{@link FormatUtils}的方法简单地将对象转换成指定的的类型
  * @author Copperfield

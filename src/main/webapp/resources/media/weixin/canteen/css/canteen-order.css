@@ -67,6 +67,7 @@ p.layout-select:after {
 }
 .operate-count {
 	display:inline-block;
+	-webkit-tap-highlight-color: rgba(255,0,0,0);
 }
 .dishs-minus,
 .dishs-plus  {
@@ -80,14 +81,17 @@ p.layout-select:after {
     font-size: 15px;
     border: 1px solid #663300;
     vertical-align:middle;
+    -webkit-tap-highlight-color: 0;
 }
 .dishs-minus {
 	color: #663300;
     background-color: #ffffff;
+    margin-right: 0.5em;
 }
 .dishs-plus {
 	color:#ffffff;
 	background-color:#663300;
+	margin-left: 0.5em;
 }
 .dishs-plus:before {
 	content:'\e619';
@@ -220,4 +224,12 @@ span.stat-value {
 }
 span.stat-value span{
 	white-space: nowrap;
+}
+
+
+.user-info.alert-info{
+	background-color: #FFFACD;
+}
+.user-info.alert-info>h4{
+	background-color: #FFE4B5;
 }

@@ -27,10 +27,10 @@ import cn.sowell.copframe.dao.deferedQuery.HibernateRefrectResultTransformer;
 import cn.sowell.copframe.dao.deferedQuery.SimpleMapWrapper;
 import cn.sowell.copframe.dao.deferedQuery.sqlFunc.WrapForCountFunction;
 import cn.sowell.copframe.dao.utils.QueryUtils;
-import cn.sowell.copframe.dto.format.FormatUtils;
-import cn.sowell.copframe.dto.format.FrameDateFormat;
 import cn.sowell.copframe.dto.page.CommonPageInfo;
 import cn.sowell.copframe.utils.CollectionUtils;
+import cn.sowell.copframe.utils.FormatUtils;
+import cn.sowell.copframe.utils.date.FrameDateFormat;
 import cn.sowell.ddxyz.model.canteen.dao.CanteenDao;
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenDeliveyWares;
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenUserCacheInfo;
@@ -419,7 +419,8 @@ public class CanteenDaoImpl implements CanteenDao{
 				+ "	ob.c_receiver_contact,"
 				+ "	ob.c_receiver_address,"
 				+ "	ob.c_receiver_name,"
-				+ "	ob.create_time"
+				+ "	ob.create_time,"
+				+ "	ob.c_comment"
 				+ "	FROM"
 				+ "	t_canteen_order co"
 				+ "	LEFT JOIN "

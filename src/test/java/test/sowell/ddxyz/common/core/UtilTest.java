@@ -3,21 +3,16 @@ package test.sowell.ddxyz.common.core;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.xml.soap.Text;
-
 import org.junit.Test;
-import org.quartz.CronExpression;
-import org.quartz.impl.calendar.CronCalendar;
 
-import cn.sowell.copframe.dto.format.FrameDateFormat;
-import cn.sowell.copframe.dto.format.OfDateFormat;
 import cn.sowell.copframe.utils.TextUtils;
+import cn.sowell.copframe.utils.date.CommonDateFormat;
+import cn.sowell.copframe.utils.date.FrameDateFormat;
 import cn.sowell.copframe.utils.qrcode.QrCodeUtils;
 import cn.sowell.copframe.utils.text.TextHandler;
 import cn.sowell.ddxyz.model.common.utils.DeliveryPeriodUtils;
@@ -34,7 +29,7 @@ public class UtilTest {
 	
 	@Test
 	public void cronTest() throws ParseException{
-		FrameDateFormat df = new OfDateFormat();
+		FrameDateFormat df = new CommonDateFormat();
 		Date theDay = df .parse("2017-6-3");
 		int[] hours = DeliveryPeriodUtils.getCronHourList("0 0 2,3,4 * * ?", theDay);
 		for (int hour : hours) {

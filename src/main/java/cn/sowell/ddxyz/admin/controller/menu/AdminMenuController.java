@@ -8,17 +8,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.fastjson.JSONObject;
-
 import cn.sowell.copframe.dto.ajax.AjaxPageResponse;
 import cn.sowell.copframe.dto.ajax.JsonRequest;
 import cn.sowell.copframe.dto.ajax.NoticeType;
 import cn.sowell.copframe.weixin.common.service.WxConfigService;
 import cn.sowell.copframe.weixin.common.service.WxCredentialService;
-import cn.sowell.copframe.weixin.config.WxApp;
-import cn.sowell.copframe.weixin.config.WxConfig;
 import cn.sowell.ddxyz.admin.AdminConstants;
 import cn.sowell.ddxyz.model.menu.service.MenuService;
+
+import com.alibaba.fastjson.JSONObject;
 
 @Controller
 @RequestMapping(AdminConstants.URI_BASE + "/menu")

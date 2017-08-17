@@ -11,7 +11,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import cn.sowell.copframe.dto.format.FrameDateFormat;
+import cn.sowell.copframe.utils.date.FrameDateFormat;
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenDelivery;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainCanteenOrder;
 import cn.sowell.ddxyz.model.canteen.pojo.param.CanteenOrderItem;

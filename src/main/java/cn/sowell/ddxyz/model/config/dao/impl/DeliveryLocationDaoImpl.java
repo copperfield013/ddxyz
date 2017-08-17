@@ -15,12 +15,10 @@ import org.springframework.util.StringUtils;
 
 import cn.sowell.copframe.dao.deferedQuery.DeferedParamQuery;
 import cn.sowell.copframe.dao.deferedQuery.DeferedParamSnippet;
-import cn.sowell.copframe.dao.deferedQuery.HibernateRefrectResultTransformer;
 import cn.sowell.copframe.dao.deferedQuery.sqlFunc.WrapForCountFunction;
 import cn.sowell.copframe.dao.utils.QueryUtils;
-import cn.sowell.copframe.dto.format.FormatUtils;
 import cn.sowell.copframe.dto.page.CommonPageInfo;
-import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
+import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.ddxyz.model.common.pojo.PlainLocation;
 import cn.sowell.ddxyz.model.config.dao.DeliveryLocationDao;
 import cn.sowell.ddxyz.model.config.pojo.criteria.DeliveryLocationCriteria;

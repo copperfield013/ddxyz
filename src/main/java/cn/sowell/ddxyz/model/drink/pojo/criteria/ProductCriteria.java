@@ -1,11 +1,6 @@
 package cn.sowell.ddxyz.model.drink.pojo.criteria;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import cn.sowell.copframe.dto.format.OfDateFormat;
 
 public class ProductCriteria {
 	

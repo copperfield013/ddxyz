@@ -226,7 +226,7 @@ public class CanteenServiceImpl implements CanteenService {
 			throw new OrderResourceApplyException("不存在id为[" + coParam.getDeliveryId() + "]的delivery");
 		}
 		Date now = new Date();
-		if((delivery.getCloseTime() != null && now.after(delivery.getCloseTime())) || now.after(delivery.getOpenTime())){
+		if(now.after(delivery.getCloseTime()) || now.before(delivery.getOpenTime())){
 			throw new OrderResourceApplyException("当前时间不在下单范围内[" + delivery.getTimePoint() + "~" + delivery.getCloseTime() +"]");
 		}
 		
