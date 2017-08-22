@@ -9,6 +9,7 @@ import org.dom4j.DocumentException;
 import org.dom4j.io.SAXReader;
 import org.springframework.core.io.Resource;
 
+import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.copframe.utils.xml.Dom4jNode;
 import cn.sowell.copframe.utils.xml.XmlNode;
 
@@ -31,6 +32,7 @@ public class WxConfig {
 			app.setWxAccount(appTag.getStrictFirstElement("wxaccount").getText());
 			app.setAppid(appTag.getStrictFirstElement("appid").getText());
 			app.setSecret(appTag.getStrictFirstElement("secret").getText());
+			app.setDebugUserId(FormatUtils.toLong(appTag.getFirstElementText("def-user-id")));
 			XmlNode merchantNode = appTag.getFirstElement("merchant");
 			if(merchantNode != null){
 				app.setMerchantId(merchantNode.getStrictFirstElement("id").getStrictText());

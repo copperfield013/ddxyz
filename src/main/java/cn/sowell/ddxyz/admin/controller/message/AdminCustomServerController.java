@@ -48,8 +48,9 @@ public class AdminCustomServerController {
 	@RequestMapping("/doAdd")
 	public AjaxPageResponse doAdd(@RequestParam String kf_account_prefix, @RequestParam String nickname){
 		String kf_account = kf_account_prefix + "@" + wxConfigService.getAppWxAccount();
-		String text = "{\"kf_account\":\"" + kf_account + "\",\"nickname\":\"" + nickname + "\"}";
-		JSONObject jo = JSONObject.parseObject(text);
+		JSONObject jo = new JSONObject();
+		jo.put("kf_account", kf_account);
+		jo.put("nickname", nickname);
 		customServerService.addCustomServer(wxCredentialService.getAccessToken(), jo);
 		return AjaxPageResponse.CLOSE_AND_REFRESH_PAGE("添加成功", "custom-server-list");
 	}

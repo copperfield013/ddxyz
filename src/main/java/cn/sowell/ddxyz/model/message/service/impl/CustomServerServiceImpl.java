@@ -1,5 +1,6 @@
 package cn.sowell.ddxyz.model.message.service.impl;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
@@ -10,10 +11,13 @@ import cn.sowell.ddxyz.model.message.service.CustomServerService;
 @Service
 public class CustomServerServiceImpl implements CustomServerService{
 
+	Logger logger = Logger.getLogger(CustomServerServiceImpl.class);
+
 	@Override
 	public JSONObject addCustomServer(String accessToken, JSONObject jo) {
 		String url = "https://api.weixin.qq.com/customservice/kfaccount/add?access_token=" + accessToken;
 		JSONObject json = HttpRequestUtils.postJsonAndReturnJson(url, jo);
+		logger.info(json);
 		return json;
 	}
 

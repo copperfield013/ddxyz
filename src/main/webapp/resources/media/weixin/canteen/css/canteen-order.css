@@ -37,7 +37,13 @@ i {
 	align-items: center;
 }
 
-p.layout-select:after {
+label.wares-right {
+    color: #666;
+    position: absolute;
+    right: 2px;
+}
+
+label.wares-right:after {
 	font-family: icon;
 	display:inline-block;
 	content:"\e600";
