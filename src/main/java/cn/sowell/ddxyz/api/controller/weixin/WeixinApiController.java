@@ -5,6 +5,8 @@ import java.util.Date;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,7 +40,7 @@ public class WeixinApiController {
 	
 	@ResponseBody
 	@RequestMapping("/message")
-	public XMLResponse message(WeiXinMessageParameter msgParam,
+	public ResponseEntity<?> message(WeiXinMessageParameter msgParam,
 			@RequestBody(required=false) String xml){
 		XMLResponse xmlResponse = new XMLResponse();
 		if(xml != null){
@@ -80,8 +82,10 @@ public class WeixinApiController {
 				logger.error("解析转换后的消息时发生错误");
 			}
 			logger.info(xml);
+		}else{
+			return new ResponseEntity<String>(msgParam.getEchostr(), HttpStatus.OK);
 		}
-		return xmlResponse;
+		return new ResponseEntity<XMLResponse>(xmlResponse, HttpStatus.OK);
 	}
 	
 }
