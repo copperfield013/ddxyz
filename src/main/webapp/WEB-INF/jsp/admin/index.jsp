@@ -153,6 +153,34 @@
 			                        </li>
 		                        </ul>
 		                   </li>
+		                   <li>
+		                    	<a href="#" class="menu-dropdown">
+		                    		<i class="menu-icon fa fa-desktop"></i>
+		                    		<span class="menu-text">素材管理</span>
+		                    		<i class="menu-expand"></i>
+		                    	</a>
+		                    	<ul class="submenu">
+	                               	<li>
+	                               		<a class="tab" href="admin/material/add" target="material-upload" title="上传素材">
+	                               			<span class="menu-text">上传素材</span>
+	                               		</a>
+	                               	</li>
+								</ul>
+		                    </li>
+		                   <li>
+		                    	<a href="#" class="menu-dropdown">
+		                    		<i class="menu-icon fa fa-desktop"></i>
+		                    		<span class="menu-text">粉丝管理</span>
+		                    		<i class="menu-expand"></i>
+		                    	</a>
+		                    	<ul class="submenu">
+	                               	<li>
+	                               		<a class="tab" href="admin/fans/list" target="fans-list" title="粉丝列表">
+	                               			<span class="menu-text">粉丝列表</span>
+	                               		</a>
+	                               	</li>
+								</ul>
+		                    </li>
 	                	</sec:authorize>
 	                	<sec:authorize access="hasRole('ROLE_CANTEEN')">
 		                   <li>
