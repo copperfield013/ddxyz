@@ -232,9 +232,33 @@
 			<version>3.9</version>
 		</dependency>
 	</dependencies>
+	<distributionManagement>
+        <!-- <repository>
+            <id>nexus-3rd</id>
+            <url>http://192.168.1.6:8081/nexus/content/repositories/thirdparty/</url>
+        </repository> -->
+        <repository>
+        	<id>aliyun51-nexus</id>
+        	<url>http://106.14.249.51:32108/repository/nexus/</url>
+        </repository>
+    </distributionManagement>
 	<build>
-		<finalName>ddxyz</finalName>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.1.2</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			
 			<!-- 指定jdk -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
