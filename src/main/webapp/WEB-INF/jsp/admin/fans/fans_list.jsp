@@ -59,7 +59,7 @@
 						<fmt:formatDate value="${dateValue }" pattern="yyyy-MM-dd HH:mm:ss"/>
 					</td>
 					<td>
-						<a href="#" class="fans-edit-a">编辑</a>
+						<a class="dialog fans-edit-a" href="admin/fans/edit?openId=${fans.openid }" title="编辑${fans.nickname }" width="500px" height="200px" >编辑</a>
 					</td>
 				</tr>
 			</c:forEach>
@@ -71,12 +71,12 @@
 	$(function(){
 		seajs.use(['dialog'], function(Dialog){
 			var $page = $("#fans-list");
-			$(".fans-edit-a", $page).click(function(){
+			/* $(".fans-edit-a", $page).click(function(){
 				var $row = $(this).closest('tr[data-openid]');
 				var openid = $row.attr('data-openid');
 				var nickname = $row.attr('data-nickname');
 				Dialog.openDialog("admin/fans/edit?openId=" + openid, "编辑" + nickname +"备注名", "fans-edit");
-			});
+			}); */
 		});
 	})
 </script>

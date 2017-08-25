@@ -65,6 +65,21 @@
 	<beans:bean id="wxUserOAuth2Filter" class="cn.sowell.copframe.weixin.authentication.WxUserOAuth2Filter" />
 	
 	
+	<!-- 用于注解的权限验证 -->
+	<authentication-manager alias="annoAuthencationManager" id="annoAuthencationManager">
+		<authentication-provider ref="wxAuthenticationProvider" />
+		<authentication-provider user-service-ref="adminUserService">
+			<password-encoder hash="md5" />
+		</authentication-provider>
+	</authentication-manager>
+	
+	<global-method-security 
+		jsr250-annotations="enabled" 
+		secured-annotations="enabled" 
+		pre-post-annotations="disabled"
+		authentication-manager-ref="annoAuthencationManager" >
+		<!-- <protect-pointcut access="ROLE_ADMIN" expression="execution(* com.elim.*..*Service.find*(..))"/> -->
+	</global-method-security>
 	
 	
 	

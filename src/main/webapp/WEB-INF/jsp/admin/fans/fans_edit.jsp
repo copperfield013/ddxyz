@@ -8,13 +8,13 @@
 					<input type="hidden" id="openid" name="openid" value="${fans.openid }"/>
 					<div class="form-group">
 						<label class="col-lg-2 control-label">昵称</label>
-						<div class="col-lg-3">
+						<div class="col-lg-8 form-stat-value">
 							${fans.nickname }
 						</div>
 					</div>
 					<div class="form-group">
 						<label class="col-lg-2 control-label" for="remark">备注名</label>
-						<div class="col-lg-3">
+						<div class="col-lg-8">
 							<input type="text" class="form-control" id="remark" name="remark" value="${fans.remark }">
 						</div>
 					</div>

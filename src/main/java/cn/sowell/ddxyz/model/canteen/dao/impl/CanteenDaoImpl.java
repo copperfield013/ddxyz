@@ -43,7 +43,6 @@ import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlanWares;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryWares;
 import cn.sowell.ddxyz.model.common.pojo.PlainOrder;
 import cn.sowell.ddxyz.model.common.pojo.PlainProduct;
-import cn.sowell.ddxyz.model.common2.core.OrderResourceApplyException;
 import cn.sowell.ddxyz.model.wares.pojo.PlainWares;
 
 @Repository
@@ -339,18 +338,6 @@ public class CanteenDaoImpl implements CanteenDao{
 	}
 	
 	
-	@Override
-	public Integer getDeliveryWaresRemain(long dWaresId) throws OrderResourceApplyException {
-		PlainDeliveryWares deliveryWares = getDeliveryWare(dWaresId);
-		if(deliveryWares == null){
-			throw new OrderResourceApplyException("没有找到deliveryWaresId[" + dWaresId + "]对应的商品配送");
-		}
-		if(deliveryWares.getMaxCount() == null){
-			return null;
-		}else{
-			return deliveryWares.getMaxCount() - deliveryWares.getCurrentCount();
-		}
-	}
 	
 	@SuppressWarnings("serial")
 	@Override

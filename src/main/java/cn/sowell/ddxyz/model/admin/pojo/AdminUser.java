@@ -16,11 +16,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import cn.sowell.copframe.common.UserIdentifier;
 import cn.sowell.ddxyz.DdxyzConstants;
 
 @Entity
 @Table(name="t_admin_user")
-public class AdminUser implements UserDetails{
+public class AdminUser implements UserDetails, UserIdentifier{
 	/**
 	 * 
 	 */
@@ -192,6 +193,11 @@ public class AdminUser implements UserDetails{
 
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
+	}
+
+	@Override
+	public String getNickname() {
+		return userName;
 	}
 
 	

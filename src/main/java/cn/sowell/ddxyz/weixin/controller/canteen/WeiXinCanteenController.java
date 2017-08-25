@@ -28,6 +28,7 @@ import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenOrderInfoItem;
 import cn.sowell.ddxyz.model.canteen.pojo.param.CanteenOrderParameter;
 import cn.sowell.ddxyz.model.canteen.service.CanteenDeliveryService;
 import cn.sowell.ddxyz.model.canteen.service.CanteenService;
+import cn.sowell.ddxyz.model.common.core.Order;
 import cn.sowell.ddxyz.model.common.pojo.PlainLocation;
 import cn.sowell.ddxyz.model.common2.core.OrderResourceApplyException;
 import cn.sowell.ddxyz.model.weixin.pojo.WeiXinUser;
@@ -150,9 +151,8 @@ public class WeiXinCanteenController {
 	@RequestMapping("/doCancelOrder/{orderId}")
 	public JsonResponse doCancelOrder(@PathVariable Long orderId){
 		JsonResponse jRes = new JsonResponse();
-		WeiXinUser operateUser = WxUtils.getCurrentUser(WeiXinUser.class);
 		try {
-			canteenService.cancelOrder(operateUser, orderId);
+			canteenService.cancelUserOrder(orderId, Order.CAN_STATUS_CANCELED);
 			jRes.setStatus("suc");
 		} catch (Exception e) {
 			jRes.setStatus("error");

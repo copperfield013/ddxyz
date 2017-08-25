@@ -15,10 +15,10 @@ import cn.sowell.ddxyz.model.canteen.pojo.param.CanteenOrderParameter;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlan;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlanWares;
+import cn.sowell.ddxyz.model.common2.core.C2OrderResource;
 import cn.sowell.ddxyz.model.common2.core.OrderOperateException;
 import cn.sowell.ddxyz.model.common2.core.OrderResourceApplyException;
 import cn.sowell.ddxyz.model.wares.pojo.PlainWares;
-import cn.sowell.ddxyz.model.weixin.pojo.WeiXinUser;
 
 public interface CanteenService {
 	
@@ -96,10 +96,11 @@ public interface CanteenService {
 	 * 当当前订单已经被取消，或者执行操作的用户operateUser和创建订单的user不一致时，都会抛出异常
 	 * @param operateUser 当前执行取消操作的用户
 	 * @param orderId 取消的订单id
+	 * @param toCancelStatus 更改后的取消狀態
 	 * @throws OrderOperateException 当取消失败时抛出异常
 	 * @throws OrderResourceApplyException 
 	 */
-	void cancelOrder(WeiXinUser operateUser, Long orderId) throws OrderOperateException, OrderResourceApplyException;
+	void cancelOrder(Long orderId, String toCancelStatus) throws OrderOperateException, OrderResourceApplyException;
 	
 	
 	/**
@@ -122,5 +123,23 @@ public interface CanteenService {
 	 * @return
 	 */
 	boolean checkDeliveryOrderOvertime(PlainDelivery delivery, Date theTime);
+
+	/**
+	 * 根据已经存在的订单，重新检测订单内容恢复的资源是否足够。该方法不会修改订单及对应产品的状态，只会检测并修改资源的数量
+	 * @param cOrder
+	 * @return
+	 * @throws OrderResourceApplyException 资源不足的情况下，抛出异常
+	 */
+	C2OrderResource reapplyOrderResource(PlainCanteenOrder cOrder)
+			throws OrderResourceApplyException;
+
+	/**
+	 * 用于微信用户取消自己的订单
+	 * @param orderId
+	 * @param canStatusCanceled
+	 * @throws OrderResourceApplyException 
+	 * @throws OrderOperateException 
+	 */
+	void cancelUserOrder(Long orderId, String canStatusCanceled) throws OrderOperateException, OrderResourceApplyException;
 
 }

@@ -9,6 +9,7 @@ public class CanteenCriteria {
 	private Date startDate;
 	private Date endDate;
 	
+	
 	public Date getStartDate() {
 		return startDate;
 	}
@@ -42,4 +43,5 @@ public class CanteenCriteria {
 		}
 		return null;
 	}
+
 }

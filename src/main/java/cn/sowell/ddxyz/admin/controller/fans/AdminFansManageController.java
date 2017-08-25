@@ -3,7 +3,6 @@ package cn.sowell.ddxyz.admin.controller.fans;
 import java.util.List;
 
 import javax.annotation.Resource;
-import javax.xml.ws.RespectBinding;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,13 +10,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.fastjson.JSONObject;
-
 import cn.sowell.copframe.dto.ajax.AjaxPageResponse;
 import cn.sowell.copframe.dto.page.CommonPageInfo;
 import cn.sowell.copframe.weixin.common.service.WxCredentialService;
 import cn.sowell.ddxyz.admin.AdminConstants;
 import cn.sowell.ddxyz.model.fans.service.FansService;
+
+import com.alibaba.fastjson.JSONObject;
 
 @Controller
 @RequestMapping(AdminConstants.URI_BASE + "/fans")

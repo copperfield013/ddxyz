@@ -6,7 +6,11 @@
 		<p class="head">
 			<span class="order-code">订单号：${orderItem.orderCode }</span>
 			<c:if test="${orderItem.canceledStatus != null }">
-				<span class="order-status">已取消</span>
+				<c:choose>
+					<c:when test="${orderItem.canceledStatus == 'closed' }"><span class="order-status">已关闭</span></c:when>
+					<c:when test="${orderItem.canceledStatus == 'miss' }"><span class="order-status">未领取</span></c:when>
+					<c:otherwise><span class="order-status">已取消</span></c:otherwise>
+				</c:choose>
 			</c:if>
 		</p>
 		<c:forEach items="${waresList[orderItem] }" var="item">

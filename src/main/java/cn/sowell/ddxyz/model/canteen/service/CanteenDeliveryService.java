@@ -93,4 +93,7 @@ public interface CanteenDeliveryService {
 	 */
 	void disableDeliveryWares(Long deliveryWaresId, boolean disable);
 
+
+	
+
 }

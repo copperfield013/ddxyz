@@ -1,10 +1,13 @@
 package cn.sowell.copframe.dao.deferedQuery;
 
+import java.util.Stack;
+
 
 public class DeferedParamSnippet {
 	private String snippetName;
 	private StringBuffer buffer = new StringBuffer();
 	private String prependWhenNotEmpty;
+	private Stack<String[]> wrapStack = new Stack<String[]>();
 	
 	DeferedParamSnippet(String snippetName) {
 		this.snippetName = snippetName;
@@ -20,11 +23,23 @@ public class DeferedParamSnippet {
 	}
 	
 	public String getSnippet(){
-		return buffer.toString();
+		StringBuffer temp = new StringBuffer(buffer.toString());
+		@SuppressWarnings("unchecked")
+		Stack<String[]> stack = (Stack<String[]>) wrapStack.clone(); 
+		while(!stack.isEmpty()){
+			String[] wrap = wrapStack.pop();
+			if(wrap[0] != null){
+				temp.insert(0, wrap[0]);
+			}
+			if(wrap[1] != null){
+				temp.append(wrap[1]);
+			}
+		}
+		return temp.toString();
 	}
 
 	public boolean isEmpty(){
-		return buffer.length() == 0;
+		return buffer.length() == 0 && wrapStack.isEmpty();
 	}
 	
 	/**
@@ -63,4 +78,25 @@ public class DeferedParamSnippet {
 			}
 		}
 	}
+	
+	/**
+	 * 语句外围包裹一层
+	 * @param prefix
+	 * @param suffix
+	 */
+	public void pushWrap(String prefix, String suffix){
+		String[] wrap = new String[2];
+		wrap[0] = prefix;
+		wrap[1] = suffix;
+		wrapStack.push(wrap);
+	}
+	
+	/**
+	 * 移除最后pushWrap
+	 * @return
+	 */
+	public String[] popWrap(){
+		return wrapStack.pop();
+	}
+	
 }

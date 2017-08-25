@@ -228,6 +228,11 @@ public interface Order {
 	final String CAN_STATUS_REFUNDED = "refunded";
 	
 	/**
+	 * 没有如期领取
+	 */
+	final String CAN_STATUS_MISS = "miss";
+	
+	/**
 	 * 支付订单
 	 * @param payParam
 	 * @throws OrderException

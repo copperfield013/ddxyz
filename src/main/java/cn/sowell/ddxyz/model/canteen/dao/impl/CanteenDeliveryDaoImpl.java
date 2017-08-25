@@ -141,7 +141,7 @@ public class CanteenDeliveryDaoImpl implements CanteenDeliveryDao {
 						"		dw.c_current_count," +
 						"		dw.c_disabled" +
 						"	FROM" +
-						"	t_delivery_wares dw " +
+						"	t_delivery_wares dw " + 
 						"	LEFT JOIN t_wares_base w ON dw.wares_id = w.id" +
 						"	WHERE" +
 						"		dw.delivery_id = :deliveryId" ;

@@ -9,10 +9,14 @@ import com.alibaba.fastjson.JSONObject;
 import cn.sowell.copframe.dto.page.CommonPageInfo;
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenOrderUpdateItem;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainCanteenOrder;
+import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenCriteria;
+import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenOrdersCriteria;
 import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenWeekTableCriteria;
 import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenDeliveryOrdersItem;
 import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenWeekTableItem;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
+import cn.sowell.ddxyz.model.common2.core.OrderOperateException;
+import cn.sowell.ddxyz.model.common2.core.OrderResourceApplyException;
 
 public interface CanteenManageService {
 	
@@ -28,11 +32,11 @@ public interface CanteenManageService {
 
 	/**
 	 * 查询订单列表
-	 * @param deliveryId
+	 * @param criteria
 	 * @param pageInfo
 	 * @return
 	 */
-	List<CanteenDeliveryOrdersItem> queryDeliveryOrderItems(long id,
+	List<CanteenDeliveryOrdersItem> queryDeliveryOrderItems(CanteenOrdersCriteria criteria,
 			CommonPageInfo pageInfo);
 	/**
 	 * 将配送订单的数据写到工作表内
@@ -62,4 +66,39 @@ public interface CanteenManageService {
 	 * @return
 	 */
 	Integer amountDelivery(long id);
+
+	/**
+	 * 将订单中所有没有被取消的订单设置为完成
+	 * @param orderIds
+	 */
+	void completeOrders(List<Long> orderIds);
+
+	
+	/**
+	 * 关闭对应的订单，同时回收订单的所有资源
+	 * @param orderId
+	 * @throws OrderResourceApplyException 
+	 * @throws OrderOperateException 
+	 */
+	void closeOrder(Long orderId) throws OrderOperateException, OrderResourceApplyException;
+	
+	/**
+	 * 取消订单的完成状态，将订单的状态修改为默认状态。同时修改订单下所有产品的状态
+	 * @param orderId
+	 */
+	void cancelComplete(Long orderId);
+
+	/**
+	 * 移除订单的取消状态。在必要的情况下，还需要重新占用资源
+	 * @param orderId
+	 * @throws OrderOperateException 
+	 * @throws OrderResourceApplyException 
+	 */
+	void removeCanceled(Long orderId) throws OrderOperateException, OrderResourceApplyException;
+
+	/**
+	 * 设置订单的取消状态为未领取
+	 * @param orderId
+	 */
+	void setOrderMiss(Long orderId);
 }

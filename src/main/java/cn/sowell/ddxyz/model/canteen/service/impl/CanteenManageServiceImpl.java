@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -16,27 +17,37 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-
 import cn.sowell.copframe.dto.page.CommonPageInfo;
 import cn.sowell.copframe.utils.CollectionUtils;
 import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.ddxyz.model.canteen.dao.CanteenManageDao;
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenOrderUpdateItem;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainCanteenOrder;
+import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenCriteria;
+import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenOrdersCriteria;
 import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenWeekTableCriteria;
 import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenDeliveryOrdersItem;
 import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenWeekTableItem;
 import cn.sowell.ddxyz.model.canteen.service.CanteenManageService;
+import cn.sowell.ddxyz.model.canteen.service.CanteenService;
+import cn.sowell.ddxyz.model.common.core.Order;
+import cn.sowell.ddxyz.model.common.core.Product;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
 import cn.sowell.ddxyz.model.common.pojo.PlainOrder;
+import cn.sowell.ddxyz.model.common2.core.OrderOperateException;
+import cn.sowell.ddxyz.model.common2.core.OrderResourceApplyException;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 @Service
 public class CanteenManageServiceImpl implements CanteenManageService{
 
 	@Resource
 	CanteenManageDao manageDao;
+	
+	@Resource
+	CanteenService canteenService;
 	
 	@Override
 	public List<CanteenWeekTableItem> queryDeliveryTableItems(Long deliveryId,
@@ -45,9 +56,9 @@ public class CanteenManageServiceImpl implements CanteenManageService{
 	}
 	
 	@Override
-	public List<CanteenDeliveryOrdersItem> queryDeliveryOrderItems(long deliveryId,
+	public List<CanteenDeliveryOrdersItem> queryDeliveryOrderItems(CanteenOrdersCriteria criteria,
 			CommonPageInfo pageInfo) {
-		return manageDao.queryDeliveryOrderItems(deliveryId, pageInfo);
+		return manageDao.queryDeliveryOrderItems(criteria, pageInfo);
 	}
 	
 	@Override
@@ -148,6 +159,60 @@ public class CanteenManageServiceImpl implements CanteenManageService{
 	@Override
 	public Integer amountDelivery(long deliveryId) {
 		return manageDao.amountDelivery(deliveryId);
+	}
+	
+	@Override
+	public void completeOrders(List<Long> orderIds) {
+		manageDao.setOrderStatus(orderIds, Order.STATUS_COMPLETED);
+		manageDao.setOrderProductsStatus(orderIds, Product.STATUS_COMPLETED);
+	}
+	
+	@Override
+	public void closeOrder(Long orderId) throws OrderOperateException, OrderResourceApplyException {
+		canteenService.cancelOrder(orderId, Order.CAN_STATUS_CLOSED);
+	}
+	
+	@Override
+	public void setOrderMiss(Long orderId) {
+		manageDao.setOrderCancelStatus(orderId, Order.CAN_STATUS_MISS);
+		manageDao.setOrderProductsCancelStatus(orderId, Product.CAN_STATUS_ORDER_MISS);
+	}
+	
+	
+	@Override
+	public void cancelComplete(Long orderId) {
+		manageDao.setOrderStatus(Arrays.asList(orderId), Order.STATUS_DEFAULT);
+		manageDao.setOrderProductsStatus(Arrays.asList(orderId), Product.STATUS_DEFAULT);
+	}
+	
+	
+	@Override
+	public void removeCanceled(Long orderId) throws OrderOperateException, OrderResourceApplyException {
+		PlainCanteenOrder cOrder = canteenService.getCanteenOrder(orderId);
+		if(cOrder != null){
+			PlainOrder pOrder = cOrder.getpOrder();
+			String cancelStatus = pOrder.getCanceledStatus();
+			if(cancelStatus != null){
+				switch (cancelStatus) {
+				case Order.CAN_STATUS_CLOSED:
+					//如果原来的状态是关闭的，那么移除关闭状态，还需要重新占用资源
+					canteenService.reapplyOrderResource(cOrder);
+					manageDao.setOrderCancelStatus(orderId, null);
+					manageDao.setOrderProductsCancelStatus(orderId, null);
+					break;
+				case Order.CAN_STATUS_MISS:
+					//如果原来的状态是未领取的，那么只需要移除订单和产品的取消状态，不需要重新占用资源
+					manageDao.setOrderCancelStatus(orderId, null);
+					manageDao.setOrderProductsCancelStatus(orderId, null);
+					break;
+				default:
+					throw new OrderOperateException("不支持移除的取消状态[" + cancelStatus + "]");
+				}
+				
+			}else{
+				throw new OrderOperateException("订单[" + orderId + "]无法移除取消状态，因为其不是取消状态");
+			}
+		}
 	}
 
 }

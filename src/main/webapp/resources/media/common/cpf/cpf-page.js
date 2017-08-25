@@ -39,13 +39,17 @@ define(function(require, exports, module){
 				});
 			}else{
 				$('a[href],button[href]', $page).click(function(){
-					if(!$(this).is('.tab,.dialog')){
-						var href = $(this).attr('href');
+					var $this = $(this);
+					if(!$this.is('.tab,.dialog')){
+						var href =$this.attr('href');
 						if(href && href !== '#'){
-							if(href.indexOf('~') === 0){
-								location.href = href.substr(1);
+							var confirmStr = $this.attr('confirm');
+							if(confirmStr){
+								require('dialog').confirm(confirmStr, function(yes){
+									if(yes) goPage($this, page);
+								});
 							}else{
-								goPage(this, page);
+								goPage($this, page);
 							}
 						}
 					}
@@ -84,7 +88,22 @@ define(function(require, exports, module){
 				}
 			}
 		}
-		targetPage.loadContent(href, title);
+		var formData = {};
+		if($(dom).is('.cpf-batch-checked')){
+			var batchRange = $(dom).attr('batch-range') || '';
+			$('.cpf-checkbox[name]' + batchRange, $(dom).getLocatePage().getContent()).each(function(){
+				var $checkbox = $(this),
+					name = $checkbox.attr('name');
+				if($checkbox.is('.checked') || $(':checkbox:checked', $checkbox).length === 1){
+					var l = formData[name];
+					if(!l){
+						formData[name] = l = [];
+					}
+					l.push($checkbox.attr('value'));
+				}
+			});
+		}
+		targetPage.loadContent(href, title, formData);
 		var tPageType = targetPage.getType();
 		if(tPageType === 'dialog'){
 			targetPage.getPageObj().show();

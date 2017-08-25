@@ -3,6 +3,7 @@ package cn.sowell.ddxyz.admin.controller.canteen;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -23,13 +24,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import cn.sowell.copframe.dto.ajax.AjaxPageResponse;
 import cn.sowell.copframe.dto.ajax.JsonResponse;
 import cn.sowell.copframe.dto.page.CommonPageInfo;
+import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.copframe.utils.date.FrameDateFormat;
 import cn.sowell.ddxyz.admin.AdminConstants;
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenOrderUpdateItem;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainCanteenOrder;
-import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenCriteria;
+import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenOrdersCriteria;
 import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenWeekTableCriteria;
 import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenDeliveryOrdersItem;
 import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenWeekTableItem;
@@ -56,7 +59,7 @@ public class AdminCanteenManageController {
 	CanteenService canteenService;
 	
 	
-	Logger logger;
+	Logger logger = Logger.getLogger(AdminCanteenManageController.class);
 	
 	
 	
@@ -76,10 +79,11 @@ public class AdminCanteenManageController {
 	
 	
 	@RequestMapping("/week_orders")
-	public String weekOrders(CanteenCriteria criteria, CommonPageInfo pageInfo, Model model){
+	public String weekOrders(CanteenOrdersCriteria criteria, CommonPageInfo pageInfo, Model model){
 		PlainDelivery delivery = canteenConfigService.getCanteenDelivery(criteria);
 		if(delivery != null){
-			List<CanteenDeliveryOrdersItem> items = canteenManageService.queryDeliveryOrderItems(delivery.getId(), pageInfo);
+			criteria.setDeliveryId(delivery.getId());
+			List<CanteenDeliveryOrdersItem> items = canteenManageService.queryDeliveryOrderItems(criteria, pageInfo);
 			model.addAttribute("orderItems", items);
 			Integer totalAmount = canteenManageService.amountDelivery(delivery.getId());
 			model.addAttribute("totalAmount", totalAmount);
@@ -87,19 +91,20 @@ public class AdminCanteenManageController {
 		model.addAttribute("delivery", delivery);
 		model.addAttribute("criteria", criteria);
 		model.addAttribute("pageInfo", pageInfo);
+		model.addAttribute("now", new Date());
 		return AdminConstants.PATH_CANTEEN + "/manage/canteen_week_orders.jsp";
 		
 	}
 	
 	@ResponseBody
-	@RequestMapping("/export_orders/{deliveryId}")
-	public ResponseEntity<byte[]> exportOrders(@PathVariable Long deliveryId){
+	@RequestMapping("/export_orders")
+	public ResponseEntity<byte[]> exportOrders(CanteenOrdersCriteria criteria){
 		//根据id获得配送对象
-		PlainDelivery delivery = canteenConfigService.getDelivery(deliveryId);
+		PlainDelivery delivery = canteenConfigService.getDelivery(criteria.getDeliveryId());
 		byte[] byteArray = null;
 		if(delivery != null){
 			//根据配送对象
-			List<CanteenDeliveryOrdersItem> items = canteenManageService.queryDeliveryOrderItems(delivery.getId(), null);
+			List<CanteenDeliveryOrdersItem> items = canteenManageService.queryDeliveryOrderItems(criteria, null);
 			//创建表格
 			Workbook workbook = new XSSFWorkbook();
 			Sheet sheet = workbook.createSheet();
@@ -128,14 +133,14 @@ public class AdminCanteenManageController {
 	}
 	
 	
-	@RequestMapping("/print_orders/{deliveryId}")
-	public String printOrdersPage(@PathVariable Long deliveryId, Model model){
+	@RequestMapping("/print_orders")
+	public String printOrdersPage(CanteenOrdersCriteria criteria, Model model){
 		//根据id获得配送对象
-		PlainDelivery delivery = canteenConfigService.getDelivery(deliveryId);
+		PlainDelivery delivery = canteenConfigService.getDelivery(criteria.getDeliveryId());
 		
 		if(delivery != null){
 			//根据配送对象
-			List<CanteenDeliveryOrdersItem> items = canteenManageService.queryDeliveryOrderItems(delivery.getId(), null);
+			List<CanteenDeliveryOrdersItem> items = canteenManageService.queryDeliveryOrderItems(criteria, null);
 			
 			model.addAttribute("delivery", delivery);
 			model.addAttribute("items", items);
@@ -160,16 +165,92 @@ public class AdminCanteenManageController {
 	
 	@ResponseBody
 	@RequestMapping("/order_tag_all")
-	public JsonResponse orderTagAll(@RequestParam Long deliveryId) {
+	public JsonResponse orderTagAll(CanteenOrdersCriteria criteria) {
 		JsonResponse jRes = new JsonResponse();
 		//根据id获得配送对象
-		PlainDelivery delivery = canteenConfigService.getDelivery(deliveryId);
+		PlainDelivery delivery = canteenConfigService.getDelivery(criteria.getDeliveryId());
 		if(delivery != null){
 			//根据配送对象
-			List<CanteenDeliveryOrdersItem> items = canteenManageService.queryDeliveryOrderItems(delivery.getId(), null);
+			List<CanteenDeliveryOrdersItem> items = canteenManageService.queryDeliveryOrderItems(criteria, null);
 			jRes.setJsonObject(canteenManageService.toOrderTagObject(items));
 		}
 		return jRes;
 	}
+	
+	
+	@ResponseBody
+	@RequestMapping("/complete_all")
+	public AjaxPageResponse completeAll(@RequestParam Long[] orderId){
+		try {
+			canteenManageService.completeOrders(Arrays.asList(orderId));
+			return AjaxPageResponse.REFRESH_LOCAL("操作成功");
+		} catch (Exception e) {
+			logger.error("操作订单完成时发生错误" + TextUtils.toString(orderId, ","), e);
+			return AjaxPageResponse.FAILD("操作失败");
+		}
+	}
+	@ResponseBody
+	@RequestMapping("/close_order/{orderId}")
+	public AjaxPageResponse closeOrder(@PathVariable Long orderId){
+		try {
+			canteenManageService.closeOrder(orderId);
+			return AjaxPageResponse.REFRESH_LOCAL("操作成功");
+		} catch (Exception e) {
+			logger.error("操作订单完成时发生错误" + orderId, e);
+			return AjaxPageResponse.FAILD("操作失败");
+		}
+	}
+
+	@ResponseBody
+	@RequestMapping("/miss_order/{orderId}")
+	public AjaxPageResponse setOrderMiss(@PathVariable Long orderId){
+		try {
+			canteenManageService.setOrderMiss(orderId);
+			return AjaxPageResponse.REFRESH_LOCAL("操作成功");
+		} catch (Exception e) {
+			logger.error("操作订单完成时发生错误" + orderId, e);
+			return AjaxPageResponse.FAILD("操作失败");
+		}
+	}
+	
+	
+	
+	@ResponseBody
+	@RequestMapping("/cancel_complete/{orderId}")
+	public AjaxPageResponse cancelComplete(@PathVariable Long orderId){
+		try {
+			canteenManageService.cancelComplete(orderId);
+			return AjaxPageResponse.REFRESH_LOCAL("操作成功");
+		} catch (Exception e) {
+			logger.error("操作订单完成时发生错误" + orderId, e);
+			return AjaxPageResponse.FAILD("操作失败");
+		}
+	}
+	@ResponseBody
+	@RequestMapping("/cancel_close/{orderId}")
+	public AjaxPageResponse cancelClose(@PathVariable Long orderId){
+		try {
+			canteenManageService.removeCanceled(orderId);
+			return AjaxPageResponse.REFRESH_LOCAL("操作成功");
+		} catch (Exception e) {
+			logger.error("操作订单完成时发生错误" + orderId, e);
+			return AjaxPageResponse.FAILD("操作失败");
+		}
+	}
+	@ResponseBody
+	@RequestMapping("/cancel_miss/{orderId}")
+	public AjaxPageResponse cancelMiss(@PathVariable Long orderId){
+		try {
+			canteenManageService.removeCanceled(orderId);
+			return AjaxPageResponse.REFRESH_LOCAL("操作成功");
+		} catch (Exception e) {
+			logger.error("操作订单完成时发生错误" + orderId, e);
+			return AjaxPageResponse.FAILD("操作失败");
+		}
+	}
+	
+	
+	
+	
 	
 }

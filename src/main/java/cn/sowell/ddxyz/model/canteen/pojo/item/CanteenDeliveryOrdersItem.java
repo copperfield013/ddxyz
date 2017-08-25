@@ -1,5 +1,6 @@
 package cn.sowell.ddxyz.model.canteen.pojo.item;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -25,6 +26,15 @@ public class CanteenDeliveryOrdersItem {
 	
 	@Column(name="c_comment")
 	private String comment;
+	
+	@Column(name="c_canceled_status")
+	private String cancelStatus;
+	
+	@Column(name="c_status")
+	private Integer status;
+	
+	@Column(name="create_time")
+	private Date createTime;
 	
 	private List<CanteenDeliveryOrderWaresItem> waresItemsList;
 	
@@ -76,6 +86,24 @@ public class CanteenDeliveryOrdersItem {
 	}
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+	public String getCancelStatus() {
+		return cancelStatus;
+	}
+	public void setCancelStatus(String cancelStatus) {
+		this.cancelStatus = cancelStatus;
+	}
+	public Integer getStatus() {
+		return status;
+	}
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+	public Date getCreateTime() {
+		return createTime;
+	}
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
 	}
 	
 }

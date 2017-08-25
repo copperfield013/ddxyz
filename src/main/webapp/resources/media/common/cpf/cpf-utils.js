@@ -1,5 +1,6 @@
 define(function(require, exports){
 	var CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
+	var SEQUENCE_MAP = {}
 	$.extend(exports, {
 		/**
 		 * 判断一个是否是整数
@@ -259,8 +260,21 @@ define(function(require, exports){
 				$(dom).attr('style', style);
 			}
 			return this;
+		},
+		/**
+		 * 自增序列
+		 * @param key 表示序列的键
+		 * @param key 序列的起始值，默认为0
+		 */
+		getNextSequence	: function(key, start){
+			key = key || 'DEFAULT_KEY';
+			var currentSeq = SEQUENCE_MAP[key];
+			if(!currentSql){
+				currentSeq = exports.isInteger(start)? parseInt(start): 0;
+			}
+			SEQUENCE_MAP[key] = currentSeq + 1;
+			return currentSeq;
 		}
-		
 	});
 	
 	function returnTrue(){return true;}

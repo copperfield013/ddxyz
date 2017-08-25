@@ -3,6 +3,7 @@ package cn.sowell.ddxyz.model.canteen.dao;
 import java.util.List;
 
 import cn.sowell.copframe.dto.page.CommonPageInfo;
+import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenOrdersCriteria;
 import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenWeekTableCriteria;
 import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenDeliveryOrdersItem;
 import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenWeekTableItem;
@@ -22,11 +23,11 @@ public interface CanteenManageDao {
 
 	/**
 	 * 查询配送的所有订单
-	 * @param deliveryId
+	 * @param criteria
 	 * @param pageInfo
 	 * @return
 	 */
-	List<CanteenDeliveryOrdersItem> queryDeliveryOrderItems(long deliveryId,
+	List<CanteenDeliveryOrdersItem> queryDeliveryOrderItems(CanteenOrdersCriteria criteria,
 			CommonPageInfo pageInfo);
 
 	/**
@@ -36,4 +37,31 @@ public interface CanteenManageDao {
 	 */
 	Integer amountDelivery(long deliveryId);
 
+	/**
+	 * 将所有没有被取消的订单的状态更改为已完成
+	 * @param orderIds
+	 */
+	void setOrderStatus(List<Long> orderIds, int orderStatus);
+
+	/**
+	 * 将所有没有被取消的产品的状态修改为已完成
+	 * @param orderIds
+	 */
+	void setOrderProductsStatus(List<Long> orderIds, int productStatus);
+
+	/**
+	 * 移除订单的取消状态
+	 * @param orderId
+	 * @param cancelStatus 
+	 */
+	void setOrderCancelStatus(Long orderId, String cancelStatus);
+
+	/**
+	 * 移除订单的所有产品的取消状态
+	 * @param orderId
+	 * @param cancelStatus 
+	 */
+	void setOrderProductsCancelStatus(Long orderId, String cancelStatus);
+
+	
 }

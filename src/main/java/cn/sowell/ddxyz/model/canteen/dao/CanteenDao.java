@@ -16,7 +16,6 @@ import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlanWares;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryWares;
 import cn.sowell.ddxyz.model.common.pojo.PlainOrder;
 import cn.sowell.ddxyz.model.common.pojo.PlainProduct;
-import cn.sowell.ddxyz.model.common2.core.OrderResourceApplyException;
 import cn.sowell.ddxyz.model.wares.pojo.PlainWares;
 
 public interface CanteenDao {
@@ -98,14 +97,6 @@ public interface CanteenDao {
 	void deleteProducts(List<Long> delList);
 	
 	
-	/**
-	 * 获得商品配送的余量，返回null时表示该商品不限量
-	 * @param dWaresId
-	 * @return
-	 * @throws OrderResourceApplyException 当dWaresId对应的商品配送信息不存在时，抛出异常 
-	 */
-	Integer getDeliveryWaresRemain(long dWaresId) throws OrderResourceApplyException;
-
 	/**
 	 * 添加商品配送的产品到指定的订单
 	 * @param orderId

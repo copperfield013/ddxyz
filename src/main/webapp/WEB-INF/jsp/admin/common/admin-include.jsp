@@ -5,7 +5,7 @@
 <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
 
 <!--Basic Styles-->
-<link href="media/admin/plugins/beyond/css/bootstrap.min.css" rel="stylesheet" />
+<link href="media/admin/plugins/beyond/css/bootstrap.css" rel="stylesheet" />
 <link href="media/admin/plugins/beyond/css/font-awesome.min.css" rel="stylesheet" />
 
 <!--Beyond styles-->

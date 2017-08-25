@@ -19,6 +19,8 @@ public interface DdxyzConstants {
 	
 	final long CANTEEN_MERCHANT_ID = 2;
 	
+	final String ROLE_CANTEEN = "ROLE_CANTEEN";
+	
 	//新订单信息类型，用于在用户付款成功后，系统给商户客服发送微信消息
 	final String MSGTYPE_NEWORDER = "new_order";
 	
@@ -98,6 +100,7 @@ public interface DdxyzConstants {
 			put(Product.CAN_STATUS_ORDER_REFUND, "已退款");
 		}
 	};
+	final String ROLE_WXUSER = "ROLE_WXUSER";
 	
 	
 }

@@ -191,6 +191,11 @@ public interface Product {
 	final String CAN_STATUS_ORDER_REFUND = "refund";
 	
 	/**
+	 * 客户没有如期过来领取商品
+	 */
+	final String CAN_STATUS_ORDER_MISS = "miss";
+	
+	/**
 	 * 检查产品能否更改为状态toStatus
 	 * @param product
 	 * @param toStatus 如果为默认状态或者未知状态，返回false

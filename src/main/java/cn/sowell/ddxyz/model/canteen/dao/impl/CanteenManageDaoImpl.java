@@ -1,6 +1,8 @@
 package cn.sowell.ddxyz.model.canteen.dao.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -10,9 +12,12 @@ import javax.annotation.Resource;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.type.StandardBasicTypes;
 import org.springframework.stereotype.Repository;
 
+import cn.sowell.copframe.dao.deferedQuery.ConditionSnippet;
 import cn.sowell.copframe.dao.deferedQuery.DeferedParamQuery;
+import cn.sowell.copframe.dao.deferedQuery.DeferedParamSnippet;
 import cn.sowell.copframe.dao.deferedQuery.HibernateRefrectResultTransformer;
 import cn.sowell.copframe.dao.deferedQuery.sqlFunc.WrapForCountFunction;
 import cn.sowell.copframe.dao.utils.QueryUtils;
@@ -20,10 +25,12 @@ import cn.sowell.copframe.dto.page.CommonPageInfo;
 import cn.sowell.copframe.utils.CollectionUtils;
 import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.ddxyz.model.canteen.dao.CanteenManageDao;
+import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenOrdersCriteria;
 import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenWeekTableCriteria;
 import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenDeliveryOrderWaresItem;
 import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenDeliveryOrdersItem;
 import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenWeekTableItem;
+import cn.sowell.ddxyz.model.common.core.Order;
 
 @Repository
 public class CanteenManageDaoImpl implements CanteenManageDao{
@@ -79,7 +86,7 @@ public class CanteenManageDaoImpl implements CanteenManageDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CanteenDeliveryOrdersItem> queryDeliveryOrderItems(
-			long deliveryId, CommonPageInfo pageInfo) {
+			CanteenOrdersCriteria criteria, CommonPageInfo pageInfo) {
 		String sql = 
 				"	select " +
 				"	co.order_id," +
@@ -88,14 +95,22 @@ public class CanteenManageDaoImpl implements CanteenManageDao{
 				"	co.c_depart," +
 				"	ob.c_receiver_contact," +
 				"	ob.c_total_price," +
+				"	ob.c_canceled_status," +
+				"	ob.c_status," +
+				"	ob.create_time," +
 				"	ob.c_comment" +
 				"	from t_canteen_order co " +
 				"	left join t_order_base ob on co.order_id = ob.id" +
-				"	where ob.delivery_id = :deliveryId and ob.c_canceled_status is null" +
+				/*"	where ob.delivery_id = :deliveryId and (ob.c_canceled_status is null or ob.c_canceled_status in (:showCancelStatus))" +*/
+				"	where ob.delivery_id = :deliveryId and (@containsCondition)" +
 				"	order by co.c_depart asc, ob.create_time desc";
 		
 		DeferedParamQuery dQuery = new DeferedParamQuery(sql);
-		dQuery.setParam("deliveryId", deliveryId);
+		dQuery.setParam("deliveryId", criteria.getDeliveryId());
+		/*dQuery.setParam("showCancelStatus", Arrays.asList(Order.CAN_STATUS_CLOSED, Order.CAN_STATUS_MISS));*/
+		DeferedParamSnippet snippet = dQuery.createSnippet("containsCondition", null);
+		appendContainsSQL(snippet, criteria).forEach((key, val)->dQuery.setParam(key, val));;
+		
 		
 		Session session = sFactory.getCurrentSession();
 		SQLQuery countQuery = dQuery.createSQLQuery(session, false, new WrapForCountFunction());
@@ -124,6 +139,42 @@ public class CanteenManageDaoImpl implements CanteenManageDao{
 		
 	}
 
+	private Map<String, Object> appendContainsSQL(DeferedParamSnippet snippet, CanteenOrdersCriteria criteria) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		snippet.append("ob.c_canceled_status is null and (");
+		if(criteria.getContainsDefault()){
+			snippet.append("ob.c_status = :defaultStatus");
+		}else{
+			snippet.append("ob.c_status <> :defaultStatus");
+		}
+		if(criteria.getContainsCompleted()){
+			snippet.append("or ob.c_status = :completedStatus");
+		}else{
+			snippet.append("and ob.c_status <> :completedStatus");
+		}
+		snippet.append(")");
+		
+		map.put("defaultStatus", Order.STATUS_DEFAULT);
+		map.put("completedStatus", Order.STATUS_COMPLETED);
+		
+		if(criteria.getContainsClosed()){
+			snippet.append("or ob.c_canceled_status = :closedStatus");
+			map.put("closedStatus", Order.CAN_STATUS_CLOSED);
+		}
+		if(criteria.getContainsCanceled()){
+			snippet.append("or ob.c_canceled_status = :canceledStatus");
+			map.put("canceledStatus", Order.CAN_STATUS_CANCELED);
+		}
+		if(criteria.getContainsMiss()){
+			snippet.append("or ob.c_canceled_status = :missStatus");
+			map.put("missStatus", Order.CAN_STATUS_MISS);
+		}
+		
+		
+		return map;
+	}
+
 	@SuppressWarnings("unchecked")
 	private List<CanteenDeliveryOrderWaresItem> getOrderWaresItemList(
 			Set<Long> orderIdSet) {
@@ -146,5 +197,44 @@ public class CanteenManageDaoImpl implements CanteenManageDao{
 		query.setLong("deliveryId", deliveryId);
 		return FormatUtils.toInteger(query.uniqueResult());
 	}
+	
+	
+	@Override
+	public void setOrderStatus(List<Long> orderIds, int orderStatus) {
+		String sql = "update t_order_base set c_status = :status where c_canceled_status is null and id in (:orderIds)";
+		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
+		query.setInteger("status", orderStatus);
+		query.setParameterList("orderIds", orderIds);
+		query.executeUpdate();
+	}
+	
+	@Override
+	public void setOrderProductsStatus(List<Long> orderIds, int productStatus) {
+		String sql = "update t_product_base set c_status = :status where c_canceled_status is null and order_id in (:orderIds)";
+		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
+		query.setInteger("status", productStatus);
+		query.setParameterList("orderIds", orderIds);
+		query.executeUpdate();
+	}
+	
+	@Override
+	public void setOrderCancelStatus(Long orderId, String cancelStatus) {
+		String sql = "update t_order_base set c_canceled_status = :cancelStatus where id = :orderId";
+		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
+		query.setLong("orderId", orderId);
+		query.setParameter("cancelStatus", cancelStatus, StandardBasicTypes.STRING);
+		query.executeUpdate();
+	}
+	
+	@Override
+	public void setOrderProductsCancelStatus(Long orderId, String cancelStatus) {
+		String sql = "update t_product_base set c_canceled_status = :cancelStatus where order_id = :orderId";
+		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
+		query.setLong("orderId", orderId);
+		query.setParameter("cancelStatus", cancelStatus, StandardBasicTypes.STRING);
+		query.executeUpdate();
+	}
+	
+	
 	
 }

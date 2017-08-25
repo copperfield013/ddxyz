@@ -14,6 +14,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.annotation.Resource;
+import javax.annotation.security.RolesAllowed;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,8 @@ import cn.sowell.copframe.dto.page.CommonPageInfo;
 import cn.sowell.copframe.utils.Assert;
 import cn.sowell.copframe.utils.CollectionUtils;
 import cn.sowell.copframe.utils.TextUtils;
+import cn.sowell.copframe.weixin.common.utils.WxUtils;
+import cn.sowell.ddxyz.DdxyzConstants;
 import cn.sowell.ddxyz.model.canteen.dao.CanteenDao;
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenDelivery;
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenDeliveyWares;
@@ -45,7 +48,6 @@ import cn.sowell.ddxyz.model.common2.core.C2OrderResource;
 import cn.sowell.ddxyz.model.common2.core.OrderOperateException;
 import cn.sowell.ddxyz.model.common2.core.OrderResourceApplyException;
 import cn.sowell.ddxyz.model.wares.pojo.PlainWares;
-import cn.sowell.ddxyz.model.weixin.pojo.WeiXinUser;
 
 @Service
 public class CanteenServiceImpl implements CanteenService {
@@ -217,6 +219,31 @@ public class CanteenServiceImpl implements CanteenService {
 		return buffer.toString();
 	}
 
+	
+	@Override
+	public synchronized C2OrderResource reapplyOrderResource(PlainCanteenOrder cOrder) throws OrderResourceApplyException{
+		Assert.notNull(cOrder);
+		Assert.notNull(cOrder.getpOrder());
+		PlainOrder pOrder = cOrder.getpOrder();
+		CanteenOrderParameter coParam = new CanteenOrderParameter();
+		coParam.setDeliveryId(pOrder.getDeliveryId());
+		coParam.setUserId(pOrder.getOrderUserId());
+		coParam.setReceiverName(pOrder.getReceiverName());
+		coParam.setDepart(coParam.getDepart());
+		List<CanteenOrderItem> orderItems = new ArrayList<CanteenOrderItem>();
+		coParam.setOrderItems(orderItems);
+		
+		List<CanteenOrderUpdateItem> orderItems2 = getOrderItems(pOrder.getId());
+		for (CanteenOrderUpdateItem uOrderItem : orderItems2) {
+			CanteenOrderItem orderItem = new CanteenOrderItem();
+			orderItem.setDeliveryWaresId(uOrderItem.getdWaresId());
+			orderItem.setCount(uOrderItem.getCount());
+			orderItems.add(orderItem);
+		}
+		return applyForOrderResource(coParam);
+	}
+	
+	
 	private synchronized C2OrderResource applyForOrderResource(CanteenOrderParameter coParam) throws OrderResourceApplyException{
 		PlainDelivery delivery = cDao.getDelivery(coParam.getDeliveryId());
 		if(delivery == null){
@@ -457,15 +484,16 @@ public class CanteenServiceImpl implements CanteenService {
 	 * @throws OrderResourceApplyException 
 	 */
 	private synchronized void applyResource(long dWaresId, int count) throws OrderResourceApplyException {
-		//获得余量
-		Integer remain = cDao.getDeliveryWaresRemain(dWaresId);
+		PlainDeliveryWares dWares = cDao.getDeliveryWare(dWaresId);
 		
-		if(remain != null){
-			if(remain > count){
-				cDao.addCurrentCount(dWaresId, count);
-			}else{
-				throw new OrderResourceApplyException("资源不足", remain, count);
+		if(dWares != null){
+			if(dWares.getMaxCount() != null){
+				int remain = dWares.getMaxCount() - dWares.getCurrentCount();
+				if(remain < count){
+					throw new OrderResourceApplyException("资源不足", remain, count);
+				}
 			}
+			cDao.addCurrentCount(dWaresId, count);
 		}
 	}
 	
@@ -491,38 +519,46 @@ public class CanteenServiceImpl implements CanteenService {
 		return result;
 	}
 
+	@RolesAllowed({DdxyzConstants.ROLE_WXUSER})
 	@Override
-	public void cancelOrder(WeiXinUser operateUser, Long orderId) throws OrderOperateException, OrderResourceApplyException {
+	public void cancelUserOrder(Long orderId, String toCancelStatus) throws OrderOperateException, OrderResourceApplyException{
+		Assert.notNull(toCancelStatus);
 		PlainCanteenOrder order = getCanteenOrder(orderId);
 		if(order != null){
+			UserIdentifier user = WxUtils.getCurrentUser(UserIdentifier.class);
+			if(!order.getpOrder().getOrderUserId().equals(user.getId())){
+				throw new OrderOperateException("只能由订单创建用户来取消订单");
+			}
 			PlainDelivery delivery = cDao.getDelivery(order.getpOrder().getDeliveryId());
 			if(delivery != null){
 				if(checkDeliveryOrderOvertime(delivery, new Date())){
 					throw new OrderOperateException("超过当前下单时间，不能取消");
 				}
 			}
-			
 			String cancelStatus = order.getpOrder().getCanceledStatus();
 			if(cancelStatus != null){
 				throw new OrderOperateException("订单[" + orderId + "]已经被取消，取消状态为[" + cancelStatus + "]");
 			}
-			if(!operateUser.getId().equals(order.getpOrder().getOrderUserId())){
-				throw new OrderOperateException("订单[" + orderId + "]的下单用户[" + order.getpOrder().getOrderUserId() + "]与当前取消的用户[" + operateUser.getId() + "]不符");
-			}
-			//订单当前必须
-			cDao.setOrderCanceled(orderId, Order.CAN_STATUS_CANCELED);
-			//释放资源
-			//根据订单id获得系统内订单的所有产品的idmap，key是配送产品的id
-			Map<Long, List<Long>> dWaresProductIdMap = cDao.getDeliveryWaresProductIdsMap(orderId);
-			HashSet<Long> cancelProductIds = new HashSet<Long>();
-			for (Entry<Long, List<Long>> entry : dWaresProductIdMap.entrySet()) {
-				cancelProductIds.addAll(entry.getValue());
-				applyResource(entry.getKey(), -entry.getValue().size());
-			}
-			cDao.setProductCalceled(cancelProductIds);
+			cancelOrder(orderId, toCancelStatus);
 		}else{
 			throw new OrderOperateException("订单[id=" + orderId + "]不存在");
 		}
+	}
+	
+	@RolesAllowed({DdxyzConstants.ROLE_CANTEEN, DdxyzConstants.ROLE_WXUSER}) 
+	@Override
+	public void cancelOrder(Long orderId, String toCancelStatus) throws OrderResourceApplyException {
+		//数据库修改订单取消状态
+		cDao.setOrderCanceled(orderId, toCancelStatus);
+		//释放资源
+		//根据订单id获得系统内订单的所有产品的idmap，key是配送产品的id
+		Map<Long, List<Long>> dWaresProductIdMap = cDao.getDeliveryWaresProductIdsMap(orderId);
+		HashSet<Long> cancelProductIds = new HashSet<Long>();
+		for (Entry<Long, List<Long>> entry : dWaresProductIdMap.entrySet()) {
+			cancelProductIds.addAll(entry.getValue());
+			applyResource(entry.getKey(), -entry.getValue().size());
+		}
+		cDao.setProductCalceled(cancelProductIds);
 	}
 	
 	@Override
