@@ -12,9 +12,9 @@
 				<th>序号</th>
 				<th>头像</th>
 				<th>昵称</th>
-				<th>备注名</th>
-				<th>居住城市</th>
 				<th>性别</th>
+				<th>居住城市</th>
+				<th>备注名</th>
 				<th>关注时间</th>
 				<th>操作</th>
 			</tr>
@@ -29,19 +29,6 @@
 					<td>${fans.nickname }</td>
 					<td>
 						<c:choose>
-							<c:when test="${empty fans.remark  }">
-								-
-							</c:when>
-							<c:otherwise>
-								${fans.remark }
-							</c:otherwise>
-						</c:choose>
-					</td>
-					<td>
-						${fans.country }-${fans.province }-${fans.city }
-					</td>
-					<td>
-						<c:choose>
 							<c:when test="${fans.sex == 1 }">
 								男
 							</c:when>
@@ -50,6 +37,19 @@
 							</c:when>
 							<c:otherwise>
 								未知
+							</c:otherwise>
+						</c:choose>
+					</td>
+					<td>
+						${fans.country }-${fans.province }-${fans.city }
+					</td>
+					<td>
+						<c:choose>
+							<c:when test="${empty fans.remark  }">
+								-
+							</c:when>
+							<c:otherwise>
+								${fans.remark }
 							</c:otherwise>
 						</c:choose>
 					</td>
