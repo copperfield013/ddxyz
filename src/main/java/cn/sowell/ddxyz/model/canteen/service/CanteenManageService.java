@@ -7,6 +7,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import com.alibaba.fastjson.JSONObject;
 
 import cn.sowell.copframe.dto.page.CommonPageInfo;
+import cn.sowell.ddxyz.admin.controller.canteen.PlainCanteenOrderStat;
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenOrderUpdateItem;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainCanteenOrder;
 import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenCriteria;
@@ -101,4 +102,18 @@ public interface CanteenManageService {
 	 * @param orderId
 	 */
 	void setOrderMiss(Long orderId);
+
+	/**
+	 * 配送的统计情况
+	 * @param deliveryId
+	 * @return
+	 */
+	PlainCanteenOrderStat statDelivery(Long deliveryId);
+
+	/**
+	 * 完成分发的所有未完成的订单
+	 * @param deliveryId
+	 * @return 修改的订单数量
+	 */
+	int completeOrders(Long deliveryId);
 }

@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import cn.sowell.copframe.dto.page.CommonPageInfo;
 import cn.sowell.copframe.utils.CollectionUtils;
 import cn.sowell.copframe.utils.TextUtils;
+import cn.sowell.ddxyz.admin.controller.canteen.PlainCanteenOrderStat;
 import cn.sowell.ddxyz.model.canteen.dao.CanteenManageDao;
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenOrderUpdateItem;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainCanteenOrder;
@@ -215,4 +216,22 @@ public class CanteenManageServiceImpl implements CanteenManageService{
 		}
 	}
 
+	@Override
+	public PlainCanteenOrderStat statDelivery(Long deliveryId) {
+		PlainCanteenOrderStat stat = new PlainCanteenOrderStat();
+		stat.setTotalCount(manageDao.getTotalOrderCount(deliveryId));
+		stat.setEffective(manageDao.getEffectiveOrderCount(deliveryId));
+		stat.setCompleted(manageDao.getCompletedOrderCount(deliveryId));
+		stat.setMissed(manageDao.getMissedOrderCount(deliveryId));
+		stat.setCanceled(manageDao.getCanceledOrderCount(deliveryId));
+		stat.setClosed(manageDao.getClosedOrderCount(deliveryId));
+		return stat;
+	}
+	
+	
+	@Override
+	public int completeOrders(Long deliveryId) {
+		return manageDao.completeOrders(deliveryId);
+	}
+	
 }

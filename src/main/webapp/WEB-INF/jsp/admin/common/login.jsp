@@ -63,8 +63,10 @@
 			}
 			
 			div.Z-loginbox > div.loginbox-logo >img {
-			    width:7.64em;
-			    height:4.71em;
+			    /* width:7.64em;
+			    height:4.71em; */
+			   	width:15em;
+			    height:6em;
 			}
 			div.warn-warp {
 				width:100%;
@@ -91,7 +93,8 @@
 			    width:100%;
 			    outline: none;
 			    background-clip: padding-box;
-			    border:1px solid #044d22;
+			    /* border:1px solid #044d22; */
+			    border:1px solid #663300;
 			    border-radius: 0.21em;
 			    background-color: #fbfbfb;
 			    padding: 0.43em 0.86em;
@@ -106,7 +109,8 @@
 			    display: block;
 			    width:100%;
 			    font-size:18px;
-			    background-color:#044d22;
+			    /* background-color:#044d22; */
+			    background-color:#663300;
 			    outline: none;
 			    text-align: center;
 			    height:2.6em;
@@ -125,7 +129,8 @@
     			<div class="Z-loginbox">
     	    		
         			<div class="loginbox-logo">
-            			<img src="media/common/ydd/image/ydd-logo.png"/>
+        				<img src="media/admin/main/image/canteen-login.png" />
+            			<!-- <img src="media/common/ydd/image/ydd-logo.png"/> -->
         			</div>
         			<div class="warn-warp">
 	        			<c:if test="${error != null }">

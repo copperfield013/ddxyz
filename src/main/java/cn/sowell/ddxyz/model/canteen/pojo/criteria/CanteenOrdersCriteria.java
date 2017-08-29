@@ -4,10 +4,13 @@ public class CanteenOrdersCriteria extends CanteenCriteria{
 	private Long deliveryId;
 	
 	private boolean containsDefault = true;
-	private boolean containsCompleted = true;
+	private boolean containsCompleted = false;
 	private boolean containsClosed = false;
 	private boolean containsCanceled = false;
 	private boolean containsMiss = false;
+	
+	
+	private String keyword;
 	
 	public boolean getContainsDefault() {
 		return containsDefault;
@@ -55,5 +58,13 @@ public class CanteenOrdersCriteria extends CanteenCriteria{
 
 	public void setDeliveryId(Long deliveryId) {
 		this.deliveryId = deliveryId;
+	}
+
+	public String getKeyword() {
+		return keyword;
+	}
+
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
 	}
 }

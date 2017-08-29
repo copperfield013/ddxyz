@@ -26,6 +26,7 @@ import cn.sowell.ddxyz.admin.AdminConstants;
 import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenWeekDeliveryCriteria;
 import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenWeekDeliveryWaresItem;
 import cn.sowell.ddxyz.model.canteen.service.CanteenDeliveryService;
+import cn.sowell.ddxyz.model.canteen.service.CanteenManageService;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryWares;
 import cn.sowell.ddxyz.model.common.pojo.PlainLocation;
@@ -43,6 +44,9 @@ public class AdminCanteenDeliveryController {
 	
 	@Resource
 	FrameDateFormat dateFormat;
+
+	@Resource
+	CanteenManageService canteenManageService;
 	
 	@RequestMapping("/week_delivery")
 	public String weekDelivery(CanteenWeekDeliveryCriteria criteria, Model model) {
@@ -50,6 +54,10 @@ public class AdminCanteenDeliveryController {
 		if(delivery != null){
 			List<CanteenWeekDeliveryWaresItem> items = deliveryService.getCanteenDeliveryWaresItems(delivery.getId());
 			model.addAttribute("deliveryWaresItems", items);
+			Integer totalAmount = canteenManageService.amountDelivery(delivery.getId());
+			model.addAttribute("totalAmount", totalAmount);
+			PlainCanteenOrderStat stat = canteenManageService.statDelivery(delivery.getId());
+			model.addAttribute("stat", stat);
 		}
 		model.addAttribute("delivery", delivery);
 		model.addAttribute("criteria", criteria);

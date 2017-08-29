@@ -27,7 +27,8 @@
 	                <div class="navbar-header pull-left">
 	                    <a href="admin/logout" class="navbar-brand">
 	                        <small>
-	                            <img src="media/admin/main/image/ydd-logo.png" alt="" />
+	                            <!-- <img src="media/admin/main/image/ydd-logo.png" alt="" /> -->
+	                            <img src="media/admin/main/image/canteen-logo.png" alt="" />
 	                        </small>
 	                    </a>
 	                </div>
@@ -184,11 +185,6 @@
 		                        	<li>
 				                        <a href="admin/canteen/delivery/week_delivery" class="tab" target="canteen-week-delivery" title="本周产品">
 											<span class="menu-text">本周产品</span>
-				                        </a>
-			                        </li>
-		                        	<li>
-				                        <a href="admin/canteen/manage/week_table" class="tab" target="canteen-week-table" title="订单周表">
-											<span class="menu-text">订单周表</span>
 				                        </a>
 			                        </li>
 		                        	<li>

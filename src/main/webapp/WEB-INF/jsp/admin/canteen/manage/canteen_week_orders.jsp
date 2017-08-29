@@ -32,6 +32,17 @@
 	#canteen-week-orders tr.order-miss{
 		color: #EEC900;
 	}
+	#canteen-week-orders .fa-btn{
+		margin-right: 0.3em;
+		cursor: pointer;
+		font-size: 1.1em;
+	}
+	#canteen-week-orders .fa-btn:HOVER{
+		color: #ccc;
+	}
+	#canteen-week-orders .operate-cell span{
+		color: #9f9f9f;
+	}
 </style>
 <nav style="padding: 1em 0" id="canteen-week-orders">
 	<form class="form-inline" action="admin/canteen/manage/week_orders" >
@@ -75,8 +86,32 @@
 								<div class="col-lg-8 "><fmt:formatNumber value="${totalAmount /100 }" pattern="0.00" />元</div>
 							</div>
 							<div class="row delivery-row">
-								<label class="col-lg-4 ">完成/取消/未领取/总订单数：</label>
-								<div class="col-lg-8 ">100/20/10/130</div>
+								<label class="col-lg-3">待完成：</label>
+								<div class="col-lg-3">
+									${stat.effective }
+									<c:if test="${stat.effective > 0 }">
+										<i class="fa fa-mail-reply-all fa-btn" 
+											id="batch-complete-all" title="完成所有订单"
+											confirm="是否完成本次分发所有待完成的订单(${stat.effective }个订单)？" 
+											href="admin/canteen/manage/batch_complete_orders/${delivery.id }"
+											style="margin-left: 0.3em; margin-right: 0;"></i>
+									</c:if>
+								</div>
+								<label class="col-lg-3">总订单：</label>
+								<div class="col-lg-3">${stat.totalCount }</div>
+							</div>
+							<div class="row delivery-row">
+								<label class="col-lg-3">已完成：</label>
+								<div class="col-lg-3">${stat.completed }</div>
+								<label class="col-lg-3">未领取：</label>
+								<div class="col-lg-3">${stat.missed }</div>
+							</div>
+							
+							<div class="row delivery-row">
+								<label class="col-lg-3">已关闭：</label>
+								<div class="col-lg-3 ">${stat.closed }</div>
+								<label class="col-lg-3">已取消：</label>
+								<div class="col-lg-3">${stat.canceled }</div>
 							</div>
 							<c:if test="${now.time >= delivery.claimEndTime.time }">
 								<div class="row delivery-row">
@@ -102,24 +137,18 @@
 					<div class="panel-heading">
 						<h3 class="panel-title">
 							订单列表
-							<!-- <span class="head-operate">
-								<a class="btn btn-xs btn-info cpf-check-all">全选</a>
-								<a class="btn btn-xs btn-info cpf-check-all" cpf-checked="false">取消全选</a>
-								<a class="btn btn-xs btn-info cpf-batch-checked" confirm="确认完成勾选的所有订单？" href="admin/canteen/manage/complete_all">勾选订单完成</a>
-								<a id="print-all" class="btn btn-xs btn-info" href="#">打印标签</a>
-								<a id="print-orders" class="btn btn-xs btn-info" href="#">打印全部</a>
-								<a id="export" class="btn btn-xs btn-info " href="#">导出</a>
-							</span> -->
 							<span class="widget-buttons head-operate">
 								<span class="input-icon" style="top:-3px">
-									<input type="text" class="form-control input-xs" id="glyphicon-search" placeholder="关键字">
+									<input type="text" class="form-control input-xs" id="keyword" name="keyword" value="${criteria.keyword }" placeholder="部门或姓名或手机号">
 									<i class="glyphicon glyphicon-search blue"></i>
 								</span>
 							</span>
 							<span class="head-operate">
+								<i class="fa fa-print fa-btn" id="print-btn" title="打印所有"></i>
+								<i class="fa fa-download fa-btn" id="download-btn" title="导出" style="margin-right: 1em;"></i>
 								<span name="containsDefault" value="true" class="contains-checkbox cpf-checkbox cpf-checkbox-xs ${criteria.containsDefault? 'checked': '' }">未完成</span>
 								<span name="containsCompleted" value="true" class="contains-checkbox cpf-checkbox cpf-checkbox-xs ${criteria.containsCompleted? 'checked': '' }" >已完成</span>
-								<span name="containsClosed" value="true" class="contains-checkbox cpf-checkbox cpf-checkbox-xs ${criteria.containsClosed? 'checked': '' }" >关闭</span>
+								<span name="containsClosed" value="true" class="contains-checkbox cpf-checkbox cpf-checkbox-xs ${criteria.containsClosed? 'checked': '' }" >已关闭</span>
 								<span name="containsCanceled" value="true" class="contains-checkbox cpf-checkbox cpf-checkbox-xs ${criteria.containsCanceled? 'checked': '' }" >用户取消</span>
 								<span name="containsMiss" value="true" class="contains-checkbox cpf-checkbox cpf-checkbox-xs ${criteria.containsMiss? 'checked': '' }" >未领取</span>
 							</span>
@@ -130,11 +159,11 @@
 						<table class="table">
 							<thead>
 								<tr>
-									<th width="8%">序号</th>
+									<th width="10%">序号</th>
 									<th width="10%">领取人</th>
 									<th width="10%">部门</th>
 									<th width="12%">手机号</th>
-									<th width="23%">订单明细</th>
+									<th width="21%">订单明细</th>
 									<th width="13%">应收款</th>
 									<th width="12%">下单时间</th>
 									<th width="12%">操作</th>
@@ -165,32 +194,39 @@
 										</td>
 										<td><fmt:formatNumber value="${item.totalPrice / 100 }" pattern="0.00" />元</td>
 										<td><fmt:formatDate value="${item.createTime }" pattern="yyyy-MM-dd HH:mm:ss" /> </td>
-										<td>
-											<c:if test="${itemStatus != 'canceled' }">
-												<c:choose>
-													<c:when test="${itemStatus == 'ordered' && now.time < delivery.claimEndTime.time}">
-														<a confirm="确认关闭订单？" href="admin/canteen/manage/close_order/${item.orderId }">关闭订单</a>
-														<br/>
-													</c:when>
-													<c:when test="${itemStatus == 'ordered' && now.time >= delivery.claimEndTime.time}">
-														<a confirm="确认将订单状态设置为未领取？" href="admin/canteen/manage/miss_order/${item.orderId }">设为未领取</a>
-														<br/>
-													</c:when>
-													<c:when test="${itemStatus == 'completed' }">
-														<a confirm="确认取消订单的完成状态？" href="admin/canteen/manage/cancel_complete/${item.orderId }">取消完成</a>
-														<br/>
-													</c:when>
-													<c:when test="${itemStatus == 'closed' }">
-														<a confirm="确认取消订单的关闭状态？" href="admin/canteen/manage/cancel_close/${item.orderId }">取消关闭</a>
-														<br/>
-													</c:when>
-													<c:when test="${itemStatus == 'miss' }">
-														<a confirm="确认取消订单的未领取状态？" href="admin/canteen/manage/cancel_miss/${item.orderId }">取消未领取</a>
-														<br/>
-													</c:when>
-												</c:choose>
-												<a class="print-order-tag" href="#">打印</a>
-											</c:if>
+										<td class="operate-cell">
+											<c:choose>
+												<c:when test="${itemStatus == 'ordered' && now.time < delivery.claimEndTime.time}">
+													<span>未完成</span><br/>
+													<a confirm="确认关闭订单？" href="admin/canteen/manage/close_order/${item.orderId }">关闭订单</a>
+													<br/>
+												</c:when>
+												<c:when test="${itemStatus == 'ordered' && now.time >= delivery.claimEndTime.time}">
+													<span>未完成</span><br/>
+													<a confirm="确认订单已完成？" href="admin/canteen/manage/complete_order/${item.orderId }">完成订单</a><br/>
+													<a confirm="确认将订单状态设置为未领取？" href="admin/canteen/manage/miss_order/${item.orderId }">设为未领取</a>
+													<br/>
+												</c:when>
+												<c:when test="${itemStatus == 'completed' }">
+													<span>已完成</span><br/>
+													<a confirm="确认取消订单的完成状态？" href="admin/canteen/manage/cancel_complete/${item.orderId }">取消完成</a>
+													<br/>
+												</c:when>
+												<c:when test="${itemStatus == 'closed' }">
+													<span>已关闭</span><br/>
+													<a confirm="确认取消订单的关闭状态？" href="admin/canteen/manage/cancel_close/${item.orderId }">取消关闭</a>
+													<br/>
+												</c:when>
+												<c:when test="${itemStatus == 'miss' }">
+													<span>未领取</span><br/>
+													<a confirm="确认取消订单的未领取状态？" href="admin/canteen/manage/cancel_miss/${item.orderId }">取消未领取</a>
+													<br/>
+												</c:when>
+												<c:when test="${itemStatus == 'canceled' }">
+													<span>已取消</span>
+												</c:when>
+											</c:choose>
+											<!-- <a class="print-order-tag" href="#">打印</a> -->
 										</td>
 									</tr>
 								</c:forEach>
@@ -251,7 +287,6 @@
 	$(function(){
 		seajs.use(['ajax', 'dialog', 'utils'], function(Ajax, Dialog, utils){
 			var $page = $('#canteen-week-orders');
-			console.log($page);
 			$('#selectDate', $page).datepicker({
 				format		: 'yyyy-mm-dd',
 				weekStart	: 1,
@@ -259,20 +294,39 @@
                 monthNames : [ '一月', '二月', '三月', '四月', '五月', '六月',  
                         '七月', '八月', '九月', '十月', '十一月', '十二月' ]
 			});
-			$('form', $page).on('cpf-submit', function(e, formData){
+			function appendToForm(formData){
 				$('.contains-checkbox :checkbox', $page).each(function(){
 					var $this = $(this);
 					formData.append($this.attr('name'), $this.is(':checked'));
 				});
+				formData.append('keyword', $('#keyword', $page).val() || '');
+				formData.append('deliveryId', '${delivery.id}');
+			}
+			
+			$('form', $page).on('cpf-submit', function(e, formData){
+				appendToForm(formData);
 			});
 			$('.contains-checkbox', $page).on('cpf-checked-change', function(checked){
 				$('form', $page).submit();
 			});
-			$('#export', $page).click(function(){
+			$('#keyword', $page).keypress(function(e){
+				if(e.keyCode == 13){
+					$('form', $page).submit();
+				}
+			});
+			$('#download-btn', $page).click(function(){
+				var formData = new FormData($('form', $page)[0]);
+				appendToForm(formData);
+				var data = {};
+				formData.forEach(function(val, name){data[name] = val});
+				var parameter = $.param(data);
+				Ajax.download('admin/canteen/manage/export_orders?' + parameter);
+			});
+			/* $('#export', $page).click(function(){
 				Ajax.download('admin/canteen/manage/export_orders/${delivery.id}');
 				return false;
-			});
-			$('.print-order-tag', $page).click(function(){
+			}); */
+			/* $('.print-order-tag', $page).click(function(){
 				var orderId = $(this).closest('tr').attr('order-id');
 				Ajax.ajax('admin/canteen/manage/order_tag', {
 					orderId	: orderId
@@ -290,8 +344,8 @@
 				});
 				
 				
-			});
-			$('#print-all', $page).click(function(){
+			}); */
+			/* $('#print-all', $page).click(function(){
 				Ajax.ajax('admin/canteen/manage/order_tag_all',{
 					deliveryId	: '${delivery.id}'
 				}, {
@@ -312,10 +366,13 @@
 						
 					}
 				});
-			});
+			}); */
 			
-			$('#print-orders', $page).click(function(){
-				Ajax.ajax('admin/canteen/manage/print_orders/${delivery.id}', {}, 
+			$('#print-btn', $page).click(function(){
+				var formData = new FormData($('form', $page)[0]);
+				appendToForm(formData);
+				
+				Ajax.ajax('admin/canteen/manage/print_orders', formData, 
 					function(data, responseType){
 						if(responseType === 'html'){
 							var $printPage = $('<div>');

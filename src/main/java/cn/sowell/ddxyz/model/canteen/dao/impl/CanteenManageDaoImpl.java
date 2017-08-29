@@ -1,11 +1,11 @@
 package cn.sowell.ddxyz.model.canteen.dao.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import javax.annotation.Resource;
 
@@ -15,7 +15,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.type.StandardBasicTypes;
 import org.springframework.stereotype.Repository;
 
-import cn.sowell.copframe.dao.deferedQuery.ConditionSnippet;
 import cn.sowell.copframe.dao.deferedQuery.DeferedParamQuery;
 import cn.sowell.copframe.dao.deferedQuery.DeferedParamSnippet;
 import cn.sowell.copframe.dao.deferedQuery.HibernateRefrectResultTransformer;
@@ -24,6 +23,7 @@ import cn.sowell.copframe.dao.utils.QueryUtils;
 import cn.sowell.copframe.dto.page.CommonPageInfo;
 import cn.sowell.copframe.utils.CollectionUtils;
 import cn.sowell.copframe.utils.FormatUtils;
+import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.ddxyz.model.canteen.dao.CanteenManageDao;
 import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenOrdersCriteria;
 import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenWeekTableCriteria;
@@ -102,7 +102,7 @@ public class CanteenManageDaoImpl implements CanteenManageDao{
 				"	from t_canteen_order co " +
 				"	left join t_order_base ob on co.order_id = ob.id" +
 				/*"	where ob.delivery_id = :deliveryId and (ob.c_canceled_status is null or ob.c_canceled_status in (:showCancelStatus))" +*/
-				"	where ob.delivery_id = :deliveryId and (@containsCondition)" +
+				"	where ob.delivery_id = :deliveryId and (@containsCondition) @keywordCondition" +
 				"	order by co.c_depart asc, ob.create_time desc";
 		
 		DeferedParamQuery dQuery = new DeferedParamQuery(sql);
@@ -111,6 +111,24 @@ public class CanteenManageDaoImpl implements CanteenManageDao{
 		DeferedParamSnippet snippet = dQuery.createSnippet("containsCondition", null);
 		appendContainsSQL(snippet, criteria).forEach((key, val)->dQuery.setParam(key, val));;
 		
+		if(TextUtils.hasText(criteria.getKeyword())){
+			dQuery.setSnippet("keywordCondition", "and ob.id in (" + 
+					" SELECT" +
+					"	b.id" +
+					" FROM" +
+					"	t_canteen_order c" +
+					" LEFT JOIN t_order_base b ON c.order_id = b.id" +
+					" WHERE" +
+					"	b.delivery_id = :deliveryId" +
+					" and (" +
+					"	c.c_depart LIKE :keyword" +
+					" OR b.c_receiver_name LIKE :keyword" +
+					" OR b.c_receiver_contact LIKE :keyword" +
+					"))");
+			dQuery.setParam("keyword", "%" + criteria.getKeyword() + "%");
+		}else{
+			dQuery.setSnippet("keywordCondition", "");
+		}
 		
 		Session session = sFactory.getCurrentSession();
 		SQLQuery countQuery = dQuery.createSQLQuery(session, false, new WrapForCountFunction());
@@ -235,6 +253,79 @@ public class CanteenManageDaoImpl implements CanteenManageDao{
 		query.executeUpdate();
 	}
 	
+	private Integer statOrderCount(Long deliveryId, Consumer<DeferedParamQuery> consumer) {
+		String sql = "SELECT" +
+				"	count(co.order_id)" +
+				" FROM" +
+				"	t_canteen_order co" +
+				" LEFT JOIN t_order_base ob ON co.order_id = ob.id" +
+				" WHERE" +
+				"	ob.delivery_id = :deliveryId";
+		
+		DeferedParamQuery dQuery = new DeferedParamQuery(sql);
+		dQuery.setParam("deliveryId", deliveryId);
+		
+		consumer.accept(dQuery);
+		SQLQuery query = dQuery.createSQLQuery(sFactory.getCurrentSession(), false, null);
+		return FormatUtils.toInteger(query.uniqueResult());
+	}
 	
+	@Override
+	public Integer getTotalOrderCount(Long deliveryId) {
+		return statOrderCount(deliveryId, con->{});
+	}
+	
+	
+
+	@Override
+	public Integer getEffectiveOrderCount(Long deliveryId) {
+		return statOrderCount(deliveryId, dQuery->
+				dQuery.appendCondition("and ob.c_canceled_status is null and ob.c_status = :status")
+				.setParam("status", Order.STATUS_DEFAULT));
+	}
+	
+	@Override
+	public Integer getCompletedOrderCount(Long deliveryId) {
+		return statOrderCount(deliveryId, dQuery->
+				dQuery.appendCondition("and ob.c_canceled_status is null and ob.c_status > :status")
+				.setParam("status", Order.STATUS_COMPLETED));
+	}
+	
+	@Override
+	public Integer getMissedOrderCount(Long deliveryId) {
+		return statOrderCount(deliveryId, dQuery->
+				dQuery.appendCondition("and ob.c_canceled_status = :canceledStatus")
+				.setParam("canceledStatus", Order.CAN_STATUS_MISS));
+	}
+	
+	@Override
+	public Integer getCanceledOrderCount(Long deliveryId) {
+		return statOrderCount(deliveryId, dQuery->
+				dQuery.appendCondition("and ob.c_canceled_status = :canceledStatus")
+				.setParam("canceledStatus", Order.CAN_STATUS_CANCELED));
+	}
+	
+	@Override
+	public Integer getClosedOrderCount(Long deliveryId) {
+		return statOrderCount(deliveryId, dQuery->
+				dQuery.appendCondition("and ob.c_canceled_status = :canceledStatus")
+				.setParam("canceledStatus", Order.CAN_STATUS_CLOSED));
+	}
+	
+	@Override
+	public int completeOrders(Long deliveryId) {
+		String sql = 
+				"	UPDATE t_order_base" +
+				"	SET c_status = :completeStatus" +
+				"	WHERE" +
+				"		delivery_id = :deliveryId" +
+				"	AND c_status = :defaultStatus" +
+				"	AND c_canceled_status IS NULL";
+		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
+		query.setLong("deliveryId", deliveryId);
+		query.setInteger("completeStatus", Order.STATUS_COMPLETED);
+		query.setInteger("defaultStatus", Order.STATUS_DEFAULT);
+		return query.executeUpdate();
+	}
 	
 }

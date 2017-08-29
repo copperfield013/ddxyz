@@ -34,25 +34,57 @@
 					<c:choose>
 						<c:when test="${delivery != null }">
 							<div class="row delivery-row">
-								<label class="col-lg-4"><br/>预定时间：<br/></label>
-								<div class="col-lg-8">
+								<label class="col-lg-4 "><br/>预定时间：<br/></label>
+								<div class="col-lg-8 ">
 									<fmt:formatDate value="${delivery.openTime }" pattern="yyyy年MM月dd日 HH时mm分" /><br/>
 									~<br/>
 									<fmt:formatDate value="${delivery.closeTime }" pattern="yyyy年MM月dd日 HH时mm分" />
 								</div>
 							</div>
 							<div class="row delivery-row">
-								<label class="col-lg-4"><br/>分发时间：<br/></label>
-								<div class="col-lg-8">
+								<label class="col-lg-4 "><br/>分发时间：<br/></label>
+								<div class="col-lg-8 ">
 									<fmt:formatDate value="${delivery.timePoint }" pattern="yyyy年MM月dd日 HH时mm分" /><br/>
 									~<br/>
 									<fmt:formatDate value="${delivery.claimEndTime }" pattern="yyyy年MM月dd日 HH时mm分" />
 								</div>
 							</div>
 							<div class="row delivery-row">
-								<label class="col-lg-4">分发点：</label>
-								<div class="col-lg-8">${delivery.locationName }</div>
+								<label class="col-lg-4 ">分发点：</label>
+								<div class="col-lg-8 ">${delivery.locationName }</div>
 							</div>
+							<div class="row delivery-row">
+								<label class="col-lg-4 ">订单总金额：</label>
+								<div class="col-lg-8 "><fmt:formatNumber value="${totalAmount /100 }" pattern="0.00" />元</div>
+							</div>
+							<div class="row delivery-row">
+								<label class="col-lg-3">待完成：</label>
+								<div class="col-lg-3">
+									${stat.effective }
+								</div>
+								<label class="col-lg-3">总订单：</label>
+								<div class="col-lg-3">${stat.totalCount }</div>
+							</div>
+							<div class="row delivery-row">
+								<label class="col-lg-3">已完成：</label>
+								<div class="col-lg-3">${stat.completed }</div>
+								<label class="col-lg-3">未领取：</label>
+								<div class="col-lg-3">${stat.missed }</div>
+							</div>
+							
+							<div class="row delivery-row">
+								<label class="col-lg-3">已关闭：</label>
+								<div class="col-lg-3 ">${stat.closed }</div>
+								<label class="col-lg-3">已取消：</label>
+								<div class="col-lg-3">${stat.canceled }</div>
+							</div>
+							<c:if test="${now.time >= delivery.claimEndTime.time }">
+								<div class="row delivery-row">
+									<div class="col-lg-3 col-lg-offset-3">
+										<input type="button" class="btn btn-primary" value="完成全部订单" />
+									</div>
+								</div>
+							</c:if>
 						</c:when>
 						<c:otherwise>
 							<div>
@@ -68,7 +100,7 @@
 			<div class="col-lg-8">
 				<div class="panel panel-primary">
 					<div class="panel-heading">
-						<h3 class="panel-title">商品列表</h3>
+						<h3 class="panel-title">产品列表</h3>
 					</div>
 					<div class="panel-body">
 						<table class="table">

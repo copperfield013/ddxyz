@@ -63,5 +63,51 @@ public interface CanteenManageDao {
 	 */
 	void setOrderProductsCancelStatus(Long orderId, String cancelStatus);
 
+	/**
+	 * 统计配送对应的所有订单的个数
+	 * @param deliveryId
+	 * @return
+	 */
+	Integer getTotalOrderCount(Long deliveryId);
+
+	/**
+	 * 统计配送的所有有效订单的个数
+	 * @param deliveryId
+	 * @return
+	 */
+	Integer getEffectiveOrderCount(Long deliveryId);
+
+	/**
+	 * 统计配送的所有已完成订单的个数
+	 * @param deliveryId
+	 * @return
+	 */
+	Integer getCompletedOrderCount(Long deliveryId);
+
+	/**
+	 * 获得所有未领取的订单
+	 * @param deliveryId
+	 * @return
+	 */
+	Integer getMissedOrderCount(Long deliveryId);
+
+	/**
+	 * 获得该配送下被用户取消的订单数量
+	 * @param deliveryId
+	 * @return
+	 */
+	Integer getCanceledOrderCount(Long deliveryId);
+
+	/**
+	 * 获得该配送下已关闭的订单数量
+	 * @param deliveryId
+	 * @return
+	 */
+	Integer getClosedOrderCount(Long deliveryId);
+
+	int completeOrders(Long deliveryId);
+
+	
+	
 	
 }

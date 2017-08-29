@@ -87,6 +87,9 @@ public class AdminCanteenManageController {
 			model.addAttribute("orderItems", items);
 			Integer totalAmount = canteenManageService.amountDelivery(delivery.getId());
 			model.addAttribute("totalAmount", totalAmount);
+			PlainCanteenOrderStat stat = canteenManageService.statDelivery(delivery.getId());
+			model.addAttribute("stat", stat);
+			
 		}
 		model.addAttribute("delivery", delivery);
 		model.addAttribute("criteria", criteria);
@@ -175,6 +178,32 @@ public class AdminCanteenManageController {
 			jRes.setJsonObject(canteenManageService.toOrderTagObject(items));
 		}
 		return jRes;
+	}
+	
+	
+	@ResponseBody
+	@RequestMapping("/complete_order/{orderId}")
+	public AjaxPageResponse completeOrder(@PathVariable Long orderId){
+		try {
+			canteenManageService.completeOrders(Arrays.asList(orderId));
+			return AjaxPageResponse.REFRESH_LOCAL("操作成功");
+		} catch (Exception e) {
+			logger.error("操作订单完成时发生错误orderId=" + orderId, e);
+			return AjaxPageResponse.FAILD("操作失败");
+		}
+		
+	}
+	
+	@ResponseBody
+	@RequestMapping("/batch_complete_orders/{deliveryId}")
+	public AjaxPageResponse batchComplateOrders(@PathVariable Long deliveryId){
+		try {
+			int batchCount = canteenManageService.completeOrders(deliveryId);
+			return AjaxPageResponse.REFRESH_LOCAL("操作成功，共完成了" + batchCount + "个订单");
+		} catch (Exception e) {
+			logger.error("批量完成配送下的所有订单时发生错误[deliveryId=" + deliveryId + "]", e);
+			return AjaxPageResponse.FAILD("操作失败");
+		}
 	}
 	
 	
