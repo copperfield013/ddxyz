@@ -31,6 +31,10 @@
 						<label class="col-lg-2 control-label" for="priceUnit">价格单位</label>
 						<div class="col-lg-3">
 							<input type="text" readonly="readonly" class="form-control" name="priceUnit" id="priceUnit" value="${wares.priceUnit }" />
+							<span class="help-block">
+								单价预览：<span id="preview">
+								<fmt:formatNumber pattern="0.00">${wares.basePrice / 100}</fmt:formatNumber>
+								元/${wares.priceUnit }</span></span>
 						</div>
 					</div>
 					<div class="form-group">
@@ -90,6 +94,14 @@
 					});
 				}
 			});
+			$('#unitPrice,#priceUnit', $page).keypress(preview).change(preview);
+			function preview(){
+				var unitPrice = $('#unitPrice', $page).val(),
+					priceUnit = $('#priceUnit', $page).val();
+				if(unitPrice != '' && priceUnit != ''){
+					$('#preview', $page).text(unitPrice + '元/' + priceUnit);
+				}
+			}
 		});
 	});
 </script>
