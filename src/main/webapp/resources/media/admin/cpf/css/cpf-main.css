@@ -272,6 +272,9 @@ label.form-control-title {
 .cmd-right a{
     color: #fff !important;
 }
+nav{
+	padding: 1em 0;
+}
 .cpf-checkbox{
 	cursor: pointer;
 	margin: 5px;

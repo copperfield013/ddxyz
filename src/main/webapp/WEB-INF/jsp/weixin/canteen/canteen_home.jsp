@@ -40,6 +40,7 @@
 		                <span class="price">
 		                     <b>单价：<i><fmt:formatNumber value="${dWares.price/100 }" pattern="0.00" />元/${dWares.priceUnit }</i></b>
 		                </span>
+		                <a class="more-info">>></a>
 		            </p>
             	</c:forEach>
             

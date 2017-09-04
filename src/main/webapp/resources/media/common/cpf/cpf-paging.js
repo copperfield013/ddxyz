@@ -85,7 +85,7 @@ define(function(require, exports, module){
 					$('form', $page).first().on('cpf-submit', function(e, formData){
 						formData.append('pageNo', pageInfo.pageNo);
 						formData.append('pageSize', pageInfo.pageSize);
-					})
+					});
 				}
 			}else{
 				$.error('pageNo, pageSize, count must be integer');

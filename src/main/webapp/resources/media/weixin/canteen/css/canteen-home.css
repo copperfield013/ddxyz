@@ -25,6 +25,7 @@ img {
 }
 .block p {
 	margin-top:20px;
+	position: relative;
 }
 .block p span {
     display: block;
@@ -32,6 +33,12 @@ img {
     /* overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis; */
+}
+.block a.more-info{
+	display: inline;
+	position: absolute;
+	right: 0;
+	bottom: 0;
 }
 .weekMenu h4:before {
     content: '\e604';
