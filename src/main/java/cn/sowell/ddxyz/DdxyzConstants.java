@@ -101,6 +101,7 @@ public interface DdxyzConstants {
 		}
 	};
 	final String ROLE_WXUSER = "ROLE_WXUSER";
+	final String PREVIEW_WARES_KEY_PREFIX = "wares_preview_key";
 	
 	
 }

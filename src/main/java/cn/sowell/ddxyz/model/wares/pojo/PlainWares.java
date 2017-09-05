@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import org.springframework.context.annotation.Lazy;
 /**
  * 
  * <p>Title: PlainWares</p>
@@ -42,11 +44,18 @@ public class PlainWares {
 	@Column(name="c_thumb_uri")
 	private String thumbUri;
 	
+	@Lazy
+	@Column(name="c_detail")
+	private String detail;
+	
 	@Column(name="create_time")
 	private Date createTime;
 	
 	@Column(name="update_time")
 	private Date updateTime;
+	
+	@Column(name="c_unsalable")
+	private Integer unsalable;
 	
 	public Long getId() {
 		return id;
@@ -101,5 +110,17 @@ public class PlainWares {
 	}
 	public void setPriceUnit(String priceUnit) {
 		this.priceUnit = priceUnit;
+	}
+	public String getDetail() {
+		return detail;
+	}
+	public void setDetail(String detail) {
+		this.detail = detail;
+	}
+	public Integer getUnsalable() {
+		return unsalable;
+	}
+	public void setUnsalable(Integer unsalable) {
+		this.unsalable = unsalable;
 	}
 }

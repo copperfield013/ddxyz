@@ -19,6 +19,7 @@
 	    <script src="media/admin/plugins/beyond/js/validation/bootstrapValidator.js"></script>
 	    <script src="media/admin/plugins/beyond/js/tagsinput/bootstrap-tagsinput.js"></script>
 	    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=YhhQe0yOr3L0f1mHLZcjHIZyvQixl4Zq"></script>
+	    <script type="text/javascript" src="media/admin/plugins/ckeditor/ckeditor.js"></script>
 	</head>
 	<body>
 		<div class="navbar">

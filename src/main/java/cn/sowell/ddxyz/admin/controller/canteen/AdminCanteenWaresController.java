@@ -1,9 +1,11 @@
 package cn.sowell.ddxyz.admin.controller.canteen;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -16,8 +18,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import cn.sowell.copframe.common.file.FileUploadUtils;
 import cn.sowell.copframe.dto.ajax.AjaxPageResponse;
+import cn.sowell.copframe.dto.ajax.JsonResponse;
 import cn.sowell.copframe.dto.page.CommonPageInfo;
 import cn.sowell.copframe.utils.TextUtils;
+import cn.sowell.copframe.utils.qrcode.QrCodeUtils;
+import cn.sowell.copframe.weixin.common.service.WxConfigService;
+import cn.sowell.ddxyz.DdxyzConstants;
 import cn.sowell.ddxyz.admin.AdminConstants;
 import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenWaresListCriteria;
 import cn.sowell.ddxyz.model.canteen.service.CanteenWaresService;
@@ -34,6 +40,9 @@ public class AdminCanteenWaresController {
 	FileUploadUtils fUploadUtils;
 	
 	Logger logger = Logger.getLogger(AdminCanteenConfigController.class); 
+	
+	@Resource
+	WxConfigService configService;
 	
 	@RequestMapping("/list")
 	public String list(CanteenWaresListCriteria criteria, CommonPageInfo pageInfo, Model model) {
@@ -52,15 +61,12 @@ public class AdminCanteenWaresController {
 	@RequestMapping("/do_add")
 	public AjaxPageResponse doCreateWares(
 			@RequestParam("thumb") MultipartFile file,
-			@RequestParam("waresName") String waresName, 
-			@RequestParam("unitPrice") Float unitPrice, 
-			@RequestParam("priceUnit") String priceUnit
+			PlainWares wares,
+			String waresName,
+			Float unitPrice
 			){
-		PlainWares wares = new PlainWares();
 		wares.setBasePrice((int)(unitPrice * 100));
-		wares.setPriceUnit(priceUnit);
 		wares.setName(waresName);
-		
 		String[] nameSplit = file.getOriginalFilename().split("\\.");
 		String suffix = nameSplit[nameSplit.length - 1];
 		String fileName = "f_" + TextUtils.uuid(10, 36) + "." + suffix;
@@ -86,18 +92,16 @@ public class AdminCanteenWaresController {
 	public AjaxPageResponse doUpdate(
 			@RequestParam("waresId") Long waresId,
 			@RequestParam(value="thumb", required=false) MultipartFile file,
-			@RequestParam(value="waresName") String waresName, 
-			@RequestParam(value="unitPrice") Float unitPrice, 
-			@RequestParam(value="priceUnit") String priceUnit,
+			PlainWares wares,
+			String waresName,
+			Float unitPrice,
 			@RequestParam(value="hasThumb", required=false) Boolean hasThumb) {
 		try {
 			PlainWares originWares = waresService.getPlainObject(PlainWares.class, waresId);
 			
-			PlainWares wares = new PlainWares();
-			wares.setId(waresId);
 			wares.setBasePrice((int)(unitPrice * 100));
-			wares.setPriceUnit(priceUnit);
 			wares.setName(waresName);
+			wares.setId(waresId);
 			
 			if(hasThumb != null && hasThumb){
 				if(file !=null) {
@@ -142,6 +146,62 @@ public class AdminCanteenWaresController {
 			return AjaxPageResponse.FAILD("操作失败");
 		}
 	}
+	
+	@ResponseBody
+	@RequestMapping("/preview_detail")
+	public JsonResponse previewDetail(Integer waresKey, String detail, HttpSession session){
+		JsonResponse jRes = new JsonResponse();
+		String uuid = (String) session.getAttribute(DdxyzConstants.PREVIEW_WARES_KEY_PREFIX + waresKey);
+		if(uuid == null){
+			uuid = TextUtils.uuid();
+			session.setAttribute(DdxyzConstants.PREVIEW_WARES_KEY_PREFIX + waresKey, uuid);
+			OutputStream outputStream = null;
+			try {
+				outputStream = fUploadUtils.createFile(uuid + ".png");
+				String redirectUrl = configService.getProjectURL() + "/weixin/canteen/preview_detail/" + uuid;
+				QrCodeUtils.encodeQRCodeImage(redirectUrl, "utf-8", outputStream, "png", 150, 150);
+			} catch (IOException e) {
+				logger.error("创建二维码时发生错误", e);
+				jRes.setStatus("error");
+				jRes.put("msg", "创建二维码时发生错误");
+				return jRes;
+			}finally{
+				try {
+					outputStream.close();
+				} catch (Exception e) {
+				}
+			}
+		}
+		waresService.updateWaresDetailPreview(uuid, detail);
+		String qrCodeIrl = configService.getProjectURL() + fUploadUtils.getFolderUri() + "/" + uuid + ".png";
+		jRes.put("qrCodeUrl", qrCodeIrl);
+		return jRes;
+	}
+	
+	
+	@ResponseBody
+	@RequestMapping("/enable_sale/{waresId}")
+	public AjaxPageResponse enableSale(@PathVariable Long waresId){
+		try {
+			waresService.updateWaresSalable(waresId, true);
+			return AjaxPageResponse.REFRESH_LOCAL("修改成功");
+		} catch (Exception e) {
+			return AjaxPageResponse.FAILD("修改失败");
+		}
+	}
+	
+	@ResponseBody
+	@RequestMapping("/disable_sale/{waresId}")
+	public AjaxPageResponse disableSale(@PathVariable Long waresId){
+		try {
+			waresService.updateWaresSalable(waresId, false);
+			return AjaxPageResponse.REFRESH_LOCAL("修改成功");
+		} catch (Exception e) {
+			return AjaxPageResponse.FAILD("修改失败");
+		}
+	}
+	
+	
 	
 	
 }

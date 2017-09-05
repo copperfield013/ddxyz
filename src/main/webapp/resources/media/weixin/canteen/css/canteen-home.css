@@ -39,6 +39,8 @@ img {
 	position: absolute;
 	right: 0;
 	bottom: 0;
+	font-size: 0.7em;
+	color: #ff3300;
 }
 .weekMenu h4:before {
     content: '\e604';
@@ -118,14 +120,13 @@ footer .main {
 }
 .shade >div {
 	font-size:20px;
-	width: 12em;
+	width: 80%;
 	height: 6em;
 	border-radius: 0.4em;
 	background-color: rgba(250,250,250,1);
 	position: absolute;
 	top: 30%;
-	left: 50%;
-	margin-left: -6em;	
+	left: 10%;
 	text-align: center;
 	padding-top:0.5em;
  }
@@ -164,4 +165,7 @@ footer .main {
 	line-height:0.55em;
 	text-align:center;
 	color:#004621;
+}
+div#detail-content * {
+    text-align: left;
 }

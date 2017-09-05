@@ -195,6 +195,8 @@ public class CanteenDaoImpl implements CanteenDao{
 						"	wb.c_base_price price," +
 						"   wb.c_price_unit price_unit," +
 						"   wb.c_thumb_uri thumburi," +
+						"   wb.c_unsalable," +
+						"   if(wb.c_detail is null or wb.c_detail = '', 0, 1) as c_has_detail," +
 						"	w.c_max_count maxcount," +
 						"	w.c_current_count currencount" +
 						" FROM" +

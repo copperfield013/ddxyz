@@ -58,6 +58,12 @@
 						<td>
 							<a class="update tab" title="餐品修改" href="admin/canteen/wares/update/${wares.id }" target="@canteen_wares_update_${wares.id }">修改</a>
 							<a class="wares-${wares.disabled == 1? 'enable': 'disable' }" href="#">${wares.disabled == 1? '启用': '禁用' }</a>
+							<c:if test="${wares.unsalable == 1 }">
+								<a confirm="确认允许出售？" href="admin/canteen/wares/enable_sale/${wares.id }">允许出售</a>
+							</c:if>
+							<c:if test="${wares.unsalable != 1 }">
+								<a confirm="确认允许出售？" href="admin/canteen/wares/disable_sale/${wares.id }">禁止出售</a>
+							</c:if>
 						</td>
 					</tr>
 				</c:forEach>

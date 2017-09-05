@@ -71,5 +71,17 @@ public class CanteenWaresDaoImpl implements CanteenWaresDao{
 		}
 		return query.executeUpdate();
 	}
-
+	
+	@Override
+	public void updateWaresSalable(Long waresId, boolean salable) {
+		String sql = "update t_wares_base set c_unsalable = :unsalable where id = :waresId";
+		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
+		query.setLong("waresId", waresId);
+		if(salable){
+			query.setParameter("unsalable", null, StandardBasicTypes.INTEGER);
+		}else{
+			query.setInteger("unsalable", 1);
+		}
+		query.executeUpdate();
+	}
 }

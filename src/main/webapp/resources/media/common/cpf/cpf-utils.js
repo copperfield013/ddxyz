@@ -173,7 +173,7 @@ define(function(require, exports){
 			if(position instanceof $){
 				$position = position;
 			}else if(position === 0){
-				$position = $container.children('div,span').first();
+				$position = $container.children('*').first();
 			}else{
 				$position = $container.children().last()
 			}

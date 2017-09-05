@@ -39,8 +39,22 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<div class="col-lg-offset-1 col-lg-2">
-							<input type="submit" class="btn" value="提交" />
+						<div class="col-lg-offset-2 col-lg-8">
+							<span class="cpf-checkbox" id="has-detail" >需要详情</span>
+						</div>
+					</div>
+					<div class="form-group" id="detail-row" style="display: none;">
+						<label class="col-lg-2 control-label" >详情</label>
+						<div class="col-lg-8">
+							<textarea id="canteen-wares-add-editor" name="detail"></textarea>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-lg-offset-2 col-lg-2">
+							<input type="button" class="btn btn-block" value="详情预览" id="detail-preview" />
+						</div>
+						<div class="col-lg-2">
+							<input type="submit" class="btn btn-primary btn-block" value="提交" />
 						</div>
 					</div>
 				</form>
@@ -53,6 +67,7 @@
 	$(function(){
 		seajs.use(['ajax', 'dialog', 'utils'], function(Ajax, Dialog, utils){
 			var $page = $('#canteen-wares-add');
+			console.log($page);
 			$('#thumb', $page).change(function(){
 				var files = $(this)[0].files;
 				for(var i in files){
@@ -71,7 +86,51 @@
 					$('#preview', $page).text(unitPrice + '元/' + priceUnit);
 				}
 			}
+			var editor = CKEDITOR.replace('canteen-wares-add-editor', {
+				 toolbar :
+		             [
+		              	['Source', 'PasteText', 'RemoveFormat'],
+		                //加粗     斜体，     下划线      穿过线      下标字        上标字
+		                ['Bold','Italic','Underline'],
+		                // 数字列表          实体列表            减小缩进    增大缩进
+		                ['NumberedList','BulletedList','-','Outdent','Indent'],
+		                //左对 齐             居中对齐          右对齐          两端对齐
+		                ['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
+		                //图片    flash    表格       水平线            表情       特殊字符        分页符
+		                ['Image','Table','HorizontalRule', 'Smiley'],
+		                //文本颜色     背景颜色
+		                ['TextColor','BGColor'],
+		                ['Styles','Format','Font','FontSize']
+		             ]
+			});
+			$('#detail-preview', $page).click(function(){
+				var formData = new FormData();
+				editor.updateElement();
+				formData.append('detail', $('#canteen-wares-add-editor').val());
+				formData.append('waresKey', '0');
+				Ajax.ajax('admin/canteen/wares/preview_detail', formData, function(data){
+					if(data.qrCodeUrl){
+						var $content = $('<div><div class="preview-qrcode-dialog"><h3>打开手机微信扫一扫</h3><p><img width="200px" height="200px" /></p></div></div>');
+						$content.find('img').attr('src', data.qrCodeUrl);
+						Dialog.openDialog($content, 
+								'详情预览', 
+								'canteen-wares-detail-preview-0', 
+								{
+									width	: '250px',
+									height	: '400px'
+								});
+					}
+				})
+			});
 			
+			$('#has-detail', $page).on('cpf-checked-change', function(e, checked){
+				$('#detail-row', $page).toggle(checked);
+			});
+			$('form', $page).on('cpf-submit', function(e, formData){
+				if(!$('#has-detail', $page).prop('checked')){
+					formData['delete']('detail');
+				}
+			});
 		});
 	});
 </script>

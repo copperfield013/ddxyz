@@ -1,7 +1,9 @@
 package cn.sowell.ddxyz.model.canteen.service.impl;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -45,6 +47,7 @@ public class CanteenWaresServiceImpl implements CanteenWaresService{
 		origin.setName(wares.getName());
 		origin.setBasePrice(wares.getBasePrice());
 		origin.setThumbUri(wares.getThumbUri());
+		origin.setDetail(wares.getDetail());
 		waresDao.update(origin);
 	}
 
@@ -56,5 +59,19 @@ public class CanteenWaresServiceImpl implements CanteenWaresService{
 	}
 	
 	
-
+	Map<String, String> detailPreviewMap = new HashMap<String, String>();
+	@Override
+	public void updateWaresDetailPreview(String uuid, String detail) {
+		detailPreviewMap.put(uuid, detail);
+	}
+	
+	@Override
+	public String getPreviewDetail(String uuid) {
+		return detailPreviewMap.get(uuid);
+	}
+	
+	@Override
+	public void updateWaresSalable(Long waresId, boolean salable) {
+		waresDao.updateWaresSalable(waresId, salable);
+	}
 }

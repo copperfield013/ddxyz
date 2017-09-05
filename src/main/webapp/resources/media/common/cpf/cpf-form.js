@@ -19,6 +19,13 @@ define(function(require, exports, module){
 	
 	$CPF.putPageInitSequeue(4, function($page){
 		$('form', $page).not('.nform').submit(function(e){
+			if(CKEDITOR){
+				for (var key in CKEDITOR.instances){
+					if($(CKEDITOR.instances[key].element.$).closest(this).length > 0){
+						CKEDITOR.instances[key].updateElement();
+					}
+				}
+			}
 			var $this = $(this),
 				page = $this.getLocatePage(),
 				formData = new FormData(this)

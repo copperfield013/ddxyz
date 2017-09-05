@@ -28,6 +28,12 @@ public class CanteenDeliveyWares {
 	@Column(name="thumburi")
 	private String thumbUri;
 	
+	@Column(name="c_unsalable")
+	private Integer unsalable;
+	
+	@Column(name="c_has_detail")
+	private Integer hasDetail;
+	
 	
 	public Long getdWaresId() {
 		return dWaresId;
@@ -76,5 +82,17 @@ public class CanteenDeliveyWares {
 	}
 	public void setThumbUri(String thumbUri) {
 		this.thumbUri = thumbUri;
+	}
+	public Integer getHasDetail() {
+		return hasDetail;
+	}
+	public void setHasDetail(Integer hasDetail) {
+		this.hasDetail = hasDetail;
+	}
+	public Integer getUnsalable() {
+		return unsalable;
+	}
+	public void setUnsalable(Integer unsalable) {
+		this.unsalable = unsalable;
 	}
 }

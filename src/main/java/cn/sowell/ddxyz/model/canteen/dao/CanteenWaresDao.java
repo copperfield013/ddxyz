@@ -18,4 +18,6 @@ public interface CanteenWaresDao {
 
 	int disableWares(Long waresId, Boolean disabled);
 
+	void updateWaresSalable(Long waresId, boolean salable);
+
 }

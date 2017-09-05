@@ -6,7 +6,7 @@
 	<title>${WXAPP.cname }</title>
 	<base>
 	<jsp:include page="/WEB-INF/jsp/weixin/common/weixin-include.jsp"></jsp:include>
-	<link href="media/weixin/canteen/css/canteen-home.css" type="text/css" rel="stylesheet" />
+	<link href="media/weixin/canteen/css/canteen-home.css?111" type="text/css" rel="stylesheet" />
 </head>
 <body>
 	<c:set var="pDelivery" value="${delivery.plainDelivery }" />
@@ -34,13 +34,17 @@
         <div class="block weekMenu">
             <h4>本周菜单</h4>
             	<c:forEach items="${delivery.waresList }" var="dWares">
-	            	<p class="clearfix">
+	            	<p class="clearfix" data-id="${dWares.waresId }">
 		                <img src="${basePath }${dWares.thumbUri}" alt="${dWares.waresName }">
 		                <span class="name">${dWares.waresName }</span>
-		                <span class="price">
-		                     <b>单价：<i><fmt:formatNumber value="${dWares.price/100 }" pattern="0.00" />元/${dWares.priceUnit }</i></b>
-		                </span>
-		                <a class="more-info">>></a>
+		                <c:if test="${dWares.unsalable != 1}">
+			                <span class="price">
+			                     <b>单价：<i><fmt:formatNumber value="${dWares.price/100 }" pattern="0.00" />元/${dWares.priceUnit }</i></b>
+			                </span>
+		                </c:if>
+		                <c:if test="${dWares.hasDetail == 1 }">
+			                <a class="more-info">点击查看</a>
+		                </c:if>
 		            </p>
             	</c:forEach>
             
@@ -80,37 +84,11 @@
     <div class="shade dialog-shade" style="display: none;">
 			<div style="height: 70%; top:15%;">
 				<div class="shade-operation">
-					<span class="shade-warn">!</span>
 					<span class="shade-close">×</span>
 				</div>
-				<p style="overflow-y: scroll;overflow-x: hidden;height: 80%;font-size: 14px;"">
-					“大漠风尘日色昏，红旗漫卷出辕门。”
-				在“跨越—2017·朱日和”演习场，有这样一群士兵，他们即将迎来自己的退伍季，即将脱战衣踏归程。闻令出征，无悔军旅，成为这群士兵的共同心声。
-				“黄沙百战穿金甲，不破楼兰终不还。”
-				一份份请战书、一篇篇宣誓词，彰显了军人乘战车上战场的血性担当和“杀敌”立功的豪情壮志。
-				“大漠风尘日色昏，红旗漫卷出辕门。”
-				在“跨越—2017·朱日和”演习场，有这样一群士兵，他们即将迎来自己的退伍季，即将脱战衣踏归程。闻令出征，无悔军旅，成为这群士兵的共同心声。
-				“黄沙百战穿金甲，不破楼兰终不还。”
-				一份份请战书、一篇篇宣誓词，彰显了军人乘战车上战场的血性担当和“杀敌”立功的豪情壮志。
-				“大漠风尘日色昏，红旗漫卷出辕门。”
-				在“跨越—2017·朱日和”演习场，有这样一群士兵，他们即将迎来自己的退伍季，即将脱战衣踏归程。闻令出征，无悔军旅，成为这群士兵的共同心声。
-				“黄沙百战穿金甲，不破楼兰终不还。”
-				一份份请战书、一篇篇宣誓词，彰显了军人乘战车上战场的血性担当和“杀敌”立功的豪情壮志。
-				“大漠风尘日色昏，红旗漫卷出辕门。”
-				在“跨越—2017·朱日和”演习场，有这样一群士兵，他们即将迎来自己的退伍季，即将脱战衣踏归程。闻令出征，无悔军旅，成为这群士兵的共同心声。
-				“黄沙百战穿金甲，不破楼兰终不还。”
-				一份份请战书、一篇篇宣誓词，彰显了军人乘战车上战场的血性担当和“杀敌”立功的豪情壮志。
-				“大漠风尘日色昏，红旗漫卷出辕门。”
-				在“跨越—2017·朱日和”演习场，有这样一群士兵，他们即将迎来自己的退伍季，即将脱战衣踏归程。闻令出征，无悔军旅，成为这群士兵的共同心声。
-				“黄沙百战穿金甲，不破楼兰终不还。”
-				一份份请战书、一篇篇宣誓词，彰显了军人乘战车上战场的血性担当和“杀敌”立功的豪情壮志。
-				“大漠风尘日色昏，红旗漫卷出辕门。”
-				在“跨越—2017·朱日和”演习场，有这样一群士兵，他们即将迎来自己的退伍季，即将脱战衣踏归程。闻令出征，无悔军旅，成为这群士兵的共同心声。
-				“黄沙百战穿金甲，不破楼兰终不还。”
-				一份份请战书、一篇篇宣誓词，彰显了军人乘战车上战场的血性担当和“杀敌”立功的豪情壮志。
-				“大漠风尘日色昏，红旗漫卷出辕门。”
-				在“跨越—2017·朱日和”演习场，有这样一群士兵，他们即将迎来自己的退伍季，即将脱战衣踏归程。闻令出征，无悔军旅，成为这群士兵的共同心声。
-				</p>
+				<div id="detail-content" style="overflow-y: scroll;overflow-x: hidden;height: 80%;font-size: 14px;margin: 0px 10px 10px 10px;padding-top: 20px">
+					
+				</div>
 			</div>
     </div>
     <footer>
@@ -119,19 +97,29 @@
     </footer>
     <script type="text/javascript">
     	$(function(){
-    		$('#shade-close').click(function(){
-    			$('.shade').remove();
-    		});
-    		
-   			$(".clearfix").click(function(){
-   				$('main').css("overflow","hidden");
-   				$(".dialog-shade").show();
-       		});
-   			
-   			$('.shade-close').click(function(){
-   				$('main').removeAttr("style");
-    			$('.dialog-shade').hide();
-    		});
+    		seajs.use(['utils', 'ajax'], function(Utils, Ajax){
+	    		console.log('111');
+	    		$('#shade-close').click(function(){
+	    			$('.shade').remove();
+	    		});
+	    		
+	   			$(".clearfix").click(function(){
+	   				Ajax.ajax('weixin/canteen/load_detail/' + $(this).attr('data-id'), {}, function(data){
+	   					$(".dialog-shade").find('#detail-content').empty();
+   						if($(data).length > 0){
+			   				$('main').css("overflow","hidden");
+			   				$(".dialog-shade").find('#detail-content').html(data);
+			   				$(".dialog-shade").show();
+			   				Utils.scrollTo($('#detail-content'), 0);
+   						}
+	   				});
+	       		});
+	   			
+	   			$('.shade-close').click(function(){
+	   				Utils.removeStyle($('main'), 'overflow');
+	    			$('.dialog-shade').hide();
+	    		});
+    		})
     	});
     </script>
 </body>

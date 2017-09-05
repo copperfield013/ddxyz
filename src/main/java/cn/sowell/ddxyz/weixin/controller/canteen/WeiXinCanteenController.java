@@ -1,6 +1,7 @@
 package cn.sowell.ddxyz.weixin.controller.canteen;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +22,7 @@ import cn.sowell.copframe.dto.page.CommonPageInfo;
 import cn.sowell.copframe.utils.date.FrameDateFormat;
 import cn.sowell.copframe.weixin.common.utils.WxUtils;
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenDelivery;
+import cn.sowell.ddxyz.model.canteen.pojo.CanteenDeliveyWares;
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenOrderUpdateItem;
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenUserCacheInfo;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainCanteenOrder;
@@ -28,9 +30,11 @@ import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenOrderInfoItem;
 import cn.sowell.ddxyz.model.canteen.pojo.param.CanteenOrderParameter;
 import cn.sowell.ddxyz.model.canteen.service.CanteenDeliveryService;
 import cn.sowell.ddxyz.model.canteen.service.CanteenService;
+import cn.sowell.ddxyz.model.canteen.service.CanteenWaresService;
 import cn.sowell.ddxyz.model.common.core.Order;
 import cn.sowell.ddxyz.model.common.pojo.PlainLocation;
 import cn.sowell.ddxyz.model.common2.core.OrderResourceApplyException;
+import cn.sowell.ddxyz.model.wares.pojo.PlainWares;
 import cn.sowell.ddxyz.model.weixin.pojo.WeiXinUser;
 import cn.sowell.ddxyz.weixin.WeiXinConstants;
 
@@ -46,6 +50,9 @@ public class WeiXinCanteenController {
 	@Resource
 	CanteenDeliveryService canteenConfigService;
 	
+	@Resource
+	CanteenWaresService waresService;
+	
 	Logger logger = Logger.getLogger(WeiXinCanteenController.class);
 	
 	@Resource
@@ -60,10 +67,25 @@ public class WeiXinCanteenController {
 		return WeiXinConstants.PATH_CANTEEN + "/canteen_home.jsp";
 	}
 	
+	@RequestMapping("/load_detail/{waresId}")
+	public String loadDetail(@PathVariable Long waresId, Model model){
+		PlainWares wares = waresService.getPlainObject(PlainWares.class, waresId);
+		model.addAttribute("data", wares.getDetail());
+		return "/common/data.jsp";
+	}
+	
+	
 	@RequestMapping("/order")
 	public String order(Model model){
 		WeiXinUser user = WxUtils.getCurrentUser(WeiXinUser.class);
 		CanteenDelivery delivery = canteenService.getDeliveryOfThisWeek();
+		Iterator<CanteenDeliveyWares> itr = delivery.getWaresList().iterator();
+		while(itr.hasNext()){
+			CanteenDeliveyWares dWares = itr.next();
+			if(Integer.valueOf(1).equals(dWares.getUnsalable())){
+				itr.remove();
+			}
+		}
 		CanteenUserCacheInfo userInfo = canteenService.getUserCacheInfo(user.getId());
 		if(delivery != null){
 			boolean overTime = canteenService.checkDeliveryOrderOvertime(delivery.getPlainDelivery(), new Date());
@@ -159,10 +181,14 @@ public class WeiXinCanteenController {
 			logger.error("取消订单失败", e);
 		}
 		return jRes;
-		
 	}
 	
-	
+	@RequestMapping("/preview_detail/{uuid}")
+	public String previewDetail(@PathVariable String uuid, Model model){
+		String detail = waresService.getPreviewDetail(uuid);
+		model.addAttribute("detail", detail);
+		return WeiXinConstants.PATH_CANTEEN + "/canteen_preview_detail.jsp";
+	}
 	
 	
 }

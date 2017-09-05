@@ -24,4 +24,25 @@ public interface CanteenWaresService {
 
 	void disableWares(Long waresId, boolean b);
 
+	/**
+	 * 
+	 * @param uuid
+	 * @param detail
+	 */
+	void updateWaresDetailPreview(String uuid, String detail);
+
+	/**
+	 * 根据uuid获得对应的详情预览
+	 * @param uuid
+	 * @return
+	 */
+	String getPreviewDetail(String uuid);
+
+	/**
+	 * 修改商品的可出售状态
+	 * @param waresId
+	 * @param salable
+	 */
+	void updateWaresSalable(Long waresId, boolean salable);
+
 }

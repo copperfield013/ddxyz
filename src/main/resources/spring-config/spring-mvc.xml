@@ -90,6 +90,8 @@ http://www.springframework.org/schema/context/spring-context-4.3.xsd">
 		<constructor-arg value="${upload_uri}" />
 	</bean>
 	
+	<bean class="cn.sowell.copframe.web.CKEditorUploadController" />
+	
 	<mvc:resources mapping="/media/**" location="/resources/media/" />
 	<mvc:resources mapping="/picture/**" location="/resources/picture/" />
 	<mvc:resources mapping="/qrcodes/**" location="/resources/qrcodes/" />
