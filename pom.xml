@@ -246,9 +246,16 @@
         </repository> -->
         <repository>
         	<id>aliyun51-nexus</id>
-        	<url>http://106.14.249.51:32108/repository/nexus/</url>
+        	<url>http://139.196.123.44:32108/repository/nexus/</url>
         </repository>
     </distributionManagement>
+	<repositories>
+		<repository>
+			<id>nexus</id>
+			<name>nexus</name>
+			<url>http://139.196.123.44:32108/repository/nexus-group/</url>
+		</repository>
+	</repositories>
 	<build>
 		<plugins>
 			<plugin>
