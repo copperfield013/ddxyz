@@ -21,6 +21,10 @@ div.page-container>.page-content{
 div.tab-warp{
 	position:relative;
 }
+.nav-tabs-wrap {
+	position:relative;
+	width:999999999px;
+}
 a.move {
 	display:none;
 	position:absolute;
@@ -31,7 +35,7 @@ a.move {
 	text-align:center;
 	color:#000000;
 	font-size:18px;
-	z-index:999999999;
+	z-index:1000;
 	background-color:#eeeeee;
 	text-decoration:none;
 }
@@ -43,10 +47,21 @@ a.right {
 	right:0;
 	border-left: 1px solid #d6d8dd;
 }
+.nav-tabs>li:first-child>a {
+	border:0;
+}
+.nav-tabs>li>a {
+	margin:0;
+}
 ul.nav-tabs{
 	height: 34px;
 	position:absolute;
 	top:0;
+	-webkit-transition:left .2s linear;
+	-moz-transition:left .2s linear;
+	-o-transition:left .2s linear;
+	transition:left .2s linear;
+	left:0;
 }
 div.tab-content{
 	position: absolute;
