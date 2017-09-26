@@ -3,7 +3,8 @@ define(function(require){
 		utils = require('utils'),
 		cnsl = require('console'),
 		WX = require('wxconfig'),
-		$paramMap = require('$paramMap');
+		$paramMap = require('$paramMap'),
+		AdsBlock = require('adsblock');
 	$CPF.init({
 		//各个模块的参数
 	});
@@ -34,7 +35,18 @@ define(function(require){
 		    }
 		});
 	});
-	
-	
+	var adsBlock = new AdsBlock({
+		filter	: function(){
+			return $('body').children().filter(function(){
+				var $this = $(this);
+				if($this.is('script')){
+					var src = $this.attr('src');
+				}else if($this.is('span')){
+					return $this.find('[id^=ads]').length > 0;
+				}
+			});
+		}
+	});
+	adsBlock.start();
 	cnsl.log('-----weixin-main------');
 });

@@ -1,0 +1,564 @@
+html {
+    width:100%;
+    height:100%;
+}
+body {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: column; 
+    width:100%;
+    height:100%;
+}
+
+.page-header {
+    width:10rem;
+    height:3.3rem;
+    /*background:linear-gradient(to top, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('../static/image/canteen_banner.png') no-repeat;
+    background:-webkit-linear-gradient(bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),  url('../static/image/canteen_banner.png') no-repeat;
+    background:-webkit-gradient(linear, left bottom, left top, from(rgba(0, 0, 0, 0.3)), to(rgba(0, 0, 0, 0.3))),  url('../static/image/canteen_banner.png') no-repeat;
+    background-size:cover;*/
+    background-color:#f3570b;
+}
+
+
+/*搜索框部分*/
+
+.canteen-search-bar_form {
+    position: relative;
+    width:10rem;
+    height:1rem;
+    padding:0.15rem 0.4rem;
+    box-sizing: border-box;
+    color:#656565;
+}
+
+.canteen-search-bar_box {
+    box-sizing: border-box;
+    position: absolute;
+    width:6.5rem;
+    margin-left:1.35rem;
+    height:0.7rem;
+    border-radius: 0.7rem;
+    font-size: 0;
+    padding:0 0.7rem;
+    background-color:#ffffff;
+    display:none;
+}
+.canteen-search-bar_box > .canteen-search-icon {
+    position: absolute;
+    top:0.14rem;
+    left:0.2rem;
+    font-size: 0.4rem;
+    color:#656565;
+}
+
+.canteen-search-bar_box > .canteen-search-cancel-icon {
+    position: absolute;
+    top:0.14rem;
+    right:0.2rem;
+    font-size: 0.4rem;
+    color:#bebebe;
+}
+
+.canteen-search-bar_box > input {
+    width:100%;
+    height:100%;
+    font-size: 0.4rem;  
+}
+
+.canteen-search-bar_label {
+    width:6.5rem;
+    height:0.7rem;
+    border-radius: 0.4rem;
+    position: absolute;
+    background-color: #ffffff;
+    font-size: 0.4rem;
+    line-height: 0.7rem;
+    text-align: center;
+    margin-left:1.35rem;
+    /*display: none;*/
+}
+
+/*信息展示部分*/
+.canteen-information-area {
+    box-sizing: border-box;
+    width:10rem;
+    padding:0 0.4rem;
+    height:2.3rem;
+    color:#ffffff;
+}
+
+.canteen-information_basic {
+    height:1.6rem;
+    width:10rem;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    font-size: 0.32rem;
+}
+
+#canteenLogo {
+    width:1.3rem;
+    height:1.3rem;  
+    margin-right:0.2rem;
+}
+
+.canteen-information_announcement {
+    height:0.7rem;
+    line-height: 0.7rem;
+    border-top:1px solid #ffffff;
+    box-sizing: border-box;
+    font-size: 0.32rem;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+}
+.canteen-information_announcement_text {
+    width:2.5rem;
+}
+.canteen-information_announcement_text:before {
+    margin-right:0.1rem;
+}
+.canteen-information_announcement_detail {
+    flex:1;
+    /*text-indent: 0.5rem;*/
+    overflow: hidden;
+}
+.canteen-information_announcement_carousel {
+    -webkit-transition: all .4s linear;
+    -moz-transition: all .4s linear;
+    transition: all .4s linear;
+}
+.canteen-information_announcement_carousel > li {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/*主体部分*/
+.canteen-main-wrap {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    overflow:hidden;
+    flex:1;
+    padding-bottom:1.3rem;
+}
+/*餐品导航*/
+.canteen-meal-nav {
+    width:2.1rem;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    flex-direction:column;
+    overflow-y:auto;
+    margin-right:0.26rem;
+    background: #f5f5f5;
+}
+.canteen-meal-nav >a {
+    width:100%;
+    height:1.3rem;
+    line-height: 1.3rem;
+    text-align: center;
+    font-size: 0.4rem;
+    color:#656565;
+    background-color:#f5f5f5;
+    border-bottom:1px solid #e2e2e2;
+}
+.canteen-meal-nav >a:before {
+    margin-right:0.2rem;
+}
+.canteen-meal-nav >a.active {
+    background-color:#ffffff;
+    color:#323232;
+}
+/*餐品列表*/
+.canteen-meal-list {
+    flex:1;
+    color:#323232;
+    padding-right:0.4rem;
+    overflow: auto;
+    display: none;
+}
+.canteen-meal-list.active {
+    display:block;
+}
+.canteen-meal-list_title {
+    height:0.8rem;
+    line-height: 0.8rem;
+    width:100%;
+    font-size: 0.4rem;   
+    margin-left:-0.1rem; 
+}
+.canteen-meal-list_menu {
+    width:100%;
+    height:2.3rem;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+.canteen-meal-list_image {
+    width:1.55rem;
+    height:1.55rem;
+    border-radius:0.13rem;
+    background-color:#f3570b;
+    margin-right:0.27rem;
+}
+.canteen-meal-list_menu_detail {
+    flex:1;
+    height:1.55rem;
+    position: relative;
+    overflow: hidden;
+}
+.canteen-meal-list_menu_detail > p {
+    height:0.52rem;
+}
+.canteen-meal-list_menu_name {
+    font-size: 0.40rem;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.canteen-meal-list_menu_sales {
+    font-size: 0.52rem;
+    color:#656565;
+    line-height: 0.615rem;
+}
+.canteen-meal-list_menu_sales > span {
+    display: inline-block;
+    transform-origin: 0;
+    transform: scale(0.50);
+}
+.canteen-meal-list_menu_sales > span:nth-child(2){
+    margin-left:-1rem;
+}
+.canteen-meal-list_menu_price {
+    font-size: 0;
+    color:#f3570b;
+}
+.canteen-meal-list_menu_price {
+    font-weight: 400;
+    font-size: 0.32rem;
+}
+.canteen-meal-list_menu_price > span {
+    font-size: 0.42rem;
+    font-weight: 600;
+    vertical-align: middle;
+}
+.canteen-meal-list_menu_button {
+    position: absolute;
+    right:0;
+    bottom:0;
+    font-size: 0;
+}
+.canteen-meal-list_menu_minus,
+.canteen-meal-list_menu_add,
+.canteen-meal-list_menu_count  {
+    display: inline-block;
+    font-size: 0.68rem;
+    min-width:0.78rem;
+    height:0.78rem;
+    text-align: center;
+    line-height: 0.78rem;
+    vertical-align:middle;
+}
+.canteen-meal-list_menu_count {
+    font-size: 0.48rem;
+}
+.canteen-meal-list_menu_minus,
+.canteen-meal-list_menu_count {
+    display:none;
+}
+.canteen-meal-list_menu_button.active > .canteen-meal-list_menu_minus,
+.canteen-meal-list_menu_button.active > .canteen-meal-list_menu_count {
+    display:inline-block;
+}
+
+.page-footer {
+    height:1.3rem;
+    width:10rem;
+    line-height: 1.3rem;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    position: fixed;
+    bottom:0;
+    z-index: 9;
+}
+.page-footer:before {
+	content: "以上为您所选商品";
+    font-size: 0.32rem;
+    text-align: center;
+    height: 1rem;
+    line-height: 1rem;
+    color: #656565;
+    position: absolute;
+    top: -1rem;
+    width: 100%;
+    border-top: 1px solid #eeeeee;
+    background-color: #ffffff;
+    display:none;
+}
+.page-footer.active:before {
+	display:block;
+}
+.shopping-car {
+    flex:1;
+    box-sizing: border-box;
+    border-top:1px solid #e2e2e2;
+    background-color:#fbfbfb;
+    padding-left:0.4rem;
+    font-size: 0;
+    color:#f3570b;
+}
+.shopping-car:before {
+    margin-right:0.25rem;
+    font-size: 0.93rem;
+    vertical-align: middle;
+}
+.shopping-car-totalprice {
+    font-size: 0.48rem;
+    font-weight: 700;
+    vertical-align: middle;
+}
+.shopping-car-totalprice:before {
+    font-size: 0.34rem;
+    vertical-align: middle;
+    font-weight: normal;
+}
+.shopping-car-totalcount {
+    position: absolute;
+    width:0.5rem;
+    height:0.5rem;
+    line-height: 0.5rem;
+    text-align: center;
+    font-style: normal;
+    border-radius:0.25rem;
+    background-color:#ff3300;
+    color:#ffffff;
+    top:0.1rem;
+    left:1.1rem;
+    font-size: 0.26rem;
+    font-weight: 700;
+    display: inline-block;
+}
+.settlement {
+    width:3.46rem;
+    text-align: center;    
+    color:#ffffff;
+    background-color:#f3570b;
+    font-size: 0.48rem;
+    font-weight: 700;
+}
+
+/*购物车为空时的购物车模块样式*/
+.page-footer.shopping-car_empty > .shopping-car,
+.page-footer.shopping-car_empty > .shopping-car:before,
+.page-footer.shopping-car_empty > .shopping-car > .shopping-car-totalprice:before {
+    color:#bebebe;
+}
+.page-footer.shopping-car_empty > .settlement {
+    background-color:#bebebe;
+}
+.page-footer.shopping-car_empty > .shopping-car > .shopping-car-totalprice:before {
+    display:none;
+}
+.page-footer.shopping-car_empty > .shopping-car > .shopping-car-totalprice {
+    font-size: 0.42rem;
+}
+.page-footer.shopping-car_empty > .shopping-car > .shopping-car-totalcount {
+    display: none;
+}
+
+/*购物车展示部分*/
+.shopping-car-show {
+    overflow:hidden;
+    position: fixed;
+    left:0;
+    right:0;
+    bottom:1.3rem;
+    z-index: 1;
+    background-color:#ffffff;
+    max-height: 6.38rem;
+    -webkit-transition: all .2s linear;
+    -moz-transition: all .2s linear;
+    transition: all .2s linear;
+    -webkit-transform: translate3d(0,100%,0);
+    transform: translate3d(0,100%,0); 
+}
+.shopping-car-show.active {
+    -webkit-transform: translate3d(0,0,0);
+    transform: translate3d(0,0,0); 
+    bottom:2.3rem;
+}
+.shopping-car-show_list_wrap {
+    flex:1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height:5.32rem;
+}
+.shopping-car-show_title {
+    background-color:#f5f5f5;
+    font-size: 0.37rem;
+    color:#656565;
+    height:1.06rem;
+    line-height: 1.06rem;
+    padding:0 0.4rem;
+}
+.shopping-car-show_title_empty {
+    float:right;
+}
+.shopping-car-show_list {
+    font-size: 0;
+    height:1.33rem;
+    width:9.2rem;
+    margin-left:0.4rem;
+    line-height: 1.33rem;
+    color:#323232;
+    border-bottom:0.5px solid #bebebe;
+    box-sizing:border-box;
+}
+.shopping-car-show_list:last-child {
+
+}
+.shopping-car-show_list_button {
+    float: right;
+    height:100%;
+}
+.shopping-car-show_list_name,
+.shopping-car-show_list_price,
+.shopping-car-show_list_count {
+    font-size: 0.42rem;
+    font-weight: 600;
+    color:#323232;
+}
+.shopping-car-show_list_price,
+.shopping-car-show_list_minus,
+.shopping-car-show_list_add   {
+    color:#f3570b;
+    font-size: 0.42rem;
+}
+.shopping-car-show_list_name {
+    display: inline-block;
+    width:5.2rem;
+}
+.shopping-car-show_list_price:before {
+    font-weight: normal;
+    font-size: 0.28rem;
+    margin-right:0.05rem;
+    vertical-align:middle;
+}
+.shopping-car-show_list_minus,
+.shopping-car-show_list_add,
+.shopping-car-show_list_count {
+    display: inline-block;
+    min-width: 0.68rem;
+    height: 0.68rem;
+    line-height: 0.68rem;
+    font-size: 0.58rem;
+    text-align: center;
+    margin-top: 0.3rem;
+}
+.shopping-car-show_list_count {
+    font-size: 0.48rem;
+}
+
+/*信息展示模块*/
+.canteen-information-alert-component {
+    display: none;
+}
+.canteen-information-alert-component.active {
+    display: block;
+}
+.canteen-information-alert {
+    color:#656565;
+    font-size: 0.32rem;
+    padding:0 0.4rem 0.8rem 0.4rem;
+    position:absolute;
+    top:2.4rem;
+    bottom:4rem;
+    left:1rem;
+    right:1rem;
+    z-index: 11;
+    background-color:#ffffff;
+    border-radius:0.2rem;
+    overflow: hidden;
+}
+.canteen-information-alert_scroll {
+    width:100%;
+    height:100%;
+    overflow: auto;
+}
+.canteen-information-alert_banner {
+    color:#323232;
+    width:100%;
+    height:1.6rem;
+    line-height: 1.6rem;
+    text-align: center;
+    border-bottom:1px solid #e2e2e2;
+    font-size: 0.6rem;
+}
+.canteen-information-alert_basic {
+    padding:0.3rem 0 0.5rem 0;
+    border-bottom: 1px solid #e2e2e2;
+}
+.canteen-information-alert_basic > p {
+    margin-top:0.2rem;
+    line-height: 0.5rem;
+}
+.canteen-information-alert_announcement {
+    padding:0.3rem 0 0.5rem 0;
+    
+}
+.canteen-information-alert_announcement-text{
+    display: block;
+    width:100%;
+    text-align: center;
+}
+.canteen-information-alert_announcement_list {
+    margin-top:0.2rem;
+    line-height: 0.6rem;
+}
+.canteen-information-alert_close {
+    width: 1.2rem;
+    height: 1.2rem;
+    line-height: 1.2rem;
+    border-radius: 50%;
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    margin-left: -0.6rem;
+    font-style: normal;
+    text-align: center;
+    font-size: 1rem;
+    border: 4px solid rgba(255,255,255,0.7);
+    background: rgba(0,0,0,0);
+    z-index: 11;
+    color: #ffffff;
+}
+
+/*遮罩*/
+.canteen-shadow {
+    position: absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    background:rgba(0, 0, 0, 0);
+    display:none;
+    -webkit-transition: all .2s linear;
+    -moz-transition: all .2s linear;
+    transition: all .2s linear;
+}
+.canteen-shadow.active {
+    display:block;
+    background:rgba(0, 0, 0, 0.6);
+}

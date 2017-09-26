@@ -14,6 +14,10 @@ public interface WeiXinConstants {
 	static final String PATH_DELIVERY = PATH_BASE + "/delivery";
 	
 	static final String PATH_CANTEEN = PATH_BASE + "/canteen";
+
+
+
+	static final String PATH_KANTEEN = PATH_BASE + "/kanteen";
 	
 	
 }

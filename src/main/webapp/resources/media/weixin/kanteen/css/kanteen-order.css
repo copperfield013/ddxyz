@@ -1,0 +1,202 @@
+html,body {
+    width:100%;
+    height:100%;
+}
+body{
+    background-color:#eeeeee;
+    position:relative;
+}
+.canteen-user-information-basic,
+.canteen-user-information-detail,
+.canteen-order-information,
+.canteen-total-price {
+    background-color:#ffffff;
+}
+
+.canteen-user-information-basic,
+.canteen-user-information-detail {
+    padding:0 0.4rem;
+}
+.canteen-user-information-basic_list {
+    height:1.3rem;
+    line-height: 1.3rem;
+    border-bottom:1px solid #e2e2e2;
+    font-size: 0;
+}
+#canteen-order-information{
+    height:100%;
+    overflow:auto;
+}
+/*基本信息部分*/
+.canteen-user-information-basic_label {
+    font-size: 0.42rem;
+    font-weight: 600;
+    width:2.4rem;
+    display: inline-block;
+    color:#323232;
+}
+.canteen-user-information-basic > .canteen-user-information-basic_list:last-child{
+    border-bottom:none;
+}
+.canteen-user-information-basic input {
+    font-size: 0.42rem;
+    color:#323232;
+}
+#userTel {
+    color:#656565;
+}
+
+/*详细信息部分*/
+.canteen-user-information-detail {
+    margin-top:0.26rem;
+    color:#323232;
+}
+.canteen-user-information-basic_important {
+    height:2.06rem;
+    font-size: 0;
+    padding:0.4rem 0;
+    border-bottom:1px solid #e2e2e2;
+    box-sizing: border-box;
+
+}
+.canteen-user-information-basic_important > .canteen-user-information-basic_list {
+    font-size: 0.4rem;    
+    border-bottom:none;
+    height:0.63rem;
+    line-height: 0.63rem;
+}
+.canteen-user-information-basic_important  .canteen-user-information-basic_label {
+    font-size: 0.42rem;
+}
+.canteen-user-pay-way {
+    font-size: 0.4rem;
+}
+#userMark {
+    font-size: 0.4rem;
+}
+.canteen-user-information-detail > .canteen-user-information-basic_list:last-child {
+    border-bottom:none;
+}
+
+/*订单信息*/
+.canteen-order-information {
+    margin-top:0.26rem;
+    margin-bottom:1.6rem;
+    background-color:#ffffff;
+    color:#323232;
+}
+.canteen-order-information_title {
+    font-size: 0;
+    padding:0 0.4rem;
+    height:1.06rem;
+    line-height: 1.06rem;
+    border-bottom:1px solid #e2e2e2;
+}
+.canteen-order-information_logo {
+    width:0.53rem;
+    height:0.53rem;
+    display: inline-block;
+    background:url('../static/image/canteen_logo.png') no-repeat;
+    background-size: cover;
+    vertical-align: middle;
+    margin-right:0.26rem;
+}
+.canteen-order-information_logoname {
+    vertical-align: middle;    
+    font-size: 0.42rem;
+    font-weight: 600;
+}
+.canteen-order-information_lists {
+    font-size: 0;
+    padding:0 0.4rem;
+}
+.canteen-order-information_list {
+    height:1.06rem;
+    line-height: 1.06rem;
+    font-size: 0.37rem;
+    display: -webkit-flex;
+    display: -webkit-box;
+    display: flex;
+}
+.canteen-order-information_list_name {
+    -webkit-box-flex: 9;
+    -webkit-flex: 9;
+    flex:9;
+}
+.canteen-order-information_list_count {
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex:1;
+}
+.canteen-order-information_list_price {
+    -webkit-box-flex: 2;
+    -webkit-flex: 2;
+    flex:2;
+    text-align: right;
+}
+.canteen-order-information_list_price:before {
+    font-size: 0.32rem;
+    margin-right:0.08rem;
+    color:#323232;
+}
+
+.canteen-order-information_price {
+    height:1.33rem;
+    line-height: 1.33rem;
+    padding:0 0.4rem;
+    font-size: 0;
+}
+.canteen-order-information_price_text {
+    display: inline-block;
+    font-size: 0.46rem;
+    font-weight: 600;
+}
+.canteen-order-information_price_totalprice {
+    float:right;
+    font-size: 0.42rem;
+    color:#f3570b;
+    vertical-align: middle;
+}
+.canteen-order-information_price_totalprice:before {
+    font-size: 0.2rem;
+    vertical-align: middle;
+    margin-right:0.08rem;
+}
+
+.canteen-order-footer {
+    height:1.3rem;
+    line-height: 1.3rem;
+    width:10rem;
+    display: -webkit-flex;
+    display:-webkit-box;
+    display:flex;
+    position: fixed;
+    bottom:0;
+}
+.canteen-order-total-price {
+    flex: 1;
+    box-sizing: border-box;
+    border-top: 1px solid #e2e2e2;
+    background-color: #fbfbfb;
+    padding-left: 0.4rem;
+    color: #f3570b;
+    padding-left:0.4rem;
+    font-size: 0.48rem;
+}
+.canteen-order-total-price_price {
+    font-weight: 700;
+}
+.canteen-order-total-price_price:before {
+    font-size: 0.34rem;
+    vertical-align: top;
+    margin-right:0.05rem;
+    font-weight: normal;
+}
+.order-submit {
+    width: 3.46rem;
+    text-align: center;
+    color: #ffffff;
+    background-color: #f3570b;
+    font-size: 0.48rem;
+    font-weight: 700;
+}

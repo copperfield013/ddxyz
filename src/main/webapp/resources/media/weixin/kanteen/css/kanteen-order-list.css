@@ -1,0 +1,305 @@
+html,body{
+    width:100%;
+    height:100%;
+}
+body {
+    background-color:#eeeeee;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: column; 
+}
+/*搜索框部分*/
+header {
+	height:2.06rem;
+}
+.canteen-search-bar_form {
+    position: relative;
+    width:10rem;
+    height:1rem;
+    padding:0.15rem 0.4rem;
+    box-sizing: border-box;
+    color:#656565;
+}
+
+.canteen-search-bar_box {
+    box-sizing: border-box;
+    position: absolute;
+    width:6.5rem;
+    margin-left:1.35rem;
+    height:0.7rem;
+    border-radius: 0.7rem;
+    font-size: 0;
+    padding:0 0.7rem;
+    background-color:#ffffff;
+    display:none;
+}
+.canteen-search-bar_box > .canteen-search-icon {
+    position: absolute;
+    top:0.14rem;
+    left:0.2rem;
+    font-size: 0.4rem;
+    color:#656565;
+}
+
+.canteen-search-bar_box > .canteen-search-cancel-icon {
+    position: absolute;
+    top:0.14rem;
+    right:0.2rem;
+    font-size: 0.4rem;
+    color:#bebebe;
+}
+
+.canteen-search-bar_box > input {
+    width:100%;
+    height:100%;
+    font-size: 0.4rem;  
+}
+
+.canteen-search-bar_label {
+    width:6.5rem;
+    height:0.7rem;
+    border-radius: 0.4rem;
+    position: absolute;
+    background-color: #ffffff;
+    font-size: 0.4rem;
+    line-height: 0.7rem;
+    text-align: center;
+    margin-left:1.35rem;
+}
+
+/*订单导航*/
+.order-nav {
+    height:1.06rem;
+    line-height: 1.06rem;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display:flex;
+    position: relative;
+    background-color:#ffffff;
+}
+
+.order-nav > a {
+    flex:1;
+    font-size: 0.42rem;
+    color:#323232;
+    text-align: center;
+}
+.order-nav-border {
+    display: inline-block;
+    height:2px;
+    width:3rem;
+    background-color:#ff3300;
+    position: absolute;
+    bottom:-1px;
+    left:1rem;
+    -webkit-transition: all .2s linear;
+    -moz-transition: all .2s linear;
+    transition: all .2s linear;
+}
+.order-nav-total > .order-nav-border {
+    left:6rem;
+}
+.canteen-order-list-wrap {
+    margin-bottom:1.8rem;
+    flex:1;
+    overflow:auto;
+}
+.canteen-order-list {
+    width:10rem;   
+    margin-top:0.26rem;
+}
+.canteen-order-list_header {
+    background-color:#ffffff;
+    font-size: 0;
+    padding:0 0.4rem;
+    height:1.06rem;
+    line-height: 1.06rem;
+}
+.canteen-order-list_logo {
+    width: 0.53rem;
+    height: 0.53rem;
+    display: inline-block;
+    background: url(../static/image/canteen_logo.png) no-repeat;
+    background-size: cover;
+    vertical-align: middle;
+    margin-right: 0.26rem;
+}
+.canteen-order-list_logoname {
+    font-size: 0.42rem;
+    color:#323232;
+    vertical-align: middle;
+}
+.canteen-order-list_status {
+    color:#ff3300;
+    font-size: 0.42rem;
+    float:right;
+}
+.canteen-order-list_lists {
+    background-color:#ffffff;
+}
+.canteen-order-list_list {
+    height:1.73rem;
+    padding:0 0.4rem;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center; 
+    color:#737373;
+    font-size: 0.37rem;
+    margin-top:0.053rem;
+    background-color:#eeeeee;
+}
+.canteen-order-list_list:first-child{
+    margin:0;
+}
+.canteen-order-list_list_image {
+    height:1.54rem;
+    width:1.54rem;
+    background-color:#ff3300;
+    border-radius:0.13rem;
+    margin-right:0.4rem;
+}
+.canteen-order-list_list_name {
+    flex:2;
+    align-self:flex-start;
+    margin-top:0.095rem;
+}
+.canteen-order-list_list_rightbox {
+    height:1.54rem;
+    flex:1;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: column;
+    -ms-flex-direction: column;
+    text-align: right;
+    justify-content:space-around;
+}
+.canteen-order-list_list_price:before {
+    color:#737373;
+    margin-right:0.08rem;
+    font-size: 0.32rem;
+}
+
+.canteen-order-list_list_totalprice {
+    background-color:#ffffff;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: row-reverse;
+    padding:0 0.4rem;
+    font-size: 0.48rem;
+    color:#ff3300;
+    height:1.06rem;
+    line-height:1.06rem;
+}
+.canteen-order-list_list_totalprice_number {
+    order:-1;
+}
+.canteen-order-list_list_totalprice_number:before {
+    font-size: 0.32rem;
+    color:#ff3300;
+    vertical-align:top;
+    margin-right:0.08rem;
+}
+/*详细信息*/
+.canteen-order-list_list_information_box {
+    background-color:#ffffff;
+    padding:0 0.4rem;
+    margin-top:0.13rem;    
+    height:2.4rem;
+    overflow: hidden;
+    color:#323232;
+}
+.canteen-order-list_list_information_box.active {
+    height:auto;
+}
+.canteen-order-list_list_information {
+    line-height:0.8rem;
+    font-size: 0.37rem;
+    border-bottom:0.5px solid #eeeeee;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center; 
+
+}
+.canteen-order-list_list_label {
+    width:2.2rem;
+}
+.canteen-order-list_list_information > span:nth-child(2){
+    flex:1;
+}
+/*订单操作*/
+.canteen-order-list_operation {
+    background-color:#ffffff;
+    font-size: 0.37rem;
+    padding:0 0.4rem;
+    color:#323232;
+}
+.canteen-order-list_more {
+    height:0.8rem;
+    line-height: 0.8rem;
+   background-color:#eeeeee;
+    text-align: center;
+}
+.canteen-order-list_more_icon {
+    display: inline-block;
+    -webkit-transition: all .2s linear;
+    -moz-transition: all .2s linear;
+    transition: all .2s linear;   
+    -ms-transform:rotate(90deg); 
+    -moz-transform:rotate(90deg); 	
+    -webkit-transform:rotate(90deg); 
+    -o-transform:rotate(90deg); 	
+    transform:rotate(90deg);
+}
+.canteen-order-list_more_icon.active {
+    -ms-transform:rotate(-90deg); 
+    -moz-transform:rotate(-90deg); 	
+    -webkit-transform:rotate(-90deg); 
+    -o-transform:rotate(-90deg); 	
+    transform:rotate(-90deg);
+}
+.canteen-order-list_button {
+    height:1.4rem;
+    border-bottom:0.5px solid #eeeeee;
+    text-align: right;
+}
+.canteen-order-list_button >a {
+    width: 3rem;
+    height: 0.8rem;
+    line-height: 0.8rem;
+    text-align: center;
+    display: inline-block;
+    border: 1px solid #eeeeee;
+    margin-top: 0.3rem;
+    color: #323232;
+    box-sizing: border-box;
+}
+.canteen-order-list-footer {
+    height: 1.3rem;
+    line-height: 1.3rem;
+    width: 10rem;
+    display: -webkit-flex;
+    display: -webkit-box;
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    background-color: #ffffff;
+    border-top:1px solid #e2e2e2;
+    flex-direction: row-reverse; 
+}
+.canteen-footer-goto-home {
+    width: 3.46rem;
+    text-align: center;
+    color: #ffffff;
+    background-color: #f3570b;
+    font-size: 0.48rem;
+    font-weight: 700;
+}

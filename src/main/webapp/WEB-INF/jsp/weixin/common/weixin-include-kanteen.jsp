@@ -1,26 +1,16 @@
 <%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
 <base href="${basePath }" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
-
-
-<!-- fromXu Start -->
-<meta charset="utf-8"/>
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Cache-Control" content="no-cache">
-<meta http-equiv="Expires" content="-1">
-<meta name="format-detection" content="telephone=no"><!-- 禁止iphone修改数字样式 -->
-<meta name="viewport" content="minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,width=device-width,user-scalable=no">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
 <meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-<link rel="stylesheet" href="${basePath }media/weixin/main/css/templete.css?${RES_STAMP}">
-<link rel="stylesheet" href="${basePath }media/weixin/main/css/common.css?${RES_STAMP}">
+<link rel="stylesheet" href="media/weixin/kanteen/css/reset.css?v=1.1.4">
 
-<!-- fromXu End -->
 
 <script src="${basePath }media/weixin/main/js/jquery-3.1.1.min.js"></script>
 <script src="${basePath }media/common/plugins/jquery.tmpl.js"></script>
-<%--<script src="${basePath }media/weixin/plugins/jquery.mobile-1.4.5/jquery.mobile-1.4.5.js"></script> --%>
+<script src="media/weixin/kanteen/js/mobile-adaptation.js"></script>
 <!-- SeaJS -->
 <script src="${basePath }media/sea-debug.js"></script>
 
