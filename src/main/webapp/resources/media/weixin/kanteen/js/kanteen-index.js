@@ -18,6 +18,7 @@
 			}
 		}
 	};
+	window.Kanteen = kanteen;
 	/*
 	 * 林家食堂微信首页页面交互命名空间
 	 * 不考虑传统ie浏览器
@@ -617,7 +618,6 @@
 	if(typeof define === 'function'){
 		define(kanteen);
 	}
-	window.Kanteen = kanteen;
 	
 	
 })();

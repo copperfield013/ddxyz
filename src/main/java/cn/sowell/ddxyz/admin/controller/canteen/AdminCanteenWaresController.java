@@ -80,6 +80,8 @@ public class AdminCanteenWaresController {
 		}
 	}
 	
+	
+	
 	@RequestMapping("/update/{waresId}")
 	public String update(@PathVariable Long waresId, Model model) {
 		PlainWares wares = waresService.getPlainObject(PlainWares.class, waresId);

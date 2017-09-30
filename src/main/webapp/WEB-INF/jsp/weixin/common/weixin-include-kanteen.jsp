@@ -1,9 +1,10 @@
 <%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
 <base href="${basePath }" />
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
+<meta name="viewport" content="initial-scale=1, user-scalable=0, user-scalable=no">
 <meta name="renderer" content="webkit">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
 
 <link rel="stylesheet" href="media/weixin/kanteen/css/reset.css?v=1.1.4">
 

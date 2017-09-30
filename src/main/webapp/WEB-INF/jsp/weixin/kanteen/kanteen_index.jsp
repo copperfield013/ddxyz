@@ -510,7 +510,8 @@
     	$(function(){
     		seajs.use(['ajax'], function(Ajax){
 	    		Kanteen.bindChange(function(cartData){
-	    			Ajax.ajax('weixin/kanteen/uploadCart', $.extend(cartData, {merchantId: 1}), function(data){
+	    			Ajax.ajax('weixin/kanteen/uploadCart', 
+	    					$.extend(cartData, {merchantId: 1}), function(data){
 	    				if(data.status != 'suc'){
 	    					console.error('系统错误');
 	    				}

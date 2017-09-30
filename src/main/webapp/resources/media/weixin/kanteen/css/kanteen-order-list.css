@@ -101,7 +101,7 @@ header {
     left:6rem;
 }
 .canteen-order-list-wrap {
-    margin-bottom:1.8rem;
+    margin-bottom:1.3rem;
     flex:1;
     overflow:auto;
 }
@@ -239,7 +239,7 @@ header {
 .canteen-order-list_operation {
     background-color:#ffffff;
     font-size: 0.37rem;
-    padding:0 0.4rem;
+   
     color:#323232;
 }
 .canteen-order-list_more {
@@ -270,6 +270,7 @@ header {
     height:1.4rem;
     border-bottom:0.5px solid #eeeeee;
     text-align: right;
+    padding:0 0.4rem;
 }
 .canteen-order-list_button >a {
     width: 3rem;

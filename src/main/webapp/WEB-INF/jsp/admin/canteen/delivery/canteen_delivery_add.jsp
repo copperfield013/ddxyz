@@ -8,7 +8,7 @@
 </style>
 <c:set var="waresRow">
 	<div class="row wares-row">
-		<div class="col-lg-6">
+		<div class="col-lg-4">
 			<select class="form-control wares" name="waresId-0">
 				<option value="">--请选择--</option>
 				<c:forEach items="${waresList }" var="wares">
@@ -16,10 +16,15 @@
 				</c:forEach>
 			</select>
 		</div>
-		<div class="col-lg-4">
+		<div class="col-lg-3">
 			<input type="number" min="0 " name="maxCount-0" class="form-control max-count" placeholder="限量" />
 		</div>
-		<div class="col-lg-2">
+		<div class="col-lg-4">
+			<select class="form-control wares" name="waresId-0">
+				<option value="">默认类别</option>
+			</select>
+		</div>
+		<div class="col-lg-1">
 			<input type="button" class="btn dwares-row-del" value="删除" />
 		</div>
 	</div>
@@ -55,14 +60,17 @@
 					</div>
 					<div class="form-group">
 						<label class="col-lg-2 control-label" for="name">餐品</label>
-						<div class="col-lg-4" id="wares-row-container">
+						<div class="col-lg-5" id="wares-row-container">
 							<input type="hidden" name="waresCount" id="waresCount" />
 							${waresRow }
 						</div>
 					</div>
 					<div class="form-group">
-						<div class="col-lg-offset-2 col-lg-3">
+						<div class="col-lg-offset-2 col-lg-2">
 							<input type="button" class="btn btn-block btn-primary" id="add-wares" value="添加" />
+						</div>
+						<div class="col-lg-2">
+							<input type="button" class="btn btn-block" id="manage-group" value="管理类别" />
 						</div>
 					</div>
 					<div class="form-group">
@@ -81,6 +89,9 @@
 		seajs.use(['ajax', 'dialog', 'utils'], function(Ajax, Dialog, utils){
 			console.log('canteen-delivery-add');
 			var nav = $("#canteen-delivery-add");
+			
+			var groupMap = {};
+			
 			var START_TIME = new Date(Number('${criteria.startDate.time}')),
 				END_TIME = new Date(Number('${criteria.endDate.time - 1}'));
 			var accessTimeRange = utils.formatDate(START_TIME, 'yyyy-MM-dd hh:mm:ss') + '~' + utils.formatDate(END_TIME, 'yyyy-MM-dd hh:mm:ss');
@@ -155,6 +166,27 @@
 				}
 				refreshDisableWares();
 				return false;
+			});
+			
+			$('#manage-group', nav).click(function(){
+				Dialog.openDialog()
+			});
+			
+			$('#add-group', nav).click(function(){
+				Dialog.prompt('请输入新的商品类别名称', function(name){
+					Ajax.ajax('weixin/canteen/delivery/add_wares_group', {
+						groupName	: name
+					}, function(data){
+						if(data.status === 'suc'){
+							
+							Dialog.notice('创建成功');
+						}else if(data.status === 'exists'){
+							
+						}else{
+							
+						}
+					});
+				});
 			});
 			
 			function refreshDisableWares(){

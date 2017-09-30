@@ -4,14 +4,11 @@
 <html lang="en">
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="renderer" content="webkit">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>确认订单</title>
-	<jsp:include page="/WEB-INF/jsp/weixin/common/weixin-include.jsp"></jsp:include>
-    <link rel="stylesheet" href="media/weixin/kanteen/css/reset.css?v=1.1">
+	<jsp:include page="/WEB-INF/jsp/weixin/common/weixin-include-kanteen.jsp"></jsp:include>
     <link rel="stylesheet" href="media/weixin/kanteen/css/kanteen-order.css?v=1.11">
-    <script src="media/weixin/kanteen/js/mobile-adaptation.js"></script>
+    <link rel="stylesheet" href="media/weixin/kanteen/css/kanteen-base.css?v=1.1.4">
+    <script src="media/weixin/plugins/pushbutton/pushbutton.min.js"></script>
     <script src="media/weixin/kanteen/js/kanteen-order.js"></script>
 </head>
 
@@ -32,21 +29,27 @@
         <section class="canteen-user-information-detail">
             <div class="canteen-user-information-basic_important">
                 <div class="canteen-user-information-basic_list">
-                    <span class="canteen-user-information-basic_label">领取时间</span>
-                    <span>2017.9.01 14:00~2017.9.01 14:00</span>
+                    <span class="canteen-user-information-basic_label">领取地点</span>
+                    <label id="fetchSite" class="canteen-user-infomation-basic_select">请选择领取地点</label>
+                    <input type="hidden" id="locationId"  />
+                    <!-- <input id="fetchSite" tSype="text" name="userTel" readonly value="" placeholder="请选择领取地点"> -->
                 </div>
                 <div class="canteen-user-information-basic_list">
-                    <span class="canteen-user-information-basic_label">领取地点</span>
-                    <span>林家食堂</span>
+                    <span class="canteen-user-information-basic_label">领取时间</span>
+                    <label id="fetchTime" class="canteen-user-infomation-basic_select">请选择领取时间</label>
+                    <input type="hidden" id="timeRange"  />
                 </div>
             </div>
             <div class="canteen-user-information-basic_list">
                 <span class="canteen-user-information-basic_label">支付方式</span>
-                <span class="canteen-user-pay-way">当面支付</span>
+                <label id="payWay" class="canteen-user-infomation-basic_select">请选择支付方式</label>
+                <input type="hidden" id="payWayValue"  />
             </div>
-            <div class="canteen-user-information-basic_list">
-                <span class="canteen-user-information-basic_label">买家备注</span>
-                <input id="userMark" tSype="text" name="userTel" value="" placeholder="请填写备注">
+            <div class="canteen-user-information-basic_mark">
+                <p class="canteen-user-information-basic__mark_label">买家备注</p>
+                <div class="canteen-user-information-basic__mark_textarea">
+                    <textarea name="userTel" id="userMark" placeholder="请填写备注（可不写）"></textarea>
+                </div>
             </div>
         </section>
 
@@ -137,7 +140,9 @@
         </div>
         <a href="canteen_order_list.html" class="order-submit">提交订单</a>
     </footer>
-
+    <section id="sitebutton"></section>
+    <section id="timebutton"></section>
+    <section id="paybutton"></section>
 </body>
 
 </html>

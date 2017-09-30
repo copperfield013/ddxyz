@@ -342,3 +342,19 @@ nav{
 	    text-align: left;
 	}
 }
+
+.dialog-prompt-msg {
+    color: #666;
+    margin-bottom: 0.5em;
+}
+
+.dialog-prompt-input-wrapper {
+    text-align: left;
+}
+
+.dialog-prompt-input-wrapper input {
+    text-indent: 0.5em;
+    height: 2em;
+    line-height: 2em;
+    width: 95%;
+}

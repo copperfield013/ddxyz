@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 
 import cn.sowell.copframe.common.file.FileUploadUtils;
 import cn.sowell.copframe.dto.ajax.AjaxPageResponse;
+import cn.sowell.copframe.dto.ajax.JsonResponse;
 import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.copframe.utils.date.FrameDateFormat;
 import cn.sowell.ddxyz.DdxyzConstants;
@@ -225,5 +227,20 @@ public class AdminCanteenDeliveryController {
 			return AjaxPageResponse.FAILD("操作失败");
 		}
 	}
+	
+	@RequestMapping("/group_manage")
+	public String waresGroupManage(Long deliveryId){
+		return AdminConstants.PATH_CANTEEN + "/canteen_delivery_wares_group_manage.jsp";
+	}
+	
+	
+	@ResponseBody
+	@RequestMapping("/move_group")
+	public JsonResponse moveGroup(Long groupId, Boolean isUp){
+		JsonResponse jRes = new JsonResponse();
+		
+		return jRes;
+	}
+	
 	
 }
