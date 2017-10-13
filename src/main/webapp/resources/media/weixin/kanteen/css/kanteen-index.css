@@ -13,7 +13,7 @@ body {
 
 .page-header {
     width:10rem;
-    height:3.3rem;
+    /* height:3.3rem; */
     /*background:linear-gradient(to top, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('../static/image/canteen_banner.png') no-repeat;
     background:-webkit-linear-gradient(bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),  url('../static/image/canteen_banner.png') no-repeat;
     background:-webkit-gradient(linear, left bottom, left top, from(rgba(0, 0, 0, 0.3)), to(rgba(0, 0, 0, 0.3))),  url('../static/image/canteen_banner.png') no-repeat;
@@ -85,12 +85,12 @@ body {
     box-sizing: border-box;
     width:10rem;
     padding:0 0.4rem;
-    height:2.3rem;
+    /* height:2.3rem; */
     color:#ffffff;
 }
 
 .canteen-information_basic {
-    height:1.6rem;
+   /*  height:1.6rem; */
     width:10rem;
     display: -webkit-box;
     display: -webkit-flex;
