@@ -35,10 +35,10 @@ public class HibernateRefrectResultTransformer<T> implements ResultTransformer{
 			if(anno != null){
 				String columnName = anno.name();
 				if(columnName != null){
-					return columnName;
+					return columnName.toLowerCase();
 				}
 			}
-			return composite.getFieldName();
+			return composite.getFieldName().toLowerCase();
 		});
 		//拿到所有的字段以及字段的注解，还有字段对应的getter和setter
 		cTrans = new ColumnMapResultTransformer<T>() {
