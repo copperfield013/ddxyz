@@ -91,7 +91,7 @@ body{
 .canteen-user-pay-way {
     font-size: 0.4rem;
 }
-#userMark {
+#remark {
     font-size: 0.4rem;
 }
 .canteen-user-information-detail > .canteen-user-information-basic_list:last-child {
@@ -219,4 +219,12 @@ body{
     background-color: #f3570b;
     font-size: 0.48rem;
     font-weight: 700;
+}
+
+#order-detail>p{
+	text-align: left;
+	word-break: break-word;
+}
+#order-detail label {
+    font-weight: bold;
 }

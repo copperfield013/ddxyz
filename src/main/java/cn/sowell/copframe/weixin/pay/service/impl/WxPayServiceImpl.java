@@ -2,11 +2,9 @@ package cn.sowell.copframe.weixin.pay.service.impl;
 
 import java.io.InputStream;
 import java.security.KeyStore;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.net.ssl.SSLContext;
@@ -28,7 +26,6 @@ import org.springframework.util.StringUtils;
 
 import cn.sowell.copframe.SystemConstants;
 import cn.sowell.copframe.common.UserIdentifier;
-import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.copframe.utils.HttpRequestUtils;
 import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.copframe.utils.date.FrameDateFormat;
@@ -55,7 +52,6 @@ import cn.sowell.copframe.weixin.pay.refund.RefundResult;
 import cn.sowell.copframe.weixin.pay.service.WxPayService;
 import cn.sowell.ddxyz.model.common.core.Order;
 import cn.sowell.ddxyz.model.common.core.OrderRefundParameter;
-import cn.sowell.ddxyz.model.common.core.Product;
 import cn.sowell.ddxyz.model.weixin.pojo.WeiXinUser;
 
 @Service
@@ -138,7 +134,7 @@ public class WxPayServiceImpl implements WxPayService{
 	
 	
 	@Override
-	public PrepayParameter buildPrepayParameter(Order order) throws WeiXinPayException {
+	public PrepayParameter buildPrepayParameter(WxPayOrder order) throws WeiXinPayException {
 		Assert.notNull(order);
 		JsApiPrepayParameter parameter = new JsApiPrepayParameter();
 		WeiXinUser user = order.getOrderUser();
@@ -153,20 +149,10 @@ public class WxPayServiceImpl implements WxPayService{
 				//设置总价
 				parameter.setTotalFee(order.getTotalPrice());
 				//付款时的标题
-				parameter.setBody("点点新意-一点点奶茶");
+				parameter.setBody("点点新意-" + order.getPayTitle());
 				//构造订单详情对象
 				OrderDetail orderDetail = new OrderDetail();
-				//遍历订单里的所有产品，并将所有产品转换为商品
-				Set<Product> productSet = order.getProductSet();
-				List<GoodsDetail> goodsDetails = new ArrayList<GoodsDetail>();
-				for (Product product : productSet) {
-					GoodsDetail gd = new GoodsDetail();
-					gd.setGoodsId(FormatUtils.toString(product.getId()));
-					gd.setGoodsName(product.getName());
-					gd.setQuantity(1);
-					gd.setPrice(product.getPrice());
-					goodsDetails.add(gd);
-				}
+				List<GoodsDetail> goodsDetails = order.getGoodsDetails();
 				orderDetail.setGoodsDetail(goodsDetails);
 				parameter.setOrderDetail(orderDetail);
 				

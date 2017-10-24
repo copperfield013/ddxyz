@@ -9,6 +9,7 @@ import cn.sowell.copframe.weixin.pay.prepay.PrepayResult;
 import cn.sowell.copframe.weixin.pay.prepay.UnifiedOrder;
 import cn.sowell.copframe.weixin.pay.refund.RefundRequest;
 import cn.sowell.copframe.weixin.pay.refund.RefundResult;
+import cn.sowell.copframe.weixin.pay.service.impl.WxPayOrder;
 import cn.sowell.ddxyz.model.common.core.Order;
 import cn.sowell.ddxyz.model.common.core.OrderRefundParameter;
 
@@ -49,7 +50,7 @@ public interface WxPayService {
 	 * @return
 	 * @throws WeiXinPayException 
 	 */
-	PrepayParameter buildPrepayParameter(Order order) throws WeiXinPayException;
+	PrepayParameter buildPrepayParameter(WxPayOrder order) throws WeiXinPayException;
 	
 	/**
 	 * 根据预付款订单的id，构造一个可以用于前端h5调用微信接口的参数对象

@@ -22,6 +22,9 @@ public class PlainKanteenDistributionWares {
 	@Column(name="menuwares_id")
 	private Long menuWaresId;
 	
+	@Column(name="wares_id")
+	private Long waresId;
+	
 	@Column(name="c_max_count")
 	private Integer maxCount;
 	
@@ -92,6 +95,12 @@ public class PlainKanteenDistributionWares {
 	}
 	public void setCreateUserId(Date createUserId) {
 		this.createUserId = createUserId;
+	}
+	public Long getWaresId() {
+		return waresId;
+	}
+	public void setWaresId(Long waresId) {
+		this.waresId = waresId;
 	}
 	
 }

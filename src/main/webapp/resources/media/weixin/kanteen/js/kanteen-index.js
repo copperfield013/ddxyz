@@ -1,21 +1,43 @@
 (function(){
 	var kanteen = {
-		changeEvents	: [],
+		eventsMap			: {},
 		bindChange		: function(callback){
-			if(typeof callback === 'function'){
-				this.changeEvents.push(callback);
-			}
+			return this.bind('change', callback);
 		},
 		triggerChange	: function(data){
-			for(var j = this.changeEvents.length - 1; j >=0 ; j--){
-				try{
-					if(this.changeEvents[j].apply(this, [data]) === false){
-						break ;
+			return this.trigger('change', [data]);
+		},
+		bind		: function(eventName, callback){
+			if(typeof callback === 'function'){
+				var events = this.eventsMap[eventName];
+				if(!events){
+					this.eventsMap[eventName] = events = [];
+				}
+				events.push(callback);
+			}
+			return this;
+		},
+		trigger	: function(eventName, args){
+			var events = this.eventsMap[eventName];
+			if(events){
+				for(var j = events.length - 1; j >=0 ; j--){
+					try{
+						if(events[j].apply(this, args) === false){
+							break ;
+						}
+					}catch(e){
+						console.error(e);
 					}
-				}catch(e){
-					console.error(e);
 				}
 			}
+		},
+		afterInit	: function(fn){
+			if(typeof fn === 'function'){
+				this.bind('afterInit', fn);
+			}else{
+				this.trigger('afterInit', [fn]);
+			}
+			return this;
 		}
 	};
 	window.Kanteen = kanteen;
@@ -282,7 +304,7 @@
 			 */
 			mealListSwitch(uid) {
 				let lists = this.domBox.meal_lists;
-				let showList = document.querySelector(`[data-uid=${uid}]`);
+				let showList = document.querySelector(`[data-uid="${uid}"]`);
 				
 				for (let i = 0; i < lists.length; i++) {
 					lists[i].classList.remove('active');
@@ -303,15 +325,15 @@
 					let isReduce = target.classList.contains("canteen-meal-list_menu_minus");
 					let unitPrice = 0;
 					let prouid = null;
+					var item = target.parentNode.parentNode.parentNode;
+					unitPrice = parseFloat(item.getAttribute('data-base-price'));
 					if (isAdd) {
-						unitPrice = parseFloat(target.parentNode.previousElementSibling.children[0].textContent);
-						prouid = target.parentNode.parentNode.parentNode.getAttribute("data-prouid");
+						prouid = item.getAttribute("data-prouid");
 						me.mealCount(target, "add");
 						me.shoppingCar(unitPrice, "add");
 						me.shoppingBasket(prouid, "add");
 					} else if (isReduce) {
-						unitPrice = parseFloat(target.parentNode.previousElementSibling.children[0].textContent);
-						prouid = target.parentNode.parentNode.parentNode.getAttribute("data-prouid");
+						prouid = item.getAttribute("data-prouid");
 						me.mealCount(target, "reduce");
 						me.shoppingCar(unitPrice, "reduce");
 						me.shoppingBasket(prouid, "reduce");
@@ -320,23 +342,42 @@
 					}
 				})
 			},
-			
+			triggerAddTrolley(prouid, addition){
+				var target = document.querySelector('.canteen-meal-list_menu[data-prouid="' + prouid +'"]');
+				if(target){
+					var unitPrice = parseFloat(target.getAttribute('data-base-price'));
+					var operate = null; 
+					if(addition > 0){
+						target = target.querySelector('.canteen-meal-list_menu_add');
+						operate = 'add';
+					}else if(addition < 0){
+						target = target.querySelector('.canteen-meal-list_menu_minus');
+						operate = 'reduce';
+					}else{
+						return;
+					}
+					this.mealCount(target, operate, addition);
+					this.shoppingCar(unitPrice, operate, addition);
+					this.shoppingBasket(prouid, operate);
+				}
+			},
 			/**
 			 * 具体餐品的点单处数量部分增加减少方法
 			 * @param {target,kind} (target:右侧餐品列表处对应餐品的增加以及减少按钮,kind:增加 or 减少)
 			 */
-			mealCount(target, kind) {
+			mealCount(target, kind, addition) {
 				let me = this;
 				let countDom = null;
 				let orderChooseWrap = null;
 				let count = 0;
 				let uid = "";
+				if(addition === undefined) addition = 1;
 				let allMeal = []; //存储页面上所有该商品
 				if (kind === "add") {
 					uid = target.parentNode.parentNode.parentNode.getAttribute("data-prouid");
 					countDom = target.previousElementSibling;
 					count = parseFloat(countDom.textContent);
-					isNaN(count) ? count = 1 : count += 1;
+					isNaN(count) ? count = addition : count += addition;
 					allMeal = document.querySelectorAll(`[data-prouid="${uid}"]`);
 					for (let i = 0; i < allMeal.length; i++) {
 						allMeal[i].querySelector(".canteen-meal-list_menu_count").textContent = count;
@@ -348,18 +389,18 @@
 					count = parseFloat(countDom.textContent);
 					allMeal = document.querySelectorAll(`[data-prouid="${uid}"]`);
 					if (isNaN(count)) {
-						count = 1;
+						count = addition;
 						for (let i = 0; i < allMeal.length; i++) {
 							allMeal[i].querySelector(".canteen-meal-list_menu_count").textContent = count;
 						}
 					} else if (count <= 1) {
-						count -= 1;
+						count -= addition;
 						for (let i = 0; i < allMeal.length; i++) {
 							allMeal[i].querySelector(".canteen-meal-list_menu_count").textContent = count;
 							allMeal[i].querySelector(".canteen-meal-list_menu_button ").classList.remove("active");
 						}
 					} else {
-						count -= 1;
+						count -= addition;
 						for (let i = 0; i < allMeal.length; i++) {
 							allMeal[i].querySelector(".canteen-meal-list_menu_count").textContent = count;
 						}
@@ -371,21 +412,22 @@
 			 * 底部购物车栏交互效果
 			 * @param { unitPrice, kind } ( unitPrice: 单价 kind: 增加 or 减少 ) 
 			 */
-			shoppingCar(unitPrice, kind) {
+			shoppingCar(unitPrice, kind, addition) {
 				let footer = this.domBox.shoppingcar_box;
 				let priceDom = this.domBox.total_price;
 				let price = parseFloat(priceDom.textContent);
 				let countDom = this.domBox.total_count;
 				let count = parseFloat(countDom.textContent);
+				if(addition == undefined) addition = 1;
 				isNaN(price) ? price = 0 : price;
 				isNaN(count) ? count = 0 : count;
 				if (kind === "add") {
-					priceDom.textContent = price + unitPrice;
-					countDom.textContent = count + 1;
+					priceDom.textContent = parseFloat(price + unitPrice * addition).toFixed(2);
+					countDom.textContent = count + addition;
 					footer.classList.remove("shopping-car_empty");
 				} else if (kind === "reduce") {
-					priceDom.textContent = price - unitPrice;
-					countDom.textContent = count - 1;
+					priceDom.textContent = parseFloat(price - unitPrice * addition).toFixed(2);
+					countDom.textContent = count - addition;
 					if (parseFloat(priceDom.textContent) === 0) {
 						footer.classList.add("shopping-car_empty");
 						priceDom.textContent = "购物车是空的";
@@ -599,7 +641,7 @@
 				let meals = basket.children;
 				let orderData = {};
 				for( let i=0; i<meals.length; i++){
-					orderData[meals[i].getAttribute("data-orderuid")]  = meals[i].querySelector(".shopping-car-show_list_count").textContent;
+					orderData['id_' + meals[i].getAttribute("data-orderuid")]  = meals[i].querySelector(".shopping-car-show_list_count").textContent;
 				}
 				kanteen.triggerChange(orderData);
 				console.log(orderData);
@@ -612,6 +654,8 @@
 	document.onreadystatechange = function () {
 		if (document.readyState === "interactive") {
 			canteen_home_interaction.init();
+			kanteen.ca = canteen_home_interaction;
+			kanteen.afterInit(canteen_home_interaction);
 		}
 	}
 	

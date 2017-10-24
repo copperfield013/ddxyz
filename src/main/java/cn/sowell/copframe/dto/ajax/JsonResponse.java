@@ -3,6 +3,7 @@ package cn.sowell.copframe.dto.ajax;
 import com.alibaba.fastjson.JSONObject;
 
 public class JsonResponse {
+	private static final String STATUS_SUC = "suc";
 	private JSONObject jsonObject = new JSONObject();
 	public JsonResponse() {
 		jsonObject = new JSONObject();
@@ -36,6 +37,11 @@ public class JsonResponse {
 
 	public String getStatus() {
 		return jsonObject.getString("status");
+	}
+	
+	public JsonResponse setStatusSuccees(){
+		setStatus(STATUS_SUC);
+		return this;
 	}
 
 	public void setStatus(String status) {

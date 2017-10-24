@@ -1,9 +1,11 @@
 package cn.sowell.ddxyz.model.common.core.impl;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -11,7 +13,9 @@ import java.util.Set;
 import org.springframework.util.Assert;
 
 import cn.sowell.copframe.common.UserIdentifier;
+import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.copframe.weixin.pay.paied.WxPayStatus;
+import cn.sowell.copframe.weixin.pay.prepay.GoodsDetail;
 import cn.sowell.ddxyz.model.common.core.Delivery;
 import cn.sowell.ddxyz.model.common.core.DeliveryLocation;
 import cn.sowell.ddxyz.model.common.core.DeliveryTimePoint;
@@ -145,7 +149,7 @@ public class DefaultOrder implements Order{
 			//从微信服务器获取当前订单的支付状态
 			WxPayStatus payStatus = checkWxPayStatus();
 			//调用微信支付查询订单接口，检查付款是否完成
-			if("SUCCESS".equals(payStatus.getTradeState())){
+			if(WxPayStatus.TRADESTATUE_SUC.equals(payStatus.getTradeState())){
 				oManager.payOrder(this, payParam);
 			}else{
 				throw new OrderException("该订单尚未成功支付，不可设置订单状态。该订单微信交易状态[" + payStatus.getTradeState() + ":" + payStatus.getTradeStateDesc() + "]");
@@ -526,6 +530,22 @@ public class DefaultOrder implements Order{
 		return (new Date()).compareTo(getPayExpireTime()) > 0;
 	}
 	
-	
+	@Override
+	public List<GoodsDetail> getGoodsDetails() {
+		List<GoodsDetail> goodsDetails = new ArrayList<GoodsDetail>();
+		for (Product product : productSet) {
+			GoodsDetail gd = new GoodsDetail();
+			gd.setGoodsId(FormatUtils.toString(product.getId()));
+			gd.setGoodsName(product.getName());
+			gd.setQuantity(1);
+			gd.setPrice(product.getPrice());
+			goodsDetails.add(gd);
+		}
+		return goodsDetails;
+	}
 
+	@Override
+	public String getPayTitle() {
+		return "一点点奶茶";
+	}
 }

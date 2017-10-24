@@ -8,6 +8,7 @@ import org.springframework.util.Assert;
 
 import cn.sowell.copframe.common.UserIdentifier;
 import cn.sowell.copframe.weixin.pay.paied.WxPayStatus;
+import cn.sowell.copframe.weixin.pay.service.impl.WxPayOrder;
 import cn.sowell.ddxyz.model.common.core.exception.OrderException;
 import cn.sowell.ddxyz.model.common.core.result.CheckResult;
 import cn.sowell.ddxyz.model.weixin.pojo.WeiXinUser;
@@ -21,7 +22,7 @@ import cn.sowell.ddxyz.model.weixin.pojo.WeiXinUser;
  * @author Copperfield Zhang
  * @date 2017年3月29日 上午10:10:56
  */
-public interface Order {
+public interface Order extends WxPayOrder{
 	/**
 	 * 获得订单在全局唯一的标识
 	 * @return
@@ -202,18 +203,24 @@ public interface Order {
 	 * 订单默认状态
 	 */
 	final int STATUS_DEFAULT = 0;
+	
+	/**
+	 * 已确认状态下，表示订单已经具备了所有可以支付的字段数据
+	 */
+	final int STATUS_CONFIRMED = 1;
+	
 	/**
 	 * 订单已支付，待完成或取消
 	 */
-	final int STATUS_PAYED = 1;
+	final int STATUS_PAYED = 2;
 	/**
 	 * 订单已完成
 	 */
-	final int STATUS_COMPLETED = 2;
+	final int STATUS_COMPLETED = 3;
 	/**
 	 * 订单已评价
 	 */
-	final int STATUS_APPRAISED = 3;
+	final int STATUS_APPRAISED = 4;
 	/**
 	 * 订单已取消，该动作由用户主动发起，
 	 */

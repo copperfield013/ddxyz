@@ -3,15 +3,11 @@ package cn.sowell.ddxyz.model.kanteen.pojo;
 import java.util.Date;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import javax.persistence.Transient;
 
-@Entity
-@Table(name="t_kanteen_trolley_wares")
 public class KanteenTrolleyWares {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -34,7 +30,7 @@ public class KanteenTrolleyWares {
 	
 	@Transient
 	@Column(name="c_wares_name")
-	private Long waresName;
+	private String waresName;
 	
 	@Transient
 	@Column(name="c_base_price")
@@ -43,7 +39,7 @@ public class KanteenTrolleyWares {
 	@Transient
 	@Column(name="c_price_unit")
 	private String priceUnit;
-
+	
 	public Long getId() {
 		return id;
 	}
@@ -84,14 +80,6 @@ public class KanteenTrolleyWares {
 		this.createTime = createTime;
 	}
 
-	public Long getWaresName() {
-		return waresName;
-	}
-
-	public void setWaresName(Long waresName) {
-		this.waresName = waresName;
-	}
-
 	public Long getWaresId() {
 		return waresId;
 	}
@@ -115,6 +103,14 @@ public class KanteenTrolleyWares {
 	public void setPriceUnit(String priceUnit) {
 		this.priceUnit = priceUnit;
 	}
-	
+
+	public String getWaresName() {
+		return waresName;
+	}
+
+	public void setWaresName(String waresName) {
+		this.waresName = waresName;
+	}
+
 	
 }

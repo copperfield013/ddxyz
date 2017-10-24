@@ -104,6 +104,10 @@ header {
     margin-bottom:1.3rem;
     flex:1;
     overflow:auto;
+    box-sizing: content-box;
+    pointer-events: auto;
+    -webkit-overflow-scrolling: touch;
+    overflow-scrolling: touch;
 }
 .canteen-order-list {
     width:10rem;   
@@ -303,4 +307,8 @@ header {
     background-color: #f3570b;
     font-size: 0.48rem;
     font-weight: 700;
+}
+
+span.canteen-order-list_status.order-status-paied {
+    color: #66CD00;
 }

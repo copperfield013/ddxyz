@@ -35,6 +35,12 @@ public class PlainOrder implements OrderDetail{
 	@Column(name="order_user_id")
 	private Long orderUserId;
 	
+	@Column(name="distribution_id")
+	private Long distributionId;
+	
+	@Column(name="trolley_id")
+	private Long trolleyId;
+	
 	@Column(name="c_dispense_resource_req")
 	private String dispenseResourceRequest;
 	
@@ -238,6 +244,18 @@ public class PlainOrder implements OrderDetail{
 	}
 	public void setPrintTime(Date printTime) {
 		this.printTime = printTime;
+	}
+	public Long getDistributionId() {
+		return distributionId;
+	}
+	public void setDistributionId(Long distributionId) {
+		this.distributionId = distributionId;
+	}
+	public Long getTrolleyId() {
+		return trolleyId;
+	}
+	public void setTrolleyId(Long trolleyId) {
+		this.trolleyId = trolleyId;
 	}
 	
 	

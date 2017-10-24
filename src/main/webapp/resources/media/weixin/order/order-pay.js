@@ -5,24 +5,16 @@ define(function(require, exports, module){
 			orderId		: orderId
 		}, function(data){
 			if(data.payParam){
-				var WxPay = require('wxpay');
-				WxPay.pay(data.payParam, function(res){
-					if(res['errMsg'] == "chooseWXPay:ok" ) {
-						//支付成功，发送请求到后台，更改订单状态
-						sendOrderPaiedReq(orderId, 0, whenSuc, whenFail);
-					}else{
-						whenCancel();
-					}
-				});
+				doPay('weixin/ydd/order-paied', data.payParam, orderId, whenSuc, whenFail, whenCancel);
 			}
 		});
 	}
 	
-	function sendOrderPaiedReq(orderId, counter, whenSuc, whenFail){
+	function sendOrderPaiedReq(paiedURI, orderId, counter, whenSuc, whenFail){
 		whenSuc = whenSuc || $.noop;
 		whenFail = whenFail || $.noop;
 		if(counter < 3){
-			require('ajax').ajax('weixin/ydd/order-paied', {
+			require('ajax').ajax(paiedURI, {
 				orderId		: orderId
 			}, function(setOrderPaiedRes){
 				//订单状态更改情况
@@ -30,7 +22,7 @@ define(function(require, exports, module){
 					whenSuc();
 				}else{
 					//后台状态更新失败时，重新提交
-					sendOrderPaiedReq(orderId, ++counter, whenSuc, whenFail);
+					sendOrderPaiedReq(paiedURI, orderId, ++counter, whenSuc, whenFail);
 				}
 			});
 		}else{
@@ -38,5 +30,18 @@ define(function(require, exports, module){
 		}
 	}
 	
+	function doPay(paiedURI, prepayParameter, orderId, whenSuc, whenFail, whenCancel){
+		var WxPay = require('wxpay');
+		WxPay.pay(prepayParameter, function(res){
+			if(res['errMsg'] == "chooseWXPay:ok" ) {
+				//支付成功，发送请求到后台，更改订单状态
+				sendOrderPaiedReq(paiedURI, orderId, 0, whenSuc, whenFail);
+			}else{
+				whenCancel();
+			}
+		});
+	}
+	
 	exports.pay = payOrder;
+	exports.doPay = doPay;
 });

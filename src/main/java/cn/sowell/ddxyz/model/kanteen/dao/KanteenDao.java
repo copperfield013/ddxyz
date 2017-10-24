@@ -2,14 +2,21 @@ package cn.sowell.ddxyz.model.kanteen.dao;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import cn.sowell.copframe.dto.page.PageInfo;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainKanteenDelivery;
 import cn.sowell.ddxyz.model.kanteen.pojo.KanteenDistributionMenuItem;
+import cn.sowell.ddxyz.model.kanteen.pojo.KanteenOrderCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.KanteenTrolleyWares;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenDistribution;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenDistributionWares;
+import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMerchant;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMerchantAnnounce;
+import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenOrder;
+import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenReceiver;
+import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenSection;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenTrolley;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenWaresGroup;
 
@@ -81,6 +88,111 @@ public interface KanteenDao {
 	 * @return
 	 */
 	List<PlainKanteenDelivery> getEnabledDeliveries(Long distributionId);
+	
+	/**
+	 * 在数据库内插入一行并返回
+	 * @param class1
+	 */
+	void create(Class<?> pojoClass);
+
+	/**
+	 * 
+	 * @param pojo
+	 * @return 
+	 */
+	Long create(Object pojo);
+
+	/**
+	 * 根据购物车的id获得购物车内所有商品的映射，key为商品的distributionWaresId，value是商品数量
+	 * @param trolleyId 购物车的id
+	 * @return
+	 */
+	Map<Long, Integer> getTrolleyWaresMap(long trolleyId);
+
+	/**
+	 * 移除购物车下的多个商品
+	 * @param trolleyId 购物车id
+	 * @param toRemove 包含多个distributionWaresId
+	 */
+	void removeTrolleyWares(Long trolleyId, Set<Long> toRemove);
+
+	/**
+	 * 更新多个购物车商品的数量
+	 * @param trolleryId
+	 * @param toUpdate
+	 */
+	void updateTrolleyWares(Long trolleryId, Map<Long, Integer> toUpdate);
+
+	/**
+	 * 获得用户最新的收件人信息
+	 * @param userId
+	 * @return
+	 */
+	PlainKanteenReceiver getLastReceiver(Long userId);
+
+	/**
+	 * 
+	 * @param id
+	 */
+	void disableTrolley(Long id);
+
+	/**
+	 * 更新当前的量。当修改成功时，返回true
+	 * @param distributionWaresId
+	 * @param addition
+	 * @return
+	 */
+	boolean updateDistributionWareCurrentCount(Long distributionWaresId,
+			Integer addition);
+
+	/**
+	 * 更新订单数据
+	 * @param pOrder
+	 */
+	void updateOrderWxPayFields(PlainKanteenOrder pOrder);
+
+	/**
+	 * 更新订单状态为已支付
+	 * @param order
+	 */
+	void updateOrderAsPaied(PlainKanteenOrder order);
+
+	/**
+	 * 
+	 * @param outTradeNo
+	 * @return
+	 */
+	PlainKanteenOrder getOrderByOutTradeNo(String outTradeNo);
+
+	/**
+	 * 根据配销id获得对应的商家信息
+	 * @param distributionId
+	 * @return
+	 */
+	PlainKanteenMerchant getMerchantByDistributionId(Long distributionId);
+
+	/**
+	 * 根据条件分页查询订单
+	 * @param criteria
+	 * @param pageInfo
+	 * @return
+	 */
+	List<PlainKanteenOrder> query(KanteenOrderCriteria criteria,
+			PageInfo pageInfo);
+
+	/**
+	 * 
+	 * @param list
+	 * @return
+	 */
+	List<PlainKanteenSection> getSections(Set<Long> orderIdSet);
+	/**
+	 * 根据配送id获得所有配送对象
+	 * @param deliveryIds
+	 * @return
+	 */
+	List<PlainKanteenDelivery> getDeliveries(Set<Long> deliveryIds);
+
 	
 
 }

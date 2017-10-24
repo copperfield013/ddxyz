@@ -3,12 +3,22 @@ package cn.sowell.ddxyz.model.kanteen.service;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import cn.sowell.copframe.dto.page.PageInfo;
+import cn.sowell.copframe.weixin.pay.exception.WeiXinPayException;
+import cn.sowell.copframe.weixin.pay.prepay.H5PayParameter;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainKanteenDelivery;
 import cn.sowell.ddxyz.model.kanteen.pojo.KanteenMenu;
+import cn.sowell.ddxyz.model.kanteen.pojo.KanteenOrder;
+import cn.sowell.ddxyz.model.kanteen.pojo.KanteenOrderCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.KanteenTrolley;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenDistribution;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMerchant;
+import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenOrder;
+import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenReceiver;
+import cn.sowell.ddxyz.model.kanteen.service.impl.OrderPayException;
+import cn.sowell.ddxyz.model.weixin.pojo.WeiXinUser;
 
 import com.alibaba.fastjson.JSONObject;
 
@@ -59,13 +69,6 @@ public interface KanteenService {
 	List<PlainKanteenDelivery> getEnabledDeliveries(Long distributionId);
 
 	/**
-	 * 根据id获得购物车信息对象
-	 * @param trolleyId
-	 * @return
-	 */
-	KanteenTrolley getTrolley(Long trolleyId);
-
-	/**
 	 * 从json中解析购物车数据放到Map中
 	 * @param trolleyData
 	 * @return key为distributionWaresId，value为个数
@@ -78,7 +81,77 @@ public interface KanteenService {
 	 * @param trolleyWares
 	 * @return
 	 */
-	void mergeTrolley(Long trolleyId, Map<Long, Integer> trolleyWares);
+	void mergeTrolleyWares(Long trolleyId, Map<Long, Integer> trolleyWares);
+
+	/**
+	 * 根据微信用户的id获得最新的收件人信息
+	 * @param id
+	 * @return
+	 */
+	PlainKanteenReceiver getLastReceiver(Long userId);
+
+	/**
+	 * 将购物车内的商品包装成订单对象
+	 * @param trolley
+	 * 
+	 */
+	void packOrder(KanteenOrder order, KanteenTrolley trolley);
+
+	/**
+	 * 保存订单数据到数据库
+	 * @param order
+	 * @return 如果是微信支付，那么将返回预支付订单的参数对象
+	 * @throws WeiXinPayException 
+	 */
+	H5PayParameter saveOrder(KanteenOrder order) throws WeiXinPayException;
+
+	/**
+	 * 清空购物车
+	 * @param trolley
+	 */
+	void clearTrolley(Long trolleyId);
+
+	/**
+	 * 从前台传入的json对象中提取并生成订单对象
+	 * @param jsonObject
+	 * @return
+	 */
+	KanteenOrder extractOrder(JSONObject jsonObject);
+
+	/**
+	 * 更改订单状态为已支付
+	 * @param order
+	 * @param user
+	 * @throws OrderPayException 
+	 */
+	void payOrder(PlainKanteenOrder order, WeiXinUser user) throws OrderPayException;
+
+	/**
+	 * 获得订单对象
+	 * @param orderId
+	 * @return
+	 */
+	PlainKanteenOrder getOrder(Long orderId);
+
+	PlainKanteenOrder getOrderByOutTradeNo(String outTradeNo);
+
+	/**
+	 * 根据用户id查询所有订单
+	 * @param userId
+	 * @return
+	 */
+	List<KanteenOrder> queryOrder(KanteenOrderCriteria criteria, PageInfo pageInfo);
+
+	/**
+	 * 获得所有订单的对应的配送数据对象
+	 * @param deliveryIds
+	 * @return
+	 */
+	public Map<Long, PlainKanteenDelivery> getDeliveryMap(
+			Set<Long> deliveryIds);
+
+	
+
 
 	
 }

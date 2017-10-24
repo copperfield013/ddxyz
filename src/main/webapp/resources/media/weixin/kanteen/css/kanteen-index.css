@@ -210,6 +210,9 @@ body {
     border-radius:0.13rem;
     background-color:#f3570b;
     margin-right:0.27rem;
+    font-size: 13px;
+    text-align: center;
+    line-height: 1rem;
 }
 .canteen-meal-list_menu_detail {
     flex:1;
@@ -249,7 +252,7 @@ body {
     font-size: 0.32rem;
 }
 .canteen-meal-list_menu_price > span {
-    font-size: 0.42rem;
+    font-size: 0.35rem;
     font-weight: 600;
     vertical-align: middle;
 }
@@ -483,10 +486,10 @@ body {
     font-size: 0.32rem;
     padding:0 0.4rem 0.8rem 0.4rem;
     position:absolute;
-    top:2.4rem;
+    top:2.2rem;
     bottom:4rem;
-    left:1rem;
-    right:1rem;
+    left:0.8rem;
+    right:0.8rem;
     z-index: 11;
     background-color:#ffffff;
     border-radius:0.2rem;

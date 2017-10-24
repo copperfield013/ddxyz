@@ -2,7 +2,7 @@ package cn.sowell.ddxyz.model.kanteen.pojo;
 
 import java.util.List;
 
-public class KanteenTrolley {
+public class KanteenTrolley{
 	private PlainKanteenTrolley plainTrolley;
 	private List<KanteenTrolleyWares> validWares;
 	private List<KanteenTrolleyWares> invalidWares;
@@ -14,6 +14,26 @@ public class KanteenTrolley {
 		return null;
 	}
 
+	public Integer getTotalValidPrice(){
+		Integer price = 0;
+		if(validWares != null){
+			for (KanteenTrolleyWares valid : validWares) {
+				price += valid.getBasePrice() * valid.getCount();
+			}
+		}
+		return price;
+	}
+	
+	public Integer getTotalValidCount(){
+		Integer count = 0;
+		if(validWares != null){
+			for (KanteenTrolleyWares valid : validWares) {
+				count += valid.getCount();
+			}
+		}
+		return count;
+	}
+	
 	public PlainKanteenTrolley getPlainTrolley() {
 		return plainTrolley;
 	}
@@ -37,5 +57,5 @@ public class KanteenTrolley {
 	public void setInvalidWares(List<KanteenTrolleyWares> invalidWares) {
 		this.invalidWares = invalidWares;
 	}
-	
+
 }

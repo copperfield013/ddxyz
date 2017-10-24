@@ -3,13 +3,14 @@
 .page-list:before, .page-list:after {
     display: block;
     text-align: center;
-    line-height: 3em;
+    line-height: 3rem;
+    font-size: 0.5rem;
 }
 .page-list.loading:after {
     content: "正在加载...";
 }
 .page-list:not(:empty).nomore:after {
-    content: "没有更多";
+    content: "已经到底啦";
 }
 .page-list:empty:before {
     content: "暂无数据";

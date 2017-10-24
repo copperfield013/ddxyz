@@ -4,6 +4,8 @@ import cn.sowell.copframe.utils.xml.XMLTag;
 
 
 public class WxPayStatus {
+	
+	public static String TRADESTATUE_SUC = "SUCCESS";
 	/**
 	 * 返回状态码（SUCCESS/FAIL）
 	 */

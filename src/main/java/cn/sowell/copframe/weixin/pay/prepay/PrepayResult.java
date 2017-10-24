@@ -114,7 +114,7 @@ public class PrepayResult {
 	 * 判断当前通信是否成功
 	 * @return
 	 */
-	boolean returnSuccess(){
+	public boolean returnSuccess(){
 		return RETURN_CODE_SUC.equals(returnCode);
 	}
 

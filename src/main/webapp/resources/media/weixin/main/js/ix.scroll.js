@@ -3,7 +3,7 @@ IX.extend({
     unscroll : function(element) {
         element.addEventListener('touchmove', function(evt) {
             if (!evt._isScroller) {
-                evt.preventDefault();
+                /*evt.preventDefault();*/
             }
         });
         return this;

@@ -8,7 +8,9 @@
     <title>林家食堂</title>
 	<jsp:include page="/WEB-INF/jsp/weixin/common/weixin-include-kanteen.jsp"></jsp:include>
     <link rel="stylesheet" href="media/weixin/kanteen/css/kanteen-index.css">
-    <script src="media/weixin/kanteen/js/kanteen-index.js"></script>
+    <link rel="stylesheet" href="media/weixin/plugins/iTip/iTip.css">
+    <script src="media/weixin/kanteen/js/kanteen-index.js?2"></script>
+    <script src="media/weixin/plugins/iTip/iTip.js"></script>
 </head>
 
 <body>
@@ -53,20 +55,20 @@
         <!--餐品选择导航-->
         <!--data-key是标识，需要和对应的展示列表 data-uid 的值一样，可以换为后台已有标识字段 -->
         <nav class="canteen-meal-nav">
-        	<c:forEach items="${menu.menuItemMap }" var="menuItem">
+        	<c:forEach items="${menu.menuItemMap }" var="menuItem" varStatus="i">
         		<c:set var="group" value="${menuItem.key }" />
-	            <a data-key="${group.id }" href="javascript:" class="canteen-meal-nav_button canteen-icon canteen-hot-sell-icon active">${group.name }</a>
+	            <a data-key="${group.id }" href="javascript:" class="canteen-meal-nav_button canteen-icon canteen-hot-sell-icon ${i.index==0?'active':'' }">${group.name }</a>
         	</c:forEach>
         </nav>
         <!--餐品列表部分-->
         <!--data-uid是标识，需要和对应的nav模块菜单中的 data-key 的值一样，可以换为后台已有标识字段  :String -->
         <!--data-prouid是商品标识，可替换为后台已有字段，具有唯一性与商品一一对应 :String -->
-        <c:forEach items="${menu.menuItemMap }" var="menuItem">
+        <c:forEach items="${menu.menuItemMap }" var="menuItem" varStatus="i">
        		<c:set var="group" value="${menuItem.key }" />
-             <div data-uid="${group.id }" class="canteen-meal-list active">
+             <div data-uid="${group.id }" class="canteen-meal-list ${i.index==0?'active':'' }">
              	<header class="canteen-meal-list_title canteen-icon canteen-title-bar-icon">${group.name }</header>
              	<c:forEach items="${menuItem.value }" var="wares">
-            		<div data-prouid="${wares.distributionWaresId }" class="canteen-meal-list_menu" >
+            		<div data-prouid="${wares.distributionWaresId }" data-base-price="<fmt:formatNumber value="${wares.basePrice/100 }" pattern="0.00" />" class="canteen-meal-list_menu" >
 						<img class="canteen-meal-list_image" src="${wares.picUri }" alt="${wares.waresName }">
 						<div class="canteen-meal-list_menu_detail">
 							<p class="canteen-meal-list_menu_name">${wares.waresName }</p>
@@ -74,10 +76,10 @@
 		                    	<c:if test="${wares.maxCount != null }">
 		                    		<span>余量${wares.maxCount }</span>
 		                    	</c:if>
-		                        <span>已售${wares.currentCount }</span>
+		                        <span>已售${wares.currentCount }份</span>
 		                    </p>
 		                    <p class="canteen-meal-list_menu_price canteen-icon canteen-rmb-icon">
-		                        <span class="">${wares.basePrice }${wares.priceUnit }</span>
+		                        <span class=""><fmt:formatNumber value="${wares.basePrice/100 }" pattern="0.00" />元/${wares.priceUnit }</span>
 		                    </p>
 		                    <div class="canteen-meal-list_menu_button">
 		                        <a href="javascript:" class="canteen-meal-list_menu_minus canteen-icon canteen-minus-icon"></a>
@@ -97,7 +99,7 @@
             <span class="shopping-car-totalprice canteen-icon canteen-rmb-icon">购物车是空的</span>
             <i class="shopping-car-totalcount"></i>
         </div>
-        <a href="canteen_order.html" class="settlement">选好了</a>
+        <a href="weixin/kanteen/order/${distribution.id }" id="submit-order" class="settlement">选好了</a>
     </footer>
 
 
@@ -108,19 +110,6 @@
             <span class="shopping-car-show_title_empty canteen-icon canteen-empty-icon">清空</span>
         </div>
         <div class="shopping-car-show_list_wrap">
-            <div data-orderuid="${trolley.plainTrolley.id }" class="shopping-car-show_list">
-				<c:forEach items="${trolley.validWares }" var="trolleyWares">
-	                <span class="shopping-car-show_list_name">${trolleyWares.waresName }</span>
-	                <span class="shopping-car-show_list_price canteen-icon canteen-rmb-icon">
-	                    <fmt:formatNumber value="${trolleyWares.basePrice }" />${trolleyWares.priceUnit }
-	                </span>
-	                <div class="shopping-car-show_list_button">
-	                    <a href="javascript:" class="shopping-car-show_list_minus canteen-icon canteen-minus-icon"></a>
-	                    <span class="shopping-car-show_list_count">${trolleyWares.count }</span>
-	                    <a href="javascript:" class="shopping-car-show_list_add canteen-icon canteen-add-icon"></a>
-	                </div>
-				</c:forEach>
-            </div>
         </div>
 
     </section>
@@ -133,7 +122,7 @@
             <div class="canteen-information-alert_basic">
                 <p class="canteen-information-alert_bookingtime">预订时间：<fmt:formatDate value="${distribution.startTime }" pattern="yyyy-MM-dd HH:mm"/>~<fmt:formatDate value="${distribution.endTime }" pattern="yyyy-MM-dd HH:mm"/> </p>
                 <c:forEach items="${deliveries }" var="delivery" varStatus="i">
-	                <p class="canteen-information-alert_collectionplace">领取地点${i.index + 1 }：${delivery.name }</p>
+	                <p class="canteen-information-alert_collectionplace">领取地点${i.index + 1 }：${delivery.locationName }</p>
 	                <p class="canteen-information-alert_collectiontime">领取时间${i.index + 1 }：<fmt:formatDate value="${delivery.startTime }" pattern="yyyy-MM-dd HH:mm"/>~<fmt:formatDate value="${delivery.endTime }" pattern="yyyy-MM-dd HH:mm"/></p>
                 </c:forEach>
             </div>
@@ -155,14 +144,51 @@
     <script type="text/javascript">
     	$(function(){
     		seajs.use(['ajax'], function(Ajax){
+    			var trolleyFlag = false;
+    			function initTrolley(ca){
+    				if(!trolleyFlag){
+		    			trolletFlag = true;
+		    			var validWares = [];
+		    			try{
+		    				validWares = $.parseJSON('${validWares}');
+		    			}catch(e){}
+		    			for(var i in validWares){
+		    				var distributionWaresId = validWares[i].distributionWaresId;
+		    				ca.triggerAddTrolley(distributionWaresId, validWares[i].count);
+		    			}
+    				}
+	    		}
+    			initTrolley(Kanteen.ca);
+    			
 	    		Kanteen.bindChange(function(cartData){
-	    			Ajax.ajax('weixin/kanteen/uploadCart', 
-	    					$.extend(cartData, {merchantId: 1}), function(data){
+	    			Ajax.postJson('weixin/kanteen/commit_trolley', 
+	    					{
+	    					distributionId: '${distribution.id}', 
+	    					trolleyData: cartData
+	    				}, function(data){
 	    				if(data.status != 'suc'){
 	    					console.error('系统错误');
 	    				}
+	    			});
+	    		}).afterInit(initTrolley);
+	    		
+	    		/* $('#submit-order').click(function(){
+	    			Ajax.ajax('weixin/kanteen/submit_order',{
+	    				distributionId	: '${distribution.id}'
+	    			}, function(data){
+	    				if(data.orderId != ''){
+	    					Tip.alert({
+	    						content	: '订单提交成功，请在15分钟内完成确认',
+	    						after	: function(){
+			    					location.href = 'weixin/kanteen/order/' + orderId;
+	    						}
+	    					})
+	    				}else{
+	    					Tips.alert('订单提交失败');
+	    				}
 	    			})
-	    		});
+	    		}); */
+	    		
     		});
     	});
     </script>

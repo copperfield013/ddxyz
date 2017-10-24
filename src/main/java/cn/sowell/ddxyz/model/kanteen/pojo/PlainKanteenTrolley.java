@@ -26,6 +26,9 @@ public class PlainKanteenTrolley {
 	@Column(name="user_id")
 	private Long userId;
 	
+	@Column(name="c_disabled")
+	private Integer disabled;
+	
 	@Column(name="create_time")
 	private Date createTime;
 	
@@ -59,6 +62,12 @@ public class PlainKanteenTrolley {
 	}
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
+	}
+	public Integer getDisabled() {
+		return disabled;
+	}
+	public void setDisabled(Integer disabled) {
+		this.disabled = disabled;
 	}
 	
 }

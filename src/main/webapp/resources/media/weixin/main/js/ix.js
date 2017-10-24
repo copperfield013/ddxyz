@@ -10,9 +10,9 @@ var defaults = {},
 //        '../css/ix.css',
 		'../css/ix.list.css',
         'ix.util.js',
-        'ix.scroll.js',
+        'ix.scroll.js?1',
         'ix.ajax.js',
-        'ix.list.js'
+        'ix.list.new.js'
     ],
     jsfiles = document.scripts,
     jsPath = jsfiles[jsfiles.length - 1].src,
