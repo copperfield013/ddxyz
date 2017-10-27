@@ -4,6 +4,7 @@ public class CheckResult {
 	private boolean isSuc = false;
 	private String msg;
 	private String reason;
+	private Object data;
 	public CheckResult(boolean defaultResult, String defaultMsg) {
 		isSuc = defaultResult;
 		msg = defaultMsg;
@@ -33,6 +34,14 @@ public class CheckResult {
 	}
 	public void setReason(String reason) {
 		this.reason = reason;
+	}
+
+	public Object getData() {
+		return data;
+	}
+
+	public void setData(Object data) {
+		this.data = data;
 	}
 	
 }

@@ -89,6 +89,9 @@ public class KanteenOrder implements WxPayOrder{
 		this.payTitle = payTitle;
 	}
 	
-	
+	@Override
+	public String getWxOutTradeNo() {
+		return plainOrder.getWxOutTradeNo();
+	}
 	
 }

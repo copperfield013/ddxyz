@@ -421,15 +421,13 @@ body {
 }
 .shopping-car-show_list {
     font-size: 0;
-    height: 1.33rem;
-    width: 100%;
+    height:1.33rem;
+    width:9.2rem;
+    margin-left:0.4rem;
     line-height: 1.33rem;
-    padding-left: 0.44rem;
-    padding-right: 0.2rem;
-    color: #323232;
-    border-bottom: 0.5px solid #bebebe;
-    box-sizing: border-box;
-    display: block;
+    color:#323232;
+    border-bottom:0.5px solid #bebebe;
+    box-sizing:border-box;
 }
 .shopping-car-show_list:last-child {
 
@@ -453,35 +451,7 @@ body {
 }
 .shopping-car-show_list_name {
     display: inline-block;
-    width: 50%;
-    height: 100%;
-}
-span.trolley-wares-name, span.trolley-wares-desc {
-    display: block;
-    width: 100%;
-    line-height: 0.8rem;
-    margin: 0;
-    padding: 0;
-}
-span.trolley-wares-name:only-child{
-	display: inline-block;
-}
-span.trolley-wares-desc {
-    font-size: 0.3rem;
-    font-weight: normal;
-    line-height: 0.4rem;
-    text-indent: 0.5em;
-    color: #666;
-    text-overflow: ellipsis;
-    width: 100%;
-    overflow: hidden;
-    white-space: nowrap;
-}
-span.shopping-car-show_list_price {
-    margin-right: 0.2rem;
-    display: block;
-    float: right;
-    height: 100%;
+    width:5.2rem;
 }
 .shopping-car-show_list_price:before {
     font-weight: normal;

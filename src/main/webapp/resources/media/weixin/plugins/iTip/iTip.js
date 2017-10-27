@@ -25,6 +25,9 @@
      time: 自动关闭时间(单位秒) time 秒后关闭 (Tips.open中有效) 
      define: 定义确定按钮的文本 (Tips.alert Tips.confirm中有效)
      cancel: 定义取消按钮的文本 (Tips.confirm中有效)
+     
+     width: 小于1的小数，表示弹出框相对于屏幕的比例
+     lockScroll: 
  * ====================================================================
  * Tips.BG //遮罩层
  * Tips.Box //弹出框
@@ -53,18 +56,21 @@
         },
         minWidth: 250,
         maxWidth: 300,
-        _show: function() {
+        _show: function(option) {
             this._fix = true;
             this.BG.style.display = 'block';
             this.Box.style.display = 'block';
-            this._css();
-            this._bind();
+            this._css(option);
+            this._bind(option);
+            (option.afterShow || $.noop).apply(this, []);
+            this._showOption = option; 
         },
         _hide: function() {
             this._fix = false;
             this.BG.style.display = 'none';
             this.Box.style.display = 'none';
-            this._unbind();
+            this._unbind(this._showOption);
+            (this._showOption.afterHide || $.noop).apply(this, []);
         },
         _pos: function() {
             var d = document,
@@ -81,19 +87,23 @@
                 this.wH = body.clientHeight;
             }
         },
-        _css: function() {
+        _css: function(option) {
             this._pos();
             this.BG.style.height = Math.max(this.pH, this.wH) + 'px';
             this.Box.style.width = 'auto';
             this.content.style.cssText = 'float:left';
-            var cW = this.content.offsetWidth;
             this.content.style.cssText = '';
             // width max:300 min:200
-            if (cW < this.minWidth) cW = this.minWidth;
-            if (cW > this.maxWidth) {
-                cW = this.maxWidth;
-                // this.content.style.whiteSpace = '';
-                this.content.style.whiteSpace = 'normal';
+            if(typeof option.width === 'number' && option.width < 1){
+            	cW = parseInt(option.width * document.body.clientWidth);
+            }else{
+            	var cW = this.content.offsetWidth;
+            	if (cW < this.minWidth) cW = this.minWidth;
+            	if (cW > this.maxWidth) {
+            		cW = this.maxWidth;
+            		// this.content.style.whiteSpace = '';
+            		this.content.style.whiteSpace = 'normal';
+            	}
             }
             this.Box.style.width = cW + 'px';
             // absolute
@@ -154,11 +164,11 @@
                 option.after && option.after(_this.Bool);
             };
         },
-        _bind: function() {
+        _bind: function(option) {
             this.Box.focus();
-            this._setEvent();
+            this._setEvent(option);
         },
-        _unbind: function() {
+        _unbind: function(option) {
             this.Box.blur();
             this.define.onclick = null;
             this.cancel.onclick = null;
@@ -169,13 +179,16 @@
             this._timeid && clearInterval(this._timeid);
             this._timeid = null;
         },
-        _setEvent: function() {
+        _setEvent: function(option) {
             var _this = this;
             this.on(this.BG, 'touchmove', function(e) {
                 e.preventDefault();
+                return false;
             });
             this.on(this.Box, 'touchmove', function(e) {
-                e.preventDefault();
+            	/*if(!$(e.target).is(option.ignoredScroll)){
+            		e.preventDefault();
+            	}*/
             });
             this.on(this.define, 'touchstart', function(e) {
                 _this.define.className.indexOf('tips_hover') < 0 && (_this.define.className += ' tips_hover');
@@ -254,7 +267,7 @@
                 this._setBtn(n, option);
             }
             this._setContent(content);
-            this._show();
+            this._show(option);
         },
         _setTime: function(option, t) {
             var time = 0,

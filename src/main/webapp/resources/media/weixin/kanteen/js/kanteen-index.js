@@ -4,8 +4,8 @@
 		bindChange		: function(callback){
 			return this.bind('change', callback);
 		},
-		triggerChange	: function(data){
-			return this.trigger('change', [data]);
+		triggerChange	: function(data, updateTrolleyWaresFn){
+			return this.trigger('change', [data, updateTrolleyWaresFn]);
 		},
 		bind		: function(eventName, callback){
 			if(typeof callback === 'function'){
@@ -448,7 +448,7 @@
 				let count = parseFloat(productWrap.querySelector(".canteen-meal-list_menu_count").textContent);
 				let name = productWrap.querySelector(".canteen-meal-list_menu_name").textContent;
 				let unitPrice = parseFloat(productWrap.querySelector(".canteen-meal-list_menu_price").querySelector("span").textContent);
-				let totalPrice = count * unitPrice;
+				let totalPrice = (parseFloat(count * unitPrice)).toFixed(2);
 				let listHtml = ``;
 				let listUid = -1;
 				for (let i = 0; i < lists.length; i++) {
@@ -459,14 +459,15 @@
 				if (kind === "add") {
 					if (listUid === -1) {
 						let listDiv = document.createElement("div");
-						listHtml = `<div data-orderuid="${uid}" class="shopping-car-show_list">
-						<span class="shopping-car-show_list_name">${name}</span>
-						<span class="shopping-car-show_list_price canteen-icon canteen-rmb-icon">${totalPrice}</span>
+						let tempId = me.getTrolleyWaresTempId();
+						listHtml = `<div data-orderuid="${uid}" data-twid="${tempId}" class="shopping-car-show_list" data-base-price="${unitPrice}" >
+						<span class="shopping-car-show_list_name"><span class="trolley-wares-name">${name}</span></span>
 						<div class="shopping-car-show_list_button">
 						<a href="javascript:" class="shopping-car-show_list_minus canteen-icon canteen-minus-icon"></a>
 						<span class="shopping-car-show_list_count">${count}</span>
 						<a href="javascript:" class="shopping-car-show_list_add canteen-icon canteen-add-icon"></a>
 						</div>
+						<span class="shopping-car-show_list_price canteen-icon canteen-rmb-icon">${totalPrice}</span>
 						</div>`;
 						listDiv.innerHTML = listHtml;
 						wrap.appendChild(listDiv.children[0].cloneNode(true));
@@ -494,7 +495,68 @@
 				}
 				this.shoppingData();
 			},
-			
+			/**
+			 * 
+			 */
+			trolleyWaresTempId	: 0,
+			/**
+			 * 
+			 */
+			getTrolleyWaresTempId() {
+				return 'temp_' + this.trolleyWaresTempId++;
+			},
+			/**
+			 *  购物车展示模块 
+			 * @param { uid, kind } ( uid:商品id唯一标识 data-prouid)
+			 */
+			addOptionWares(dwid, count, unitPrice, description, optionIds) {
+				if(typeof dwid === 'object'){
+					let $trolleyItem = dwid;
+					let currentCount = parseInt($trolleyItem.querySelector(".shopping-car-show_list_count").textContent);
+					let toCount = currentCount + count;
+					let basePrice = parseFloat($trolleyItem.getAttribute('data-base-price'));
+					if(toCount > 0){
+						$trolleyItem.querySelector(".shopping-car-show_list_count").textContent = toCount;
+						$trolleyItem.querySelector(".shopping-car-show_list_price").textContent = (basePrice * toCount).toFixed(2);
+					}else{
+						let shoppingBasket = this.domBox.shopping_basket_wrap;
+						let showBasket = shoppingBasket.classList.contains("active");
+						let wrap = this.domBox.shopping_basket;
+						let lists = wrap.children;
+						$trolleyItem.parentNode.removeChild($trolleyItem);
+						if (lists.length === 0 && showBasket) {
+							shoppingBasket.classList.toggle("active");
+							this.domBox.shoppingcar_box.classList.toggle("active");
+							this.shadow();
+						}
+						
+					}
+						
+				}else{
+					let me = this;
+					let wrap = this.domBox.shopping_basket;
+					let lists = wrap.children;
+					let productWrap = document.querySelector(`[data-prouid="${dwid}"]`);
+					let footerPage = this.domBox.shoppingcar_box;
+					let name = productWrap.querySelector(".canteen-meal-list_menu_name").textContent;
+					let totalPrice = (parseFloat(count * unitPrice)).toFixed(2);
+					let tempId = me.getTrolleyWaresTempId();
+					let listDiv = document.createElement("div");
+					let options = optionIds.join();
+					let listHtml = `<div data-orderuid="${dwid}" data-twid="${tempId}" data-options="${options}" class="shopping-car-show_list" data-base-price="${unitPrice}">
+						<span class="shopping-car-show_list_name"><span class="trolley-wares-name">${name}</span><span class="trolley-wares-desc">${description}</span></span>
+						<div class="shopping-car-show_list_button">
+						<a href="javascript:" class="shopping-car-show_list_minus canteen-icon canteen-minus-icon"></a>
+						<span class="shopping-car-show_list_count">${count}</span>
+						<a href="javascript:" class="shopping-car-show_list_add canteen-icon canteen-add-icon"></a>
+						</div>
+						<span class="shopping-car-show_list_price canteen-icon canteen-rmb-icon">${totalPrice}</span>
+						</div>`;
+					listDiv.innerHTML = listHtml;
+					wrap.appendChild(listDiv.children[0].cloneNode(true));
+				}
+				this.shoppingData();
+			},
 			/**
 			 * 购物车展示栏 添加减少 具体方法调用展示模块
 			 */
@@ -515,22 +577,36 @@
 						
 						uid = target.parentNode.parentNode.getAttribute("data-orderuid");
 						meal = document.querySelector(`[data-prouid="${uid}"]`);
-						mealTarget = meal.querySelector(".canteen-meal-list_menu_add");
-						unitPrice = parseFloat(meal.querySelector(".canteen-meal-list_menu_price").querySelector("span").textContent);
-						//调用顺序不可乱
-						me.mealCount(mealTarget, "add");
-						me.shoppingBasket(uid, "add");
-						me.shoppingCar(unitPrice, "add");
+						if(meal.classList.contains('wares-with-option')){
+							var $trolleyItem =  target.closest('.shopping-car-show_list');
+							var price = parseFloat($trolleyItem.getAttribute('data-base-price'));
+							me.shoppingCar(price, "add");
+    						me.addOptionWares($trolleyItem, 1);
+						}else{
+							mealTarget = meal.querySelector(".canteen-meal-list_menu_add");
+							unitPrice = parseFloat(meal.querySelector(".canteen-meal-list_menu_price").querySelector("span").textContent);
+							//调用顺序不可乱
+							me.mealCount(mealTarget, "add");
+							me.shoppingBasket(uid, "add");
+							me.shoppingCar(unitPrice, "add");
+						}
 						
 					} else if (isReduce) {
 						uid = target.parentNode.parentNode.getAttribute("data-orderuid");
 						meal = document.querySelector(`[data-prouid="${uid}"]`);
-						mealTarget = meal.querySelector(".canteen-meal-list_menu_minus");
-						unitPrice = parseFloat(meal.querySelector(".canteen-meal-list_menu_price").querySelector("span").textContent);
-						//调用顺序不可乱
-						me.mealCount(mealTarget, "reduce");
-						me.shoppingBasket(uid, "reduce");
-						me.shoppingCar(unitPrice, "reduce");
+						if(meal.classList.contains('wares-with-option')){
+							var $trolleyItem =  target.closest('.shopping-car-show_list');
+							var price = parseFloat($trolleyItem.getAttribute('data-base-price'));
+							me.shoppingCar(price, "reduce");
+    						me.addOptionWares($trolleyItem, -1);
+						}else{
+							mealTarget = meal.querySelector(".canteen-meal-list_menu_minus");
+							unitPrice = parseFloat(meal.querySelector(".canteen-meal-list_menu_price").querySelector("span").textContent);
+							//调用顺序不可乱
+							me.mealCount(mealTarget, "reduce");
+							me.shoppingBasket(uid, "reduce");
+							me.shoppingCar(unitPrice, "reduce");
+						}
 					} else {
 						return;
 					}
@@ -637,13 +713,25 @@
 			 * orderDate 为 用户每次操作购物车后，购物车内的内容
 			 */
 			shoppingData() {
+				let me = this;
 				let basket = this.domBox.shopping_basket;
 				let meals = basket.children;
 				let orderData = {};
 				for( let i=0; i<meals.length; i++){
-					orderData['id_' + meals[i].getAttribute("data-orderuid")]  = meals[i].querySelector(".shopping-car-show_list_count").textContent;
+					orderData['id_' + meals[i].getAttribute("data-twid")]  = {
+						dwId	: meals[i].getAttribute("data-orderuid"),
+						count	: meals[i].querySelector(".shopping-car-show_list_count").textContent,
+						options	: meals[i].getAttribute('data-options')
+					}
 				}
-				kanteen.triggerChange(orderData);
+				kanteen.triggerChange(orderData, function(tempTrolleyWaresData){
+					for(var tempId in trolleyWaresData){
+						var $trolleyDom = me.domBox.shopping_basket.querySelector('[data-twid="' + tempId + '"]');
+						if($trolleyDom){
+							$trolleyDom.setAttribute('data-twid', trolleyWaresData[tempId].id);
+						}
+					}
+				});
 				console.log(orderData);
 			},
 			

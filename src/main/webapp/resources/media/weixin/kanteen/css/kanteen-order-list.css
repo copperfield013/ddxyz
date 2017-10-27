@@ -8,6 +8,7 @@ body {
     display: -webkit-flex;
     display: flex;
     flex-direction: column; 
+    position: relative;
 }
 /*搜索框部分*/
 header {
@@ -101,13 +102,16 @@ header {
     left:6rem;
 }
 .canteen-order-list-wrap {
-    margin-bottom:1.3rem;
+    /* margin-bottom:1.3rem; */
     flex:1;
     overflow:auto;
     box-sizing: content-box;
     pointer-events: auto;
     -webkit-overflow-scrolling: touch;
     overflow-scrolling: touch;
+    position: absolute;
+    top: 2.06rem;
+    bottom: 1.3rem;
 }
 .canteen-order-list {
     width:10rem;   
@@ -277,7 +281,7 @@ header {
     padding:0 0.4rem;
 }
 .canteen-order-list_button >a {
-    width: 3rem;
+    width: 6em;
     height: 0.8rem;
     line-height: 0.8rem;
     text-align: center;
@@ -286,6 +290,10 @@ header {
     margin-top: 0.3rem;
     color: #323232;
     box-sizing: border-box;
+}
+a.canteen-order-pay {
+    background-color: #FF4500;
+    color: #fff;
 }
 .canteen-order-list-footer {
     height: 1.3rem;

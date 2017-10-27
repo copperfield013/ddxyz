@@ -118,16 +118,9 @@ public class WeiXinKanteenController {
 		return WeiXinConstants.PATH_KANTEEN + "/kanteen_order.jsp";
 	}
 	
-	@RequestMapping("/order_list")
-	public String orderList(Model model){
-		WeiXinUser user = WxUtils.getCurrentUser(WeiXinUser.class);
-		KanteenOrderCriteria criteria = new KanteenOrderCriteria();
-		criteria.setUserId(user.getId());
-		List<KanteenOrder> orderList = kanteenService.queryOrder(criteria , null);
-		Map<Long, PlainKanteenDelivery> deliveryMap = kanteenService.getDeliveryMap(new HashSet<Long>(CollectionUtils.toList(orderList, order->order.getPlainOrder().getDeliveryId())));
-		model.addAttribute("orderList", orderList);
-		model.addAttribute("orderStatusMap", KanteenConstants.ORDER_STATUS_MAP);
-		model.addAttribute("deliveryMap", deliveryMap);
+	@RequestMapping("/order_list/{range}")
+	public String orderList(@PathVariable String range, Model model){
+		model.addAttribute("range", range);
 		return WeiXinConstants.PATH_KANTEEN + "/kanteen_order_list.jsp";
 	}
 	
@@ -187,6 +180,9 @@ public class WeiXinKanteenController {
 		}
 		return jRes;
 	}
+	
+	
+	
 	
 	@ResponseBody
 	@RequestMapping("/order_paied")
@@ -294,19 +290,83 @@ public class WeiXinKanteenController {
 	
 	
 	@RequestMapping("/order_list_data")
-	public String orderListData(String range, PageInfo pageInfo, Model model){
+	public String orderListData(KanteenOrderCriteria criteria, PageInfo pageInfo, Model model){
 		WeiXinUser user = WxUtils.getCurrentUser(WeiXinUser.class);
 		pageInfo.setPageSize(5);
-		KanteenOrderCriteria criteria = new KanteenOrderCriteria();
 		criteria.setUserId(user.getId());
 		List<KanteenOrder> orderList = kanteenService.queryOrder(criteria , pageInfo);
 		Map<Long, PlainKanteenDelivery> deliveryMap = kanteenService.getDeliveryMap(new HashSet<Long>(CollectionUtils.toList(orderList, order->order.getPlainOrder().getDeliveryId())));
 		model.addAttribute("orderList", orderList);
 		model.addAttribute("orderStatusMap", KanteenConstants.ORDER_STATUS_MAP);
 		model.addAttribute("deliveryMap", deliveryMap);
-		
+		model.addAttribute("now", new Date());
 		return WeiXinConstants.PATH_KANTEEN + "/kanteen_order_list_data.jsp"; 
 	}
+
+	@ResponseBody
+	@RequestMapping("/check_order_for_pay")
+	public JsonResponse checkOrderForPay(@RequestParam Long orderId){
+		JsonResponse jRes = new JsonResponse();
+		PlainKanteenOrder order = kanteenService.getOrder(orderId);
+		if(order == null){
+			jRes.put("msg", "订单不存在");
+		}else if(!PlainKanteenOrder.STATUS_DEFAULT.equals(order.getStatus())){
+			jRes.put("msg", "订单已支付");
+		}else if(order.getCanceledStatus() != null){
+			jRes.put("msg", "订单已取消");
+		}else if(order.getPayExpiredTime().before(new Date())){
+			jRes.put("msg", "已超过订单可支付时间");
+		}else if(order.getWxPrepayId() != null){
+			H5PayParameter payParameter = payService.buildPayParameter(order.getWxPrepayId());
+			jRes.put("payParameter", payParameter);
+			jRes.setStatusSuccees();
+		}
+		return jRes;
+	}
+	
+	@ResponseBody
+	@RequestMapping("/delete_order")
+	public JsonResponse deleteOrder(@RequestParam Long orderId){
+		JsonResponse jRes = new JsonResponse();
+		WeiXinUser user = WxUtils.getCurrentUser(WeiXinUser.class);
+		try {
+			kanteenService.hideOrder(user, orderId);
+			jRes.setStatusSuccees();
+		} catch (Exception e) {
+			logger.error("删除订单时发生错误", e);
+		}
+		return jRes;
+	}
+	
+	@ResponseBody
+	@RequestMapping("/refund_order")
+	public JsonResponse refundOrder(@RequestParam Long orderId){
+		JsonResponse jRes = new JsonResponse();
+		WeiXinUser user = WxUtils.getCurrentUser(WeiXinUser.class);
+		try {
+			kanteenService.refundOrder(user, orderId);
+			jRes.setStatusSuccees();
+		} catch (Exception e) {
+			logger.error("订单退款时发生错误", e);
+		}
+		return jRes;
+	}
+	
+	@ResponseBody
+	@RequestMapping("/cancel_order")
+	public JsonResponse cancelOrder(@RequestParam Long orderId){
+		JsonResponse jRes = new JsonResponse();
+		WeiXinUser user = WxUtils.getCurrentUser(WeiXinUser.class);
+		try {
+			kanteenService.cancelOrder(user, orderId);
+			jRes.setStatusSuccees();
+		} catch (Exception e) {
+			logger.error("取消订单时发生错误", e);
+		}
+		return jRes;
+	}
+	
+	
 	
 	
 	

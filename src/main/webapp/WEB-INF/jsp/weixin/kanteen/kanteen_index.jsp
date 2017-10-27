@@ -7,10 +7,8 @@
     
     <title>林家食堂</title>
 	<jsp:include page="/WEB-INF/jsp/weixin/common/weixin-include-kanteen.jsp"></jsp:include>
-    <link rel="stylesheet" href="media/weixin/kanteen/css/kanteen-index.css">
-    <link rel="stylesheet" href="media/weixin/plugins/iTip/iTip.css">
+    <link rel="stylesheet" href="media/weixin/kanteen/css/kanteen-index.css?3">
     <script src="media/weixin/kanteen/js/kanteen-index.js?2"></script>
-    <script src="media/weixin/plugins/iTip/iTip.js"></script>
 </head>
 
 <body>
@@ -68,7 +66,10 @@
              <div data-uid="${group.id }" class="canteen-meal-list ${i.index==0?'active':'' }">
              	<header class="canteen-meal-list_title canteen-icon canteen-title-bar-icon">${group.name }</header>
              	<c:forEach items="${menuItem.value }" var="wares">
-            		<div data-prouid="${wares.distributionWaresId }" data-base-price="<fmt:formatNumber value="${wares.basePrice/100 }" pattern="0.00" />" class="canteen-meal-list_menu" >
+            		<div data-wares-id="${wares.waresId }" 
+            			data-prouid="${wares.distributionWaresId }" 
+            			data-base-price="<fmt:formatNumber value="${wares.basePrice/100 }" pattern="0.00" />" 
+            			class="canteen-meal-list_menu ${menu.waresOptionGroupMap[wares.waresId] != null? 'wares-with-option' : ''}" >
 						<img class="canteen-meal-list_image" src="${wares.picUri }" alt="${wares.waresName }">
 						<div class="canteen-meal-list_menu_detail">
 							<p class="canteen-meal-list_menu_name">${wares.waresName }</p>
@@ -81,11 +82,18 @@
 		                    <p class="canteen-meal-list_menu_price canteen-icon canteen-rmb-icon">
 		                        <span class=""><fmt:formatNumber value="${wares.basePrice/100 }" pattern="0.00" />元/${wares.priceUnit }</span>
 		                    </p>
-		                    <div class="canteen-meal-list_menu_button">
-		                        <a href="javascript:" class="canteen-meal-list_menu_minus canteen-icon canteen-minus-icon"></a>
-		                        <span class="canteen-meal-list_menu_count"></span>
-		                        <a href="javascript:" class="canteen-meal-list_menu_add canteen-icon canteen-add-icon"></a>
-		                    </div>
+		                    <c:choose>
+		                    	<c:when test="${menu.waresOptionGroupMap[wares.waresId] != null}">
+				                    <a class="kanteen-optionsgroup" href="javascript:;">选规格</a>
+		                    	</c:when>
+		                    	<c:otherwise>
+		                    		<div class="canteen-meal-list_menu_button">
+				                        <a href="javascript:" class="canteen-meal-list_menu_minus canteen-icon canteen-minus-icon"></a>
+				                        <span class="canteen-meal-list_menu_count"></span>
+				                        <a href="javascript:" class="canteen-meal-list_menu_add canteen-icon canteen-add-icon"></a>
+				                    </div>
+		                    	</c:otherwise>
+		                    </c:choose>
 		                </div>
             		</div> 		
              	</c:forEach>
@@ -141,6 +149,36 @@
 
     <!--遮罩-->
     <div class="canteen-shadow"></div>
+    
+    <script id="options-tmpl" type="text/jquery-tmpl">
+		<div class="options-panel">
+			<h3>\${wares.waresName}</h3>
+			<div class="option-groups-container">
+				{{each(i, group) groups}}
+					<div class="options-group 
+						{{if group.multiple == 1}}options-group-multiple {{/if}} 
+						{{if group.required == 1}}options-group-required {{/if}}
+						"
+						data-id="\${group.id}">
+						<h4>\${group.title}</h4>
+						<p>
+							{{each(j, option) group.options}}
+								<span 
+								{{if group.required == 1 && j == 0}}
+									class="active"
+								{{/if}}
+								data-id="\${option.id}">\${option.name}</span>
+							{{/each}}
+						</p>
+					</div>
+				{{/each}}
+			</div>
+			<div class="options-footer">
+				<span class="options-price"><span class="option-wares-base-price">\${wares.basePriceFloat}</span>元/\${wares.priceUnit}</span>
+			</div>
+		</div>
+	</script>
+    
     <script type="text/javascript">
     	$(function(){
     		seajs.use(['ajax'], function(Ajax){
@@ -160,7 +198,7 @@
 	    		}
     			initTrolley(Kanteen.ca);
     			
-	    		Kanteen.bindChange(function(cartData){
+	    		Kanteen.bindChange(function(cartData, updateTwIdFn){
 	    			Ajax.postJson('weixin/kanteen/commit_trolley', 
 	    					{
 	    					distributionId: '${distribution.id}', 
@@ -168,26 +206,61 @@
 	    				}, function(data){
 	    				if(data.status != 'suc'){
 	    					console.error('系统错误');
+	    				}else{
+	    					updateTwIdFn(data.tempTrolleyWaresData);
 	    				}
 	    			});
 	    		}).afterInit(initTrolley);
-	    		
-	    		/* $('#submit-order').click(function(){
-	    			Ajax.ajax('weixin/kanteen/submit_order',{
-	    				distributionId	: '${distribution.id}'
-	    			}, function(data){
-	    				if(data.orderId != ''){
-	    					Tip.alert({
-	    						content	: '订单提交成功，请在15分钟内完成确认',
-	    						after	: function(){
-			    					location.href = 'weixin/kanteen/order/' + orderId;
-	    						}
-	    					})
-	    				}else{
-	    					Tips.alert('订单提交失败');
+	    		$(document).on('touchend', '.options-group span', function(e){
+	    			var $option = $(e.target);
+	    			var isActive = $option.is('.active'),
+	    				isMulti = $option.closest('.options-group').is('.options-group-multiple'),
+	    				isRequired = $option.closest('.options-group').is('.options-group-required');
+	    			if(isActive && isRequired && $option.siblings().filter('span.active').length == 0){
+    					return false;
+	    			}else{
+		    			if(isMulti){
+		    				$option.toggleClass('active', !isActive);
+		    			}else{
+		    				var $active = $option.closest('p').find('span.active'); 
+		    				$option.addClass('active');
+		    				$active.removeClass('active');
+		    			}
+	    			}
+	    			return false;
+	    		});
+    			var optionGroupJson = $.parseJSON('${menu.optionGroupJson}');
+	    		$(document).on('click', 'a.kanteen-optionsgroup', function(e){
+	    			var waresId = $(e.target).closest('[data-wares-id]').attr('data-wares-id'),
+	    				distributionWaresId = $(e.target).closest('[data-prouid]').attr('data-prouid');
+	    			if(waresId){
+	    				var data = optionGroupJson[optionGroupJson.waresKeyPrefix + waresId];
+	    				if(data){
+	    					data.wares.basePriceFloat = parseFloat(data.wares.basePrice / 100).toFixed(2);
+			    			var $content = $('#options-tmpl').tmpl(data);
+			    			
+			    			Tips.confirm({
+			    				content	: $content.prop('outerHTML'),
+			    				width	: 3/4,
+			    				after	: function(b){
+			    					if(b){
+			    						var $range = $(Tips.Box);
+			    						var optionIds = [];
+			    						var desc = [];
+			    						$('.options-group span.active', $range).each(function(){
+			    							var optionId = $(this).attr('data-id');
+			    							optionIds.push(optionId);
+			    							desc.push($(this).text());
+			    						});
+			    						var price = parseFloat($('.option-wares-base-price', $range).text());
+			    						Kanteen.ca.shoppingCar(price, "add");
+			    						Kanteen.ca.addOptionWares(distributionWaresId, 1, price, desc.join(), optionIds);
+			    					}
+			    				}
+			    			});
 	    				}
-	    			})
-	    		}); */
+	    			}
+	    		});
 	    		
     		});
     	});

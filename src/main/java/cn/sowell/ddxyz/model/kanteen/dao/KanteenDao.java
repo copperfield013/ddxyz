@@ -10,6 +10,8 @@ import cn.sowell.ddxyz.model.canteen.pojo.PlainKanteenDelivery;
 import cn.sowell.ddxyz.model.kanteen.pojo.KanteenDistributionMenuItem;
 import cn.sowell.ddxyz.model.kanteen.pojo.KanteenOrderCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.KanteenTrolleyWares;
+import cn.sowell.ddxyz.model.kanteen.pojo.KanteenWaresOptionGroup;
+import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenCancelOption;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenDistribution;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenDistributionWares;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMerchant;
@@ -59,6 +61,13 @@ public interface KanteenDao {
 	 */
 	List<KanteenDistributionMenuItem> getMenuItems(Long distributionId);
 
+	/**
+	 * 查找所有商品id中有选项的选项组
+	 * @param waresIds
+	 * @return
+	 */
+	Map<Long, List<KanteenWaresOptionGroup>> getMenuWaresOptionGroupsMap(Set<Long> waresIds);
+	
 	/**
 	 * 根据用户id和配销的id获得购物车数据对象
 	 * @param userId
@@ -192,6 +201,31 @@ public interface KanteenDao {
 	 * @return
 	 */
 	List<PlainKanteenDelivery> getDeliveries(Set<Long> deliveryIds);
+
+	/**
+	 * 修改订单的删除状态
+	 * @param orderId
+	 */
+	void updateOrderAsDeleted(Long orderId, boolean toDel);
+
+	/**
+	 * 修改订单状态为已退款
+	 * @param orderId
+	 * @param refundFee
+	 */
+	void updateOrderAsRefunded(Long orderId, Integer refundFee);
+	/**
+	 * 
+	 * @param orderId
+	 */
+	void cancelOrder(Long orderId);
+
+	/**
+	 * 根据订单找到对应的取消选项
+	 * @param plainOrder
+	 * @return
+	 */
+	PlainKanteenCancelOption getOrderCancelOption(PlainKanteenOrder plainOrder);
 
 	
 

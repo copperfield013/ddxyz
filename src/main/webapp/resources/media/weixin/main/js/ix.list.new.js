@@ -52,6 +52,7 @@ var load = function($list, opt, curpage, cb) {
         dataType : 'html',
         callback : function(html) {
             $list.removeClass('loading');
+            $list.removeClass('initing');
             var $lis = $('<div></div>').html(html).children();
             cb($lis);
             if(opt.callback && $.isFunction(opt.callback)) {

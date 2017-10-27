@@ -46,4 +46,6 @@ public interface WxPayOrder {
 	 */
 	String getPayTitle();
 
+	String getWxOutTradeNo();
+
 }

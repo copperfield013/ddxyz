@@ -8,9 +8,7 @@
 	<jsp:include page="/WEB-INF/jsp/weixin/common/weixin-include-kanteen.jsp"></jsp:include>
     <link rel="stylesheet" href="media/weixin/kanteen/css/kanteen-order.css?v=1.12">
     <link rel="stylesheet" href="media/weixin/kanteen/css/kanteen-base.css?v=1.1.4">
-    <link rel="stylesheet" href="media/weixin/plugins/iTip/iTip.css">
     <script src="media/weixin/plugins/pushbutton/pushbutton.min.js"></script>
-    <script src="media/weixin/plugins/iTip/iTip.js"></script>
     	
     <!-- <script src="media/weixin/kanteen/js/kanteen-order.js"></script> -->
 </head>
@@ -238,7 +236,7 @@
 			    									Tips.alert({
 			    										content	: '支付成功',
 			    										after	: function(){
-					    									window.location.href = 'weixin/kanteen/order_list';
+					    									window.location.href = 'weixin/kanteen/order_list/week';
 			    										}
 			    									});
 			    								}, function(){
@@ -246,7 +244,7 @@
 			    									Tips.alert({
 			    										content	: '没有支付',
 			    										after	: function(){
-			    											window.location.href = 'weixin/kanteen/order_list';
+			    											window.location.href = 'weixin/kanteen/order_list/week';
 			    										}
 			    									});
 			    								}, function(){
@@ -254,7 +252,7 @@
 			    									Tips.alert({
 			    										content	: '支付已取消',
 			    										after	: function(){
-			    											window.location.href = 'weixin/kanteen/order_list';
+			    											window.location.href = 'weixin/kanteen/order_list/week';
 			    										}
 			    									});
 			    								});

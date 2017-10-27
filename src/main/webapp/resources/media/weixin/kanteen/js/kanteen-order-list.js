@@ -3,7 +3,7 @@ let canteen_home_interaction = {
     init() {
         this.searchBox();
         this.showMore();
-        this.orderNav();
+        //this.orderNav();
     },
 
     /**

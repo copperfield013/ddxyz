@@ -1,6 +1,7 @@
 package cn.sowell.ddxyz.model.kanteen.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -29,9 +30,13 @@ import cn.sowell.copframe.weixin.pay.paied.WxPayStatus;
 import cn.sowell.copframe.weixin.pay.prepay.H5PayParameter;
 import cn.sowell.copframe.weixin.pay.prepay.PrepayParameter;
 import cn.sowell.copframe.weixin.pay.prepay.PrepayResult;
+import cn.sowell.copframe.weixin.pay.refund.RefundRequest;
+import cn.sowell.copframe.weixin.pay.refund.RefundResult;
 import cn.sowell.copframe.weixin.pay.service.WxPayService;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainKanteenDelivery;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainKanteenTrolleyWares;
+import cn.sowell.ddxyz.model.common.core.OrderRefundParameter;
+import cn.sowell.ddxyz.model.common.core.result.CheckResult;
 import cn.sowell.ddxyz.model.kanteen.dao.KanteenDao;
 import cn.sowell.ddxyz.model.kanteen.pojo.KanteenDistributionMenuItem;
 import cn.sowell.ddxyz.model.kanteen.pojo.KanteenMenu;
@@ -39,6 +44,8 @@ import cn.sowell.ddxyz.model.kanteen.pojo.KanteenOrder;
 import cn.sowell.ddxyz.model.kanteen.pojo.KanteenOrderCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.KanteenTrolley;
 import cn.sowell.ddxyz.model.kanteen.pojo.KanteenTrolleyWares;
+import cn.sowell.ddxyz.model.kanteen.pojo.KanteenWaresOptionGroup;
+import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenCancelOption;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenDistribution;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenDistributionWares;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMenu;
@@ -107,6 +114,12 @@ public class KanteenServiceImpl implements KanteenService {
 			//对菜单进行排序
 			menuItemMap = sort(menuItemMap);
 			menu.setMenuItemMap(menuItemMap);
+			
+			Set<Long> waresIds = new HashSet<Long>();
+			menuItemMap.values().forEach(itemList->itemList.forEach(item->waresIds.add(item.getWaresId())));
+			Map<Long, List<KanteenWaresOptionGroup>> waresOptionGroupMap = kDao.getMenuWaresOptionGroupsMap(waresIds);
+			menu.setWaresOptionGroupMap(waresOptionGroupMap);
+			
 			return menu;
 		}
 		return null;
@@ -211,6 +224,7 @@ public class KanteenServiceImpl implements KanteenService {
 	public Map<Long, Integer> extractTrolley(JSONObject trolleyData) {
 		Map<Long, Integer> map = new LinkedHashMap<Long, Integer>();
 		Pattern pattern = Pattern.compile("^id_(\\d+)$");
+		Pattern tempPattern = Pattern.compile("^id_temp_(\\d+)$");
 		trolleyData.keySet().forEach(key->{
 			Matcher matcher = pattern.matcher(key);
 			if(matcher.matches()){
@@ -293,7 +307,7 @@ public class KanteenServiceImpl implements KanteenService {
 		for (KanteenTrolleyWares validWares : validWareses) {
 			PlainKanteenDistributionWares dWares = kDao.get(validWares.getDistributionWaresId(), PlainKanteenDistributionWares.class);
 			if(dWares != null){
-				PlainKanteenWares wares = kDao.get(dWares.getId(), PlainKanteenWares.class);
+				PlainKanteenWares wares = kDao.get(dWares.getWaresId(), PlainKanteenWares.class);
 				
 				if(wares != null){
 					PlainKanteenSection section = new PlainKanteenSection();
@@ -402,6 +416,7 @@ public class KanteenServiceImpl implements KanteenService {
 		pOrder.setReceiverDepart(json.getString("receiverDepart"));
 		pOrder.setDeliveryId(json.getLong("deliveryId"));
 		pOrder.setLocationName(json.getString("locationName"));
+		pOrder.setLocationId(json.getLong("locationId"));
 		pOrder.setPayway(json.getString("payway"));
 		//pOrder.setTotalPrice(json.getInteger("totalPrice"));
 		pOrder.setRemark(json.getString("remark"));
@@ -417,10 +432,14 @@ public class KanteenServiceImpl implements KanteenService {
 	@Override
 	public void payOrder(PlainKanteenOrder order, WeiXinUser user) throws OrderPayException{
 		//检测订单是否可以被支付
-		if(order.getCanceledStatus() != null){
-			throw new OrderPayException("订单已取消");
+		if(order == null){
+			throw new OrderPayException("订单不存在");
 		}else if(!PlainKanteenOrder.STATUS_DEFAULT.equals(order.getStatus())){
 			throw new OrderPayException("订单已支付", true);
+		}else if(order.getCanceledStatus() != null){
+			throw new OrderPayException("订单已取消");
+		}else if(order.getPayExpiredTime().before(new Date())){
+			throw new OrderPayException("已超过订单可支付时间");
 		}else{
 			//调用微信接口查询订单的支付状态
 			WxPayStatus checkResult = payService.checkPayStatus(order.getWxOutTradeNo());
@@ -466,6 +485,106 @@ public class KanteenServiceImpl implements KanteenService {
 		}else{
 			return new HashMap<Long, PlainKanteenDelivery>();
 		}
+	}
+	
+	
+	@Override
+	public void hideOrder(WeiXinUser user, Long orderId) {
+		checkAuthority(user, orderId, true);
+		kDao.updateOrderAsDeleted(orderId, true);
+	}
+	
+	
+	
+	@Override
+	public void refundOrder(WeiXinUser user, Long orderId) {
+		CheckResult checkResult = checkAuthority(user, orderId, true);
+		PlainKanteenOrder plainOrder = (PlainKanteenOrder) checkResult.getData();
+		if(PlainKanteenOrder.STATUS_DEFAULT.equals(plainOrder.getStatus())){
+			throw new RuntimeException("订单状态未支付，无法退款");
+		}
+		OrderRefundParameter refundParam = new OrderRefundParameter();
+		refundParam.setOperateUser(user);
+		refundParam.setRefundFee(plainOrder.getActualPay());
+		KanteenOrder order = getKanteenOrder(plainOrder);
+		RefundRequest refundReq = payService.buildRefundRequest(refundParam, order);
+		RefundResult result = payService.sendRefund(refundReq, true);
+		if(result != null){
+			if("SUCCESS".equals(result.getResultCode())){
+				//退款请求成功
+				kDao.updateOrderAsRefunded(orderId, result.getRefundFee());
+			}else if("FAIL".equals(result.getResultCode())){
+				throw new RuntimeException("调用微信退款接口时返回失败，原因是[" + result.getErrorCodeDesc() + "]");
+			}else{
+				throw new RuntimeException("微信退款接口返回未知状态码【" + result.getResultCode() + "】");
+			}
+		}else{
+			//退款请求失败
+			throw new RuntimeException("调用微信退款接口时发生异常，退款失败");
+		}
+	}
+	
+	
+	@Override
+	public void cancelOrder(WeiXinUser user, Long orderId) {
+		//检查操作的权限 
+		CheckResult checkResult = checkAuthority(user, orderId, true);
+		PlainKanteenOrder plainOrder = (PlainKanteenOrder) checkResult.getData();
+		//检查订单是否已经被取消，如果已经被取消，那么不能再次取消
+		if(plainOrder.getCanceledStatus() != null){
+			throw new RuntimeException("订单已被取消，不能再次取消");
+		}
+		
+		//取消订单只能在订单已支付但是未完成的情况下执行
+		if(!PlainKanteenOrder.STATUS_PAIED.equals(plainOrder.getStatus())){
+			throw new RuntimeException("取消订单只能在订单已支付但是未完成的情况下执行");
+		}
+		//根据商家的配置检查订单的可取消性
+		checkOrderCancelOption(plainOrder);
+		kDao.cancelOrder(orderId);
+	}
+	
+	
+	private void checkOrderCancelOption(PlainKanteenOrder plainOrder) {
+		PlainKanteenCancelOption option = kDao.getOrderCancelOption(plainOrder);
+		if(option != null){
+			
+		}else{
+			
+		}
+		
+		
+		
+	}
+
+	private KanteenOrder getKanteenOrder(PlainKanteenOrder plainOrder) {
+		List<PlainKanteenSection> sections = kDao.getSections(new HashSet<Long>(Arrays.asList(plainOrder.getId())));
+		KanteenOrder order = new KanteenOrder();
+		order.setPlainOrder(plainOrder);
+		order.setSectionList(sections);
+		return order;
+	}
+
+	private CheckResult checkAuthority(WeiXinUser user, Long orderId, boolean throwException){
+		CheckResult result = new CheckResult(false, "");
+		if(user == null || user.getId() == null){
+			result.setMsg("user不存在");
+		}
+		PlainKanteenOrder order = getOrder(orderId);
+		if(order != null){
+			result.setData(order);
+			if(user.getId().equals(order.getOrderUserId())){
+				result.setResult(true, "验证通过");
+			}else{
+				result.setMsg("用户没有权限");
+			}
+		}else{
+			result.setMsg("订单[id=" + orderId + "]不存在");
+		}
+		if(!result.isSuc() && throwException){
+			throw new RuntimeException(result.getMsg());
+		}
+		return result;
 	}
 	
 	

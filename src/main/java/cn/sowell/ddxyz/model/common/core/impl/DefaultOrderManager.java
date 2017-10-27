@@ -361,7 +361,7 @@ public class DefaultOrderManager implements OrderManager, InitializingBean {
 
 	@Override
 	public WxPayStatus checkWxPayStatus(DefaultOrder order) {
-		return payService.checkPayStatus(order.getOutTradeNo());
+		return payService.checkPayStatus(order.getWxOutTradeNo());
 	}
 	
 	@Override

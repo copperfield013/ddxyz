@@ -7,11 +7,12 @@
 
 
 <link rel="stylesheet" href="media/weixin/kanteen/css/reset.css?v=1.1.4">
-
+<link rel="stylesheet" href="media/weixin/plugins/iTip/iTip.css">
 
 <script src="${basePath }media/weixin/main/js/jquery-3.1.1.min.js"></script>
 <script src="${basePath }media/common/plugins/jquery.tmpl.js"></script>
 <script src="media/weixin/kanteen/js/mobile-adaptation.js"></script>
+<script src="media/weixin/plugins/iTip/iTip.js"></script>
 <!-- SeaJS -->
 <script src="${basePath }media/sea-debug.js"></script>
 
@@ -42,7 +43,7 @@
 				$.extend(exports, $.parseJSON('${$paramMapJson}'));
 			}catch(e){}
 		});
-		seajs.use('MAIN/weixin-main.js?${RES_STAMP}');
+		seajs.use('MAIN/weixin-main.js');
 	});
 	
 </script>

@@ -50,7 +50,6 @@ import cn.sowell.copframe.weixin.pay.prepay.UnifiedOrder;
 import cn.sowell.copframe.weixin.pay.refund.RefundRequest;
 import cn.sowell.copframe.weixin.pay.refund.RefundResult;
 import cn.sowell.copframe.weixin.pay.service.WxPayService;
-import cn.sowell.ddxyz.model.common.core.Order;
 import cn.sowell.ddxyz.model.common.core.OrderRefundParameter;
 import cn.sowell.ddxyz.model.weixin.pojo.WeiXinUser;
 
@@ -212,13 +211,13 @@ public class WxPayServiceImpl implements WxPayService{
 	}
 	
 	@Override
-	public RefundRequest buildRefundRequest(OrderRefundParameter refundParam, Order order) {
+	public RefundRequest buildRefundRequest(OrderRefundParameter refundParam, WxPayOrder order) {
 		if(refundParam != null){
 			RefundRequest request = new RefundRequest();
 			request.setAppid(configService.getAppid());
 			request.setMerchantId(configService.getMerchantId());
 			request.setNonceStr(TextUtils.uuid());
-			request.setOutTradeNo(order.getOutTradeNo());
+			request.setOutTradeNo(order.getWxOutTradeNo());
 			request.setOutRefundNo(generateOutRefundNo());
 			request.setTotalFee(order.getTotalPrice());
 			UserIdentifier operateUser = refundParam.getOperateUser();

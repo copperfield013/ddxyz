@@ -500,7 +500,7 @@ public class DefaultOrder implements Order{
 	}
 
 	@Override
-	public String getOutTradeNo() {
+	public String getWxOutTradeNo() {
 		return pOrder.getOutTradeNo();
 	}
 

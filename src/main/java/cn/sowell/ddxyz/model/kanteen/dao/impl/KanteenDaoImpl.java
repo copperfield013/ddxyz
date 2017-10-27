@@ -1,6 +1,7 @@
 package cn.sowell.ddxyz.model.kanteen.dao.impl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -17,15 +18,21 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Repository;
 
 import cn.sowell.copframe.dao.deferedQuery.DeferedParamQuery;
+import cn.sowell.copframe.dao.deferedQuery.DeferedParamSnippet;
 import cn.sowell.copframe.dao.deferedQuery.HibernateRefrectResultTransformer;
 import cn.sowell.copframe.dao.deferedQuery.KeyValueMapResultTransformer;
 import cn.sowell.copframe.dao.utils.QueryUtils;
 import cn.sowell.copframe.dto.page.PageInfo;
+import cn.sowell.copframe.utils.CollectionUtils;
+import cn.sowell.copframe.utils.TextUtils;
+import cn.sowell.copframe.utils.date.FrameDateFormat;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainKanteenDelivery;
 import cn.sowell.ddxyz.model.kanteen.dao.KanteenDao;
 import cn.sowell.ddxyz.model.kanteen.pojo.KanteenDistributionMenuItem;
 import cn.sowell.ddxyz.model.kanteen.pojo.KanteenOrderCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.KanteenTrolleyWares;
+import cn.sowell.ddxyz.model.kanteen.pojo.KanteenWaresOptionGroup;
+import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenCancelOption;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenDistribution;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenDistributionWares;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMerchant;
@@ -35,12 +42,17 @@ import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenReceiver;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenSection;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenTrolley;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenWaresGroup;
+import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenWaresOption;
+import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenWaresOptionGroup;
 
 @Repository
 public class KanteenDaoImpl implements KanteenDao {
 
 	@Resource
 	SessionFactory sFactory;
+
+	@Resource
+	FrameDateFormat dateFormat;
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -115,7 +127,42 @@ public class KanteenDaoImpl implements KanteenDao {
 		query.setResultTransformer(HibernateRefrectResultTransformer.getInstance(KanteenDistributionMenuItem.class));
 		return query.list();
 	}
-
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Map<Long, List<KanteenWaresOptionGroup>> getMenuWaresOptionGroupsMap(
+			Set<Long> waresIds) {
+		if(waresIds != null && waresIds.size() > 0){
+			String hql = "from PlainKanteenWaresOptionGroup g where g.waresId in (:waresIds) and g.disabled is null";
+			Query query = sFactory.getCurrentSession().createQuery(hql);
+			query.setParameterList("waresIds", waresIds, StandardBasicTypes.LONG);
+			List<PlainKanteenWaresOptionGroup> plainGroups = query.list();
+			
+			if(plainGroups != null && plainGroups.size() > 0){
+				hql = "from PlainKanteenWaresOption o where o.optiongroupId in (:groupIds) and o.disabled is null";
+				query =  sFactory.getCurrentSession().createQuery(hql);
+				query.setParameterList("groupIds", CollectionUtils.toList(plainGroups, group->group.getId()));
+				List<PlainKanteenWaresOption> plainOptions = query.list();
+				
+				//groupId->group的map
+				Map<Long, PlainKanteenWaresOptionGroup> groupMap = CollectionUtils.toMap(plainGroups, group->group.getId());
+				//groupId->optionList的map
+				Map<Long, List<PlainKanteenWaresOption>> optionListMap = CollectionUtils.toListMap(plainOptions, option->option.getOptiongroupId());
+				//存放kanteenGroup
+				List<KanteenWaresOptionGroup> groups = new ArrayList<KanteenWaresOptionGroup>();
+				groupMap.forEach((groupId, plainGroup)->{
+					KanteenWaresOptionGroup group = new KanteenWaresOptionGroup();
+					group.setPlainGroup(plainGroup);
+					group.setOptionList(optionListMap.get(groupId));
+					groups.add(group);
+				});
+				return CollectionUtils.toListMap(groups, group->group.getWaresId());
+			}
+		}
+		return new HashMap<Long, List<KanteenWaresOptionGroup>>();
+	}
+	
+	
 	@Override
 	public PlainKanteenTrolley getTrolley(Long userId, Long distributionId) {
 		String hql = "from PlainKanteenTrolley t where t.userId = :userId and t.distributionId = :distributionId and t.disabled is null order by t.createTime desc";
@@ -333,9 +380,35 @@ public class KanteenDaoImpl implements KanteenDao {
 	@Override
 	public List<PlainKanteenOrder> query(KanteenOrderCriteria criteria,
 			PageInfo pageInfo) {
-		String sql = "select o.* from t_order_kanteen o where o.order_user_id = :userId order by o.create_time desc";
+		String sql = "select o.* from t_order_kanteen o "
+				+ "where o.order_user_id = :userId "
+				+ "and o.c_deleted is null "
+				+ "@condition order by o.create_time desc";
 		DeferedParamQuery dQuery = new DeferedParamQuery(sql);
 		dQuery.setParam("userId", criteria.getUserId());
+		
+		DeferedParamSnippet snippet = dQuery.createSnippet("condition", null);
+		if("week".equals(criteria.getRange())){
+			snippet.append("and o.create_time >= :weekStart and o.create_time <= :weekEnd");
+			Date[] weekRange = dateFormat.getTheWeekRange(new Date(), Calendar.MONDAY);
+			dQuery.setParam("weekStart", weekRange[0])
+					.setParam("weekEnd", weekRange[1]);
+					
+		}else if(!"all".equals(criteria.getRange())){
+			throw new RuntimeException("range没有传入可用值");
+		}
+		
+		if(TextUtils.hasText(criteria.getKeyword())){
+			snippet.append("and (o.c_merchant_name like :keyword "
+					+ "or o.c_order_code like :keyword "
+					+ "or o.c_location_name like :keyword "
+					+ "or o.c_receiver_name like :keyword "
+					+ "or o.c_receiver_contact like :keyword "
+					+ "or o.c_receiver_depart like :keyword"
+					+ "or exists(select s.id from t_section_base s where s.order_id = o.id and s.c_waresname like :keyword)"
+					+ ")");
+			dQuery.setParam("keyword", criteria.getKeyword());
+		}
 		
 		Query query = dQuery.createSQLQuery(sFactory.getCurrentSession(), false, null);
 		QueryUtils.setPagingParamWithCriteria(query, pageInfo);
@@ -350,6 +423,44 @@ public class KanteenDaoImpl implements KanteenDao {
 		Query query = sFactory.getCurrentSession().createQuery(hql);
 		query.setParameterList("deliveryIds", deliveryIds, StandardBasicTypes.LONG);
 		return query.list();
+	}
+	
+	@Override
+	public void updateOrderAsDeleted(Long orderId, boolean toDel) {
+		String sql = "update t_order_kanteen set c_deleted = :toDel, update_time = :now where id = :orderId";
+		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
+		query.setParameter("toDel", toDel ? 1 : null, StandardBasicTypes.INTEGER)
+				.setLong("orderId", orderId)
+				.setTimestamp("now", new Date());
+		query.executeUpdate();
+	}
+	
+	@Override
+	public void updateOrderAsRefunded(Long orderId, Integer refundFee) {
+		String sql = "update t_order_kanteen set c_canceled_status = :refundStatus, c_refund_fee = :refundFee, update_time = :now where id = :orderId";
+		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
+		query.setString("refundStatus", PlainKanteenOrder.CANSTATUS_REFUNDED)
+				.setInteger("refundFee", refundFee)
+				.setTimestamp("now", new Date())
+				.setLong("orderId", orderId);
+		query.executeUpdate();
+	}
+	
+	@Override
+	public void cancelOrder(Long orderId) {
+		String sql = "update t_order_kanteen set c_canceled_status = :canceledStatus, update_time = :now where id = :orderId";
+		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
+		query.setString("canceledStatus", PlainKanteenOrder.CANSTATUS_CANCELED)
+				.setTimestamp("now", new Date())
+				.setLong("orderId", orderId);
+		query.executeUpdate();
+	}
+	
+	@Override
+	public PlainKanteenCancelOption getOrderCancelOption(
+			PlainKanteenOrder plainOrder) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

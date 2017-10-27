@@ -25,6 +25,13 @@ public class PlainKanteenOrder {
 	public static final String PAYWAY_SPOT = "spot";
 
 	public static final String STATUS_PAIED = "paied";
+
+	/**
+	 * 订单已退款
+	 */
+	public static final String CANSTATUS_REFUNDED = "refunded";
+
+	public static final String CANSTATUS_CANCELED = "canceled";
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
@@ -106,6 +113,9 @@ public class PlainKanteenOrder {
 	
 	@Column(name="c_print_time")
 	private Date printTime;
+	
+	@Column(name="c_deleted")
+	private Integer deleted;
 	
 	@Column(name="create_time")
 	private Date createTime;
@@ -344,6 +354,14 @@ public class PlainKanteenOrder {
 
 	public void setReceiverDepart(String receiverDepart) {
 		this.receiverDepart = receiverDepart;
+	}
+
+	public Integer getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Integer deleted) {
+		this.deleted = deleted;
 	}
 	
 }

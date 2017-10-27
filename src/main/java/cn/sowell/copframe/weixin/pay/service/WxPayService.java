@@ -10,7 +10,6 @@ import cn.sowell.copframe.weixin.pay.prepay.UnifiedOrder;
 import cn.sowell.copframe.weixin.pay.refund.RefundRequest;
 import cn.sowell.copframe.weixin.pay.refund.RefundResult;
 import cn.sowell.copframe.weixin.pay.service.impl.WxPayOrder;
-import cn.sowell.ddxyz.model.common.core.Order;
 import cn.sowell.ddxyz.model.common.core.OrderRefundParameter;
 
 /**
@@ -69,12 +68,13 @@ public interface WxPayService {
 	 * @return
 	 */
 	RefundRequest buildRefundRequest(OrderRefundParameter refundParam,
-			Order order);
+			WxPayOrder order);
 	
 	/**
 	 * 从微信服务器检查订单的支付状态
 	 * @return
 	 */
 	WxPayStatus checkPayStatus(String outTrandeNo);
+	
 	
 }

@@ -12,8 +12,11 @@ define(function(require, exports, module){
 		
 		this.start = function(){
 			if(timer == null){
+				console.log('启动广告拦截器');
 				timer = setInterval(function(){
 					$.each(param.filter(), function(i, e){
+						console.log(e);
+						console.log('检测到广告，将拦截');
 						$(e).remove();
 					});
 				}, param.interval);
@@ -22,6 +25,7 @@ define(function(require, exports, module){
 		
 		this.stop = function(){
 			if(timer != null){
+				console.log('关闭广告拦截器');
 				clearInterval(timer);
 				timer = null;
 			}

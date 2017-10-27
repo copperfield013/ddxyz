@@ -288,7 +288,7 @@ public interface Order extends WxPayOrder{
 	 * 提交预付款订单时，当前系统生成的交易号
 	 * @return
 	 */
-	String getOutTradeNo();
+	String getWxOutTradeNo();
 	
 	/**
 	 * 订单支付完成之后，微信推送的状态返回的订单号

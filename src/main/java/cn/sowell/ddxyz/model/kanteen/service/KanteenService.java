@@ -149,6 +149,27 @@ public interface KanteenService {
 	 */
 	public Map<Long, PlainKanteenDelivery> getDeliveryMap(
 			Set<Long> deliveryIds);
+	
+	/**
+	 * 隐藏订单
+	 * @param user
+	 * @param orderId
+	 */
+	void hideOrder(WeiXinUser user, Long orderId);
+
+	/**
+	 * 订单退款
+	 * @param user
+	 * @param orderId
+	 */
+	void refundOrder(WeiXinUser user, Long orderId);
+
+	/**
+	 * 取消订单
+	 * @param user
+	 * @param orderId
+	 */
+	void cancelOrder(WeiXinUser user, Long orderId);
 
 	
 
