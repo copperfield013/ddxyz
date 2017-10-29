@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -22,8 +21,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONObject;
+
 import cn.sowell.copframe.dto.page.PageInfo;
 import cn.sowell.copframe.utils.CollectionUtils;
+import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.copframe.utils.date.FrameDateFormat;
 import cn.sowell.copframe.weixin.pay.exception.WeiXinPayException;
 import cn.sowell.copframe.weixin.pay.paied.WxPayStatus;
@@ -43,6 +45,7 @@ import cn.sowell.ddxyz.model.kanteen.pojo.KanteenMenu;
 import cn.sowell.ddxyz.model.kanteen.pojo.KanteenOrder;
 import cn.sowell.ddxyz.model.kanteen.pojo.KanteenOrderCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.KanteenTrolley;
+import cn.sowell.ddxyz.model.kanteen.pojo.KanteenTrolleyItem;
 import cn.sowell.ddxyz.model.kanteen.pojo.KanteenTrolleyWares;
 import cn.sowell.ddxyz.model.kanteen.pojo.KanteenWaresOptionGroup;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenCancelOption;
@@ -60,8 +63,6 @@ import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenWares;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenWaresGroup;
 import cn.sowell.ddxyz.model.kanteen.service.KanteenService;
 import cn.sowell.ddxyz.model.weixin.pojo.WeiXinUser;
-
-import com.alibaba.fastjson.JSONObject;
 
 @Service
 public class KanteenServiceImpl implements KanteenService {
@@ -221,18 +222,60 @@ public class KanteenServiceImpl implements KanteenService {
 	
 
 	@Override
-	public Map<Long, Integer> extractTrolley(JSONObject trolleyData) {
-		Map<Long, Integer> map = new LinkedHashMap<Long, Integer>();
+	public List<KanteenTrolleyItem> extractTrolleyItems(JSONObject trolleyData) {
 		Pattern pattern = Pattern.compile("^id_(\\d+)$");
-		Pattern tempPattern = Pattern.compile("^id_temp_(\\d+)$");
-		trolleyData.keySet().forEach(key->{
-			Matcher matcher = pattern.matcher(key);
-			if(matcher.matches()){
-				String id = matcher.group(1);
-				map.put(Long.valueOf(id), trolleyData.getInteger(key));
+		Pattern tempPattern = Pattern.compile("^id_(temp_\\d+)$");
+		List<KanteenTrolleyItem> list = new ArrayList<KanteenTrolleyItem>();
+		trolleyData.forEach((key, value)->{
+			JSONObject jTrolleyItem = (JSONObject) value;
+			KanteenTrolleyItem item = new KanteenTrolleyItem();
+			Matcher matcher = tempPattern.matcher(key);
+			if(matcher.matches()) {
+				String tempId = matcher.group(1);
+				item.setTempId(tempId);
+			}else {
+				matcher = pattern.matcher(key);
+				if(matcher.matches()) {
+					Long trolleyWaresId = Long.valueOf(matcher.group(1));
+					item.setTrolleyWaresId(trolleyWaresId);
+				}
+			}
+			item.setDistributionWaresId(jTrolleyItem.getLong("dwId"));
+			item.setCount(jTrolleyItem.getInteger("count"));
+			String optionsStr = jTrolleyItem.getString("options");
+			if(optionsStr != null) {
+				item.setWaresOptionIds(CollectionUtils.toList(Arrays.asList(TextUtils.splitToArray(optionsStr, ",")), option->Long.valueOf(option)));
+			}
+			list.add(item);
+			
+		});
+		return list;
+	}
+	
+	@Override
+	public void mergeTrolleyWares(Long trolleyId, List<KanteenTrolleyItem> existsItems) {
+		Map<Long, Integer> originTrolleyWaresMap = kDao.getTrolleyWaresMap(trolleyId);
+		Set<Long> toRemove = new HashSet<Long>(originTrolleyWaresMap.keySet());
+		Map<Long, Integer> toCreate = new HashMap<Long, Integer>();
+		Map<Long, Integer> toUpdate = new HashMap<Long, Integer>();
+		
+		
+		
+		
+		
+		trolleyWaresMap.forEach((distributionWaresId, count)->{
+			if(!Integer.valueOf(0).equals(count)){
+				if(originTrolleyWaresMap.containsKey(distributionWaresId)){
+					toRemove.remove(distributionWaresId);
+					Integer originCount = originTrolleyWaresMap.get(distributionWaresId);
+					if(!originCount.equals(count)){
+						toUpdate.put(distributionWaresId, count);
+					}
+				}else{
+					toCreate.put(distributionWaresId, count);
+				}
 			}
 		});
-		return map;
 		
 	}
 
@@ -266,7 +309,6 @@ public class KanteenServiceImpl implements KanteenService {
 			trolleyWares.setUpdateTime(trolleyWares.getCreateTime());
 			kDao.create(trolleyWares);
 		});
-		
 	}
 	
 	@Override
@@ -586,6 +628,8 @@ public class KanteenServiceImpl implements KanteenService {
 		}
 		return result;
 	}
+	
+	
 	
 	
 }

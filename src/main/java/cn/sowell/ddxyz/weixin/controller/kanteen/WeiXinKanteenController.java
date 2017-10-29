@@ -37,6 +37,7 @@ import cn.sowell.ddxyz.model.kanteen.pojo.KanteenMenu;
 import cn.sowell.ddxyz.model.kanteen.pojo.KanteenOrder;
 import cn.sowell.ddxyz.model.kanteen.pojo.KanteenOrderCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.KanteenTrolley;
+import cn.sowell.ddxyz.model.kanteen.pojo.KanteenTrolleyItem;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenDistribution;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMerchant;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenOrder;
@@ -134,11 +135,20 @@ public class WeiXinKanteenController {
 		WeiXinUser user = WxUtils.getCurrentUser(WeiXinUser.class);
 		KanteenTrolley trolley = kanteenService.getTrolley(user.getId(), distributionId);
 		if(trolley != null){
-			Map<Long, Integer> trolleyWares = kanteenService.extractTrolley(json.getJSONObject("trolleyData"));
+			List<KanteenTrolleyItem> existsItems = kanteenService.extractTrolleyItems(json.getJSONObject("trolleyData"));
+			
+			
+			//Map<Long, Integer> trolleyWares = kanteenService.extractTrolley(json.getJSONObject("trolleyData"));
 			try {
 				//调用方法更新购物车内的数据
-				kanteenService.mergeTrolleyWares(trolley.getId(), trolleyWares);
+				kanteenService.mergeTrolleyWares(trolley.getId(), existsItems);
 				jRes.put("trolleyId", trolley.getId());
+				JSONObject mergedTempTrolleyWares = new JSONObject();
+				existsItems.forEach(item->{
+					if(item.getTempId() != null) {
+						mergedTempTrolleyWares.put(item.getTempId(), item.getTrolleyWaresId());
+					}
+				});
 				jRes.setStatus("suc");
 			} catch (Exception e) {
 				logger.error("更新购物车时发生错误", e);

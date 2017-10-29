@@ -13,6 +13,7 @@ import cn.sowell.ddxyz.model.kanteen.pojo.KanteenMenu;
 import cn.sowell.ddxyz.model.kanteen.pojo.KanteenOrder;
 import cn.sowell.ddxyz.model.kanteen.pojo.KanteenOrderCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.KanteenTrolley;
+import cn.sowell.ddxyz.model.kanteen.pojo.KanteenTrolleyItem;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenDistribution;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMerchant;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenOrder;
@@ -69,12 +70,19 @@ public interface KanteenService {
 	List<PlainKanteenDelivery> getEnabledDeliveries(Long distributionId);
 
 	/**
-	 * 从json中解析购物车数据放到Map中
+	 * 从json中解析购物车数据放到List
 	 * @param trolleyData
 	 * @return key为distributionWaresId，value为个数
 	 */
-	Map<Long, Integer> extractTrolley(JSONObject trolleyData);
+	List<KanteenTrolleyItem> extractTrolleyItems(JSONObject jsonObject);
 
+	/**
+	 * 更新当前购物车内的商品
+	 * @param id
+	 * @param existsItems
+	 */
+	void mergeTrolleyWares(Long id, List<KanteenTrolleyItem> existsItems);
+	
 	/**
 	 * 更新购物车内的数据
 	 * @param trolleyId
@@ -170,6 +178,10 @@ public interface KanteenService {
 	 * @param orderId
 	 */
 	void cancelOrder(WeiXinUser user, Long orderId);
+	
+	
+
+	
 
 	
 
