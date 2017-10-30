@@ -71,8 +71,8 @@ public class WeiXinKanteenController {
 	
 	Logger logger = Logger.getLogger(WeiXinKanteenController.class);
 	
-	@RequestMapping({"", "/"})
-	public String main(Long merchantId, Model model){
+	@RequestMapping({"", "/", "{merchantId}"})
+	public String main(@PathVariable(required=false) Long merchantId, Model model){
 		if(merchantId == null){
 			merchantId = FormatUtils.toLong(PropertyPlaceholder.getProperty("wx_default_merchant_id"));
 		}
@@ -135,16 +135,16 @@ public class WeiXinKanteenController {
 		WeiXinUser user = WxUtils.getCurrentUser(WeiXinUser.class);
 		KanteenTrolley trolley = kanteenService.getTrolley(user.getId(), distributionId);
 		if(trolley != null){
-			List<KanteenTrolleyItem> existsItems = kanteenService.extractTrolleyItems(json.getJSONObject("trolleyData"));
+			List<KanteenTrolleyItem> items = kanteenService.extractTrolleyItems(json.getJSONObject("trolleyData"));
 			
 			
 			//Map<Long, Integer> trolleyWares = kanteenService.extractTrolley(json.getJSONObject("trolleyData"));
 			try {
 				//调用方法更新购物车内的数据
-				kanteenService.mergeTrolleyWares(trolley.getId(), existsItems);
+				kanteenService.mergeTrolleyWares(trolley.getId(), items);
 				jRes.put("trolleyId", trolley.getId());
 				JSONObject mergedTempTrolleyWares = new JSONObject();
-				existsItems.forEach(item->{
+				items.forEach(item->{
 					if(item.getTempId() != null) {
 						mergedTempTrolleyWares.put(item.getTempId(), item.getTrolleyWaresId());
 					}

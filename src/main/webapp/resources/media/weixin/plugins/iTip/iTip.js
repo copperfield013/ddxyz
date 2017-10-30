@@ -183,9 +183,12 @@
             var _this = this;
             this.on(this.BG, 'touchmove', function(e) {
                 e.preventDefault();
+				e.stopPropagation();
                 return false;
             });
+            
             this.on(this.Box, 'touchmove', function(e) {
+            	e.stopPropagation();
             	/*if(!$(e.target).is(option.ignoredScroll)){
             		e.preventDefault();
             	}*/

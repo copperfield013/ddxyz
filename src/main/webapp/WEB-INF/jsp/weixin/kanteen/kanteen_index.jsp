@@ -186,13 +186,22 @@
     			function initTrolley(ca){
     				if(!trolleyFlag){
 		    			trolletFlag = true;
-		    			var validWares = [];
+		    			var validWareses = [];
 		    			try{
-		    				validWares = $.parseJSON('${validWares}');
+		    				validWareses = $.parseJSON('${validWares}');
 		    			}catch(e){}
-		    			for(var i in validWares){
-		    				var distributionWaresId = validWares[i].distributionWaresId;
-		    				ca.triggerAddTrolley(distributionWaresId, validWares[i].count);
+		    			for(var i in validWareses){
+		    				var validWares = validWareses[i];
+		    				var distributionWaresId = validWares.distributionWaresId;
+		    				if(validWares.wareOptionIds && validWares.wareOptionIds.length > 0){
+		    					var totalPrice = validWares.count * validWares.basePrice;
+		    					
+		    					Kanteen.ca.shoppingCar(totalPrice / 100, "add");
+		    					var desc = validWares.optionNames.join();
+	    						Kanteen.ca.addOptionWares(distributionWaresId, validWares.count, validWares.basePrice / 100, desc, validWares.wareOptionIds);
+		    				}else{
+			    				ca.triggerAddTrolley(distributionWaresId, validWares.count);
+		    				}
 		    			}
     				}
 	    		}

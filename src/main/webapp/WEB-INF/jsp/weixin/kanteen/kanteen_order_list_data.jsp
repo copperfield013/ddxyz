@@ -3,8 +3,8 @@
 <c:forEach items="${orderList }" var="order">
 	<c:set var="pOrder" value="${order.plainOrder }" />
     <section class="canteen-order-list" data-id="${pOrder.id }">
-        <p class="canteen-order-list_header">
-            <i class="canteen-order-list_logo"></i>
+        <p class="canteen-order-list_header" href="weixin/kanteen">
+            <a class="canteen-order-list_logo"></a>
             <span class="canteen-order-list_logoname">${pOrder.merchantName }</span>
             <span class="canteen-order-list_status order-status-${pOrder.status }">
             	${pOrder.status == 'default' && pOrder.payExpiredTime != null && pOrder.payExpiredTime.time < now.time ? '支付超时': orderStatusMap[pOrder.status]  }
@@ -14,7 +14,10 @@
         	<c:forEach items="${order.sectionList}" var="section">
                 <div class="canteen-order-list_list">
                     <img class="canteen-order-list_list_image" src="${section.thumbUri }">
-                    <span class="canteen-order-list_list_name">${section.waresName }</span>
+                    <span class="canteen-order-list_list_name">
+                    	<span class="kanteen-section-wares-name">${section.waresName }</span>
+                    	<span class="kanteen-scrtion-option-desc">${section.optionsDesc }</span>
+                    </span>
                     <div class="canteen-order-list_list_rightbox">
                         <span class="canteen-order-list_list_price canteen-icon canteen-rmb-icon"><fmt:formatNumber value="${section.totalPrice /100 }" pattern="0.00" /> </span>
                         <span class="canteen-order-list_list_count canteen-icon canteen-close-icon">${section.count }</span>

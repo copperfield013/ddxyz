@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -15,13 +16,33 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
+
+
+
+
 import javax.annotation.Resource;
+
+
+
+
+
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+
+
+
+
+
 import com.alibaba.fastjson.JSONObject;
+
+
+
+
+
 
 import cn.sowell.copframe.dto.page.PageInfo;
 import cn.sowell.copframe.utils.CollectionUtils;
@@ -37,6 +58,7 @@ import cn.sowell.copframe.weixin.pay.refund.RefundResult;
 import cn.sowell.copframe.weixin.pay.service.WxPayService;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainKanteenDelivery;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainKanteenTrolleyWares;
+import cn.sowell.ddxyz.model.canteen.pojo.PlainKanteenTrolleyWaresOption;
 import cn.sowell.ddxyz.model.common.core.OrderRefundParameter;
 import cn.sowell.ddxyz.model.common.core.result.CheckResult;
 import cn.sowell.ddxyz.model.kanteen.dao.KanteenDao;
@@ -58,6 +80,7 @@ import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenOrder;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenProduct;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenReceiver;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenSection;
+import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenSectionOption;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenTrolley;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenWares;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenWaresGroup;
@@ -244,7 +267,7 @@ public class KanteenServiceImpl implements KanteenService {
 			item.setCount(jTrolleyItem.getInteger("count"));
 			String optionsStr = jTrolleyItem.getString("options");
 			if(optionsStr != null) {
-				item.setWaresOptionIds(CollectionUtils.toList(Arrays.asList(TextUtils.splitToArray(optionsStr, ",")), option->Long.valueOf(option)));
+				item.setWaresOptionIds(new HashSet<Long>(CollectionUtils.toList(Arrays.asList(TextUtils.splitToArray(optionsStr, ",")), option->Long.valueOf(option))));
 			}
 			list.add(item);
 			
@@ -253,28 +276,55 @@ public class KanteenServiceImpl implements KanteenService {
 	}
 	
 	@Override
-	public void mergeTrolleyWares(Long trolleyId, List<KanteenTrolleyItem> existsItems) {
+	public void mergeTrolleyWares(Long trolleyId, List<KanteenTrolleyItem> items) {
 		Map<Long, Integer> originTrolleyWaresMap = kDao.getTrolleyWaresMap(trolleyId);
+		Map<PlainKanteenTrolleyWares, KanteenTrolleyItem> tempItemMap = new HashMap<PlainKanteenTrolleyWares, KanteenTrolleyItem>();
+		//构造用于移除的trolleyWaresId的集合
 		Set<Long> toRemove = new HashSet<Long>(originTrolleyWaresMap.keySet());
-		Map<Long, Integer> toCreate = new HashMap<Long, Integer>();
+		Date now = new Date();
+		Map<PlainKanteenTrolleyWares, Set<PlainKanteenTrolleyWaresOption>> toCreate = new LinkedHashMap<PlainKanteenTrolleyWares, Set<PlainKanteenTrolleyWaresOption>>();
 		Map<Long, Integer> toUpdate = new HashMap<Long, Integer>();
-		
-		
-		
-		
-		
-		trolleyWaresMap.forEach((distributionWaresId, count)->{
-			if(!Integer.valueOf(0).equals(count)){
-				if(originTrolleyWaresMap.containsKey(distributionWaresId)){
-					toRemove.remove(distributionWaresId);
-					Integer originCount = originTrolleyWaresMap.get(distributionWaresId);
-					if(!originCount.equals(count)){
-						toUpdate.put(distributionWaresId, count);
+		Set<Long> toDelete = new HashSet<Long>(originTrolleyWaresMap.keySet());
+		items.forEach(item -> {
+			if(item.getTempId() != null){
+				PlainKanteenTrolleyWares tWares = new PlainKanteenTrolleyWares();
+				tWares.setTrolleyId(trolleyId);
+				tWares.setDistributionWaresId(item.getDistributionWaresId());
+				tWares.setCount(item.getCount());
+				tWares.setCreateTime(now);
+				tWares.setUpdateTime(now);
+				
+				Set<PlainKanteenTrolleyWaresOption> options =  new HashSet<PlainKanteenTrolleyWaresOption>();
+				if(item.getWaresOptionIds() != null && item.getWaresOptionIds().size() > 0){
+					item.getWaresOptionIds().forEach(optionId->{
+						PlainKanteenTrolleyWaresOption option = new PlainKanteenTrolleyWaresOption();
+						option.setWaresOptionId(optionId);
+						option.setCreateTime(now);
+						options.add(option);
+					});
+				}
+				toCreate.put(tWares, options);
+				tempItemMap.put(tWares, item);
+			}else if(item.getTrolleyWaresId() != null){
+				if(originTrolleyWaresMap.containsKey(item.getTrolleyWaresId())){
+					if(!item.getCount().equals(originTrolleyWaresMap.get(item.getTrolleyWaresId()))){
+						//已经存在，要进行修改
+						toUpdate.put(item.getTrolleyWaresId(), item.getCount());
 					}
-				}else{
-					toCreate.put(distributionWaresId, count);
+					toDelete.remove(item.getTrolleyWaresId());
 				}
 			}
+		});
+		
+		kDao.removeTrolleyWares(trolleyId, toRemove);
+		kDao.updateTrolleyWares(trolleyId, toUpdate);
+		toCreate.forEach((trolleyWares, options)->{
+			Long trolleyWaresId = kDao.create(trolleyWares);
+			options.forEach(option->{
+				option.setTrolleyWaresId(trolleyWaresId);
+				kDao.create(option);
+			});
+			tempItemMap.get(trolleyWares).setTrolleyWaresId(trolleyWaresId);
 		});
 		
 	}
@@ -367,6 +417,16 @@ public class KanteenServiceImpl implements KanteenService {
 					section.setWaresId(wares.getId());
 					section.setWaresName(wares.getName());
 					order.getSectionList().add(section);
+					if(validWares.getWareOptionIds() != null && !validWares.getWareOptionIds().isEmpty()){
+						List<PlainKanteenSectionOption> options = new ArrayList<PlainKanteenSectionOption>();
+						validWares.getWareOptionIds().forEach(optionId->{
+							PlainKanteenSectionOption option = new PlainKanteenSectionOption();
+							option.setWaresOptionId(optionId);
+							options.add(option);
+						});
+						section.setOptionsDesc(validWares.getOptionDesc());
+						order.getSectionOptionsMap().put(section, options);
+					}
 				}else{
 					throw new RuntimeException("商品不存在[waresId=" + dWares.getId()+ "]");
 				}
@@ -397,6 +457,12 @@ public class KanteenServiceImpl implements KanteenService {
 			section.setOrderId(orderId);
 			section.setCreateTime(pOrder.getCreateTime());
 			Long sectionId = kDao.create(section);
+			if(order.getSectionOptionsMap().containsKey(section)){
+				order.getSectionOptionsMap().get(section).forEach(option->{
+					option.setSectionId(sectionId);
+					kDao.create(option);
+				});
+			}
 			if(order.isCreateProduct()){
 				for(int i = 0; i < section.getCount(); i++){
 					PlainKanteenProduct product = new PlainKanteenProduct();

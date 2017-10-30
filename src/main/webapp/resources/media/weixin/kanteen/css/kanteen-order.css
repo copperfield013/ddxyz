@@ -141,7 +141,27 @@ body{
 .canteen-order-information_list_name {
     -webkit-box-flex: 9;
     -webkit-flex: 9;
-    flex:9;
+    flex: 9;
+    display: inline-block;
+    width: 50%;
+}
+span.canteen-order-information_list_name>span {
+    display: block;
+    height: 50%;
+    line-height: 0.5rem;
+    width: 100%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    margin-top: 0.1rem;
+}
+span.canteen-order-information_list_name>span.kanteen-order-wares-option-desc {
+    font-size: 0.7em;
+    text-indent: 0.6em;
+    color: #999;
+    height: 30%;
+    line-height: 0.3rem;
+    margin-top: 0;
 }
 .canteen-order-information_list_count {
     -webkit-box-flex: 1;

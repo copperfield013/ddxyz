@@ -61,6 +61,9 @@ public class PlainKanteenSection {
 	@Column(name="c_thumb_uri")
 	private String thumbUri;
 	
+	@Column(name="c_option_desc")
+	private String optionsDesc;
+	
 	@Column(name="create_time")
 	private Date createTime;
 	
@@ -201,5 +204,13 @@ public class PlainKanteenSection {
 
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
+	}
+
+	public String getOptionsDesc() {
+		return optionsDesc;
+	}
+
+	public void setOptionsDesc(String optionsDesc) {
+		this.optionsDesc = optionsDesc;
 	}
 }

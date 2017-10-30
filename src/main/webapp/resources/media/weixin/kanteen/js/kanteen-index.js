@@ -428,7 +428,7 @@
 				} else if (kind === "reduce") {
 					priceDom.textContent = parseFloat(price - unitPrice * addition).toFixed(2);
 					countDom.textContent = count - addition;
-					if (parseFloat(priceDom.textContent) === 0) {
+					if (parseInt(countDom.textContent) === 0) {
 						footer.classList.add("shopping-car_empty");
 						priceDom.textContent = "购物车是空的";
 					}
@@ -725,10 +725,10 @@
 					}
 				}
 				kanteen.triggerChange(orderData, function(tempTrolleyWaresData){
-					for(var tempId in trolleyWaresData){
+					for(var tempId in tempTrolleyWaresData){
 						var $trolleyDom = me.domBox.shopping_basket.querySelector('[data-twid="' + tempId + '"]');
 						if($trolleyDom){
-							$trolleyDom.setAttribute('data-twid', trolleyWaresData[tempId].id);
+							$trolleyDom.setAttribute('data-twid', tempTrolleyWaresData[tempId].id);
 						}
 					}
 				});

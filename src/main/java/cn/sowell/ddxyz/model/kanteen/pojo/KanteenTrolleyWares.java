@@ -1,12 +1,16 @@
 package cn.sowell.ddxyz.model.kanteen.pojo;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Transient;
+
+import cn.sowell.copframe.utils.CollectionUtils;
 
 public class KanteenTrolleyWares {
 	@Id
@@ -39,6 +43,23 @@ public class KanteenTrolleyWares {
 	@Transient
 	@Column(name="c_price_unit")
 	private String priceUnit;
+	
+	@Transient
+	private Set<Long> wareOptionIds;
+	
+	@Transient
+	private Set<Long> trolleyOptionIds;
+	
+	@Transient
+	private List<String> optionNames;
+	
+	public String getOptionDesc(){
+		if(optionNames != null && optionNames.size() > 0){
+			return CollectionUtils.toChain(optionNames);
+		}
+		return null;
+	}
+	
 	
 	public Long getId() {
 		return id;
@@ -111,6 +132,31 @@ public class KanteenTrolleyWares {
 	public void setWaresName(String waresName) {
 		this.waresName = waresName;
 	}
+
+	public Set<Long> getWareOptionIds() {
+		return wareOptionIds;
+	}
+
+	public void setWareOptionIds(Set<Long> wareOptionIds) {
+		this.wareOptionIds = wareOptionIds;
+	}
+
+	public Set<Long> getTrolleyOptionIds() {
+		return trolleyOptionIds;
+	}
+
+	public void setTrolleyOptionIds(Set<Long> trolleyOptionIds) {
+		this.trolleyOptionIds = trolleyOptionIds;
+	}
+
+	public List<String> getOptionNames() {
+		return optionNames;
+	}
+
+	public void setOptionNames(List<String> optionNames) {
+		this.optionNames = optionNames;
+	}
+
 
 	
 }

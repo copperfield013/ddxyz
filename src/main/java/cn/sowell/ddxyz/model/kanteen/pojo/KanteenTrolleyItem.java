@@ -1,14 +1,12 @@
 package cn.sowell.ddxyz.model.kanteen.pojo;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.alibaba.fastjson.JSONObject;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class KanteenTrolleyItem {
 	private Long trolleyWaresId;
 	private Long distributionWaresId;
-	private List<Long> waresOptionIds = new ArrayList<Long>();
+	private Set<Long> waresOptionIds = new LinkedHashSet<Long>();
 	private Integer count;
 	private String tempId;
 	public Long getDistributionWaresId() {
@@ -23,12 +21,6 @@ public class KanteenTrolleyItem {
 	public void setTrolleyWaresId(Long trolleyWaresId) {
 		this.trolleyWaresId = trolleyWaresId;
 	}
-	public List<Long> getWaresOptionIds() {
-		return waresOptionIds;
-	}
-	public void setWaresOptionIds(List<Long> waresOptionIds) {
-		this.waresOptionIds = waresOptionIds;
-	}
 	public Integer getCount() {
 		return count;
 	}
@@ -41,9 +33,11 @@ public class KanteenTrolleyItem {
 	public void setTempId(String tempId) {
 		this.tempId = tempId;
 	}
-	
-	public JSONObject getResponseJson() {
-		
+	public Set<Long> getWaresOptionIds() {
+		return waresOptionIds;
+	}
+	public void setWaresOptionIds(Set<Long> waresOptionIds) {
+		this.waresOptionIds = waresOptionIds;
 	}
 	
 }

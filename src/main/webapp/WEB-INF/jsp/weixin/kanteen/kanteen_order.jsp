@@ -6,8 +6,8 @@
 <head>
     <title>确认订单</title>
 	<jsp:include page="/WEB-INF/jsp/weixin/common/weixin-include-kanteen.jsp"></jsp:include>
-    <link rel="stylesheet" href="media/weixin/kanteen/css/kanteen-order.css?v=1.12">
-    <link rel="stylesheet" href="media/weixin/kanteen/css/kanteen-base.css?v=1.1.4">
+    <link rel="stylesheet" href="media/weixin/kanteen/css/kanteen-order.css?v=3">
+    <link rel="stylesheet" href="media/weixin/kanteen/css/kanteen-base.css?v=2">
     <script src="media/weixin/plugins/pushbutton/pushbutton.min.js"></script>
     	
     <!-- <script src="media/weixin/kanteen/js/kanteen-order.js"></script> -->
@@ -62,7 +62,10 @@
             <div class="canteen-order-information_lists">
             	<c:forEach items="${trolley.validWares }" var="wares">
 	            	<div class="canteen-order-information_list" data-dwid="${wares.distributionWaresId }" data-count="${wares.count }">
-	                    <span class="canteen-order-information_list_name">${wares.waresName }</span>
+	                    <span class="canteen-order-information_list_name">
+	                    	<span class="kanteen-order-wares-option-name">${wares.waresName }</span>
+	                    	<span class="kanteen-order-wares-option-desc">${wares.optionDesc }</span>
+	                    </span>
 	                    <span class="canteen-order-information_list_count canteen-icon canteen-close-icon">${wares.count }</span>
 	                    <span class="canteen-order-information_list_price canteen-icon canteen-rmb-icon"><fmt:formatNumber value="${wares.basePrice/100 * wares.count }" pattern="0.00" /> </span>
 	                </div>

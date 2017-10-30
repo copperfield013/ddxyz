@@ -27,6 +27,7 @@ import cn.sowell.copframe.utils.CollectionUtils;
 import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.copframe.utils.date.FrameDateFormat;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainKanteenDelivery;
+import cn.sowell.ddxyz.model.canteen.pojo.PlainKanteenTrolleyWaresOption;
 import cn.sowell.ddxyz.model.kanteen.dao.KanteenDao;
 import cn.sowell.ddxyz.model.kanteen.pojo.KanteenDistributionMenuItem;
 import cn.sowell.ddxyz.model.kanteen.pojo.KanteenOrderCriteria;
@@ -195,9 +196,43 @@ public class KanteenDaoImpl implements KanteenDao {
 		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
 		query.setLong("trolleyId", trolleyId);
 		query.setResultTransformer(HibernateRefrectResultTransformer.getInstance(KanteenTrolleyWares.class));
-		return query.list();
+		List<KanteenTrolleyWares> list = query.list();
+		
+		List<PlainKanteenTrolleyWaresOption> options = getWaresOptions(CollectionUtils.toSet(list, item->item.getId()));
+		Map<Long, List<PlainKanteenTrolleyWaresOption>> optionsListMap = CollectionUtils.toListMap(options, option->option.getTrolleyWaresId());
+		
+		for (KanteenTrolleyWares tWares : list) {
+			if(optionsListMap.containsKey(tWares.getId())){
+				List<PlainKanteenTrolleyWaresOption> waresOptions = optionsListMap.get(tWares.getId());
+				tWares.setWareOptionIds(CollectionUtils.toSet(waresOptions, option->option.getWaresOptionId()));
+				tWares.setTrolleyOptionIds(CollectionUtils.toSet(waresOptions, option->option.getId()));
+				tWares.setOptionNames(CollectionUtils.toList(waresOptions, option->option.getOptionName()));
+			}
+		}
+		return list;
 	}
 	
+	
+	
+	
+	
+	
+	@SuppressWarnings("unchecked")
+	private List<PlainKanteenTrolleyWaresOption> getWaresOptions(
+			Set<Long> trolleyWaresIds) {
+		if(trolleyWaresIds != null && trolleyWaresIds.size() > 0){
+			String sql = "select o.*, wo.c_name as option_name " + 
+					"from t_trolley_option o " +
+					"left join t_wares_option wo on o.waresoption_id = wo.id " + 
+					"where o.trolleywares_id in (:trolleyWaresIds)";
+			SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
+			query.setParameterList("trolleyWaresIds", trolleyWaresIds, StandardBasicTypes.LONG);
+			query.setResultTransformer(HibernateRefrectResultTransformer.getInstance(PlainKanteenTrolleyWaresOption.class));
+			return query.list();
+		}
+		return new ArrayList<PlainKanteenTrolleyWaresOption>();
+	}
+
 	@Override
 	public Map<Long, Integer> getTrolleyWaresMap(long trolleyId){
 		String sql = "SELECT" +

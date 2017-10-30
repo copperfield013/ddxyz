@@ -171,9 +171,24 @@ header {
     margin-right:0.4rem;
 }
 .canteen-order-list_list_name {
-    flex:2;
-    align-self:flex-start;
-    margin-top:0.095rem;
+    flex: 2;
+    align-self: flex-start;
+    margin-top: 0.095rem;
+    display: inline-block;
+    height: 1.54rem;
+    max-width: 50%;
+}
+span.canteen-order-list_list_name>span {
+    display: block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 100%;
+}
+span.kanteen-scrtion-option-desc {
+    color: #999;
+    font-size: 0.7em;
+    text-indent: 0.5em;
 }
 .canteen-order-list_list_rightbox {
     height:1.54rem;

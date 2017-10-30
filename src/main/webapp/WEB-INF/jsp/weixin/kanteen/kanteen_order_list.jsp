@@ -6,7 +6,7 @@
 <head>
     <title>订单列表</title>
 	<jsp:include page="/WEB-INF/jsp/weixin/common/weixin-include-kanteen.jsp"></jsp:include>
-    <link rel="stylesheet" href="media/weixin/kanteen/css/kanteen-order-list.css?1">
+    <link rel="stylesheet" href="media/weixin/kanteen/css/kanteen-order-list.css?2">
     <script src="media/weixin/kanteen/js/kanteen-order-list.js"></script>
     <script src="${basePath }media/weixin/main/js/ix.js"></script>
 </head>
@@ -42,9 +42,6 @@
     </div>
 
 
-    <footer class="canteen-order-list-footer">
-        <a class="canteen-footer-goto-home" href="weixin/kanteen">去下单</a>
-    </footer>
     <script type="text/javascript">
     	$(function(){
     		seajs.use(['utils', 'ajax'], function(Utils, Ajax){
@@ -61,7 +58,7 @@
     			
     			
     			function bindEvent(event, selector, callback){
-    				$(document).on(event, selector, function(){
+    				$(document).on(event, selector, function(e){
     					e.preventDefault();
     					if($(e.target).is(selector)){
     						callback.apply(this, arguments);
@@ -137,7 +134,12 @@
     					});
 					}
     			});
-    			
+    			bindEvent('click', '.canteen-order-list_header', function(e){
+    				var href = $(e.target).attr('href');
+    				if(href){
+	    				window.location.href = href;
+    				}
+    			});
     		});
     	});
     </script>

@@ -2,6 +2,7 @@ package cn.sowell.ddxyz.model.kanteen.pojo;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,8 @@ public class KanteenOrder implements WxPayOrder{
 	private PlainKanteenOrder plainOrder = new PlainKanteenOrder();
 	private List<PlainKanteenSection> sectionList = new ArrayList<PlainKanteenSection>();
 	private Map<Long, Integer> waresCountMap = new LinkedHashMap<Long, Integer>();
+	private Map<PlainKanteenSection, List<PlainKanteenSectionOption>> sectionOptionsMap = new HashMap<PlainKanteenSection, List<PlainKanteenSectionOption>>();
+	
 	private boolean createProduct = false;
 	private WeiXinUser orderUser;
 	private String payTitle = "林家食堂";
@@ -92,6 +95,13 @@ public class KanteenOrder implements WxPayOrder{
 	@Override
 	public String getWxOutTradeNo() {
 		return plainOrder.getWxOutTradeNo();
+	}
+	public Map<PlainKanteenSection, List<PlainKanteenSectionOption>> getSectionOptionsMap() {
+		return sectionOptionsMap;
+	}
+	public void setSectionOptionsMap(
+			Map<PlainKanteenSection, List<PlainKanteenSectionOption>> sectionOptionsMap) {
+		this.sectionOptionsMap = sectionOptionsMap;
 	}
 	
 }
