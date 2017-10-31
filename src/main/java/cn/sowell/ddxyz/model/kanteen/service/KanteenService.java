@@ -83,13 +83,6 @@ public interface KanteenService {
 	 */
 	void mergeTrolleyWares(Long id, List<KanteenTrolleyItem> existsItems);
 	
-	/**
-	 * 更新购物车内的数据
-	 * @param trolleyId
-	 * @param trolleyWares
-	 * @return
-	 */
-	void mergeTrolleyWares(Long trolleyId, Map<Long, Integer> trolleyWares);
 
 	/**
 	 * 根据微信用户的id获得最新的收件人信息

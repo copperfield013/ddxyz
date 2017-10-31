@@ -7,6 +7,7 @@ import java.util.Set;
 
 import cn.sowell.copframe.dto.page.PageInfo;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainKanteenDelivery;
+import cn.sowell.ddxyz.model.canteen.pojo.PlainKanteenTrolleyWares;
 import cn.sowell.ddxyz.model.kanteen.pojo.KanteenDistributionMenuItem;
 import cn.sowell.ddxyz.model.kanteen.pojo.KanteenOrderCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.KanteenTrolleyWares;
@@ -116,21 +117,21 @@ public interface KanteenDao {
 	 * @param trolleyId 购物车的id
 	 * @return
 	 */
-	Map<Long, Integer> getTrolleyWaresMap(long trolleyId);
+	Map<Long, PlainKanteenTrolleyWares> getTrolleyWaresMap(long trolleyId);
 
 	/**
 	 * 移除购物车下的多个商品
 	 * @param trolleyId 购物车id
 	 * @param toRemove 包含多个distributionWaresId
 	 */
-	void removeTrolleyWares(Long trolleyId, Set<Long> toRemove);
+	void removeTrolleyWares(Set<Long> toRemove);
 
 	/**
 	 * 更新多个购物车商品的数量
 	 * @param trolleryId
 	 * @param toUpdate
 	 */
-	void updateTrolleyWares(Long trolleryId, Map<Long, Integer> toUpdate);
+	void updateTrolleyWares(Map<Long, Integer> toUpdate);
 
 	/**
 	 * 获得用户最新的收件人信息

@@ -1,7 +1,9 @@
 package cn.sowell.ddxyz.model.kanteen.pojo;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -9,6 +11,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Transient;
+
+import com.alibaba.fastjson.annotation.JSONField;
 
 import cn.sowell.copframe.utils.CollectionUtils;
 
@@ -50,11 +54,15 @@ public class KanteenTrolleyWares {
 	@Transient
 	private Set<Long> trolleyOptionIds;
 	
+	//waresOptionId到option对象的map
 	@Transient
-	private List<String> optionNames;
+	@JSONField(serialize=false)
+	private Map<Long, PlainKanteenWaresOption> optionMap;
+	
 	
 	public String getOptionDesc(){
-		if(optionNames != null && optionNames.size() > 0){
+		List<String> optionNames = getOptionNames();
+		if(optionNames != null && !optionNames.isEmpty()){
 			return CollectionUtils.toChain(optionNames);
 		}
 		return null;
@@ -149,12 +157,23 @@ public class KanteenTrolleyWares {
 		this.trolleyOptionIds = trolleyOptionIds;
 	}
 
+	@JSONField(name="optionNames")
 	public List<String> getOptionNames() {
-		return optionNames;
+		if(getOptionMap() != null){
+			return CollectionUtils.toList(getOptionMap().values(), option->option.getName());
+		}else{
+			return new ArrayList<String>();
+		}
 	}
 
-	public void setOptionNames(List<String> optionNames) {
-		this.optionNames = optionNames;
+
+	public Map<Long, PlainKanteenWaresOption> getOptionMap() {
+		return optionMap;
+	}
+
+
+	public void setOptionMap(Map<Long, PlainKanteenWaresOption> optionMap) {
+		this.optionMap = optionMap;
 	}
 
 

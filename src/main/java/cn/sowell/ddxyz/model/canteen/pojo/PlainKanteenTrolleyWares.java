@@ -23,6 +23,9 @@ public class PlainKanteenTrolleyWares {
 	@Column(name="distributionwares_id")
 	private Long distributionWaresId;
 	
+	@Column(name="c_temp_id")
+	private String tempId;
+	
 	@Column(name="c_count")
 	private Integer count;
 	
@@ -67,5 +70,11 @@ public class PlainKanteenTrolleyWares {
 	}
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
+	}
+	public String getTempId() {
+		return tempId;
+	}
+	public void setTempId(String tempId) {
+		this.tempId = tempId;
 	}
 }

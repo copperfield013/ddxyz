@@ -6,6 +6,7 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
@@ -23,7 +24,7 @@ import cn.sowell.copframe.dto.ajax.JsonRequest;
 public class JsonRequestConverter implements HttpMessageConverter<JsonRequest>{
 	
 	private Charset defaultCharset = Charset.forName(PropertyPlaceholder.getProperty("charset"));
-	
+	Logger logger = Logger.getLogger(JsonRequestConverter.class);
 	@Override
 	public boolean canRead(Class<?> clazz, MediaType mediaType) {
 		return JsonRequest.class.isAssignableFrom(clazz) && MediaType.APPLICATION_JSON.includes(mediaType);
@@ -47,6 +48,7 @@ public class JsonRequestConverter implements HttpMessageConverter<JsonRequest>{
 		String body = StreamUtils.copyToString(input, defaultCharset);
 		JSONObject json = null;
 		try {
+			logger.info(body);
 			json = JSON.parseObject(body);
 		} catch (Exception e) {
 		}

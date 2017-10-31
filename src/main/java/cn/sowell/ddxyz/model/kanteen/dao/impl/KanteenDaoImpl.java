@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,13 +21,13 @@ import org.springframework.stereotype.Repository;
 import cn.sowell.copframe.dao.deferedQuery.DeferedParamQuery;
 import cn.sowell.copframe.dao.deferedQuery.DeferedParamSnippet;
 import cn.sowell.copframe.dao.deferedQuery.HibernateRefrectResultTransformer;
-import cn.sowell.copframe.dao.deferedQuery.KeyValueMapResultTransformer;
 import cn.sowell.copframe.dao.utils.QueryUtils;
 import cn.sowell.copframe.dto.page.PageInfo;
 import cn.sowell.copframe.utils.CollectionUtils;
 import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.copframe.utils.date.FrameDateFormat;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainKanteenDelivery;
+import cn.sowell.ddxyz.model.canteen.pojo.PlainKanteenTrolleyWares;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainKanteenTrolleyWaresOption;
 import cn.sowell.ddxyz.model.kanteen.dao.KanteenDao;
 import cn.sowell.ddxyz.model.kanteen.pojo.KanteenDistributionMenuItem;
@@ -198,15 +199,17 @@ public class KanteenDaoImpl implements KanteenDao {
 		query.setResultTransformer(HibernateRefrectResultTransformer.getInstance(KanteenTrolleyWares.class));
 		List<KanteenTrolleyWares> list = query.list();
 		
-		List<PlainKanteenTrolleyWaresOption> options = getWaresOptions(CollectionUtils.toSet(list, item->item.getId()));
+		List<PlainKanteenTrolleyWaresOption> options = getTrolleyOptions(CollectionUtils.toSet(list, item->item.getId()));
 		Map<Long, List<PlainKanteenTrolleyWaresOption>> optionsListMap = CollectionUtils.toListMap(options, option->option.getTrolleyWaresId());
+		Map<Long, PlainKanteenWaresOption> wOptionMap = getWaresOptionsMap(CollectionUtils.toSet(options, option->option.getWaresOptionId()));
+		
 		
 		for (KanteenTrolleyWares tWares : list) {
 			if(optionsListMap.containsKey(tWares.getId())){
 				List<PlainKanteenTrolleyWaresOption> waresOptions = optionsListMap.get(tWares.getId());
 				tWares.setWareOptionIds(CollectionUtils.toSet(waresOptions, option->option.getWaresOptionId()));
 				tWares.setTrolleyOptionIds(CollectionUtils.toSet(waresOptions, option->option.getId()));
-				tWares.setOptionNames(CollectionUtils.toList(waresOptions, option->option.getOptionName()));
+				tWares.setOptionMap(CollectionUtils.filter(wOptionMap, key->tWares.getWareOptionIds().contains(key)));
 			}
 		}
 		return list;
@@ -218,38 +221,41 @@ public class KanteenDaoImpl implements KanteenDao {
 	
 	
 	@SuppressWarnings("unchecked")
-	private List<PlainKanteenTrolleyWaresOption> getWaresOptions(
+	private Map<Long, PlainKanteenWaresOption> getWaresOptionsMap(
+			LinkedHashSet<Long> waresOptionIds) {
+		if(waresOptionIds != null && !waresOptionIds.isEmpty()){
+			String hql = "from PlainKanteenWaresOption o where o.id in (:waresOptionIds)";
+			Query query = sFactory.getCurrentSession().createQuery(hql);
+			query.setParameterList("waresOptionIds", waresOptionIds, StandardBasicTypes.LONG);
+			List<PlainKanteenWaresOption> list = query.list();
+			if(list != null){
+				return CollectionUtils.toMap(list, option->option.getId());
+			}
+		}
+		return new HashMap<Long, PlainKanteenWaresOption>();
+	}
+
+	@SuppressWarnings("unchecked")
+	private List<PlainKanteenTrolleyWaresOption> getTrolleyOptions(
 			Set<Long> trolleyWaresIds) {
 		if(trolleyWaresIds != null && trolleyWaresIds.size() > 0){
-			String sql = "select o.*, wo.c_name as option_name " + 
-					"from t_trolley_option o " +
-					"left join t_wares_option wo on o.waresoption_id = wo.id " + 
-					"where o.trolleywares_id in (:trolleyWaresIds)";
-			SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
+			String hql = "from PlainKanteenTrolleyWaresOption o where o.trolleyWaresId in (:trolleyWaresIds)";
+			Query query = sFactory.getCurrentSession().createQuery(hql);
 			query.setParameterList("trolleyWaresIds", trolleyWaresIds, StandardBasicTypes.LONG);
-			query.setResultTransformer(HibernateRefrectResultTransformer.getInstance(PlainKanteenTrolleyWaresOption.class));
 			return query.list();
 		}
 		return new ArrayList<PlainKanteenTrolleyWaresOption>();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public Map<Long, Integer> getTrolleyWaresMap(long trolleyId){
-		String sql = "SELECT" +
-				"	tw.distributionwares_id," +
-				"	tw.c_count" +
-				" FROM" +
-				"	t_trolley_wares tw" +
-				" WHERE" +
-				"	tw.trolley_id = :trolleyId";
-		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
+	public Map<Long, PlainKanteenTrolleyWares> getTrolleyWaresMap(long trolleyId){
+		String hql = "from PlainKanteenTrolleyWares w where w.trolleyId = :trolleyId";
+		
+		Query query = sFactory.getCurrentSession().createQuery(hql);
 		query.setLong("trolleyId", trolleyId);
-		Map<Long, Integer> map = new HashMap<Long, Integer>();
-		query.setResultTransformer(KeyValueMapResultTransformer.build(map, 
-				(mapWrapper)->mapWrapper.getLong("distributionwares_id"), 
-				(mapWrapper)->mapWrapper.getInteger("c_count")));
-		query.list();
-		return map;
+		List<PlainKanteenTrolleyWares> list = query.list();
+		return CollectionUtils.toMap(list, item->item.getId());
 	}
 	
 
@@ -286,24 +292,22 @@ public class KanteenDaoImpl implements KanteenDao {
 	
 	
 	@Override
-	public void removeTrolleyWares(Long trolleyId, Set<Long> toRemove) {
+	public void removeTrolleyWares(Set<Long> toRemove) {
 		if(toRemove != null && toRemove.size() > 0){
-			String sql = "delete from t_trolley_wares where trolley_id = :trolleyId and distributionwares_id in (:toRemove)";
+			String sql = "delete from t_trolley_wares where id in (:toRemove)";
 			SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
-			query.setLong("trolleyId", trolleyId);
 			query.setParameterList("toRemove", toRemove, StandardBasicTypes.LONG);
 			query.executeUpdate();
 		}
 	}
 	
 	@Override
-	public void updateTrolleyWares(Long trolleryId, Map<Long, Integer> toUpdate) {
+	public void updateTrolleyWares(Map<Long, Integer> toUpdate) {
 		if(toUpdate != null && toUpdate.size() > 0){
-			String sql = "update t_trolley_wares set c_count = :count, update_time = :updateTime where trolley_id = :trolleyId and distributionwares_id = :distributionWaresId"; 
+			String sql = "update t_trolley_wares set c_count = :count, update_time = :updateTime where id = :distributionWaresId"; 
 			toUpdate.forEach((distributionWaresId, count) -> {
 				SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
-				query.setLong("trolleyId", trolleryId)
-					.setLong("distributionWaresId", distributionWaresId)
+				query.setLong("distributionWaresId", distributionWaresId)
 					.setInteger("count", count)
 					.setTimestamp("updateTime", new Date());
 				query.executeUpdate();

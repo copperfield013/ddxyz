@@ -198,9 +198,9 @@
 		    					
 		    					Kanteen.ca.shoppingCar(totalPrice / 100, "add");
 		    					var desc = validWares.optionNames.join();
-	    						Kanteen.ca.addOptionWares(distributionWaresId, validWares.count, validWares.basePrice / 100, desc, validWares.wareOptionIds);
+	    						Kanteen.ca.addOptionWares(distributionWaresId, validWares.count, validWares.basePrice / 100, desc, validWares.wareOptionIds, validWares.id);
 		    				}else{
-			    				ca.triggerAddTrolley(distributionWaresId, validWares.count);
+			    				ca.triggerAddTrolley(distributionWaresId, validWares.count, validWares.id);
 		    				}
 		    			}
     				}
@@ -213,7 +213,9 @@
 	    					distributionId: '${distribution.id}', 
 	    					trolleyData: cartData
 	    				}, function(data){
-	    				if(data.status != 'suc'){
+	    				if(data.status === 'interrupted'){
+	    					console.log('提交了新的更新购物车请求，当前请求被系统中断');
+	    				}else if(data.status != 'suc'){
 	    					console.error('系统错误');
 	    				}else{
 	    					updateTwIdFn(data.tempTrolleyWaresData);

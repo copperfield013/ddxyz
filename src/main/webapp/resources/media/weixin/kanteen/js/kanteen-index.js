@@ -342,7 +342,7 @@
 					}
 				})
 			},
-			triggerAddTrolley(prouid, addition){
+			triggerAddTrolley(prouid, addition, trolleyWaresId){
 				var target = document.querySelector('.canteen-meal-list_menu[data-prouid="' + prouid +'"]');
 				if(target){
 					var unitPrice = parseFloat(target.getAttribute('data-base-price'));
@@ -358,7 +358,7 @@
 					}
 					this.mealCount(target, operate, addition);
 					this.shoppingCar(unitPrice, operate, addition);
-					this.shoppingBasket(prouid, operate);
+					this.shoppingBasket(prouid, operate, trolleyWaresId);
 				}
 			},
 			/**
@@ -439,7 +439,7 @@
 			 *  购物车展示模块 
 			 * @param { uid, kind } ( uid:商品id唯一标识 data-prouid)
 			 */
-			shoppingBasket(uid, kind) {
+			shoppingBasket(uid, kind, trolleyWaresId) {
 				let me = this;
 				let wrap = this.domBox.shopping_basket;
 				let lists = wrap.children;
@@ -459,7 +459,7 @@
 				if (kind === "add") {
 					if (listUid === -1) {
 						let listDiv = document.createElement("div");
-						let tempId = me.getTrolleyWaresTempId();
+						let tempId = trolleyWaresId || me.getTrolleyWaresTempId();
 						listHtml = `<div data-orderuid="${uid}" data-twid="${tempId}" class="shopping-car-show_list" data-base-price="${unitPrice}" >
 						<span class="shopping-car-show_list_name"><span class="trolley-wares-name">${name}</span></span>
 						<div class="shopping-car-show_list_button">
@@ -503,13 +503,14 @@
 			 * 
 			 */
 			getTrolleyWaresTempId() {
-				return 'temp_' + this.trolleyWaresTempId++;
+				var uuid = 0 | Math.random() * 100000;
+				return 'temp_' + uuid;
 			},
 			/**
 			 *  购物车展示模块 
 			 * @param { uid, kind } ( uid:商品id唯一标识 data-prouid)
 			 */
-			addOptionWares(dwid, count, unitPrice, description, optionIds) {
+			addOptionWares(dwid, count, unitPrice, description, optionIds, trolleyWaresId) {
 				if(typeof dwid === 'object'){
 					let $trolleyItem = dwid;
 					let currentCount = parseInt($trolleyItem.querySelector(".shopping-car-show_list_count").textContent);
@@ -540,7 +541,7 @@
 					let footerPage = this.domBox.shoppingcar_box;
 					let name = productWrap.querySelector(".canteen-meal-list_menu_name").textContent;
 					let totalPrice = (parseFloat(count * unitPrice)).toFixed(2);
-					let tempId = me.getTrolleyWaresTempId();
+					let tempId = trolleyWaresId || me.getTrolleyWaresTempId();
 					let listDiv = document.createElement("div");
 					let options = optionIds.join();
 					let listHtml = `<div data-orderuid="${dwid}" data-twid="${tempId}" data-options="${options}" class="shopping-car-show_list" data-base-price="${unitPrice}">
@@ -728,7 +729,7 @@
 					for(var tempId in tempTrolleyWaresData){
 						var $trolleyDom = me.domBox.shopping_basket.querySelector('[data-twid="' + tempId + '"]');
 						if($trolleyDom){
-							$trolleyDom.setAttribute('data-twid', tempTrolleyWaresData[tempId].id);
+							$trolleyDom.setAttribute('data-twid', tempTrolleyWaresData[tempId]);
 						}
 					}
 				});

@@ -1,11 +1,13 @@
 package cn.sowell.ddxyz.weixin.controller.kanteen;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -128,43 +130,93 @@ public class WeiXinKanteenController {
 	
 	@ResponseBody
 	@RequestMapping("/commit_trolley")
-	public JsonResponse commitTrolley(@RequestBody JsonRequest jReq){
+	public JsonResponse commitTrolley(@RequestBody JsonRequest jReq, HttpSession session){
 		JsonResponse jRes = new JsonResponse();
 		JSONObject json = jReq.getJsonObject();
-		Long distributionId = json.getLong("distributionId");
-		WeiXinUser user = WxUtils.getCurrentUser(WeiXinUser.class);
-		KanteenTrolley trolley = kanteenService.getTrolley(user.getId(), distributionId);
-		if(trolley != null){
-			List<KanteenTrolleyItem> items = kanteenService.extractTrolleyItems(json.getJSONObject("trolleyData"));
-			
-			
-			//Map<Long, Integer> trolleyWares = kanteenService.extractTrolley(json.getJSONObject("trolleyData"));
+		UniqueWaitBlocker blocker;
+		try {
+			blocker = blockCommitTrolleyRequest(session.getId());
+		} catch (InterruptedException e1) {
+			jRes.setStatus("interrupted");
+			return jRes;
+		}
+		
+		synchronized (blocker.RUNNING) {
 			try {
-				//调用方法更新购物车内的数据
-				kanteenService.mergeTrolleyWares(trolley.getId(), items);
-				jRes.put("trolleyId", trolley.getId());
-				JSONObject mergedTempTrolleyWares = new JSONObject();
-				items.forEach(item->{
-					if(item.getTempId() != null) {
-						mergedTempTrolleyWares.put(item.getTempId(), item.getTrolleyWaresId());
+				Long distributionId = json.getLong("distributionId");
+				WeiXinUser user = WxUtils.getCurrentUser(WeiXinUser.class);
+				KanteenTrolley trolley = kanteenService.getTrolley(user.getId(), distributionId);
+				if(trolley != null){
+					List<KanteenTrolleyItem> items = kanteenService.extractTrolleyItems(json.getJSONObject("trolleyData"));
+					
+					try {
+						//调用方法更新购物车内的数据
+						kanteenService.mergeTrolleyWares(trolley.getId(), items);
+						jRes.put("trolleyId", trolley.getId());
+						JSONObject mergedTempTrolleyWares = new JSONObject();
+						items.forEach(item->{
+							if(item.getTempId() != null) {
+								mergedTempTrolleyWares.put(item.getTempId(), item.getTrolleyWaresId());
+							}
+						});
+						jRes.setStatus("suc");
+						jRes.put("tempTrolleyWaresData", mergedTempTrolleyWares);
+					} catch (Exception e) {
+						logger.error("更新购物车时发生错误", e);
+						jRes.setStatus("error");
 					}
-				});
-				jRes.setStatus("suc");
+					return jRes;
+				}else{
+					jRes.setStatus("error");
+					logger.error("无法获得或创建购物车对象");
+				}
 			} catch (Exception e) {
-				logger.error("更新购物车时发生错误", e);
-				jRes.setStatus("error");
+				logger.error(e);
+			}finally{
+				blocker.releaseRunningLock();
 			}
 			return jRes;
-		}else{
-			jRes.setStatus("error");
-			logger.error("无法获得或创建购物车对象");
 		}
-		return jRes;
 	}
 	
 	
 	
-	
+	Map<String, UniqueWaitBlocker> trolleyTreadBlockerMap = new HashMap<String, UniqueWaitBlocker>();
+	private UniqueWaitBlocker blockCommitTrolleyRequest(String sessionKey) throws InterruptedException {
+		UniqueWaitBlocker blocker ;
+		boolean toWait = false;
+		synchronized (trolleyTreadBlockerMap) {
+			if(!trolleyTreadBlockerMap.containsKey(sessionKey)){
+				long startTime = System.currentTimeMillis();
+				blocker = new UniqueWaitBlocker(()->{
+					synchronized (trolleyTreadBlockerMap) {
+						logger.debug("执行结束，从map中移除blocker[sessionId=" + sessionKey + "]，生命周期" + (System.currentTimeMillis() - startTime) + "毫秒");
+						trolleyTreadBlockerMap.remove(sessionKey);
+					}
+				});
+				blocker.setRunningThread(Thread.currentThread());
+				logger.debug("构造blocker并放置到map中[sessionId=" + sessionKey + "]");
+				trolleyTreadBlockerMap.put(sessionKey, blocker);
+			}else{
+				blocker = trolleyTreadBlockerMap.get(sessionKey);
+				if(blocker.hasWaitThread()){
+					logger.debug("存在更新购物车的等待线程，将中断原等待线程[sessionId=" + sessionKey + "]");
+					//如果有等待的线程，那么将其终端
+					blocker.getWaitingThread().interrupt();
+				}
+				blocker.setWaitingThread(Thread.currentThread());
+				toWait = true;
+			}
+		}
+		if(toWait){
+			synchronized(blocker.WAIT){
+				logger.debug("尚有线程在更新购物车数据，将阻塞当前提交购物车的线程[sessionId=" + sessionKey + "]");
+				blocker.WAIT.wait();
+			}
+		}
+		return blocker;
+	}
+
 	@ResponseBody
 	@RequestMapping("/confirm_order/{distributionId}")
 	public JsonResponse confirmOrder(@PathVariable Long distributionId, @RequestBody JsonRequest jReq){

@@ -27,9 +27,6 @@ public class PlainKanteenTrolleyWaresOption {
 	@Column(name="create_time")
 	private Date createTime;
 	
-	@Transient
-	@Column(name="option_name")
-	private String optionName;
 	
 	public Long getId() {
 		return id;
@@ -55,11 +52,4 @@ public class PlainKanteenTrolleyWaresOption {
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
-	public String getOptionName() {
-		return optionName;
-	}
-	public void setOptionName(String optionName) {
-		this.optionName = optionName;
-	}
-	
 }

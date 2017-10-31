@@ -26,6 +26,9 @@ public class PlainKanteenWaresOption {
 	@Column(name="c_rule")
 	private String rule;
 	
+	@Column(name="c_addition_price")
+	private Integer additionPrice;
+	
 	@Column(name="c_disabled")
 	private Integer disabled;
 	
@@ -89,6 +92,14 @@ public class PlainKanteenWaresOption {
 
 	public void setOrder(Integer order) {
 		this.order = order;
+	}
+
+	public Integer getAdditionPrice() {
+		return additionPrice;
+	}
+
+	public void setAdditionPrice(Integer additionPrice) {
+		this.additionPrice = additionPrice;
 	}
 	
 	
