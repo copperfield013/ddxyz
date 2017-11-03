@@ -260,6 +260,10 @@
 			    									});
 			    								});
 			    							});
+			    						}else if(data.ordered){
+			    							Tips.alert('订单已创建。请在可领取时间段内到指定地点领取。', function(){
+			    								window.location.href = 'weixin/kanteen/order_list/week';
+			    							});
 			    						}
 			    					}else{
 			    						Tips.alert('订单提交失败');

@@ -16,46 +16,12 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
-
-
-
-
-
-
-
 import javax.annotation.Resource;
-
-
-
-
-
-
-
-
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-
-
-
-
-
-
-
-
-import com.alibaba.fastjson.JSONObject;
-
-
-
-
-
-
-
-
 
 import cn.sowell.copframe.dto.page.PageInfo;
 import cn.sowell.copframe.utils.CollectionUtils;
@@ -74,6 +40,7 @@ import cn.sowell.ddxyz.model.canteen.pojo.PlainKanteenTrolleyWares;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainKanteenTrolleyWaresOption;
 import cn.sowell.ddxyz.model.common.core.OrderRefundParameter;
 import cn.sowell.ddxyz.model.common.core.result.CheckResult;
+import cn.sowell.ddxyz.model.kanteen.KanteenConstants;
 import cn.sowell.ddxyz.model.kanteen.dao.KanteenDao;
 import cn.sowell.ddxyz.model.kanteen.pojo.KanteenDistributionMenuItem;
 import cn.sowell.ddxyz.model.kanteen.pojo.KanteenMenu;
@@ -101,6 +68,8 @@ import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenWaresOption;
 import cn.sowell.ddxyz.model.kanteen.service.KanteenService;
 import cn.sowell.ddxyz.model.weixin.pojo.WeiXinUser;
 
+import com.alibaba.fastjson.JSONObject;
+
 @Service
 public class KanteenServiceImpl implements KanteenService {
 
@@ -114,6 +83,9 @@ public class KanteenServiceImpl implements KanteenService {
 	
 	
 	Logger logger = Logger.getLogger(KanteenServiceImpl.class);
+	
+	
+	
 	@Override
 	public PlainKanteenMerchant getMerchant(Long merchantId) {
 		PlainKanteenMerchant merchant = kDao.get(merchantId, PlainKanteenMerchant.class);
@@ -223,6 +195,7 @@ public class KanteenServiceImpl implements KanteenService {
 				pTrolley.setUserId(userId);
 				pTrolley.setDistributionId(distributionId);
 				pTrolley.setMerchantId(distribution.getMerchantId());
+				trolley.setDistribution(distribution);
 				Long id = kDao.create(pTrolley);
 				pTrolley.setId(id);
 			}else{
@@ -366,19 +339,43 @@ public class KanteenServiceImpl implements KanteenService {
 	
 	@Override
 	public void packOrder(KanteenOrder order, KanteenTrolley trolley) {
+		Calendar cal = Calendar.getInstance();
 		PlainKanteenTrolley pTrolley = trolley.getPlainTrolley();
+		PlainKanteenDistribution distribution = kDao.get(pTrolley.getDistributionId(), PlainKanteenDistribution.class);
+		if(distribution == null){
+			throw new RuntimeException("配销[id=" + pTrolley.getDistributionId() + "]不存在");
+		}else{
+			if(cal.getTime().before(distribution.getStartTime())){
+				throw new RuntimeException("配销还没开始");
+			}else if(distribution.getEndTime() != null && cal.getTime().after(distribution.getEndTime())){
+				throw new RuntimeException("配销已经结束");
+			}
+		}
 		PlainKanteenOrder pOrder = order.getPlainOrder();
 		pOrder.setOrderUserId(pTrolley.getUserId());
-		pOrder.setDistributionId(trolley.getPlainTrolley().getDistributionId());
+		pOrder.setDistributionId(pTrolley.getDistributionId());
 		pOrder.setTrolleyId(trolley.getId());
-		pOrder.setStatus(PlainKanteenOrder.STATUS_DEFAULT);
-		Calendar calendar = Calendar.getInstance();
-		pOrder.setCreateTime(calendar.getTime());
-		calendar.add(Calendar.MINUTE, 15);
-		pOrder.setPayExpiredTime(calendar.getTime());
+		
+		pOrder.setCreateTime(cal.getTime());
 		pOrder.setOrderCode(generateOrderCode(pOrder.getCreateTime()));
-		
-		
+		pOrder.setStatus(PlainKanteenOrder.STATUS_DEFAULT);
+		if(PlainKanteenOrder.PAYWAY_WXPAY.equals(pOrder.getPayway())){
+			cal.add(Calendar.MINUTE, 15);
+			pOrder.setPayExpiredTime(cal.getTime());
+		}else{
+			pOrder.setStatus(PlainKanteenOrder.STATUS_CONFIRMED);
+		}
+		//检测配送
+		if(pOrder.getDeliveryId() != null){
+			PlainKanteenDelivery delivery = kDao.get(pOrder.getDeliveryId(), PlainKanteenDelivery.class);
+			if(delivery != null){
+				if(!supportPayway(delivery.getPayWay(), pOrder.getPayway())){
+					throw new RuntimeException("配送[id=" + delivery.getId() + ",payway=" + delivery.getPayWay() + "]不支持支付方式[" + pOrder.getPayway() + "]");
+				}
+			}else{
+				throw new RuntimeException("配送[id=" + pOrder.getDeliveryId() + "]不存在");
+			}
+		}
 		PlainKanteenMerchant merchant = kDao.getMerchantByDistributionId(pOrder.getDistributionId());
 		if(merchant != null){
 			pOrder.setMerchantId(merchant.getId());
@@ -430,6 +427,7 @@ public class KanteenServiceImpl implements KanteenService {
 					}
 					section.setBasePrice(sectionPrice);
 					section.setTotalPrice(sectionPrice * section.getCount());
+					totalPrice += section.getTotalPrice();
 				}else{
 					throw new RuntimeException("商品不存在[waresId=" + dWares.getId()+ "]");
 				}
@@ -444,6 +442,14 @@ public class KanteenServiceImpl implements KanteenService {
 		pOrder.setTotalPrice(totalPrice);
 	}
 	
+	private boolean supportPayway(Integer deliveryPayway, String orderPayway) {
+		if(KanteenConstants.PAYWAY_DELIVERY_ORDER_MAP.containsKey(deliveryPayway)){
+			return KanteenConstants.PAYWAY_DELIVERY_ORDER_MAP.get(deliveryPayway).contains(orderPayway);
+		}else{
+			throw new RuntimeException("未知配送的可支付方式" + deliveryPayway);
+		}
+	}
+
 	private String generateOrderCode(Date date) {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(dateFormat.format(date, "yyyyMMddHHmmss"));

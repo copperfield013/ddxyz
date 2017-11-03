@@ -95,6 +95,7 @@ public class WeiXinKanteenController {
 				model.addAttribute("deliveries", deliveries);
 				model.addAttribute("menu", menu);
 				model.addAttribute("trolley", trolley);
+				model.addAttribute("now", new Date());
 				model.addAttribute("validWares", JSONObject.toJSON(trolley.getValidWares()));
 			}
 			model.addAttribute("merchant", merchant);
@@ -233,7 +234,11 @@ public class WeiXinKanteenController {
 				//创建并保存订单
 				H5PayParameter payParameter = kanteenService.saveOrder(order);
 				jRes.put("orderId", order.getOrderId());
-				jRes.put("payParameter", JSON.toJSON(payParameter));
+				if(payParameter != null){
+					jRes.put("payParameter", JSON.toJSON(payParameter));
+				}else{
+					jRes.put("ordered", true);
+				}
 				jRes.setStatusSuccees();
 			} catch (Exception e) {
 				logger.error("创建订单失败", e);

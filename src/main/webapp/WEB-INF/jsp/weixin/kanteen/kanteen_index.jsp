@@ -7,22 +7,22 @@
     
     <title>林家食堂</title>
 	<jsp:include page="/WEB-INF/jsp/weixin/common/weixin-include-kanteen.jsp"></jsp:include>
-    <link rel="stylesheet" href="media/weixin/kanteen/css/kanteen-index.css?3">
-    <script src="media/weixin/kanteen/js/kanteen-index.js?2"></script>
+    <link rel="stylesheet" href="media/weixin/kanteen/css/kanteen-index.css?${GLOBAL_VERSION }">
+    <script src="media/weixin/kanteen/js/kanteen-index.js?${GLOBAL_VERSION }"></script>
 </head>
 
 <body>
     <header class="page-header">
         <!--搜索框-->
-        <form class="canteen-search-bar_form">
+        <form class="canteen-search-bar_form" action="">
             <div class="canteen-search-bar_box">
                 <i class="canteen-icon canteen-search-icon"></i>
-                <input id="canteenSearch" type="text" name="canteenSearch" placeholder="搜索商品">
+                <input id="canteenSearch" type="search" placeholder="搜索商品">
                 <i class="canteen-search-bar_clear canteen-icon canteen-search-cancel-icon"></i>
             </div>
             <label for="canteenSearch" class="canteen-search-bar_label">
                 <i class="canteen-icon canteen-search-icon"></i>
-                <span>搜索商品</span>
+                <span id="keyword-view">搜索商品</span>
             </label>
         </form>
 
@@ -181,7 +181,7 @@
     
     <script type="text/javascript">
     	$(function(){
-    		seajs.use(['ajax'], function(Ajax){
+    		seajs.use(['ajax', 'utils'], function(Ajax, Utils){
     			var trolleyFlag = false;
     			function initTrolley(ca){
     				if(!trolleyFlag){
@@ -205,7 +205,7 @@
 		    			}
     				}
 	    		}
-    			initTrolley(Kanteen.ca);
+    			
     			
 	    		Kanteen.bindChange(function(cartData, updateTwIdFn){
 	    			Ajax.postJson('weixin/kanteen/commit_trolley', 
@@ -241,7 +241,7 @@
 	    			return false;
 	    		});
     			var optionGroupJson = $.parseJSON('${menu.optionGroupJson}');
-	    		$(document).on('click', 'a.kanteen-optionsgroup', function(e){
+	    		$(document).on('touchend', 'a.kanteen-optionsgroup', function(e){
 	    			var waresId = $(e.target).closest('[data-wares-id]').attr('data-wares-id'),
 	    				distributionWaresId = $(e.target).closest('[data-prouid]').attr('data-prouid');
 	    			if(waresId){
@@ -272,7 +272,53 @@
 	    				}
 	    			}
 	    		});
-	    		
+	    		$('form').submit(function(e){
+	    			e.preventDefault();
+	    			$('#canteenSearch').trigger('searchx');
+	    			return false;
+	    		});
+	    		$('#canteenSearch').bind('searchx', keywordSearch);
+    			function keywordSearch(){
+	    			var keyword = $(this).val();
+    				var split = keyword.split('');
+    				var regexStr = '';
+    				for(var i in split){
+    					if(split[i] !== ' ' && split[i] !== '　'){
+    						regexStr += split[i] + '.*';
+    					}
+    				}
+   					regexStr = '^.*' + regexStr + '.*$';
+   					var regex = new RegExp(regexStr);
+   					
+   					
+   					$('nav.canteen-meal-nav a').addClass('search-hide').removeClass('active');
+   					$('div.canteen-meal-list').addClass('search-hide');
+   					var hasResult = false;
+	    			$('.canteen-meal-list_menu').addClass('search-hide').filter(function(){
+	    				var name = $(this).find('.canteen-meal-list_menu_name').text();
+    					return regex.test(name);
+	    			}).removeClass('search-hide').each(function(){
+	    				var $item = $(this).closest('div.canteen-meal-list');
+	    				$item.removeClass('search-hide');
+	    				var uid = $item.attr('data-uid');
+	    				$('nav.canteen-meal-nav a[data-key="' + uid + '"]').removeClass('search-hide')
+	    				hasResult = true;
+	    			});
+	    			if(keyword){
+		    			$('#keyword-view').text(keyword);
+	    			}else{
+	    				$('#keyword-view').text('搜索商品');
+	    			}
+	    			try{
+		    			Kanteen.ca.activeMenuGroup($('nav.canteen-meal-nav a').not('.search-hide')[0]);
+	    			}catch(e){alert(e)};
+	    			setTimeout(function(){
+		    			$('#canteenSearch').blur();
+		    			if(keyword && !hasResult){
+		    				Tips.alert('没有符合条件的商品');
+		    			};
+	    			}, 100);
+	    		}
     		});
     	});
     </script>

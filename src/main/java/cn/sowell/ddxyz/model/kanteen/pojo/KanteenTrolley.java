@@ -6,7 +6,7 @@ public class KanteenTrolley{
 	private PlainKanteenTrolley plainTrolley;
 	private List<KanteenTrolleyWares> validWares;
 	private List<KanteenTrolleyWares> invalidWares;
-	
+	private PlainKanteenDistribution distribution;
 	public Long getId(){
 		if(plainTrolley != null){
 			return plainTrolley.getId();
@@ -56,6 +56,14 @@ public class KanteenTrolley{
 
 	public void setInvalidWares(List<KanteenTrolleyWares> invalidWares) {
 		this.invalidWares = invalidWares;
+	}
+
+	public PlainKanteenDistribution getDistribution() {
+		return distribution;
+	}
+
+	public void setDistribution(PlainKanteenDistribution distribution) {
+		this.distribution = distribution;
 	}
 
 }

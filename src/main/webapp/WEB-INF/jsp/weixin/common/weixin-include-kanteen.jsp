@@ -5,14 +5,13 @@
 <meta name="renderer" content="webkit">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-
-<link rel="stylesheet" href="media/weixin/kanteen/css/reset.css?v=1.1.4">
-<link rel="stylesheet" href="media/weixin/plugins/iTip/iTip.css">
+<link rel="stylesheet" href="media/weixin/kanteen/css/reset.css?${GLOBAL_VERSION }">
+<link rel="stylesheet" href="media/weixin/plugins/iTip/iTip.css?${GLOBAL_VERSION }">
 
 <script src="${basePath }media/weixin/main/js/jquery-3.1.1.min.js"></script>
 <script src="${basePath }media/common/plugins/jquery.tmpl.js"></script>
 <script src="media/weixin/kanteen/js/mobile-adaptation.js"></script>
-<script src="media/weixin/plugins/iTip/iTip.js"></script>
+<script src="media/weixin/plugins/iTip/iTip.js?${GLOBAL_VERSION }"></script>
 <!-- SeaJS -->
 <script src="${basePath }media/sea-debug.js"></script>
 

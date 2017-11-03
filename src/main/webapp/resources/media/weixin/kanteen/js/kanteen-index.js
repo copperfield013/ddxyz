@@ -1,5 +1,4 @@
-(function(){
-	var kanteen = {
+var kanteen = {
 		eventsMap			: {},
 		bindChange		: function(callback){
 			return this.bind('change', callback);
@@ -274,28 +273,29 @@
 				let nav = this.domBox.nav_box;
 				let buttons = this.domBox.nav_buttons;
 				
-				this.eventBind(nav, "touchend", function (event) {
+				this.activeMenuGroup = function(target){
+					if(target){
+						if (target.classList.contains("canteen-meal-nav_button")) {
+							for (let i = 0; i < buttons.length; i++) {
+								buttons[i].classList.remove('active');
+							}
+							try {
+								let uid = target.getAttribute("data-key");
+								target.classList.add("active");
+								//执行右侧餐品列表的整体切换
+								me.mealListSwitch(uid);
+								
+							} catch (error) {
+								console.warn(error);
+							}
+						}
+					}
+				}
+				
+				this.eventBind(nav, "click", function (event) {
 					
 					let target = event.target;
-					if (target.classList.contains("canteen-meal-nav_button")) {
-						for (let i = 0; i < buttons.length; i++) {
-							buttons[i].classList.remove('active');
-						}
-						try {
-							
-							let uid = target.getAttribute("data-key");
-							target.classList.add("active");
-							//执行右侧餐品列表的整体切换
-							me.mealListSwitch(uid);
-							
-						} catch (error) {
-							console.warn(error);
-						}
-					} else {
-						return;
-					}
-					
-					
+					me.activeMenuGroup(target);
 				})
 			},
 			
@@ -748,9 +748,4 @@
 		}
 	}
 	
-	if(typeof define === 'function'){
-		define(kanteen);
-	}
 	
-	
-})();

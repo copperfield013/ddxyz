@@ -6,9 +6,9 @@
 <head>
     <title>订单列表</title>
 	<jsp:include page="/WEB-INF/jsp/weixin/common/weixin-include-kanteen.jsp"></jsp:include>
-    <link rel="stylesheet" href="media/weixin/kanteen/css/kanteen-order-list.css?2">
-    <script src="media/weixin/kanteen/js/kanteen-order-list.js"></script>
-    <script src="${basePath }media/weixin/main/js/ix.js"></script>
+    <link rel="stylesheet" href="media/weixin/kanteen/css/kanteen-order-list.css?${GLOBAL_VERSION }">
+    <script src="media/weixin/kanteen/js/kanteen-order-list.js?${GLOBAL_VERSION }"></script>
+    <script src="${basePath }media/weixin/main/js/ix.js?${GLOBAL_VERSION }"></script>
 </head>
 
 <body>

@@ -13,8 +13,19 @@ import javax.persistence.Table;
 @Table(name="t_order_kanteen")
 public class PlainKanteenOrder {
 	
+	/**
+	 * 订单已创建
+	 */
 	public static final String STATUS_DEFAULT = "default";
 
+	/**
+	 * 订单已支付
+	 */
+	public static final String STATUS_PAIED = "paied";
+	/**
+	 * 订单已确认
+	 */
+	public static final String STATUS_CONFIRMED = "confirmed";
 	/**
 	 * 微信支付
 	 */
@@ -24,7 +35,7 @@ public class PlainKanteenOrder {
 	 */
 	public static final String PAYWAY_SPOT = "spot";
 
-	public static final String STATUS_PAIED = "paied";
+	
 
 	/**
 	 * 订单已退款

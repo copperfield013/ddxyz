@@ -39,6 +39,10 @@
                 <span class="canteen-order-list_list_rtime"><fmt:formatDate value="${deliveryMap[pOrder.deliveryId].startTime }" pattern="yyyy-MM-dd HH:mm:ss" /> </span>
             </p>
             <p class="canteen-order-list_list_information">
+                <span class="canteen-order-list_list_label">领取地点</span>
+                <span class="canteen-order-list_list_rtime">${deliveryMap[pOrder.deliveryId].locationName }</span>
+            </p>
+            <p class="canteen-order-list_list_information">
                 <span class="canteen-order-list_list_label">部门</span>
                 <span class="canteen-order-list_lsit_department">${pOrder.receiverDepart }</span>
             </p>

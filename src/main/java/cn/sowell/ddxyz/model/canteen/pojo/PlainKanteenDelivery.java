@@ -13,6 +13,9 @@ import javax.persistence.Table;
 @Table(name="t_delivery_base")
 public class PlainKanteenDelivery {
 	
+	public static final int PAYWAY_WXPAY = 1;
+	public static final int PAYWAY_SPOT = 2;
+	public static final int PAYWAY_WXPAY_AND_SPOT = 3;
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;

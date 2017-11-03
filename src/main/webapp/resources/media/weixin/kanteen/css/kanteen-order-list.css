@@ -332,6 +332,6 @@ a.canteen-order-pay {
     font-weight: 700;
 }
 
-span.canteen-order-list_status.order-status-paied {
+span.canteen-order-list_status.order-status-paied,span.canteen-order-list_status.order-status-confirmed {
     color: #66CD00;
 }
