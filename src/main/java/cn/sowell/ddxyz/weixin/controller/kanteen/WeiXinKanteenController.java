@@ -84,8 +84,9 @@ public class WeiXinKanteenController {
 			//获得本周的配销
 			PlainKanteenDistribution distribution = kanteenService.getDistributionOfThisWeek(merchantId, new Date());
 			if(distribution != null){
+				Date now = new Date();
 				//获得配销的所有配送信息
-				List<PlainKanteenDelivery> deliveries = kanteenService.getEnabledDeliveries(distribution.getId());
+				List<PlainKanteenDelivery> deliveries = kanteenService.getEnabledDeliveries(distribution.getId(), now);
 				//如果配销存在，那么就拿到配销对应的菜单信息
 				KanteenMenu menu = kanteenService.getKanteenMenu(distribution.getId());
 				//获得配销对应的购物车，如果不存在，则创建一个
@@ -95,7 +96,7 @@ public class WeiXinKanteenController {
 				model.addAttribute("deliveries", deliveries);
 				model.addAttribute("menu", menu);
 				model.addAttribute("trolley", trolley);
-				model.addAttribute("now", new Date());
+				model.addAttribute("now", now);
 				model.addAttribute("validWares", JSONObject.toJSON(trolley.getValidWares()));
 			}
 			model.addAttribute("merchant", merchant);
@@ -111,7 +112,7 @@ public class WeiXinKanteenController {
 		PlainKanteenReceiver receiver = kanteenService.getLastReceiver(user.getId());
 		
 		//获得配销的所有配送信息
-		List<PlainKanteenDelivery> deliveries = kanteenService.getEnabledDeliveries(distributionId);
+		List<PlainKanteenDelivery> deliveries = kanteenService.getEnabledDeliveries(distributionId, new Date());
 		
 		model.addAttribute("trolley", trolley);
 		model.addAttribute("receiver", receiver);

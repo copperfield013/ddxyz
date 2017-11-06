@@ -95,9 +95,10 @@ public interface KanteenDao {
 	/**
 	 * 
 	 * @param distributionId
+	 * @param theTime 
 	 * @return
 	 */
-	List<PlainKanteenDelivery> getEnabledDeliveries(Long distributionId);
+	List<PlainKanteenDelivery> getEnabledDeliveries(Long distributionId, Date theTime);
 	
 	/**
 	 * 在数据库内插入一行并返回

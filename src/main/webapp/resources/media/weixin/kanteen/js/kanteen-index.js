@@ -1,45 +1,47 @@
-var kanteen = {
-		eventsMap			: {},
-		bindChange		: function(callback){
-			return this.bind('change', callback);
-		},
-		triggerChange	: function(data, updateTrolleyWaresFn){
-			return this.trigger('change', [data, updateTrolleyWaresFn]);
-		},
-		bind		: function(eventName, callback){
-			if(typeof callback === 'function'){
-				var events = this.eventsMap[eventName];
-				if(!events){
-					this.eventsMap[eventName] = events = [];
+define(function(require, exports, module){
+	var kanteen = {
+			eventsMap			: {},
+			bindChange		: function(callback){
+				return this.bind('change', callback);
+			},
+			triggerChange	: function(data, updateTrolleyWaresFn){
+				return this.trigger('change', [data, updateTrolleyWaresFn]);
+			},
+			bind		: function(eventName, callback){
+				if(typeof callback === 'function'){
+					var events = this.eventsMap[eventName];
+					if(!events){
+						this.eventsMap[eventName] = events = [];
+					}
+					events.push(callback);
 				}
-				events.push(callback);
-			}
-			return this;
-		},
-		trigger	: function(eventName, args){
-			var events = this.eventsMap[eventName];
-			if(events){
-				for(var j = events.length - 1; j >=0 ; j--){
-					try{
-						if(events[j].apply(this, args) === false){
-							break ;
+				return this;
+			},
+			trigger	: function(eventName, args){
+				var events = this.eventsMap[eventName];
+				if(events){
+					for(var j = events.length - 1; j >=0 ; j--){
+						try{
+							if(events[j].apply(this, args) === false){
+								break ;
+							}
+						}catch(e){
+							console.error(e);
 						}
-					}catch(e){
-						console.error(e);
 					}
 				}
+			},
+			afterInit	: function(fn){
+				if(typeof fn === 'function'){
+					this.bind('afterInit', fn);
+				}else{
+					this.trigger('afterInit', [fn]);
+				}
+				return this;
 			}
-		},
-		afterInit	: function(fn){
-			if(typeof fn === 'function'){
-				this.bind('afterInit', fn);
-			}else{
-				this.trigger('afterInit', [fn]);
-			}
-			return this;
-		}
 	};
 	window.Kanteen = kanteen;
+	module.exports = kanteen;
 	/*
 	 * 林家食堂微信首页页面交互命名空间
 	 * 不考虑传统ie浏览器
@@ -493,7 +495,9 @@ var kanteen = {
 				} else {
 					return;
 				}
-				this.shoppingData();
+				if(!trolleyWaresId){
+					this.shoppingData();
+				}
 			},
 			/**
 			 * 
@@ -532,7 +536,7 @@ var kanteen = {
 						}
 						
 					}
-						
+					
 				}else{
 					let me = this;
 					let wrap = this.domBox.shopping_basket;
@@ -545,14 +549,14 @@ var kanteen = {
 					let listDiv = document.createElement("div");
 					let options = optionIds.join();
 					let listHtml = `<div data-orderuid="${dwid}" data-twid="${tempId}" data-options="${options}" class="shopping-car-show_list" data-base-price="${unitPrice}">
-						<span class="shopping-car-show_list_name"><span class="trolley-wares-name">${name}</span><span class="trolley-wares-desc">${description}</span></span>
-						<div class="shopping-car-show_list_button">
-						<a href="javascript:" class="shopping-car-show_list_minus canteen-icon canteen-minus-icon"></a>
-						<span class="shopping-car-show_list_count">${count}</span>
-						<a href="javascript:" class="shopping-car-show_list_add canteen-icon canteen-add-icon"></a>
-						</div>
-						<span class="shopping-car-show_list_price canteen-icon canteen-rmb-icon">${totalPrice}</span>
-						</div>`;
+					<span class="shopping-car-show_list_name"><span class="trolley-wares-name">${name}</span><span class="trolley-wares-desc">${description}</span></span>
+					<div class="shopping-car-show_list_button">
+					<a href="javascript:" class="shopping-car-show_list_minus canteen-icon canteen-minus-icon"></a>
+					<span class="shopping-car-show_list_count">${count}</span>
+					<a href="javascript:" class="shopping-car-show_list_add canteen-icon canteen-add-icon"></a>
+					</div>
+					<span class="shopping-car-show_list_price canteen-icon canteen-rmb-icon">${totalPrice}</span>
+					</div>`;
 					listDiv.innerHTML = listHtml;
 					wrap.appendChild(listDiv.children[0].cloneNode(true));
 				}
@@ -582,7 +586,7 @@ var kanteen = {
 							var $trolleyItem =  target.closest('.shopping-car-show_list');
 							var price = parseFloat($trolleyItem.getAttribute('data-base-price'));
 							me.shoppingCar(price, "add");
-    						me.addOptionWares($trolleyItem, 1);
+							me.addOptionWares($trolleyItem, 1);
 						}else{
 							mealTarget = meal.querySelector(".canteen-meal-list_menu_add");
 							unitPrice = parseFloat(meal.querySelector(".canteen-meal-list_menu_price").querySelector("span").textContent);
@@ -599,7 +603,7 @@ var kanteen = {
 							var $trolleyItem =  target.closest('.shopping-car-show_list');
 							var price = parseFloat($trolleyItem.getAttribute('data-base-price'));
 							me.shoppingCar(price, "reduce");
-    						me.addOptionWares($trolleyItem, -1);
+							me.addOptionWares($trolleyItem, -1);
 						}else{
 							mealTarget = meal.querySelector(".canteen-meal-list_menu_minus");
 							unitPrice = parseFloat(meal.querySelector(".canteen-meal-list_menu_price").querySelector("span").textContent);
@@ -720,9 +724,9 @@ var kanteen = {
 				let orderData = {};
 				for( let i=0; i<meals.length; i++){
 					orderData['id_' + meals[i].getAttribute("data-twid")]  = {
-						dwId	: meals[i].getAttribute("data-orderuid"),
-						count	: meals[i].querySelector(".shopping-car-show_list_count").textContent,
-						options	: meals[i].getAttribute('data-options')
+							dwId	: meals[i].getAttribute("data-orderuid"),
+							count	: meals[i].querySelector(".shopping-car-show_list_count").textContent,
+							options	: meals[i].getAttribute('data-options')
 					}
 				}
 				kanteen.triggerChange(orderData, function(tempTrolleyWaresData){
@@ -741,11 +745,11 @@ var kanteen = {
 	
 	
 	document.onreadystatechange = function () {
-		if (document.readyState === "interactive") {
-			canteen_home_interaction.init();
-			kanteen.ca = canteen_home_interaction;
-			kanteen.afterInit(canteen_home_interaction);
-		}
+		canteen_home_interaction.init();
+		kanteen.ca = canteen_home_interaction;
+		require('utils').bindOrTrigger('afterKanteenInit', [kanteen]);
+		//kanteen.afterInit(canteen_home_interaction);
 	}
+});
 	
 	

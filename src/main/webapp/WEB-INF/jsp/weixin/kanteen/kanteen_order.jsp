@@ -225,9 +225,16 @@
 	   		        	}
 	   		        }, false);
 	   		        
-	   		        
-		    		$('#order-submit').click(function(){
+	   		     	var hasDelivery = '${hasDelivery}' == 'true';
+	    			if(!hasDelivery){
+	   					Tips.alert('当前没有可用配送');
+	    			}
+		    		$('#order-submit').on('touchend', function(){
 		    			try{
+		    				if(!hasDelivery){
+			   					Tips.alert('当前没有可用配送');
+			   					return false;
+			    			}
 			    			var order = getSubmitOrder();
 			    			showOrderMsg(order, function(){
 			    				Ajax.postJson('weixin/kanteen/confirm_order/${distributionId}', order, function(data){

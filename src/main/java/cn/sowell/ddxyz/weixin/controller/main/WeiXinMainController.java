@@ -33,6 +33,18 @@ public class WeiXinMainController {
 	public String home(){
 		return WeiXinConstants.PATH_BASE + "/home";
 	}
+	
+	
+	@RequestMapping("/404")
+	public String go404(){
+		return WeiXinConstants.PATH_BASE + "/common/404.jsp";
+	}
+	
+	@RequestMapping("/500")
+	public String go500(){
+		return WeiXinConstants.PATH_BASE + "/common/500.jsp";
+	}
+	
 
 	@ResponseBody
 	@RequestMapping(value="/prepay", headers="Accept=application/json")

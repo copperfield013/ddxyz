@@ -272,10 +272,11 @@ public class KanteenDaoImpl implements KanteenDao {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<PlainKanteenDelivery> getEnabledDeliveries(Long distributionId) {
-		String hql = "from PlainKanteenDelivery d where d.distributionId = :distributionId and d.disabled is null";
+	public List<PlainKanteenDelivery> getEnabledDeliveries(Long distributionId, Date theTime) {
+		String hql = "from PlainKanteenDelivery d where d.distributionId = :distributionId and d.disabled is null and d.startTime <= :theTime and (d.endTime is null or d.endTime > :theTime)";
 		Query query = sFactory.getCurrentSession().createQuery(hql);
 		query.setLong("distributionId", distributionId);
+		query.setTimestamp("theTime", theTime);
 		return query.list();
 	}
 	

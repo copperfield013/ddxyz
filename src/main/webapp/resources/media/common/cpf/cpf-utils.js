@@ -1,6 +1,7 @@
 define(function(require, exports){
 	var CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
 	var SEQUENCE_MAP = {}
+	var bindOrTriggerMap = {};
 	$.extend(exports, {
 		/**
 		 * 判断一个是否是整数
@@ -283,6 +284,36 @@ define(function(require, exports){
                 monthNames : [ '一月', '二月', '三月', '四月', '五月', '六月',  
                         '七月', '八月', '九月', '十月', '十一月', '十二月' ]
 			});
+		},
+		/**
+		 * 绑定和触发
+		 * 当A使用bindOrTrigger(event, callback)方法绑定了一个事件，必须等待B用bindOrTrigger(event)触发该事件。
+		 * 与普通的bind-trigger方法不同的是：用该方法绑定事件时，如果已经有方法调用了触发的方法，那么在绑定之后将会立刻触发事件。
+		 * 之后，如果有其他方法再次调用触发方法，将会直接触发。如果重新绑定了事件，那么也会在绑定之后立刻触发重新绑定的回调。
+		 * 如果想要重新绑定并令其重新触发，只能传入callback为false，那么将会重新初始化该事件
+		 */
+		bindOrTrigger	: function(event, callback){
+			if(typeof event === 'string'){
+				if(callback === false){
+					bindOrTriggerMap['event_' + event] = undefined;
+					return this;
+				}
+				var obj = bindOrTriggerMap['event_' + event];
+				if(!obj){
+					bindOrTriggerMap['event_' + event] = obj = {};
+				}
+				if(callback === undefined || $.isArray(callback)){
+					if(typeof obj.callback === 'function'){
+						obj.callback.apply(this, callback);
+					}
+					obj.flag = true;
+				}else if(typeof callback === 'function'){
+					obj.callback = callback;
+					if(obj.flag){
+						this.bindOrTrigger(event);
+					}
+				}
+			}
 		}
 	});
 	

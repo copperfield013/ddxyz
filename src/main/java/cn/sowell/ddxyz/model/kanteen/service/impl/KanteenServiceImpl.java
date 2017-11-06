@@ -228,8 +228,8 @@ public class KanteenServiceImpl implements KanteenService {
 	}
 
 	@Override
-	public List<PlainKanteenDelivery> getEnabledDeliveries(Long distributionId) {
-		return kDao.getEnabledDeliveries(distributionId);
+	public List<PlainKanteenDelivery> getEnabledDeliveries(Long distributionId, Date theTime) {
+		return kDao.getEnabledDeliveries(distributionId, theTime);
 	}
 	
 
@@ -352,6 +352,23 @@ public class KanteenServiceImpl implements KanteenService {
 			}
 		}
 		PlainKanteenOrder pOrder = order.getPlainOrder();
+		//检测配送
+		if(pOrder.getDeliveryId() != null){
+			PlainKanteenDelivery delivery = kDao.get(pOrder.getDeliveryId(), PlainKanteenDelivery.class);
+			if(delivery != null){
+				if(!supportPayway(delivery.getPayWay(), pOrder.getPayway())){
+					throw new RuntimeException("配送[id=" + delivery.getId() + ",payway=" + delivery.getPayWay() + "]不支持支付方式[" + pOrder.getPayway() + "]");
+				}
+				if(cal.getTime().before(delivery.getStartTime())){
+					throw new RuntimeException("配送尚未开始");
+				}else if(delivery.getEndTime() != null && cal.getTime().after(delivery.getEndTime())){
+					throw new RuntimeException("配送已经结束");
+				}
+				
+			}else{
+				throw new RuntimeException("配送[id=" + pOrder.getDeliveryId() + "]不存在");
+			}
+		}
 		pOrder.setOrderUserId(pTrolley.getUserId());
 		pOrder.setDistributionId(pTrolley.getDistributionId());
 		pOrder.setTrolleyId(trolley.getId());
@@ -365,17 +382,7 @@ public class KanteenServiceImpl implements KanteenService {
 		}else{
 			pOrder.setStatus(PlainKanteenOrder.STATUS_CONFIRMED);
 		}
-		//检测配送
-		if(pOrder.getDeliveryId() != null){
-			PlainKanteenDelivery delivery = kDao.get(pOrder.getDeliveryId(), PlainKanteenDelivery.class);
-			if(delivery != null){
-				if(!supportPayway(delivery.getPayWay(), pOrder.getPayway())){
-					throw new RuntimeException("配送[id=" + delivery.getId() + ",payway=" + delivery.getPayWay() + "]不支持支付方式[" + pOrder.getPayway() + "]");
-				}
-			}else{
-				throw new RuntimeException("配送[id=" + pOrder.getDeliveryId() + "]不存在");
-			}
-		}
+		
 		PlainKanteenMerchant merchant = kDao.getMerchantByDistributionId(pOrder.getDistributionId());
 		if(merchant != null){
 			pOrder.setMerchantId(merchant.getId());

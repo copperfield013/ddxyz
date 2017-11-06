@@ -67,7 +67,7 @@ public interface KanteenService {
 	 * @param distributionId
 	 * @return
 	 */
-	List<PlainKanteenDelivery> getEnabledDeliveries(Long distributionId);
+	List<PlainKanteenDelivery> getEnabledDeliveries(Long distributionId, Date theTime);
 
 	/**
 	 * 从json中解析购物车数据放到List
@@ -171,12 +171,6 @@ public interface KanteenService {
 	 * @param orderId
 	 */
 	void cancelOrder(WeiXinUser user, Long orderId);
-	
-	
-
-	
-
-	
 
 
 	

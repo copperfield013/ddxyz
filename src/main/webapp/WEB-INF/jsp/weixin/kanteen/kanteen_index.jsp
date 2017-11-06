@@ -12,6 +12,7 @@
 </head>
 
 <body>
+	<c:set var="hasDelivery" value="${deliveries != null && fn:length(deliveries) > 0 }" />
     <header class="page-header">
         <!--搜索框-->
         <form class="canteen-search-bar_form" action="">
@@ -107,7 +108,7 @@
             <span class="shopping-car-totalprice canteen-icon canteen-rmb-icon">购物车是空的</span>
             <i class="shopping-car-totalcount"></i>
         </div>
-        <a href="weixin/kanteen/order/${distribution.id }" id="submit-order" class="settlement">选好了</a>
+        <span href="weixin/kanteen/order/${distribution.id }" id="submit-order" class="settlement">选好了</span>
     </footer>
 
 
@@ -181,10 +182,16 @@
     
     <script type="text/javascript">
     	$(function(){
-    		seajs.use(['ajax', 'utils'], function(Ajax, Utils){
-    			var trolleyFlag = false;
-    			function initTrolley(ca){
+    		seajs.use(['ajax', 'utils', 'kanteen/js/kanteen-index'], function(Ajax, Utils){
+    			var optionGroupJson = {};
+	    		try{
+	    			optionGroupJson = $.parseJSON('${menu.optionGroupJson}');
+	    		}catch(e){
+	    		}
+	    		var trolleyFlag = false;
+    			function initTrolley(Kanteen){
     				if(!trolleyFlag){
+    					var ca = Kanteen.ca;
 		    			trolletFlag = true;
 		    			var validWareses = [];
 		    			try{
@@ -205,23 +212,26 @@
 		    			}
     				}
 	    		}
-    			
-    			
-	    		Kanteen.bindChange(function(cartData, updateTwIdFn){
-	    			Ajax.postJson('weixin/kanteen/commit_trolley', 
-	    					{
-	    					distributionId: '${distribution.id}', 
-	    					trolleyData: cartData
-	    				}, function(data){
-	    				if(data.status === 'interrupted'){
-	    					console.log('提交了新的更新购物车请求，当前请求被系统中断');
-	    				}else if(data.status != 'suc'){
-	    					console.error('系统错误');
-	    				}else{
-	    					updateTwIdFn(data.tempTrolleyWaresData);
-	    				}
-	    			});
-	    		}).afterInit(initTrolley);
+    			Utils.bindOrTrigger('afterKanteenInit', function(Kanteen){
+    				Kanteen.bindChange(function(cartData, updateTwIdFn){
+    	    			Ajax.postJson('weixin/kanteen/commit_trolley', 
+    	    					{
+    	    					distributionId: '${distribution.id}', 
+    	    					trolleyData: cartData
+    	    				}, function(data){
+    	    				if(data.status === 'interrupted'){
+    	    					console.log('提交了新的更新购物车请求，当前请求被系统中断');
+    	    				}else if(data.status != 'suc'){
+    	    					console.error('系统错误');
+    	    				}else{
+    	    					updateTwIdFn(data.tempTrolleyWaresData);
+    	    				}
+    	    			});
+    	    		});
+    				initTrolley(Kanteen);
+    			});
+	    		
+	    		
 	    		$(document).on('touchend', '.options-group span', function(e){
 	    			var $option = $(e.target);
 	    			var isActive = $option.is('.active'),
@@ -240,7 +250,6 @@
 	    			}
 	    			return false;
 	    		});
-    			var optionGroupJson = $.parseJSON('${menu.optionGroupJson}');
 	    		$(document).on('touchend', 'a.kanteen-optionsgroup', function(e){
 	    			var waresId = $(e.target).closest('[data-wares-id]').attr('data-wares-id'),
 	    				distributionWaresId = $(e.target).closest('[data-prouid]').attr('data-prouid');
@@ -319,6 +328,20 @@
 		    			};
 	    			}, 100);
 	    		}
+    			var hasDelivery = '${hasDelivery}' == 'true';
+    			if(!hasDelivery){
+   					Tips.alert('当前没有可用配送');
+    			}
+    			$('.settlement').click(function(){
+    				if(!$(this).is('.shopping-car_empty *')){
+    					if(!hasDelivery){
+        					Tips.alert('当前没有可用配送');
+        				}else{
+	    					window.location.href = $(this).attr('href');
+        				}
+    				}
+    			});
+    			
     		});
     	});
     </script>

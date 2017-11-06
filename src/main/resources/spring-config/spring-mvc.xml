@@ -71,7 +71,23 @@ http://www.springframework.org/schema/context/spring-context-4.3.xsd">
 	
 	<!-- 装载全局Controller的异常处理，这个类将所有异常显示到控制台，并且将异常信息返回到客户端 -->
     <bean class="cn.sowell.copframe.ControllerExceptionHandler" />
-
+    
+	<bean class="cn.sowell.copframe.common.CpfHandlerExceptionResolver" >
+		<property name="errorForwardMap">
+			<map>
+				<entry key="404">
+					<map>
+						<entry key="/weixin/**" value="/weixin/common/404.jsp" />
+					</map>
+				</entry>
+				<entry key="500">
+					<map>
+						<entry key="/weixin/**" value="/weixin/common/500.jsp" />
+					</map>
+				</entry>
+			</map>
+		</property>
+	</bean>
 	
 	<!-- 对模型视图名称的解析，即在模型视图名称添加前后缀 -->
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
