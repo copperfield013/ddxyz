@@ -35,6 +35,7 @@ import cn.sowell.copframe.weixin.pay.prepay.PrepayResult;
 import cn.sowell.copframe.weixin.pay.refund.RefundRequest;
 import cn.sowell.copframe.weixin.pay.refund.RefundResult;
 import cn.sowell.copframe.weixin.pay.service.WxPayService;
+import cn.sowell.ddxyz.DdxyzConstants;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainKanteenDelivery;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainKanteenTrolleyWares;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainKanteenTrolleyWaresOption;
@@ -345,6 +346,8 @@ public class KanteenServiceImpl implements KanteenService {
 		if(distribution == null){
 			throw new RuntimeException("配销[id=" + pTrolley.getDistributionId() + "]不存在");
 		}else{
+			//判断是否要生成订单内的产品
+			order.setCreateProduct(DdxyzConstants.VALUE_TRUE.equals(distribution.getSaveProduct()));
 			if(cal.getTime().before(distribution.getStartTime())){
 				throw new RuntimeException("配销还没开始");
 			}else if(distribution.getEndTime() != null && cal.getTime().after(distribution.getEndTime())){
@@ -359,9 +362,7 @@ public class KanteenServiceImpl implements KanteenService {
 				if(!supportPayway(delivery.getPayWay(), pOrder.getPayway())){
 					throw new RuntimeException("配送[id=" + delivery.getId() + ",payway=" + delivery.getPayWay() + "]不支持支付方式[" + pOrder.getPayway() + "]");
 				}
-				if(cal.getTime().before(delivery.getStartTime())){
-					throw new RuntimeException("配送尚未开始");
-				}else if(delivery.getEndTime() != null && cal.getTime().after(delivery.getEndTime())){
+				if(delivery.getEndTime() != null && cal.getTime().after(delivery.getEndTime())){
 					throw new RuntimeException("配送已经结束");
 				}
 				
@@ -601,6 +602,8 @@ public class KanteenServiceImpl implements KanteenService {
 			order.setPlainOrder(pOrder);
 			order.setSectionList(sectionsMap.get(order.getOrderId()));
 			orderList.add(order);
+			order.setCanDelete(checkStatusFor(OPERATE_HIDE, pOrder, false).isSuc());
+			order.setCanCancel(checkStatusFor(OPERATE_CANCEL, pOrder, false).isSuc());
 		});
 		return orderList;
 	}
@@ -619,12 +622,118 @@ public class KanteenServiceImpl implements KanteenService {
 	
 	@Override
 	public void hideOrder(WeiXinUser user, Long orderId) {
-		checkAuthority(user, orderId, true);
+		//检查订单权限
+		CheckResult checkResult = checkAuthority(user, orderId, true);
+		//检查订单状态
+		checkStatusFor(OPERATE_HIDE, (PlainKanteenOrder) checkResult.getData(), true);
 		kDao.updateOrderAsDeleted(orderId, true);
 	}
 	
 	
+	static final String OPERATE_HIDE = "hide";
+	static final String OPERATE_CANCEL = "cancel";
 	
+	/**
+	 * 检查订单状态是否可以执行某个操作
+	 * @param string
+	 * @param orderId
+	 * @param b
+	 */
+	private CheckResult checkStatusFor(String operate, PlainKanteenOrder order, boolean throwException) {
+		CheckResult result = new CheckResult(false, null);
+		String status = order.getStatus(),
+				canceledStatus = order.getCanceledStatus();
+		switch (operate) {
+		case OPERATE_HIDE:
+			if(DdxyzConstants.VALUE_TRUE.equals(order.getDeleted())){
+				 result.setMsg("订单已经被隐藏，无需再次执行操作");
+			}else{
+				//检测订单是否被取消，如果已经取消，那么可以隐藏
+				//检测订单是否已经完成，那么可以隐藏
+				//如果订单是默认状态，那么可以隐藏
+				if(canceledStatus != null ||
+					PlainKanteenOrder.STATUS_COMPLETED.equals(status) ||
+					PlainKanteenOrder.STATUS_DEFAULT.equals(status)
+					){
+					result.isSuc(true);
+				}
+			}
+			break;
+		case OPERATE_CANCEL:
+			//如果订单是已确认(paied、confirmed)状态，那么根据策略判断取消
+			//如果订单是未领取(missed)状态，那么根据策略判断隐藏
+			if(PlainKanteenOrder.STATUS_PAIED.equals(status) 
+					|| PlainKanteenOrder.STATUS_CONFIRMED.equals(status)
+					|| PlainKanteenOrder.CANSTATUS_MISSED.equals(canceledStatus)){
+				PlainKanteenCancelOption cancelOption = kDao.getOrderCancelOption(order.getId());
+				if(detectWithOption(cancelOption, order)){
+					result.isSuc(true);
+				}
+			}
+			break;
+		}
+		if(!result.isSuc() && throwException){
+			throw new RuntimeException(result.getMsg());
+		}
+		return result;
+		
+	}
+
+	/**
+	 * 根据策略检测订单是否能够被取消
+	 * @param cancelOption
+	 * @param order
+	 * @return
+	 */
+	private boolean detectWithOption(PlainKanteenCancelOption cancelOption,
+			PlainKanteenOrder order) {
+		boolean uncompleted = PlainKanteenOrder.STATUS_PAIED.equals(order.getStatus())
+								|| PlainKanteenOrder.STATUS_CONFIRMED.equals(order.getStatus())
+								|| PlainKanteenOrder.STATUS_DEFAULT.equals(order.getStatus())
+								;
+		if(cancelOption != null){
+			Integer validity = cancelOption.getValidity();
+			if(validity != null){
+				switch (validity) {
+				case PlainKanteenCancelOption.VALIDITY_ALWAYS:
+					//策略总是有效
+					break;
+				case PlainKanteenCancelOption.VALIDITY_PRECOMPLETED:
+					//策略只在订单完成前有效
+					if(!uncompleted){
+						return false;
+					}
+					break;
+				case PlainKanteenCancelOption.VALIDITY_PRECOMPLETED_UNMISSED:
+					//策略在订单完成前，以及未领取时有效
+					if(!uncompleted && !PlainKanteenOrder.CANSTATUS_MISSED.equals(order.getCanceledStatus())){
+						return false;
+					}
+					break;
+				}
+			}
+			Integer option = cancelOption.getCancelOption();
+			if(option != null){
+				switch (option) {
+				case PlainKanteenCancelOption.OPTION_BANNED:
+					return false;
+				case PlainKanteenCancelOption.OPTION_LIMITED:
+					Date deadline = cancelOption.getDeadline();
+					if(deadline != null){
+						return (new Date()).before(deadline);
+					}else{
+						return false;
+					}
+				case PlainKanteenCancelOption.OPTION_NEGOTIATE:
+					return false;
+				case PlainKanteenCancelOption.OPTION_DIRECTED:
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	@Override
 	public void refundOrder(WeiXinUser user, Long orderId) {
 		CheckResult checkResult = checkAuthority(user, orderId, true);
@@ -669,23 +778,11 @@ public class KanteenServiceImpl implements KanteenService {
 			throw new RuntimeException("取消订单只能在订单已支付但是未完成的情况下执行");
 		}
 		//根据商家的配置检查订单的可取消性
-		checkOrderCancelOption(plainOrder);
+		checkStatusFor(OPERATE_CANCEL, plainOrder, true);
 		kDao.cancelOrder(orderId);
 	}
 	
 	
-	private void checkOrderCancelOption(PlainKanteenOrder plainOrder) {
-		PlainKanteenCancelOption option = kDao.getOrderCancelOption(plainOrder);
-		if(option != null){
-			
-		}else{
-			
-		}
-		
-		
-		
-	}
-
 	private KanteenOrder getKanteenOrder(PlainKanteenOrder plainOrder) {
 		List<PlainKanteenSection> sections = kDao.getSections(new HashSet<Long>(Arrays.asList(plainOrder.getId())));
 		KanteenOrder order = new KanteenOrder();
@@ -715,8 +812,6 @@ public class KanteenServiceImpl implements KanteenService {
 		}
 		return result;
 	}
-	
-	
 	
 	
 }

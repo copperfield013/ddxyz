@@ -26,6 +26,12 @@ public class PlainKanteenOrder {
 	 * 订单已确认
 	 */
 	public static final String STATUS_CONFIRMED = "confirmed";
+	
+	/**
+	 * 订单已完成
+	 */
+	public static final String STATUS_COMPLETED = "completed";
+	
 	/**
 	 * 微信支付
 	 */
@@ -43,6 +49,9 @@ public class PlainKanteenOrder {
 	public static final String CANSTATUS_REFUNDED = "refunded";
 
 	public static final String CANSTATUS_CANCELED = "canceled";
+
+	public static final String CANSTATUS_MISSED = "missed";
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;

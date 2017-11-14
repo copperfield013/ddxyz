@@ -30,6 +30,10 @@
             <span class="canteen-order-list_list_totalprice_number canteen-icon canteen-rmb-icon"><fmt:formatNumber value="${pOrder.totalPrice /100 }" pattern="0.00" /></span>
         </p>
         <div class="canteen-order-list_list_information_box">
+        	<p class="canteen-order-list_list_information">
+                <span class="canteen-order-list_list_label">创建时间</span>
+                <span class="canteen-order-list_lsit_stime"><fmt:formatDate value="${pOrder.createTime }" pattern="yyyy-MM-dd HH:mm:ss" /></span>
+            </p>
             <p class="canteen-order-list_list_information">
                 <span class="canteen-order-list_list_label">领取人</span>
                 <span class="canteen-order-list_lsit_name">${pOrder.receiverName }</span>
@@ -55,10 +59,6 @@
                 <span class="canteen-order-list_lsit_tel">${pOrder.receiverContact }</span>
             </p>
             <p class="canteen-order-list_list_information">
-                <span class="canteen-order-list_list_label">创建时间</span>
-                <span class="canteen-order-list_lsit_stime"><fmt:formatDate value="${pOrder.createTime }" pattern="yyyy-MM-dd HH:mm:ss" /></span>
-            </p>
-            <p class="canteen-order-list_list_information">
                 <span class="canteen-order-list_list_label">订单编号</span>
                 <span class="canteen-order-list_lsit_number">${pOrder.orderCode }</span>
             </p>
@@ -75,8 +75,12 @@
             <div class="canteen-order-list_button">
                 <!--暂时不需要-->
                 <!--<a class="canteen-order-alter" href="javascript:">修改订单</a>-->
-                <a class="canteen-order-delete" href="javascript:">删除订单</a>
-                <a class="canteen-order-cancel">取消订单</a>
+                <c:if test="${order.canDelete }">
+	                <a class="canteen-order-delete" href="javascript:">删除订单</a>
+                </c:if>
+                <c:if test="${order.canCancel }">
+	                <a class="canteen-order-cancel">取消订单</a>
+                </c:if>
                 <c:if test="${pOrder.status == 'default' && pOrder.payExpiredTime != null && pOrder.payExpiredTime.time > now.time }">
 	                <a class="canteen-order-pay" href="javascript:">继续支付</a>
                 </c:if>

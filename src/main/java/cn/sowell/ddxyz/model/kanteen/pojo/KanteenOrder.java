@@ -22,6 +22,10 @@ public class KanteenOrder implements WxPayOrder{
 	private WeiXinUser orderUser;
 	private String payTitle = "林家食堂";
 	
+	private boolean canDelete = false;
+	private boolean canCancel = false;
+	
+	
 	public PlainKanteenOrder getPlainOrder() {
 		return plainOrder;
 	}
@@ -102,6 +106,18 @@ public class KanteenOrder implements WxPayOrder{
 	public void setSectionOptionsMap(
 			Map<PlainKanteenSection, List<PlainKanteenSectionOption>> sectionOptionsMap) {
 		this.sectionOptionsMap = sectionOptionsMap;
+	}
+	public boolean getCanDelete() {
+		return canDelete;
+	}
+	public void setCanDelete(boolean canDelete) {
+		this.canDelete = canDelete;
+	}
+	public boolean getCanCancel() {
+		return canCancel;
+	}
+	public void setCanCancel(boolean canCancel) {
+		this.canCancel = canCancel;
 	}
 	
 }

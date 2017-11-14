@@ -28,6 +28,9 @@ public class PlainKanteenDistribution {
 	@Column(name="merchant_id")
 	private Long merchantId;
 	
+	@Column(name="c_save_product")
+	private Integer saveProduct;
+	
 	@Column(name="c_disabled")
 	private Integer disabled;
 	
@@ -93,5 +96,11 @@ public class PlainKanteenDistribution {
 	}
 	public void setUpdateUserId(Long updateUserId) {
 		this.updateUserId = updateUserId;
+	}
+	public Integer getSaveProduct() {
+		return saveProduct;
+	}
+	public void setSaveProduct(Integer saveProduct) {
+		this.saveProduct = saveProduct;
 	}
 }

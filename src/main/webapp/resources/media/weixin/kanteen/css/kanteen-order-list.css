@@ -111,7 +111,7 @@ header {
     overflow-scrolling: touch;
     position: absolute;
     top: 2.06rem;
-    bottom: 1.3rem;
+    bottom: 0;
 }
 .canteen-order-list {
     width:10rem;   
@@ -158,7 +158,7 @@ header {
     color:#737373;
     font-size: 0.37rem;
     margin-top:0.053rem;
-    background-color:#eeeeee;
+    background-color:#fafafa;
 }
 .canteen-order-list_list:first-child{
     margin:0;
@@ -233,7 +233,7 @@ span.kanteen-scrtion-option-desc {
     background-color:#ffffff;
     padding:0 0.4rem;
     margin-top:0.13rem;    
-    height:2.4rem;
+    height:3.2rem;
     overflow: hidden;
     color:#323232;
 }
@@ -268,7 +268,7 @@ span.kanteen-scrtion-option-desc {
 .canteen-order-list_more {
     height:0.8rem;
     line-height: 0.8rem;
-   background-color:#eeeeee;
+	background-color:#fafafa;
     text-align: center;
 }
 .canteen-order-list_more_icon {

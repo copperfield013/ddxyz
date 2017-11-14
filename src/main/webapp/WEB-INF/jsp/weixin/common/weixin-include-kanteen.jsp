@@ -5,6 +5,7 @@
 <meta name="renderer" content="webkit">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
+<link rel="stylesheet" href="media/weixin/main/css/weixin-main.css?${GLOBAL_VERSION }">
 <link rel="stylesheet" href="media/weixin/kanteen/css/reset.css?${GLOBAL_VERSION }">
 <link rel="stylesheet" href="media/weixin/plugins/iTip/iTip.css?${GLOBAL_VERSION }">
 

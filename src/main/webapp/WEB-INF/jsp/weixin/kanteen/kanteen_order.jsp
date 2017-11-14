@@ -14,7 +14,7 @@
 </head>
 
 <body>
-
+	<c:set var="hasDelivery" value="${deliveries != null && fn:length(deliveries) > 0 }" />
     <form id="canteen-order-information">
         <section class="canteen-user-information-basic">
             <div class="canteen-user-information-basic_list">
@@ -92,7 +92,7 @@
     <script type="text/javascript">
     	$(function(){
     		document.onreadystatechange = function () {
-	    		seajs.use(['utils', 'ajax', 'wxconfig'], function(Utils, Ajax, WX){
+	    		seajs.use(['utils', 'ajax', 'wxconfig', '$CPF'], function(Utils, Ajax, WX, $CPF){
 	    			var selectedDeilvery = null,
 	    				selectedPayway = null,
 	    				selectedLocationId = null;
@@ -123,6 +123,7 @@
 	   		        		key		: 'spot'
 	   		        	}]
 	   		        };
+	   		        $CPF.showLoading('mobile');
 	   		        try{
 	   		        	var deliveries = $.parseJSON('${deliveriesJson}');
 	   		        	for(var i in deliveries){
@@ -147,7 +148,11 @@
 	   		        			});
 	   		        		}
 	       		        }
-	   		        }catch(e){console.error(e);}
+	   		        }catch(e){
+	   		        	Tips.alert('页面初始化失败，请尝试刷新页面');
+	   		        }finally{
+	   		        	$CPF.closeLoading();
+	   		        }
 	   		        
 	   		        var locationSel = null,
 	   		        	timeSel = null,
@@ -237,6 +242,7 @@
 			    			}
 			    			var order = getSubmitOrder();
 			    			showOrderMsg(order, function(){
+			    				$CPF.showLoading('mobile');
 			    				Ajax.postJson('weixin/kanteen/confirm_order/${distributionId}', order, function(data){
 			    					if(data.status === 'suc'){
 			    						if(data.payParameter){
@@ -274,6 +280,7 @@
 			    						}
 			    					}else{
 			    						Tips.alert('订单提交失败');
+			    						$CPF.closeLoading();
 			    					}
 			    				});
 			    			});
@@ -312,7 +319,6 @@
 		    					waresName			: $this.find('.canteen-order-information_list_name').text()
 		    				});
 		    			});
-		    			console.log('check-suc');
 		    			return {
 		    				receiverName	: receiverName,
 		    				receiverContact	: receiverContact,
@@ -340,25 +346,24 @@
 						var waresChain = '';
 						for(var i in order.sections){
 							var section = order.sections[i];
-							waresChain += `\${section.waresName}×\${section.count},`;
+							waresChain += section.waresName + '×' + section.count + ',';
 						}
 						waresChain = waresChain && waresChain.substring(0, waresChain.length - 1);
 						content +=
-								`
-								<p><label>商品：</label>\${waresChain}</p>
-								<p><label>合计：</label>￥\${order.totalPrice.toFixed(2)}</p>
-								<p><label>领取人姓名：</label>\${order.receiverName}</p>
-								<p><label>联系方式：</label>\${order.receiverContact}</p> 
-								<p><label>部门：</label>\${order.receiverDepart}</p> 
-								<p><label>领取地点：</label>\${order.locationName}</p> 
-								<p><label>领取开始时间：</label>\${order.startTimeStr}</p>
-								<p><label>领取结束时间：</label>\${order.endTimeStr}</p>
-								<p><label>付款方式：</label>\${order.paywayName}</p>
-								<p><label>备注：</label>\${order.remark}</p>`
+								'<p><label>商品：</label>' + waresChain + '</p>' + 
+								'<p><label>合计：</label>￥' + order.totalPrice.toFixed(2) + '</p>' + 
+								'<p><label>领取人姓名：</label>' + order.receiverName + '</p>' + 
+								'<p><label>联系方式：</label>' + order.receiverContact + '</p>' +  
+								'<p><label>部门：</label>' + order.receiverDepart + '</p>' + 
+								'<p><label>领取地点：</label>' + order.locationName + '</p>' +
+								'<p><label>领取开始时间：</label>' + order.startTimeStr + '</p>' +
+								'<p><label>领取结束时间：</label>' + order.endTimeStr + '</p>' + 
+								'<p><label>付款方式：</label>' + order.paywayName + '</p>' +
+								'<p><label>备注：</label>' + order.remark + '</p>';
 						Tips.confirm({
 							define: '确认',
 							cancel: '取消',
-							content: `<div id="order-detail">\${content}</div>`,
+							content: '<div id="order-detail">' + content + '</div>',
 							after: function(b){
 								if(b){
 									callback();

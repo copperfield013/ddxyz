@@ -182,7 +182,10 @@ public class WeiXinKanteenController {
 	}
 	
 	
-	
+	/**
+	 * 用于根据sessionKey拦截请求，保证系统中只有一个正在执行的请求，以及等待的请求。
+	 * 当有新的请求传入时，将会中断正在等待的请求，并且覆盖自身作为等待的请求
+	 */
 	Map<String, UniqueWaitBlocker> trolleyTreadBlockerMap = new HashMap<String, UniqueWaitBlocker>();
 	private UniqueWaitBlocker blockCommitTrolleyRequest(String sessionKey) throws InterruptedException {
 		UniqueWaitBlocker blocker ;
@@ -433,6 +436,8 @@ public class WeiXinKanteenController {
 		}
 		return jRes;
 	}
+	
+	
 	
 	
 	

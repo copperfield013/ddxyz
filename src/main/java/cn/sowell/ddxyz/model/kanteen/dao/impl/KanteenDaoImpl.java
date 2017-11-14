@@ -273,7 +273,7 @@ public class KanteenDaoImpl implements KanteenDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<PlainKanteenDelivery> getEnabledDeliveries(Long distributionId, Date theTime) {
-		String hql = "from PlainKanteenDelivery d where d.distributionId = :distributionId and d.disabled is null and d.startTime <= :theTime and (d.endTime is null or d.endTime > :theTime)";
+		String hql = "from PlainKanteenDelivery d where d.distributionId = :distributionId and d.disabled is null and (d.endTime is null or d.endTime > :theTime)";
 		Query query = sFactory.getCurrentSession().createQuery(hql);
 		query.setLong("distributionId", distributionId);
 		query.setTimestamp("theTime", theTime);
@@ -497,10 +497,15 @@ public class KanteenDaoImpl implements KanteenDao {
 	}
 	
 	@Override
-	public PlainKanteenCancelOption getOrderCancelOption(
-			PlainKanteenOrder plainOrder) {
-		// TODO Auto-generated method stub
-		return null;
+	public PlainKanteenCancelOption getOrderCancelOption(Long orderId) {
+		String sql = "SELECT c.* FROM t_order_kanteen o " +
+				"LEFT JOIN t_delivery_canceloption c ON o.delivery_id = c.delivery_id " +
+				"where o.id = :orderId ";
+		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
+		query
+			.setLong("orderId", orderId)
+			.setMaxResults(1)
+			.setResultTransformer(HibernateRefrectResultTransformer.getInstance(PlainKanteenCancelOption.class));
+		return (PlainKanteenCancelOption) query.uniqueResult();
 	}
-	
 }

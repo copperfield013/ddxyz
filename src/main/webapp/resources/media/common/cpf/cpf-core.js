@@ -93,16 +93,47 @@ define(function(require, exports, module){
 		/**
 		 * 显示加载层，并阻止用户点击
 		 */
-		showLoading			: function(){
+		showLoading			: function(portal){
 			if($loading){
-				$loading.modal('show');
+				if(typeof $loading.modal === 'function'){
+					$loading.modal('show');
+				}else{
+					$loading.show();
+				}
 			}else{
-				$loading = $('<div id="loading-container"><img id="loading-gif" src="' + this.param.loadingImg + '" /></div>');
-				$loading
-					.css('lineHeight', document.body.clientHeight + 'px')
-					.appendTo(document.body).modal({
-					keyboard	: false
-				});
+				if(portal === 'mobile'){
+					$loading = $('<div id="loading-container">' +
+								'<div class="loading-cover"></div>' + 
+									'<div class="loader-inner pacman">' +
+										'<div></div><div></div><div></div><div></div><div></div>' +
+									'</div></div>');
+				}else{
+					$loading = $('<div id="loading-container"><img id="loading-gif" src="' + this.param.loadingImg + '" /></div>');
+					$loading
+						.css('lineHeight', document.body.clientHeight + 'px');
+				}
+				$loading.appendTo(document.body);
+				if(typeof $loading.modal === 'function'){
+					$loading.modal({
+						keyboard	: false
+					});
+				}else{
+					var returnFalse = function(e){e.preventDefault();return false};
+					$loading.on('click', returnFalse)
+							.on('mousedown', returnFalse)
+							.on('mouseup', returnFalse)
+							.on('touchstart', returnFalse)
+							.on('touchend', returnFalse)
+							.show()
+							;
+					if(portal === 'mobile'){
+						var $pacman = $loading.find('.pacman');
+						var left = parseInt((document.body.clientWidth - $pacman.outerWidth()) / 2),
+							top  = parseInt((document.body.clientHeight - $pacman.outerHeight()) / 2);
+						$pacman.css('left', left + 'px')
+								.css('top', top + 'px');
+					}
+				}
 			}
 		},
 		/**
@@ -110,7 +141,11 @@ define(function(require, exports, module){
 		 */
 		closeLoading		: function(){
 			if($loading){
-				$loading.modal('hide');
+				if(typeof $loading.modal === 'function'){
+					$loading.modal('hide');
+				}else{
+					$loading.hide();
+				}
 			}
 		},
 		data				: function(key, value){

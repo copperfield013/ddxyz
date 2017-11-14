@@ -10,7 +10,7 @@ var defaults = {},
 //        '../css/ix.css',
 		'../css/ix.list.css',
         'ix.util.js',
-        'ix.scroll.js?1',
+        'ix.scroll.js',
         'ix.ajax.js',
         'ix.list.new.js'
     ],

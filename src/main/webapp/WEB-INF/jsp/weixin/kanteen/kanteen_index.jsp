@@ -8,7 +8,6 @@
     <title>林家食堂</title>
 	<jsp:include page="/WEB-INF/jsp/weixin/common/weixin-include-kanteen.jsp"></jsp:include>
     <link rel="stylesheet" href="media/weixin/kanteen/css/kanteen-index.css?${GLOBAL_VERSION }">
-    <script src="media/weixin/kanteen/js/kanteen-index.js?${GLOBAL_VERSION }"></script>
 </head>
 
 <body>
@@ -182,7 +181,7 @@
     
     <script type="text/javascript">
     	$(function(){
-    		seajs.use(['ajax', 'utils', 'kanteen/js/kanteen-index'], function(Ajax, Utils){
+    		seajs.use(['$CPF', 'ajax', 'utils', 'kanteen/js/kanteen-index.js?${GLOBAL_VERSION}'], function($CPF, Ajax, Utils, Kanteen){
     			var optionGroupJson = {};
 	    		try{
 	    			optionGroupJson = $.parseJSON('${menu.optionGroupJson}');
@@ -228,7 +227,11 @@
     	    				}
     	    			});
     	    		});
-    				initTrolley(Kanteen);
+    				try{
+	    				initTrolley(Kanteen);
+    				}catch(e){
+    					alert(e);
+    				}
     			});
 	    		
 	    		
@@ -320,7 +323,7 @@
 	    			}
 	    			try{
 		    			Kanteen.ca.activeMenuGroup($('nav.canteen-meal-nav a').not('.search-hide')[0]);
-	    			}catch(e){alert(e)};
+	    			}catch(e){};
 	    			setTimeout(function(){
 		    			$('#canteenSearch').blur();
 		    			if(keyword && !hasResult){
@@ -341,7 +344,17 @@
         				}
     				}
     			});
-    			
+    			$CPF.showLoading('mobile');
+    			$(document).ready(function(){
+    				try{
+	    				Kanteen.ca.init();
+    					Utils.bindOrTrigger('afterKanteenInit', [Kanteen]);
+    				}catch(e){
+    					Tips.alert('页面初始化失败，请尝试刷新页面');
+    				}finally{
+	    				$CPF.closeLoading();
+    				}
+    			});
     		});
     	});
     </script>

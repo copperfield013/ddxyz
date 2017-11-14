@@ -223,11 +223,11 @@ public interface KanteenDao {
 	void cancelOrder(Long orderId);
 
 	/**
-	 * 根据订单找到对应的取消选项
-	 * @param plainOrder
+	 * 根据订单主键获得其配送的取消选项。如果订单不存在或者对应的配送没有配置取消选项，那么会返回null
+	 * @param orderId
 	 * @return
 	 */
-	PlainKanteenCancelOption getOrderCancelOption(PlainKanteenOrder plainOrder);
+	PlainKanteenCancelOption getOrderCancelOption(Long orderId);
 
 	
 
