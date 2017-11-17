@@ -196,6 +196,7 @@
 		                        </ul>
 		                   </li>
 	                	</sec:authorize>
+	                	<jsp:include page="kanteen-submemu.jsp"></jsp:include>
 					</ul>
 				</div>
 				<div class="page-content">

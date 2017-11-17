@@ -49,4 +49,21 @@ public interface AdminConstants {
 	 * 餐厅模块
 	 */
 	final String PATH_CANTEEN = PATH_BASE + "/canteen";
+
+
+	
+	final String PATH_KANTEEN = PATH_BASE + "/kanteen";
+	
+	/**
+	 * 配销
+	 */
+	final String PATH_KANTEEN_DISTRIBUTION = PATH_KANTEEN + "/distribution";
+
+
+
+	final String PATH_KANTEEN_WARES = PATH_KANTEEN + "/wares";
+
+
+
+	final String PATH_KANTEEN_WARESGROUP = PATH_KANTEEN + "/waresgroup";
 }

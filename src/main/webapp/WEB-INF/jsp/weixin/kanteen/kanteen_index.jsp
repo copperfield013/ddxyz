@@ -75,7 +75,7 @@
 							<p class="canteen-meal-list_menu_name">${wares.waresName }</p>
 		                    <p class="canteen-meal-list_menu_sales">
 		                    	<c:if test="${wares.maxCount != null }">
-		                    		<span>余量${wares.maxCount }</span>
+		                    		<span>限量${wares.maxCount }份</span>
 		                    	</c:if>
 		                        <span>已售${wares.currentCount }份</span>
 		                    </p>
@@ -188,29 +188,58 @@
 	    		}catch(e){
 	    		}
 	    		var trolleyFlag = false;
+	    		function initTrolleyItem(item, ca){
+	    			var distributionWaresId = item.distributionWaresId;
+    				if(item.wareOptionIds && item.wareOptionIds.length > 0){
+    					var totalPrice = item.count * item.basePrice;
+    					ca.shoppingCar(totalPrice / 100, "add");
+    					var desc = item.optionNames.join();
+						ca.addOptionWares(distributionWaresId, item.count, item.basePrice / 100, desc, item.wareOptionIds, item.id);
+    				}else{
+	    				ca.triggerAddTrolley(distributionWaresId, item.count, item.id);
+    				}
+	    		}
     			function initTrolley(Kanteen){
     				if(!trolleyFlag){
     					var ca = Kanteen.ca;
-		    			trolletFlag = true;
-		    			var validWareses = [];
+		    			var validWareses = [],
+		    				invalidWareses = [];
 		    			try{
 		    				validWareses = $.parseJSON('${validWares}');
+		    				invalidWareses = $.parseJSON('${invalidWares}')
 		    			}catch(e){}
 		    			for(var i in validWareses){
-		    				var validWares = validWareses[i];
-		    				var distributionWaresId = validWares.distributionWaresId;
-		    				if(validWares.wareOptionIds && validWares.wareOptionIds.length > 0){
-		    					var totalPrice = validWares.count * validWares.basePrice;
-		    					
-		    					Kanteen.ca.shoppingCar(totalPrice / 100, "add");
-		    					var desc = validWares.optionNames.join();
-	    						Kanteen.ca.addOptionWares(distributionWaresId, validWares.count, validWares.basePrice / 100, desc, validWares.wareOptionIds, validWares.id);
-		    				}else{
-			    				ca.triggerAddTrolley(distributionWaresId, validWares.count, validWares.id);
-		    				}
+		    				initTrolleyItem(validWareses[i], ca);
+		    			}
+		    			for(var i in invalidWareses){
+		    				initTrolleyItem(invalidWareses[i], ca);
 		    			}
     				}
 	    		}
+	    		var countLimitedWares = {};
+    			try{
+    				countLimitedWares = $.parseJSON('${menu.countLimitedWares}');
+    				if(!countLimitedWares.waresKeyPrefix){
+    					$.error();
+    				}
+    			}catch(e){
+    				console.error(e);
+    				Tips.alert('数据加载失败，请尝试刷新页面');
+    			}
+    			Utils.bind('addWares', function(e, dWaresId, addition){
+    				var limit = countLimitedWares[countLimitedWares.waresKeyPrefix + dWaresId]
+    				if(limit){
+    					var trolleyCount = 0;
+    					$('.shopping-car-show_list[data-orderuid="' + dWaresId + '"]').each(function(){
+    						trolleyCount += parseInt($(this).find('.shopping-car-show_list_count').text());
+    					});
+    					if(limit.maxCount < limit.currentCount + trolleyCount + addition){
+    						Tips.alert('商品余量不足');
+    						return false;
+    					}
+    				}
+    				
+    			});
     			Utils.bindOrTrigger('afterKanteenInit', function(Kanteen){
     				Kanteen.bindChange(function(cartData, updateTwIdFn){
     	    			Ajax.postJson('weixin/kanteen/commit_trolley', 
@@ -267,17 +296,21 @@
 			    				width	: 3/4,
 			    				after	: function(b){
 			    					if(b){
-			    						var $range = $(Tips.Box);
-			    						var optionIds = [];
-			    						var desc = [];
-			    						$('.options-group span.active', $range).each(function(){
-			    							var optionId = $(this).attr('data-id');
-			    							optionIds.push(optionId);
-			    							desc.push($(this).text());
-			    						});
-			    						var price = parseFloat($('.option-wares-base-price', $range).text());
-			    						Kanteen.ca.shoppingCar(price, "add");
-			    						Kanteen.ca.addOptionWares(distributionWaresId, 1, price, desc.join(), optionIds);
+			    						if(Utils.trigger('addWares', [distributionWaresId, 1]) !== false){
+				    						var $range = $(Tips.Box);
+				    						var optionIds = [];
+				    						var desc = [];
+				    						$('.options-group span.active', $range).each(function(){
+				    							var optionId = $(this).attr('data-id');
+				    							optionIds.push(optionId);
+				    							desc.push($(this).text());
+				    						});
+				    						var price = parseFloat($('.option-wares-base-price', $range).text());
+				    						Kanteen.ca.shoppingCar(price, "add");
+				    						Kanteen.ca.addOptionWares(distributionWaresId, 1, price, desc.join(), optionIds);
+			    						}else{
+			    							Tips.alert('商品余量不足');
+			    						}
 			    					}
 			    				}
 			    			});
@@ -340,7 +373,28 @@
     					if(!hasDelivery){
         					Tips.alert('当前没有可用配送');
         				}else{
-	    					window.location.href = $(this).attr('href');
+        					var href = $(this).attr('href');
+        					Ajax.ajax('weixin/kanteen/trolley_remain_check', {
+            					distributionId	: '${distribution.id}'
+            				}, function(data){
+            					if(data.invalids && data.invalids.length > 0){
+            						var msg = '<h4>购物车内以下商品的余量不足</h4>';
+            						for(var i in data.invalids){
+            							var invalid = data.invalids[i];
+            							if(invalid.exists === false){
+        	    							msg += '<p class="remain-alert"><span>' + invalid.waresName + '</span>' + 
+        	    								'<span>已被删除</span></p>';
+            							}else{
+        	    							msg += '<p class="remain-alert"><span>' + invalid.waresName + '</span>' + 
+        	    								'<span>' + invalid.requestCount + '份</span><span>剩余' + (invalid.remain <=0?0: invalid.remain) + '份</span></p>';
+            							}
+            						}
+            						Tips.alert(msg);
+            					}else{
+            						window.location.href = href;
+            					}
+            				});
+	    					
         				}
     				}
     			});

@@ -41,9 +41,6 @@ public class PlainKanteenWares {
 	@Column(name="c_unsalable")
 	private Integer unsalable;
 	
-	@Column(name="group_id")
-	private Long groupId;
-	
 	@Column(name="create_time")
 	private Date createTime;
 	
@@ -106,12 +103,6 @@ public class PlainKanteenWares {
 	public void setUnsalable(Integer unsalable) {
 		this.unsalable = unsalable;
 	}
-	public Long getGroupId() {
-		return groupId;
-	}
-	public void setGroupId(Long groupId) {
-		this.groupId = groupId;
-	}
 	public Date getCreateTime() {
 		return createTime;
 	}
@@ -127,7 +118,7 @@ public class PlainKanteenWares {
 	public Long getUpdateUserId() {
 		return updateUserId;
 	}
-	public void setUpdateUserId(Long updateUserId) {
-		this.updateUserId = updateUserId;
+	public void setUpdateUserId(Long serializable) {
+		this.updateUserId = serializable;
 	}
 }

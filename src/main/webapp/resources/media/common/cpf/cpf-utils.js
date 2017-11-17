@@ -2,6 +2,7 @@ define(function(require, exports){
 	var CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
 	var SEQUENCE_MAP = {}
 	var bindOrTriggerMap = {};
+	var eventFieldMap = {};
 	$.extend(exports, {
 		/**
 		 * 判断一个是否是整数
@@ -284,6 +285,56 @@ define(function(require, exports){
                 monthNames : [ '一月', '二月', '三月', '四月', '五月', '六月',  
                         '七月', '八月', '九月', '十月', '十一月', '十二月' ]
 			});
+		},
+		triggerInField	: function(fieldName, eventName, args){
+			if(typeof fieldName === 'string' && typeof eventName === 'string'){
+				var eventMap = eventFieldMap[fieldName];
+				if(eventMap){
+					var callbackStack = eventMap[eventName];
+					if(callbackStack){
+						var event = {
+								fieldName	: fieldName,
+								eventName	: eventName
+						};
+						var eventArgs = [event];
+						if($.isArray(args)){
+							eventArgs = $.merge(eventArgs, args);
+						}else{
+							eventArgs.push(args);
+						}
+						for(var i = callbackStack.length - 1; i >= 0; i--){
+							try{
+								if(callbackStack[i].apply(this, eventArgs) === false){
+									return false;
+								}
+							}catch(e){
+								console.error(e);
+							}
+						}
+					}
+				}
+			}
+		},
+		bindInField		: function(fieldName, eventName, callback){
+			if(typeof fieldName === 'string' && typeof eventName === 'string'){
+				if(typeof callback === 'function'){
+					var eventMap = eventFieldMap[fieldName];
+					if(!eventMap){
+						eventFieldMap[fieldName] = eventMap = {};
+					}
+					var callbackStack = eventMap[eventName];
+					if(!callbackStack){
+						eventMap[eventName] = callbackStack = [];
+					}
+					callbackStack.push(callback);
+				}
+			}
+		},
+		trigger		: function(eventName, args){
+			return this.triggerInField('defaultField', eventName, args);
+		},
+		bind		: function(eventName, callback){
+			return this.bindInField('defaultField', eventName, callback);
 		},
 		/**
 		 * 绑定和触发

@@ -54,6 +54,8 @@ public class KanteenTrolleyWares {
 	@Transient
 	private Set<Long> trolleyOptionIds;
 	
+	private PlainKanteenDistributionWares distributionWares;
+	
 	//waresOptionId到option对象的map
 	@Transient
 	@JSONField(serialize=false)
@@ -174,6 +176,24 @@ public class KanteenTrolleyWares {
 
 	public void setOptionMap(Map<Long, PlainKanteenWaresOption> optionMap) {
 		this.optionMap = optionMap;
+	}
+
+
+	public Integer getRemain() {
+		if(distributionWares != null && distributionWares.getMaxCount() != null){
+			return distributionWares.getMaxCount() - distributionWares.getCurrentCount();
+		}
+		return null;
+	}
+
+
+	public PlainKanteenDistributionWares getDistributionWares() {
+		return distributionWares;
+	}
+
+
+	public void setDistributionWares(PlainKanteenDistributionWares distributionWares) {
+		this.distributionWares = distributionWares;
 	}
 
 

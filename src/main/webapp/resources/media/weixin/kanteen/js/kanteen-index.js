@@ -334,9 +334,11 @@ define(function (require, exports, module) {
 				unitPrice = parseFloat(item.getAttribute('data-base-price'));
 				if (isAdd) {
 					prouid = item.getAttribute("data-prouid");
-					me.mealCount(target, "add");
-					me.shoppingCar(unitPrice, "add");
-					me.shoppingBasket(prouid, "add");
+					if(require('utils').trigger('addWares', [prouid, 1]) !== false){
+						me.mealCount(target, "add");
+						me.shoppingCar(unitPrice, "add");
+						me.shoppingBasket(prouid, "add");
+					}
 				} else if (isReduce) {
 					prouid = item.getAttribute("data-prouid");
 					me.mealCount(target, "reduce");
@@ -550,7 +552,9 @@ define(function (require, exports, module) {
 				listDiv.innerHTML = listHtml;
 				_wrap.appendChild(listDiv.children[0].cloneNode(true));
 			}
-			this.shoppingData();
+			if(!trolleyWaresId){
+				this.shoppingData();
+			}
 		},
 
 		/**
@@ -566,13 +570,16 @@ define(function (require, exports, module) {
 			var unitPrice = 0;
 
 			this.eventBind(basket, "touchend", function (event) {
-				target = event.target;
+				var target = event.target;
 				var isAdd = target.classList.contains("shopping-car-show_list_add");
 				var isReduce = target.classList.contains("shopping-car-show_list_minus");
 				if (isAdd) {
 
 					uid = target.parentNode.parentNode.getAttribute("data-orderuid");
 					meal = document.querySelector('[data-prouid="' + uid + '"]');
+					if(require('utils').trigger('addWares', [uid, 1]) === false){
+						return;
+					}
 					if (meal.classList.contains('wares-with-option')) {
 						var $trolleyItem = target.closest('.shopping-car-show_list');
 						var price = parseFloat($trolleyItem.getAttribute('data-base-price'));

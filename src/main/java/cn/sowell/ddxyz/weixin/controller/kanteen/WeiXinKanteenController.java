@@ -40,6 +40,7 @@ import cn.sowell.ddxyz.model.kanteen.pojo.KanteenOrder;
 import cn.sowell.ddxyz.model.kanteen.pojo.KanteenOrderCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.KanteenTrolley;
 import cn.sowell.ddxyz.model.kanteen.pojo.KanteenTrolleyItem;
+import cn.sowell.ddxyz.model.kanteen.pojo.KanteenTrolleyWares;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenDistribution;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMerchant;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenOrder;
@@ -51,6 +52,7 @@ import cn.sowell.ddxyz.model.weixin.service.WeiXinUserService;
 import cn.sowell.ddxyz.weixin.WeiXinConstants;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 @Controller
@@ -98,6 +100,7 @@ public class WeiXinKanteenController {
 				model.addAttribute("trolley", trolley);
 				model.addAttribute("now", now);
 				model.addAttribute("validWares", JSONObject.toJSON(trolley.getValidWares()));
+				model.addAttribute("invalidWares", JSONObject.toJSON(trolley.getInvalidWares()));
 			}
 			model.addAttribute("merchant", merchant);
 		}
@@ -437,7 +440,28 @@ public class WeiXinKanteenController {
 		return jRes;
 	}
 	
-	
+	@ResponseBody
+	@RequestMapping("/trolley_remain_check")
+	public JsonResponse checkTrolleyRemain(@RequestParam Long distributionId){
+		JsonResponse jRes = new JsonResponse();
+		WeiXinUser user = WxUtils.getCurrentUser(WeiXinUser.class);
+		KanteenTrolley trolley = kanteenService.getTrolley(user.getId(), distributionId);
+		List<KanteenTrolleyWares> invalids = trolley.getInvalidWares();
+		JSONArray invalidArray = new JSONArray();
+		for (KanteenTrolleyWares invalid : invalids) {
+			JSONObject jo = new JSONObject();
+			jo.put("waresName", invalid.getWaresName());
+			jo.put("requestCount", invalid.getCount());
+			if(invalid.getRemain() != null){
+				jo.put("remain", invalid.getRemain());
+			}else{
+				jo.put("exists", false);
+			}
+			invalidArray.add(jo);
+		}
+		jRes.put("invalids", invalidArray);
+		return jRes;
+	}
 	
 	
 	

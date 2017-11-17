@@ -310,7 +310,7 @@ define(function(require, exports, module){
 				id		: id
 			}, param));
 			//直接加载弹出框
-			dialog.loadContent(url)
+			dialog.loadContent(url, param.reqParam)
 				.show();
 			return dialog;
 		},

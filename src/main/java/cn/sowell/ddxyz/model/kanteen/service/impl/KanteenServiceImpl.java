@@ -211,6 +211,7 @@ public class KanteenServiceImpl implements KanteenService {
 					//将根据当前配销的商品余量限制，筛选购物车内的商品
 					trolleyWares.forEach(tWares->{
 						PlainKanteenDistributionWares dWares = distributionWaresMap.get(tWares.getDistributionWaresId());
+						tWares.setDistributionWares(dWares);
 						if(dWares != null &&
 								(dWares.getMaxCount() == null || tWares.getCount() + dWares.getCurrentCount() <= dWares.getMaxCount())){
 							validWares.add(tWares);

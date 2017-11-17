@@ -60,6 +60,26 @@ public class KanteenMenu {
 		}
 		return json;
 	}
+	
+	public JSONObject getCountLimitedWares(){
+		JSONObject json = new JSONObject();
+		String waresKeyPrefix = "deliveryWares_";
+		json.put("waresKeyPrefix", waresKeyPrefix);
+		if(menuItemMap != null){
+			menuItemMap.values().forEach(items->{
+				items.forEach(item->{
+					if(item.getMaxCount() != null){
+						JSONObject data = new JSONObject();
+						data.put("maxCount", item.getMaxCount());
+						data.put("currentCount", item.getCurrentCount());
+						json.put(waresKeyPrefix + item.getDistributionWaresId(), data);
+					}
+				});
+			});
+		}
+		return json;
+	}
+	
 
 	public Map<Long, List<KanteenWaresOptionGroup>> getWaresOptionGroupMap() {
 		return waresOptionGroupMap;

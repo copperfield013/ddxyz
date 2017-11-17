@@ -674,3 +674,6 @@ span.options-price:BEFORE {
 .search-hide{
 	display: none !important;
 }
+.remain-alert>span{
+	margin: 0 0.2em !important
+}
