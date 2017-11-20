@@ -129,7 +129,9 @@ define(function(require, exports, module){
 		$content
 			.addClass($CPF.getParam('pageContentClass'))
 			.data($CPF.getParam('pageDataKey'), this);
-		
+		this.getId = function(){
+			return id;
+		};
 		this.getContent = function(){
 			return $content;
 		};
@@ -156,6 +158,22 @@ define(function(require, exports, module){
 			if(typeof pageObj.close === 'function'){
 				pageObj.close();
 			}
+		};
+		var eventMap = {};
+		this.bind = function(eventName, callback){
+			if(typeof eventName === 'string' && typeof callback === 'function'){
+				eventMap[eventName] = callback;
+			}
+		};
+		this.trigger = function(eventName, args){
+			if(typeof eventName === 'string'){
+				var callback = eventMap[eventName];
+				if(typeof callback === 'function'){
+					try{
+						return callback.apply(this, args);
+					}catch(e){}
+				}
+			}
 		}
 	}
 	
@@ -170,7 +188,6 @@ define(function(require, exports, module){
 			pageMap[pageId] = undefined;
 		}
 	});
-	
 	
 	//将整个Page类作为对外接口
 	module.exports = Page;

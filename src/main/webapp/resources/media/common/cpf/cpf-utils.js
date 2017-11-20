@@ -286,7 +286,7 @@ define(function(require, exports){
                         '七月', '八月', '九月', '十月', '十一月', '十二月' ]
 			});
 		},
-		triggerInField	: function(fieldName, eventName, args){
+		triggerInField	: function(fieldName, eventName, args, target){
 			if(typeof fieldName === 'string' && typeof eventName === 'string'){
 				var eventMap = eventFieldMap[fieldName];
 				if(eventMap){
@@ -302,9 +302,12 @@ define(function(require, exports){
 						}else{
 							eventArgs.push(args);
 						}
+						if(!target){
+							target = this;
+						}
 						for(var i = callbackStack.length - 1; i >= 0; i--){
 							try{
-								if(callbackStack[i].apply(this, eventArgs) === false){
+								if(callbackStack[i].apply(target, eventArgs) === false){
 									return false;
 								}
 							}catch(e){

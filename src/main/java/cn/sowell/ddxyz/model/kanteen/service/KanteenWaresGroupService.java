@@ -4,6 +4,7 @@ import java.util.List;
 
 import cn.sowell.copframe.dto.page.PageInfo;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenWaresGroup;
+import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenWaresGroupWaresItem;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenChooseWaresListCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenWaresGroupCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.KanteenWaresGroupItem;
@@ -19,7 +20,7 @@ public interface KanteenWaresGroupService {
 
 	PlainKanteenWaresGroup getWaresGroup(Long waresGroupId);
 
-	void updateWaresGroup(PlainKanteenWaresGroup origin);
+	void updateWaresGroup(PlainKanteenWaresGroup origin, PlainKanteenWaresGroupWaresItem[] items);
 
 	/**
 	 * 更新商品组的禁用状态
@@ -42,5 +43,6 @@ public interface KanteenWaresGroupService {
 	 * @return
 	 */
 	List<KanteenWaresGroupWaresItem> getGroupWares(Long waresGroupId);
+
 
 }

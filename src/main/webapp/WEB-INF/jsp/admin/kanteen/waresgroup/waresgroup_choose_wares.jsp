@@ -19,6 +19,9 @@
 		color: #000;
 		background-color: #BBFFFF !important;
 	}
+	#waresgroup_choose_wares table.table{
+		margin-bottom: 10px;
+	}
 </style>
 <div id="waresgroup_choose_wares">
 	<div>
@@ -48,14 +51,15 @@
 <div class="modal-footer">
 	<div class="row">
 		<div class="col-lg-3 col-lg-offset-4">
-			<input id="submit" class="btn btn-primary btn-block" type="button" value="确定" /> 
+			<input id="submit" class="btn btn-primary btn-block submit" type="button" value="确定" /> 
 		</div>
 	</div>
 </div>
 <script>
 	$(function(){
-		seajs.use(['utils'], function(Utils){
-			var $page = $('#waresgroup_choose_wares');
+		seajs.use(['utils', 'dialog'], function(Utils, Dialog){
+			var $page = $('#waresgroup_choose_wares'),
+				page = $page.getLocatePage();
 			$('#check-all', $page).change(function(){
 				var checked = $(this).prop('checked');
 				var $table = $(this).closest('table');
@@ -64,8 +68,12 @@
 			$('tr.choose-row').click(function(){
 				$(this).closest('tr.choose-row').toggleClass('selected');
 			});
-			var waresInfo = $.parseJSON('${waresInfo}');
-			$('#submit', $page.getLocatePage().getContent()).click(function(){
+			var waresInfo = {};
+			try{
+				waresInfo = $.parseJSON('${waresInfo}');
+			}catch(e){}
+			
+			page.bind('footer-submit', function(data){
 				var data = [];
 				$('.choose-row.selected', $page).each(function(){
 					var waresId = $(this).attr('data-id');
@@ -73,8 +81,9 @@
 						data.push(waresInfo['wares_' + waresId]);
 					}
 				});
-				Utils.trigger();
+				return data;
 			});
+			
 		});
 	});
 </script>

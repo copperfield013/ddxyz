@@ -1,8 +1,10 @@
 package cn.sowell.ddxyz.model.kanteen.dao;
 
 import java.util.List;
+import java.util.Set;
 
 import cn.sowell.copframe.dto.page.PageInfo;
+import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenWaresGroupWaresItem;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenChooseWaresListCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenWaresGroupCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.KanteenWaresGroupItem;
@@ -41,5 +43,16 @@ public interface KanteenWaresGroupDao {
 	 * @return
 	 */
 	List<KanteenWaresGroupWaresItem> getGroupWares(Long waresGroupId);
+	/**
+	 * 保存商品组元素的顺序
+	 * @param item
+	 * @return
+	 */
+	void updateGroupWaresItemOrder(PlainKanteenWaresGroupWaresItem item);
+	/**
+	 * 将商品组中某几个商品设置为禁用
+	 * @param itemIds
+	 */
+	void disableGroupWaresItemOrder(Set<Long> itemIds);
 
 }

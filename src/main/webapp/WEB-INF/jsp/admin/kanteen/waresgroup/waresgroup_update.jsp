@@ -47,8 +47,8 @@
 	<div class="page-body">
 		<div class="row">
 			<div class="col-lg-12">
-				<form class="bv-form form-horizontal validate-form" action="admin/kanteen/waresgroup/do_update">
-					<input type="hidden" name="id" value="" ${waresGroup.id }/>
+				<form class="bv-form form-horizontal validate-form" confirm="确认提交更改？" action="admin/kanteen/waresgroup/do_update">
+					<input type="hidden" name="id" value="${waresGroup.id }" />
 					<div class="form-group">
 						<label class="col-lg-2 control-label" for="name">商品组名称</label>
 						<div class="col-lg-3">
@@ -61,7 +61,7 @@
 						<label class="col-lg-2 control-label" for="desc">描述</label>
 						<div class="col-lg-3">
 							<input type="text" class="form-control" 
-								name="desc" id="description" value="${waresGroup.description }"
+								name="description" id="description" value="${waresGroup.description }"
 							 />
 						</div>
 					</div>
@@ -71,7 +71,7 @@
 							<ol class="wareses-container" >
 								<c:forEach items="${waresList }" var="wares">
 									<li data-id="${wares.id }" data-waresId="${wares.waresId }">
-										<span>${wares.waresName }</span>
+										<span class="wares-name">${wares.waresName }</span>
 										<span class="wares-operate">
 											<span class="fa fa-arrow-circle-o-up order-up"></span>
 											<span class="fa fa-arrow-circle-o-down order-down"></span>
@@ -87,7 +87,7 @@
 					</div>
 					<div class="form-group">
 						<div class="col-lg-offset-2 col-lg-2">
-							<input type="submit" class="btn btn-primary btn-block" value="提交" />
+							<input type="submit" class="btn btn-primary btn-block" value="提交更改" />
 						</div>
 					</div>
 				</form>
@@ -102,13 +102,47 @@
 			var $page = $('#wares-update');
 			console.log($page);
 			
+			$('form', $page).on('cpf-submit', function(e, formData){
+				var count = 0;
+				$('.wareses-container li', $page).each(function(){
+					var $this = $(this);
+					formData.append('id-' + count, $this.attr('data-id') || '');
+					formData.append('wares-id-' + count, $this.attr('data-waresId'));
+					count++;
+				});
+				formData.append('wares-count', count);
+			});
+			
 			$('#add-wares', $page).click(function(){
+				var except = [];
+				var $container = $('.wareses-container', $page);
+				$('li[data-waresId]', $container).each(function(){
+					except.push($(this).attr('data-waresId'));
+				});
 				Dialog.openDialog('admin/kanteen/waresgroup/choose_wares', '选择商品', 'choose_wares', {
 					reqParam	: {
-						except	: [],
-						mode		: 'multi'
+						except	: except,
+						mode	: 'multi'
 					},
-					
+					onSubmit: function(data){
+						var template = 
+							'<li>' +
+								'<span class="wares-name"></span>' +
+								'<span class="wares-operate">' + 
+									'<span class="fa fa-arrow-circle-o-up order-up"></span>' +
+									'<span class="fa fa-arrow-circle-o-down order-down"></span>' +
+									'<span class="fa fa-trash-o wares-del"></span>' +
+								'</span>' +
+							'</li>';
+						var $temp = $(template);
+						for(var key in data){
+							var wares = data[key];
+							var $li = $temp.clone();
+							$li.attr('data-waresId', wares.id);
+							$('.wares-name', $li).text(wares.name);
+							$container.append($li);
+						}
+					}
 				});
 			});
 			$page.on('click', '.order-up', function(){

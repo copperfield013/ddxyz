@@ -26,12 +26,13 @@
 			<c:forEach items="${waresGroups }" var="waresGroup" varStatus="i">
 				<tr data-id="${waresGroup.id }" >
 					<td>${i.index + 1}</td>
-					<td><a href="admin/kanteen/manage_waresgroup/${waresGroup.id }" class="tab" target="waresgroup_manage_${waresGroup.id }">${waresGroup.name }</a></td>
+					<td>
+						<a class="tab" target="waresgroup_update_${waresGroup.id }" title="修改商品组" href="admin/kanteen/waresgroup/update/${waresGroup.id }">${waresGroup.name }</a>
+					</td>
 					<td>${waresGroup.description }</td>
 					<td>${waresGroup.waresCount }</td>
 					<td><fmt:formatDate value="${waresGroup.createTime }" pattern="yyyy-MM-dd HH:mm:ss"/></td>
 					<td>
-						<a class="tab" target="waresgroup_update_${waresGroup.id }" title="修改商品组" href="admin/kanteen/waresgroup/update/${waresGroup.id }">修改</a>
 						<c:set var="disabled" value="${waresGroup.disabled == 1 }" />
 						<a class="waresgroup-${disabled? 'disable': 'enable' }">${disabled? '启用': '禁用' }</a>
 					</td>

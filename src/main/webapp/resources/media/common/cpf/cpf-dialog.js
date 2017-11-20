@@ -37,7 +37,7 @@ define(function(require, exports, module){
 			content		: '',
 			onShow		: $.noop,
 			onClose		: $.noop,
-			onSubmit	: undefined,
+			onSubmit	: $.noop,
 			afterLoad	: $.noop,
 			isModal		: true,
 			width		: bodySize.width * 3/5,
@@ -233,7 +233,13 @@ define(function(require, exports, module){
 				resetSelector = 'button.reset,button[type=reset],input[type="reset"],input.reset[type="button"]'
 			$(submitSelector, $footer).click(function(){
 				var forForm = $($(this).attr('for'), $content);
-				forForm.submit();
+				var data = _this.getPage().trigger('footer-submit', []);
+				if(typeof param.onSubmit !== 'function' || param.onSubmit.apply(this, [data]) !== false){
+					try{
+						forForm.submit();
+					}catch(e){}
+					page.close();
+				}
 			});
 			$(resetSelector, $footer).click(function(){
 				var forForm = $($(this).attr('for'), $content);
@@ -310,7 +316,7 @@ define(function(require, exports, module){
 				id		: id
 			}, param));
 			//直接加载弹出框
-			dialog.loadContent(url, param.reqParam)
+			dialog.loadContent(url, param.title, param.reqParam)
 				.show();
 			return dialog;
 		},
@@ -464,6 +470,7 @@ define(function(require, exports, module){
 					}
 				}
 			}).trigger('keyup');
+			
 			dialog.getFooter().find('button.prompt-btn-confirm,button.prompt-btn-cancel').click(function(){
 				var isYes = $(this).is('.prompt-btn-confirm');
 				var val = $(':text', dialog.getDom()).val();

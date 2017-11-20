@@ -1,5 +1,9 @@
 package cn.sowell.ddxyz.model.common.dao;
 
+import java.util.List;
+
+import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.KanteenWaresGroupWaresItem;
+
 
 public interface NormalOperateDao {
 

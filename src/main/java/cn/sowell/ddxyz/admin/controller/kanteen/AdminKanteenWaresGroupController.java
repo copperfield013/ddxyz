@@ -2,7 +2,14 @@ package cn.sowell.ddxyz.admin.controller.kanteen;
 
 import java.util.List;
 
+
+
+
+
 import javax.annotation.Resource;
+
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -11,13 +18,26 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+
+
+
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+
+
+
+
+
 import cn.sowell.copframe.common.UserIdentifier;
 import cn.sowell.copframe.dto.ajax.AjaxPageResponse;
 import cn.sowell.copframe.dto.page.PageInfo;
+import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.copframe.weixin.common.utils.WxUtils;
 import cn.sowell.ddxyz.admin.AdminConstants;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMerchant;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenWaresGroup;
+import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenWaresGroupWaresItem;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenChooseWaresListCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenWaresGroupCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.KanteenWaresGroupItem;
@@ -82,14 +102,25 @@ public class AdminKanteenWaresGroupController {
 	
 	@ResponseBody
 	@RequestMapping("/do_update")
-	public AjaxPageResponse doUpdate(PlainKanteenWaresGroup waresGroup){
+	public AjaxPageResponse doUpdate(PlainKanteenWaresGroup waresGroup, HttpServletRequest request){
 		if(waresGroup.getId() != null){
 			PlainKanteenWaresGroup origin = waresGroupService.getWaresGroup(waresGroup.getId());
 			origin.setName(waresGroup.getName());
 			origin.setDescription(waresGroup.getDescription());
 			origin.setUpdateUserId((Long) WxUtils.getCurrentUser(UserIdentifier.class).getId());
 			try {
-				waresGroupService.updateWaresGroup(origin);
+				Integer count = FormatUtils.toInteger(request.getParameter("wares-count"));
+				PlainKanteenWaresGroupWaresItem[] items = null ;
+				if(count != null && count > 0){
+					items = new PlainKanteenWaresGroupWaresItem[count];
+					for (int i = 0; i < count; i++) {
+						items[i] = new PlainKanteenWaresGroupWaresItem();
+						items[i].setId(FormatUtils.toLong(request.getParameter("id-" + i)));
+						items[i].setWaresId(FormatUtils.toLong(request.getParameter("wares-id-" + i)));
+						items[i].setOrder(i);
+					}
+				}
+				waresGroupService.updateWaresGroup(origin, items);
 				return AjaxPageResponse.CLOSE_AND_REFRESH_PAGE("修改成功", "waresgroup_list");
 			} catch (Exception e) {
 				logger.debug("", e);
@@ -127,6 +158,11 @@ public class AdminKanteenWaresGroupController {
 		model.addAttribute("waresList", waresList);
 		model.addAttribute("criteria", criteria);
 		model.addAttribute("pageInfo", pageInfo);
+		JSONObject waresInfo = new JSONObject();
+		waresList.forEach(wares->{
+			waresInfo.put("wares_" + wares.getId(), JSON.toJSON(wares));
+		});
+		model.addAttribute("waresInfo", waresInfo);
 		return AdminConstants.PATH_KANTEEN_WARESGROUP + "/waresgroup_choose_wares.jsp";
 	}
 	

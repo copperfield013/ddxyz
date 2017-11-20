@@ -45,22 +45,34 @@ define(function(require, exports, module){
 					return false;
 				}
 			}
-			var url = $this.attr('action')
-				;
-			//构造提交事件
-			var submitEvent = $.Event('cpf-submit');
-			var canceled = false;
-			submitEvent.doCancel = function(){canceled = true};
-			var result = $this.trigger(submitEvent, [formData, $this, page]);
-			try{
-				if(!canceled){
-					page.loadContent(url, undefined, formData);
-					$this.trigger('cpf-submitting', [formData, $this, page]);
+			var url = $this.attr('action'),
+				confirm = $this.attr('confirm'),
+				Dialog = require('dialog'),
+				_submit = function(){
+				//构造提交事件
+				var submitEvent = $.Event('cpf-submit');
+				var canceled = false;
+				submitEvent.doCancel = function(){canceled = true};
+				var result = $this.trigger(submitEvent, [formData, $this, page]);
+				try{
+					if(!canceled){
+						page.loadContent(url, undefined, formData);
+						$this.trigger('cpf-submitting', [formData, $this, page]);
+					}
+				}catch(e){
+					console.error(e);
+				}finally{
+					return false;
 				}
-			}catch(e){
-				console.error(e);
-			}finally{
-				return false;
+			};
+			if(confirm && Dialog){
+				Dialog.confirm(confirm, function(yes){
+					if(yes){
+						_submit();
+					}
+				});
+			}else{
+				return _submit();
 			}
 		}).filter('.validate-form').each(function(){
 			//初始化验证插件

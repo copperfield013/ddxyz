@@ -1,6 +1,7 @@
 package cn.sowell.ddxyz.model.kanteen.dao.impl;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -14,6 +15,7 @@ import cn.sowell.copframe.dao.utils.QueryUtils;
 import cn.sowell.copframe.dto.page.PageInfo;
 import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.ddxyz.model.kanteen.dao.KanteenWaresGroupDao;
+import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenWaresGroupWaresItem;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenChooseWaresListCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenWaresGroupCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.KanteenWaresGroupItem;
@@ -39,7 +41,7 @@ public class KanteenWaresGroupDaoImpl implements KanteenWaresGroupDao {
 				"		wg.c_disabled" +
 				"	FROM" +
 				"		t_waresgroup_base wg" +
-				"	LEFT JOIN t_waresgroup_wares w ON wg.id = w.group_id" +
+				"	LEFT JOIN t_waresgroup_wares w ON wg.id = w.group_id and w.c_disabled is null" +
 				"	where wg.merchant_id = :merchantId @condition" +
 				"	group by wg.id order by wg.create_time desc", 
 				KanteenWaresGroupItem.class, sFactory.getCurrentSession(), pageInfo, 
@@ -103,14 +105,36 @@ public class KanteenWaresGroupDaoImpl implements KanteenWaresGroupDao {
 				"		w.c_base_price," +
 				"		w.c_price_unit," +
 				"		wg.c_order," +
-				"		w.create_time" +
+				"		w.create_time, wg.id id" +
 				"	FROM" +
 				"		t_waresgroup_wares wg" +
 				"	LEFT JOIN t_wares_base w ON wg.wares_id = w.id" + 
-				"	where wg.group_id = :groupId order by wg.c_order asc", KanteenWaresGroupWaresItem.class, 
+				"	where wg.group_id = :groupId and wg.c_disabled is null order by wg.c_order asc", 
+				KanteenWaresGroupWaresItem.class, 
 				sFactory.getCurrentSession(), dQuery->{
 					dQuery.setParam("groupId", waresGroupId);
 		});
+	}
+	
+	@Override
+	public void updateGroupWaresItemOrder(PlainKanteenWaresGroupWaresItem item) {
+		String sql = "update t_waresgroup_wares set c_order = :order where id = :id";
+		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
+		query.setInteger("order", item.getOrder())
+			.setLong("id", item.getId())
+			.executeUpdate()
+			;
+	}
+	
+	@Override
+	public void disableGroupWaresItemOrder(Set<Long> itemIds) {
+		if(itemIds != null && itemIds.size() > 0){
+			String sql = "update t_waresgroup_wares set c_disabled = :status where id in (:itemIds)";
+			SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
+			query.setInteger("status", 1)
+				.setParameterList("itemIds", itemIds, StandardBasicTypes.LONG)
+				.executeUpdate();
+		}
 	}
 	
 }
