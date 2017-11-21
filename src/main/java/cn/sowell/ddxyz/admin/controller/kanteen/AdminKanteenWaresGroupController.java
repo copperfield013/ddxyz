@@ -130,7 +130,7 @@ public class AdminKanteenWaresGroupController {
 	}
 	@ResponseBody
 	@RequestMapping("/disable/{waresGroupId}")
-	public AjaxPageResponse disableWaresGroup(Long waresGroupId){
+	public AjaxPageResponse disableWaresGroup(@PathVariable Long waresGroupId){
 		try {
 			waresGroupService.disableWaresGroup(waresGroupId, true);
 			return AjaxPageResponse.REFRESH_LOCAL("操作成功");
@@ -141,7 +141,7 @@ public class AdminKanteenWaresGroupController {
 	
 	@ResponseBody
 	@RequestMapping("/enable/{waresGroupId}")
-	public AjaxPageResponse enableWaresGroup(Long waresGroupId){
+	public AjaxPageResponse enableWaresGroup(@PathVariable Long waresGroupId){
 		try {
 			waresGroupService.disableWaresGroup(waresGroupId, false);
 			return AjaxPageResponse.REFRESH_LOCAL("操作成功");

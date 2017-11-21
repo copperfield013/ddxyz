@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/jsp/common/base_empty.jsp"%>
-<div id="wares-list">
+<div id="waresgroup-list">
 	<nav style="padding: 1em 0" id="order-nav">
 		<form class="form-inline" action="admin/kanteen/waresgroup" >
 			<div class="form-group">
@@ -34,9 +34,9 @@
 					<td><fmt:formatDate value="${waresGroup.createTime }" pattern="yyyy-MM-dd HH:mm:ss"/></td>
 					<td>
 						<c:set var="disabled" value="${waresGroup.disabled == 1 }" />
-						<a class="waresgroup-${disabled? 'disable': 'enable' }">${disabled? '启用': '禁用' }</a>
+						<c:set var="operate" value="${disabled?'启用':'禁用' }" />
+						<a confirm="确认${operate }？" href="admin/kanteen/waresgroup/${disabled?'enable':'disable' }/${waresGroup.id}" >${operate }</a>
 					</td>
-					
 				</tr>
 			</c:forEach>
 		</tbody>
@@ -46,25 +46,8 @@
 <script>
 	$(function(){
 		seajs.use(['ajax', 'dialog', 'utils'], function(Ajax, Dialog, utils){
-			var $page = $('#wares-list');
+			var $page = $('#waresgroup-list');
 			console.log($page);
-			$('.wares-enable', $page).click(function(){
-				disableWares(this, 'enable');
-			});
-			$('.wares-disable', $page).click(function(){
-				disableWares(this, 'disable');
-			});
-			function disableWares(dom, disabled){
-				Dialog.confirm('确定' + (disabled == 'disable' ? '禁用': '启用'), function(yes){
-					if(yes){
-						var waresgroupId = $(dom).closest('tr').attr('data-id');
-						Ajax.ajax('admin/kanteen/waresgroup/' + disabled + '/' + waresgroupId, {}, {
-							page	: $page.getLocatePage()
-						});
-					}	
-				});
-				
-			}
 		});
 	});
 </script>

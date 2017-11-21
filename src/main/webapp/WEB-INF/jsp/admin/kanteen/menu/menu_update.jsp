@@ -1,59 +1,59 @@
 <%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/jsp/common/base_empty.jsp"%>
 <style>
-	#wares-update-${waresGroup.id } ol.wareses-container {
+	#menu-update-${menu.id } ol.waresgroup-container {
 	    margin: 1em;
 	    font-size: 1.2em;
 	}
-	#wares-update-${waresGroup.id } ol.wareses-container>li {
+	#menu-update-${menu.id } ol.waresgroup-container>li {
 	    margin: 0.5em 1em;
 	}
-	#wares-update-${waresGroup.id }  span.wares-operate{
+	#menu-update-${menu.id } span.waresgroup-operate{
 		margin-left: 1em;
 	}
-	#wares-update-${waresGroup.id }  .wareses-container li:HOVER span.wares-operate{
+	#menu-update-${menu.id }  .waresgroup-container li:HOVER span.waresgroup-operate{
 		display: inline;
 	}
-	#wares-update-${waresGroup.id }  .wareses-container li:FIRST-CHILD .order-up{
+	#menu-update-${menu.id } .waresgroup-container li:FIRST-CHILD .order-up{
 		display: none;
 	}
-	#wares-update-${waresGroup.id }  .wareses-container li:Last-child .order-down{
+	#menu-update-${menu.id } .waresgroup-container li:Last-child .order-down{
 		display: none;
 	}
-	#wares-update-${waresGroup.id }  span.wares-operate{
+	#menu-update-${menu.id } span.waresgroup-operate{
 		display: none;
 	}
-	#wares-update-${waresGroup.id } span.wares-operate .fa{
+	#menu-update-${menu.id } span.waresgroup-operate .fa{
 	    color: #666;
 	    cursor: pointer;
 	    margin-left: 0.2em;
 	}
-	#wares-update-${waresGroup.id } span.wares-operate .fa:HOVER{
+	#menu-update-${menu.id } span.waresgroup-operate .fa:HOVER{
 	    color: #00f;
 	}
-	#wares-update-${waresGroup.id } .wareses-operate{
+	#menu-update-${menu.id } .waresgroupes-operate{
 		text-align: center;
 	    font-size: 1.9em;
 	    color: #427fed;
 	}
-	#wares-update-${waresGroup.id } .wareses-operate>span{
+	#menu-update-${menu.id } .waresgroupes-operate>span{
 		cursor: pointer;
 	}
-	#wares-update-${waresGroup.id } span.fa.fa-trash-o.wares-del:HOVER{
+	#menu-update-${menu.id } span.fa.fa-trash-o.waresgroup-del:HOVER{
 		color: #00f;
 	}
 </style>
-<div id="wares-update-${waresGroup.id }">
+<div id="menu-update-${menu.id }">
 	<div class="page-body">
 		<div class="row">
 			<div class="col-lg-12">
-				<form class="bv-form form-horizontal validate-form" confirm="确认提交更改？" action="admin/kanteen/waresgroup/do_update">
-					<input type="hidden" name="id" value="${waresGroup.id }" />
+				<form class="bv-form form-horizontal validate-form" confirm="确认提交更改？" action="admin/kanteen/menu/do_update">
+					<input type="hidden" name="id" value="${menu.id }" />
 					<div class="form-group">
-						<label class="col-lg-2 control-label" for="name">商品组名称</label>
+						<label class="col-lg-2 control-label" for="name">菜单名称</label>
 						<div class="col-lg-3">
 							<input type="text" class="form-control" name="name" id="name" data-bv-notempty="true"
-								value="${waresGroup.name }"
+								value="${menu.name }"
 								data-bv-notempty-message="商品组名称不能为空" />
 						</div>
 					</div>
@@ -61,27 +61,27 @@
 						<label class="col-lg-2 control-label" for="desc">描述</label>
 						<div class="col-lg-3">
 							<input type="text" class="form-control" 
-								name="description" id="description" value="${waresGroup.description }"
+								name="description" id="description" value="${menu.description }"
 							 />
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-lg-2 control-label">商品</label>
+						<label class="col-lg-2 control-label">商品组</label>
 						<div class="col-lg-3">
-							<ol class="wareses-container" >
-								<c:forEach items="${waresList }" var="wares">
-									<li data-id="${wares.id }" data-waresId="${wares.waresId }">
-										<span class="wares-name">${wares.waresName }</span>
-										<span class="wares-operate">
+							<ol class="waresgroup-container" >
+								<c:forEach items="${waresGroupList }" var="waresGroup">
+									<li data-id="${waresGroup.menuGroupId }" data-groupId="${waresGroup.groupId }">
+										<span class="group-name">${waresGroup.groupName }</span>
+										<span class="waresgroup-operate">
 											<span class="fa fa-arrow-circle-o-up order-up"></span>
 											<span class="fa fa-arrow-circle-o-down order-down"></span>
-											<span class="fa fa-trash-o wares-del"></span>
+											<span class="fa fa-trash-o waresgroup-del"></span>
 										</span>
 									</li>
 								</c:forEach>
 							</ol>
-							<div class="wareses-operate">
-								<span class="fa fa-plus-circle" id="add-wares"></span>
+							<div class="waresgroupes-operate">
+								<span class="fa fa-plus-circle" id="add-group"></span>
 							</div>
 						</div>
 					</div>
@@ -99,47 +99,47 @@
 <script>
 	$(function(){
 		seajs.use(['ajax', 'dialog', 'utils'], function(Ajax, Dialog, utils){
-			var $page = $('#wares-update-${waresGroup.id}');
+			var $page = $('#menu-update-${menu.id}');
 			console.log($page);
 			
 			$('form', $page).on('cpf-submit', function(e, formData){
 				var count = 0;
-				$('.wareses-container li', $page).each(function(){
+				$('.waresgroup-container li', $page).each(function(){
 					var $this = $(this);
 					formData.append('id-' + count, $this.attr('data-id') || '');
-					formData.append('wares-id-' + count, $this.attr('data-waresId'));
+					formData.append('group-id-' + count, $this.attr('data-groupId'));
 					count++;
 				});
-				formData.append('wares-count', count);
+				formData.append('group-count', count);
 			});
 			
-			$('#add-wares', $page).click(function(){
+			$('#add-group', $page).click(function(){
 				var except = [];
-				var $container = $('.wareses-container', $page);
-				$('li[data-waresId]', $container).each(function(){
-					except.push($(this).attr('data-waresId'));
+				var $container = $('.waresgroup-container', $page);
+				$('li[data-groupId]', $container).each(function(){
+					except.push($(this).attr('data-groupId'));
 				});
-				Dialog.openDialog('admin/kanteen/waresgroup/choose_wares', '选择商品', 'choose_wares', {
+				Dialog.openDialog('admin/kanteen/menu/choose_waresgroup', '选择商品组', 'choose_waresgroup', {
 					reqParam	: {
-						except	: except,
-						mode	: 'multi'
+						exceptGroupIds	: except,
+						mode			: 'multi'
 					},
 					onSubmit: function(data){
 						var template = 
 							'<li>' +
-								'<span class="wares-name"></span>' +
-								'<span class="wares-operate">' + 
+								'<span class="group-name"></span>' +
+								'<span class="waresgroup-operate">' + 
 									'<span class="fa fa-arrow-circle-o-up order-up"></span>' +
 									'<span class="fa fa-arrow-circle-o-down order-down"></span>' +
-									'<span class="fa fa-trash-o wares-del"></span>' +
+									'<span class="fa fa-trash-o waresgroup-del"></span>' +
 								'</span>' +
 							'</li>';
 						var $temp = $(template);
 						for(var key in data){
-							var wares = data[key];
+							var group = data[key];
 							var $li = $temp.clone();
-							$li.attr('data-waresId', wares.id);
-							$('.wares-name', $li).text(wares.name);
+							$li.attr('data-groupId', group.waresGroupId);
+							$('.group-name', $li).text(group.waresGroupName);
 							$container.append($li);
 						}
 					}

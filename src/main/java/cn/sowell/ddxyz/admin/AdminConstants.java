@@ -66,4 +66,8 @@ public interface AdminConstants {
 
 
 	final String PATH_KANTEEN_WARESGROUP = PATH_KANTEEN + "/waresgroup";
+
+
+
+	final String PATH_KANTEEN_MENU = PATH_KANTEEN + "/menu";
 }

@@ -1,19 +1,11 @@
-package cn.sowell.ddxyz.model.kanteen.pojo;
+package cn.sowell.ddxyz.model.kanteen.pojo.adminItem;
 
 import java.util.Date;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
 
-@Entity
-@Table(name="t_menu_base")
-public class PlainKanteenMenu {
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+public class KanteenMenuItem {
+	@Column(name="id")
 	private Long id;
 	
 	@Column(name="c_name")
@@ -22,11 +14,8 @@ public class PlainKanteenMenu {
 	@Column(name="c_desc")
 	private String description;
 	
-	@Column(name="c_disabled")
-	private Integer disabled;
-	
-	@Column(name="merchant_id")
-	private Long merchantId;
+	private Integer groupCount;
+	private Integer waresCount;
 	
 	@Column(name="create_time")
 	private Date createTime;
@@ -34,10 +23,8 @@ public class PlainKanteenMenu {
 	@Column(name="update_time")
 	private Date updateTime;
 	
-	@Column(name="update_user_id")
-	private Long updateUserId;
-	
-	
+	@Column(name="c_disabled")
+	private Integer disabled;
 	public Long getId() {
 		return id;
 	}
@@ -56,17 +43,17 @@ public class PlainKanteenMenu {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public Integer getDisabled() {
-		return disabled;
+	public Integer getGroupCount() {
+		return groupCount;
 	}
-	public void setDisabled(Integer disabled) {
-		this.disabled = disabled;
+	public void setGroupCount(Integer groupCount) {
+		this.groupCount = groupCount;
 	}
-	public Long getMerchantId() {
-		return merchantId;
+	public Integer getWaresCount() {
+		return waresCount;
 	}
-	public void setMerchantId(Long merchantId) {
-		this.merchantId = merchantId;
+	public void setWaresCount(Integer waresCount) {
+		this.waresCount = waresCount;
 	}
 	public Date getCreateTime() {
 		return createTime;
@@ -74,17 +61,16 @@ public class PlainKanteenMenu {
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
-	public Long getUpdateUserId() {
-		return updateUserId;
-	}
-	public void setUpdateUserId(Long updateUserId) {
-		this.updateUserId = updateUserId;
-	}
 	public Date getUpdateTime() {
 		return updateTime;
 	}
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 	}
-	
+	public Integer getDisabled() {
+		return disabled;
+	}
+	public void setDisabled(Integer disabled) {
+		this.disabled = disabled;
+	}
 }

@@ -34,7 +34,7 @@
 				</a>
 			</li>
 			<li>
-				<a href="#" class="tab" target="" title="菜单"> 
+				<a href="admin/kanteen/menu" class="tab" target="menu_list" title="菜单"> 
 					<span class="menu-text">菜单</span>
 				</a>
 			</li>

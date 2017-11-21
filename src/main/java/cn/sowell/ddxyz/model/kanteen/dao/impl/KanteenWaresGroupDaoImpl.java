@@ -62,7 +62,7 @@ public class KanteenWaresGroupDaoImpl implements KanteenWaresGroupDao {
 		String sql = "update t_waresgroup_base set c_disabled = :toDisable where id = :waresgroupId";
 		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
 		query.setLong("waresgroupId", waresGroupId);
-		query.setParameter("toDisable", toDisable?1:null, StandardBasicTypes.LONG);
+		query.setParameter("toDisable", toDisable?1:null, StandardBasicTypes.INTEGER);
 		return query.executeUpdate();
 	}
 	
