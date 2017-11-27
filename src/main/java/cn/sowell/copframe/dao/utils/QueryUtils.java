@@ -24,8 +24,8 @@ public class QueryUtils {
 			PageInfo pageInfo) {
 		if(query != null && pageInfo != null){
 			if(pageInfo.getCount() != null && pageInfo.getPageSize() != null){
-				if(pageInfo.getCount() <= (pageInfo.getPageNo() - 1) * pageInfo.getPageSize()){
-					pageInfo.setPageNo((pageInfo.getCount() - 1) / pageInfo.getPageSize());
+				if(pageInfo.getPageNo() > (pageInfo.getCount() / pageInfo.getPageSize()) + 1){
+					pageInfo.setPageNo((pageInfo.getCount() / pageInfo.getPageSize()) + 1);
 				}
 			}
 			query.setFirstResult(pageInfo.getFirstIndex());
@@ -51,6 +51,21 @@ public class QueryUtils {
 		if(pageInfo.getCount() > 0){
 			SQLQuery query = dQuery.createSQLQuery(session, false, null);
 			query.setResultTransformer(HibernateRefrectResultTransformer.getInstance(itemClass));
+			setPagingParamWithCriteria(query, pageInfo);
+			return query.list();
+		}else{
+			return new ArrayList<T>();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T> List<T> pagingQuery(String hql, Session session, PageInfo pageInfo, Consumer<DeferedParamQuery> consumer){
+		DeferedParamQuery dQuery = new DeferedParamQuery(hql);
+		consumer.accept(dQuery);
+		Query countQuery = dQuery.createQuery(session, false, new WrapForCountFunction());
+		pageInfo.setCount(FormatUtils.toInteger(countQuery.uniqueResult()));
+		if(pageInfo.getCount() > 0){
+			Query query = dQuery.createQuery(session, false, null);
 			setPagingParamWithCriteria(query, pageInfo);
 			return query.list();
 		}else{

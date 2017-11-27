@@ -4,6 +4,7 @@ import java.util.List;
 
 import cn.sowell.copframe.dto.page.PageInfo;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMenu;
+import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMenuWaresGroup;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenChooseWaresGroupListCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenMenuCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.KanteenMenuItem;
@@ -46,7 +47,7 @@ public interface KanteenMenuService {
 	 * @param origin
 	 * @param items
 	 */
-	void updateMenu(PlainKanteenMenu origin, KanteenMenuWaresGroupItem[] items);
+	void updateMenu(PlainKanteenMenu origin, PlainKanteenMenuWaresGroup[] items);
 	
 	/**
 	 * 将菜单的状态设置为启用/禁用

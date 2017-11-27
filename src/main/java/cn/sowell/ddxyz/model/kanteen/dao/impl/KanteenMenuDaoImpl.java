@@ -19,8 +19,10 @@ import cn.sowell.copframe.dao.deferedQuery.KeyValueMapResultTransformer;
 import cn.sowell.copframe.dao.utils.QueryUtils;
 import cn.sowell.copframe.dto.page.PageInfo;
 import cn.sowell.copframe.utils.CollectionUtils;
+import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.ddxyz.model.kanteen.dao.KanteenMenuDao;
+import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMenuWaresGroup;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenChooseWaresGroupListCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenMenuCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.KanteenMenuItem;
@@ -48,7 +50,7 @@ public class KanteenMenuDaoImpl implements KanteenMenuDao{
 				DeferedParamSnippet snippet = dQuery.createSnippet("condition", null);
 				if(TextUtils.hasText(criteria.getName())){
 					snippet.append("and m.c_name like :name");
-					dQuery.setParam("name", criteria.getName());
+					dQuery.setParam("name", "%" + criteria.getName() + "%");
 				}
 		});
 		LinkedHashSet<Long> menuIdSet = CollectionUtils.toSet(list, item->item.getId());
@@ -56,8 +58,8 @@ public class KanteenMenuDaoImpl implements KanteenMenuDao{
 			Map<Long, Integer> menuWaresGroupCountMap = getMenuWaresGroupCountMap(menuIdSet),
 								menuWaresCountMap =  getMenuWaresCountMap(menuIdSet);
 			list.forEach(item->{
-				item.setGroupCount(menuWaresGroupCountMap.get(item.getId()));
-				item.setWaresCount(menuWaresCountMap.get(item.getId()));
+				item.setGroupCount(FormatUtils.coalesce(menuWaresGroupCountMap.get(item.getId()), 0));
+				item.setWaresCount(FormatUtils.coalesce(menuWaresCountMap.get(item.getId()), 0));
 			});
 		}
 		
@@ -127,11 +129,11 @@ public class KanteenMenuDaoImpl implements KanteenMenuDao{
 	}
 	
 	@Override
-	public void updateMenuWaresGroupItemOrder(KanteenMenuWaresGroupItem item) {
+	public void updateMenuWaresGroupItemOrder(PlainKanteenMenuWaresGroup item) {
 		String sql = "update t_menu_waresgroup set c_order = :order where id = :id";
 		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
 		query.setInteger("order", item.getOrder())
-				.setLong("id", item.getMenuGroupId());
+				.setLong("id", item.getId());
 		query.executeUpdate();
 	}
 	
@@ -153,9 +155,10 @@ public class KanteenMenuDaoImpl implements KanteenMenuDao{
 	public void disbaleMenu(Long menuId, boolean toDisable) {
 		String sql = "update t_menu_base set c_disabled = :toDisable, update_time = :now where id = :menuId";
 		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
-		query.setLong("menuid", menuId)
+		query.setLong("menuId", menuId)
 				.setTimestamp("now", new Date())
-				.setParameter("toDisable", toDisable? 1: null, StandardBasicTypes.INTEGER);
+				.setParameter("toDisable", toDisable? 1: null, StandardBasicTypes.INTEGER)
+				.executeUpdate();
 	}
 
 	@Override

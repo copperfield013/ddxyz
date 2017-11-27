@@ -78,6 +78,11 @@ public class HibernateRefrectResultTransformer<T> implements ResultTransformer{
 		return cTrans.transformList(collection);
 	}
 	
+	public T build(SimpleMapWrapper mapWrapper){
+		return cTrans.build(mapWrapper);
+	}
+	
+	
 	private static Map<Class<?>, HibernateRefrectResultTransformer<?>> instanceMap = new HashMap<Class<?>, HibernateRefrectResultTransformer<?>>();
 	@SuppressWarnings("unchecked")
 	public static <C> HibernateRefrectResultTransformer<C> getInstance(Class<C> clazz){

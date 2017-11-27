@@ -15,6 +15,7 @@ import cn.sowell.copframe.utils.CollectionUtils;
 import cn.sowell.ddxyz.model.common.dao.NormalOperateDao;
 import cn.sowell.ddxyz.model.kanteen.dao.KanteenMenuDao;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMenu;
+import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMenuWaresGroup;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenChooseWaresGroupListCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenMenuCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.KanteenMenuItem;
@@ -58,21 +59,21 @@ public class KanteenMenuServiceImpl implements KanteenMenuService{
 	
 	@Override
 	public void updateMenu(PlainKanteenMenu origin,
-			KanteenMenuWaresGroupItem[] items) {
+			PlainKanteenMenuWaresGroup[] items) {
 		origin.setUpdateTime(new Date());
 		nDao.update(origin);
 		List<KanteenMenuWaresGroupItem> originItems = mDao.getMenuWaresGroups(origin.getId());
 		
 		Map<Long, KanteenMenuWaresGroupItem> originItemMap = CollectionUtils.toMap(originItems, item->item.getMenuGroupId());
-		Set<KanteenMenuWaresGroupItem> toUpdate = new HashSet<KanteenMenuWaresGroupItem>();
-		Set<KanteenMenuWaresGroupItem> toCreate = new HashSet<KanteenMenuWaresGroupItem>();
+		Set<PlainKanteenMenuWaresGroup> toUpdate = new HashSet<PlainKanteenMenuWaresGroup>();
+		Set<PlainKanteenMenuWaresGroup> toCreate = new HashSet<PlainKanteenMenuWaresGroup>();
 		Set<Long> toDelete = CollectionUtils.toSet(originItems, item->item.getMenuGroupId());
 		if(items != null){
-			for (KanteenMenuWaresGroupItem item : items) {
-				if(item.getGroupId() != null){
-					item.setGroupId(origin.getId());
-					if(item.getMenuGroupId() != null){
-						KanteenMenuWaresGroupItem originItem = originItemMap.get(item.getMenuGroupId());
+			for (PlainKanteenMenuWaresGroup item : items) {
+				if(item.getWaresgourpId() != null){
+					item.setMenuId(origin.getId());
+					if(item.getId() != null){
+						KanteenMenuWaresGroupItem originItem = originItemMap.get(item.getId());
 						if(originItem != null){
 							if(!item.getOrder().equals(originItem.getOrder())){
 								toUpdate.add(item);

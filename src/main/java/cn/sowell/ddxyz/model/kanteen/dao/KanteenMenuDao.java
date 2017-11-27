@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import cn.sowell.copframe.dto.page.PageInfo;
+import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMenuWaresGroup;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenChooseWaresGroupListCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenMenuCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.KanteenMenuItem;
@@ -33,7 +34,7 @@ public interface KanteenMenuDao {
 	 * @param item
 	 * @return
 	 */
-	void updateMenuWaresGroupItemOrder(KanteenMenuWaresGroupItem item);
+	void updateMenuWaresGroupItemOrder(PlainKanteenMenuWaresGroup item);
 
 	/**
 	 * 将指定的所有菜单-商品组的关联的状态设置为禁用

@@ -70,4 +70,8 @@ public interface AdminConstants {
 
 
 	final String PATH_KANTEEN_MENU = PATH_KANTEEN + "/menu";
+
+
+
+	final String PATH_KANTEEN_DELIVERY = PATH_KANTEEN + "/delivery";
 }

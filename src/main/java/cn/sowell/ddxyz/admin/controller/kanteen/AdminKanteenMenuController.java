@@ -19,6 +19,7 @@ import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.copframe.weixin.common.utils.WxUtils;
 import cn.sowell.ddxyz.admin.AdminConstants;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMenu;
+import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMenuWaresGroup;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenChooseWaresGroupListCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenMenuCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.KanteenMenuItem;
@@ -75,7 +76,7 @@ public class AdminKanteenMenuController {
 		try {
 			menu.setUpdateUserId((Long) WxUtils.getCurrentUser(UserIdentifier.class).getId());
 			menuService.saveMenu(menu);
-			return AjaxPageResponse.CLOSE_AND_REFRESH_PAGE("保存成功", "menu_id");
+			return AjaxPageResponse.CLOSE_AND_REFRESH_PAGE("保存成功", "menu_list");
 		} catch (Exception e) {
 			logger.error("添加菜单时发生错误", e);
 			return AjaxPageResponse.FAILD("保存失败");
@@ -93,13 +94,14 @@ public class AdminKanteenMenuController {
 			origin.setUpdateUserId((Long) WxUtils.getCurrentUser(UserIdentifier.class).getId());
 			try {
 				Integer count = FormatUtils.toInteger(request.getParameter("group-count"));
-				KanteenMenuWaresGroupItem[] items = null ;
+				
+				PlainKanteenMenuWaresGroup[] items = null;
 				if(count != null && count > 0){
-					items = new KanteenMenuWaresGroupItem[count];
+					items = new PlainKanteenMenuWaresGroup[count];
 					for (int i = 0; i < count; i++) {
-						items[i] = new KanteenMenuWaresGroupItem();
-						items[i].setGroupId(FormatUtils.toLong(request.getParameter("group-id-" + i)));
-						items[i].setMenuGroupId(FormatUtils.toLong(request.getParameter("id-" + i)));
+						items[i] = new PlainKanteenMenuWaresGroup();
+						items[i].setWaresgourpId(FormatUtils.toLong(request.getParameter("group-id-" + i)));
+						items[i].setId(FormatUtils.toLong(request.getParameter("id-" + i)));
 						items[i].setOrder(i);
 					}
 				}
@@ -112,22 +114,26 @@ public class AdminKanteenMenuController {
 		return AjaxPageResponse.FAILD("修改失败");
 	}
 	
+	@ResponseBody
 	@RequestMapping("/disable/{menuId}")
 	public AjaxPageResponse disableMenu(@PathVariable Long menuId){
 		try {
 			menuService.disableMenu(menuId, true);
 			return AjaxPageResponse.REFRESH_LOCAL("操作成功");
 		} catch (Exception e) {
+			logger.error("禁用菜单时发生错误", e);
 			return AjaxPageResponse.FAILD("操作失败");
 		}
 	}
 	
+	@ResponseBody
 	@RequestMapping("/enable/{menuId}")
 	public AjaxPageResponse enableMenu(@PathVariable Long menuId){
 		try {
 			menuService.disableMenu(menuId, false);
 			return AjaxPageResponse.REFRESH_LOCAL("操作成功");
 		} catch (Exception e) {
+			logger.error("禁用菜单时发生错误", e);
 			return AjaxPageResponse.FAILD("操作失败");
 		}
 	}

@@ -23,6 +23,12 @@ public class KanteenDistributionItem {
 	@Column(name="c_disabled")
 	private Integer disabled;
 	
+	@Column(name="create_time")
+	private Date createTime;
+	
+	@Column(name="update_time")
+	private Date updateTime;
+	
 	public Long getId() {
 		return id;
 	}
@@ -58,5 +64,17 @@ public class KanteenDistributionItem {
 	}
 	public void setDisabled(Integer disabled) {
 		this.disabled = disabled;
+	}
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+	public Date getCreateTime() {
+		return createTime;
+	}
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
 	}
 }
