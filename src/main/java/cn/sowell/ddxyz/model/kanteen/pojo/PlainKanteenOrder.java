@@ -52,6 +52,8 @@ public class PlainKanteenOrder {
 
 	public static final String CANSTATUS_MISSED = "missed";
 
+	public static final String CANSTATUS_CLOSED = "closed";
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;

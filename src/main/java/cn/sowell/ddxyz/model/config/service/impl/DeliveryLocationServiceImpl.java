@@ -7,7 +7,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import cn.sowell.copframe.dto.page.CommonPageInfo;
+import cn.sowell.copframe.dto.page.PageInfo;
 import cn.sowell.ddxyz.model.common.pojo.PlainLocation;
 import cn.sowell.ddxyz.model.config.dao.DeliveryLocationDao;
 import cn.sowell.ddxyz.model.config.pojo.criteria.DeliveryLocationCriteria;
@@ -20,7 +20,7 @@ public class DeliveryLocationServiceImpl implements DeliveryLocationService {
 	DeliveryLocationDao deliveryLocationDao;
 
 	@Override
-	public List<PlainLocation> getPlainLocationPageList(DeliveryLocationCriteria criteria, CommonPageInfo pageInfo) {
+	public List<PlainLocation> getPlainLocationPageList(DeliveryLocationCriteria criteria, PageInfo pageInfo) {
 		List<PlainLocation> list = deliveryLocationDao.getPlainLocationPageList(criteria, pageInfo);
 		return list;
 	}

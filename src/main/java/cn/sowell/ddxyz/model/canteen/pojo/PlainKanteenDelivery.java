@@ -1,6 +1,8 @@
 package cn.sowell.ddxyz.model.canteen.pojo;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,9 +18,22 @@ public class PlainKanteenDelivery {
 	public static final int PAYWAY_WXPAY = 1;
 	public static final int PAYWAY_SPOT = 2;
 	public static final int PAYWAY_WXPAY_AND_SPOT = 3;
+	@SuppressWarnings("serial")
+	public static final Map<Integer, String> PAYWAY_MAP = new HashMap<Integer, String>(){
+		{
+			this.put(PAYWAY_WXPAY, "微信支付");
+			this.put(PAYWAY_SPOT, "现场支付");
+			this.put(PAYWAY_WXPAY_AND_SPOT, "微信/现场支付");
+		}
+	};
+	
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
+	
+	@Column(name="c_code")
+	private String code;
 	
 	@Column(name="distribution_id")
 	private Long distributionId;
@@ -124,6 +139,12 @@ public class PlainKanteenDelivery {
 	}
 	public void setUpdateUserId(Long updateUserId) {
 		this.updateUserId = updateUserId;
+	}
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
 	}
 	
 }

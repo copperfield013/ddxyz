@@ -1,15 +1,20 @@
 package cn.sowell.copframe.dao.utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 
+import cn.sowell.copframe.dao.deferedQuery.ColumnMapResultTransformer;
 import cn.sowell.copframe.dao.deferedQuery.DeferedParamQuery;
 import cn.sowell.copframe.dao.deferedQuery.HibernateRefrectResultTransformer;
+import cn.sowell.copframe.dao.deferedQuery.SimpleMapWrapper;
 import cn.sowell.copframe.dao.deferedQuery.sqlFunc.WrapForCountFunction;
 import cn.sowell.copframe.dto.page.PageInfo;
 import cn.sowell.copframe.utils.FormatUtils;
@@ -72,5 +77,31 @@ public class QueryUtils {
 			return new ArrayList<T>();
 		}
 	}
+	
+	
+	@SuppressWarnings("serial")
+	public static <K, V> Map<K, V> queryMap(String sql, Session session, Function<SimpleMapWrapper, K> keyGetter, Function<SimpleMapWrapper, V> valueGetter, Consumer<DeferedParamQuery> consumer){
+		Map<K, V> groupMap = new HashMap<K, V>();
+		DeferedParamQuery dQuery = new DeferedParamQuery(sql);
+		consumer.accept(dQuery);
+		SQLQuery query = dQuery.createSQLQuery(session, false, null);
+		query.setResultTransformer(new ColumnMapResultTransformer<Void>() {
+			
+			@Override
+			protected Void build(SimpleMapWrapper mapWrapper) {
+				groupMap.put(keyGetter.apply(mapWrapper), valueGetter.apply(mapWrapper));
+				return null;
+			}
+		});
+		query.list();
+		return groupMap;
+	}
+	
+	public static <K, V> Map<K, V> queryMap(String sql, Session session, Function<SimpleMapWrapper, K> keyGetter, Class<V> valueClass, Consumer<DeferedParamQuery> consumer){
+		return queryMap(sql, session, keyGetter,
+				mapWrapper->HibernateRefrectResultTransformer.getInstance(valueClass).build(mapWrapper),
+				consumer);
+	}
+	
 	
 }

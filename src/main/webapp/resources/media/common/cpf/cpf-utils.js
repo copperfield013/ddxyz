@@ -286,6 +286,26 @@ define(function(require, exports){
                         '七月', '八月', '九月', '十月', '十一月', '十二月' ]
 			});
 		},
+		daterangepicker: function($dom, _param){
+			var defaultParam = {
+					format 				: 'YYYY-MM-DD HH:mm:ss',
+					timePicker			: true,
+					timePicker12Hour	: false,
+					timePickerIncrement : 5,
+					separator			: '~',
+					locale				: {
+						applyLabel	: '确定',
+		                cancelLabel: '取消',
+		                fromLabel: '从',
+		                toLabel: '到',
+						daysOfWeek : [ '日', '一', '二', '三', '四', '五', '六' ],  
+		                monthNames : [ '一月', '二月', '三月', '四月', '五月', '六月',  
+	                        '七月', '八月', '九月', '十月', '十一月', '十二月' ]
+				}
+			};
+			var param = $.extend({}, defaultParam, _param);
+			return $dom.daterangepicker(param);
+		},
 		triggerInField	: function(fieldName, eventName, args, target){
 			if(typeof fieldName === 'string' && typeof eventName === 'string'){
 				var eventMap = eventFieldMap[fieldName];

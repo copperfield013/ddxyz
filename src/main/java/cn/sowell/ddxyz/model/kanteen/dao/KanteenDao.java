@@ -229,6 +229,14 @@ public interface KanteenDao {
 	 */
 	PlainKanteenCancelOption getOrderCancelOption(Long orderId);
 
+	/**
+	 * 获得商户在该时间点的默认配销
+	 * @param id
+	 * @param date
+	 * @return
+	 */
+	PlainKanteenDistribution getDefaultDistribution(Long merchantId, Date date);
+
 	
 
 }

@@ -97,4 +97,10 @@ public class KanteenWaresGroupServiceImpl implements KanteenWaresGroupService{
 		return wgDao.getGroupWares(waresGroupId);
 	}
 	
+	@Override
+	public Map<Long, PlainKanteenWaresGroup> getGroupMapByGroupWaresIds(
+			Set<Long> groupWaresIds) {
+		return wgDao.getGroupMapByGroupWaresIds(groupWaresIds);
+	}
+	
 }

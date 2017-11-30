@@ -22,8 +22,11 @@ import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenDistribution;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMerchant;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenDistributionChooseMenuCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.KanteenDistributionItem;
+import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.KanteenMenuOrderStat;
+import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.KanteenMenuOrderStatItem;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.waresgroup.KanteenMenuItemForChoose;
 import cn.sowell.ddxyz.model.kanteen.service.KanteenDistributionService;
+import cn.sowell.ddxyz.model.kanteen.service.KanteenMenuService;
 import cn.sowell.ddxyz.model.kanteen.service.KanteenMerchantService;
 
 @Controller
@@ -35,6 +38,9 @@ public class AdminKanteenDistributionController {
 	
 	@Resource
 	KanteenDistributionService distributionService;
+	
+	@Resource
+	KanteenMenuService menuService;
 	
 	@Resource
 	FrameDateFormat dateFormat;
@@ -66,19 +72,24 @@ public class AdminKanteenDistributionController {
 		distribution.setSaveProduct(saveProduct == null? null: 1);
 		try {
 			distributionService.saveDistribution(distribution);
-			return AjaxPageResponse.CLOSE_AND_REFRESH_PAGE("保存成功", "distribution_id");
+			return AjaxPageResponse.CLOSE_AND_REFRESH_PAGE("保存成功", "distribution_list");
 		} catch (Exception e) {
 			logger.error("保存配销时发生错误", e);
 			return AjaxPageResponse.FAILD("保存失败");
 		}
 	}
 	
-	
-	@RequestMapping("/update/{distributionId}")
-	public String upate(@PathVariable Long distributionId, Model model){
+	@RequestMapping("/detail/{distributionId}")
+	public String detail(@PathVariable Long distributionId, PageInfo pageInfo, Model model){
 		PlainKanteenDistribution distribution = distributionService.getDistribution(distributionId);
+		//配销菜单内所有产品的统计
+		List<KanteenMenuOrderStatItem> orderStatItems = distributionService.queryMenuOrderStats(distributionId, pageInfo);
+		//配销的订单状态统计
+		KanteenMenuOrderStat stat = distributionService.getDistributionOrderStat(distributionId);
 		model.addAttribute("distribution", distribution);
-		return AdminConstants.PATH_KANTEEN_DISTRIBUTION + "/distribution_update.jsp";
+		model.addAttribute("orderStatItems", orderStatItems);
+		model.addAttribute("stat", stat);
+		return AdminConstants.PATH_KANTEEN_DISTRIBUTION + "/distribution_detail.jsp";
 	}
 	
 	
@@ -106,7 +117,7 @@ public class AdminKanteenDistributionController {
 			;
 		
 		model.addAttribute("tpage", tpage);
-		return AdminConstants.PATH_BASE + "/common/choose_table.jsp";
+		return AdminConstants.PATH_CHOOSE_TABLE;
 	}
 	
 	

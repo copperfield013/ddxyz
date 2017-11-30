@@ -12,9 +12,11 @@ import org.hibernate.SessionFactory;
 import org.hibernate.type.StandardBasicTypes;
 import org.springframework.stereotype.Repository;
 
+import cn.sowell.copframe.dao.deferedQuery.DeferedParamSnippet;
 import cn.sowell.copframe.dao.deferedQuery.KeyValueMapResultTransformer;
 import cn.sowell.copframe.dao.utils.QueryUtils;
 import cn.sowell.copframe.dto.page.PageInfo;
+import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainKanteenDelivery;
 import cn.sowell.ddxyz.model.kanteen.dao.KanteenDeliveryDao;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenOrder;
@@ -30,10 +32,15 @@ public class KanteenDeliveryDaoImpl implements KanteenDeliveryDao{
 	public List<PlainKanteenDelivery> queryDeliveries(
 			KanteenDeliveryCriteria criteria, PageInfo pageInfo) {
 		return QueryUtils.pagingQuery(
-				"from PlainKanteenDelivery d where d.merchantId = :merchantId order by d.updateTime desc", 
+				"from PlainKanteenDelivery d where d.merchantId = :merchantId @condition order by d.updateTime desc", 
 				sFactory.getCurrentSession(), pageInfo, 
 				dQuery->{
 					dQuery.setParam("merchantId", criteria.getMerchantId());
+					DeferedParamSnippet snippet = dQuery.createSnippet("condition", null);
+					if(criteria.getDistributionId() != null){
+						snippet.append("and d.distributionId = :distributionId");
+						dQuery.setParam("distributionId", criteria.getDistributionId());
+					}
 		});
 	}
 	
@@ -44,7 +51,7 @@ public class KanteenDeliveryDaoImpl implements KanteenDeliveryDao{
 					"		o.delivery_id," +
 					"		count(o.id) order_count" +
 					"	FROM t_order_base o" +
-					"	WHERE o.c_status is not null and o.c_status <> :defaultStatus and c.c_canceled_status is null and o.delivery_id IN (:deliveryIds)" +
+					"	WHERE o.c_status is not null and o.c_status <> :defaultStatus and o.c_canceled_status is null and o.delivery_id IN (:deliveryIds)" +
 					"	GROUP BY o.delivery_id";
 			
 			SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
@@ -61,4 +68,13 @@ public class KanteenDeliveryDaoImpl implements KanteenDeliveryDao{
 		
 	}
 
+	@Override
+	public String getLastCode(Long merchantId) {
+		String sql = "select d.c_code from t_delivery_base d where d.merchant_id = :merchantId and d.c_code is not null order by d.create_time desc";
+		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
+		query.setLong("merchantId", merchantId);
+		query.setMaxResults(1);
+		return FormatUtils.toString(query.uniqueResult());
+	}
+	
 }

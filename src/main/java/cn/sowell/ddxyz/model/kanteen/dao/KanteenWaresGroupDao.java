@@ -1,9 +1,11 @@
 package cn.sowell.ddxyz.model.kanteen.dao;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import cn.sowell.copframe.dto.page.PageInfo;
+import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenWaresGroup;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenWaresGroupWaresItem;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenChooseWaresListCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenWaresGroupCriteria;
@@ -54,5 +56,13 @@ public interface KanteenWaresGroupDao {
 	 * @param itemIds
 	 */
 	void disableGroupWaresItemOrder(Set<Long> itemIds);
+	
+	/**
+	 * 
+	 * @param groupWaresIds
+	 * @return
+	 */
+	Map<Long, PlainKanteenWaresGroup> getGroupMapByGroupWaresIds(
+			Set<Long> groupWaresIds);
 
 }

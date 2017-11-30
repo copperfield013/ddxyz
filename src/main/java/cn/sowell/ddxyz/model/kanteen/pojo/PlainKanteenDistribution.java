@@ -15,6 +15,9 @@ public class PlainKanteenDistribution {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
+
+	@Column(name="c_code")
+	private String code;
 	
 	@Column(name="c_start_time")
 	private Date startTime;
@@ -102,5 +105,11 @@ public class PlainKanteenDistribution {
 	}
 	public void setSaveProduct(Integer saveProduct) {
 		this.saveProduct = saveProduct;
+	}
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
 	}
 }

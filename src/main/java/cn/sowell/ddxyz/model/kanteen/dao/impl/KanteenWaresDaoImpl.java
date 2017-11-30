@@ -1,9 +1,13 @@
 package cn.sowell.ddxyz.model.kanteen.dao.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
+import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.SessionFactory;
 import org.hibernate.type.StandardBasicTypes;
@@ -12,8 +16,10 @@ import org.springframework.stereotype.Repository;
 import cn.sowell.copframe.dao.deferedQuery.DeferedParamSnippet;
 import cn.sowell.copframe.dao.utils.QueryUtils;
 import cn.sowell.copframe.dto.page.PageInfo;
+import cn.sowell.copframe.utils.CollectionUtils;
 import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.ddxyz.model.kanteen.dao.KanteenWaresDao;
+import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenWares;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenWaresCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.KanteenWaresItem;
 
@@ -95,6 +101,19 @@ public class KanteenWaresDaoImpl implements KanteenWaresDao {
 			query.setParameter("disabled", null, StandardBasicTypes.INTEGER);
 		}
 		return query.executeUpdate();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Map<Long, PlainKanteenWares> getWaresMap(Set<Long> waresIds) {
+		if(waresIds != null && !waresIds.isEmpty()){
+			String hql = "from PlainKanteenWares w where w.id in (:waresIds)";
+			Query query = sFactory.getCurrentSession().createQuery(hql);
+			query.setParameterList("waresIds", waresIds);
+			List<PlainKanteenWares> list = query.list();
+			return CollectionUtils.toMap(list, wares->wares.getId());
+		}
+		return new HashMap<Long, PlainKanteenWares>();
 	}
 
 }

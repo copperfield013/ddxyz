@@ -23,5 +23,12 @@ public interface KanteenDeliveryService {
 	 * @param delivery
 	 */
 	void saveDelivery(PlainKanteenDelivery delivery);
+
+	/**
+	 * 根据配送id获得配送对象
+	 * @param deliveryId
+	 * @return
+	 */
+	PlainKanteenDelivery getDelivery(Long deliveryId);
 	
 }

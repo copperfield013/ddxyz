@@ -24,7 +24,6 @@ import cn.sowell.ddxyz.admin.controller.canteen.PlainCanteenOrderStat;
 import cn.sowell.ddxyz.model.canteen.dao.CanteenManageDao;
 import cn.sowell.ddxyz.model.canteen.pojo.CanteenOrderUpdateItem;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainCanteenOrder;
-import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenCriteria;
 import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenOrdersCriteria;
 import cn.sowell.ddxyz.model.canteen.pojo.criteria.CanteenWeekTableCriteria;
 import cn.sowell.ddxyz.model.canteen.pojo.item.CanteenDeliveryOrdersItem;

@@ -172,6 +172,15 @@ public interface KanteenService {
 	 */
 	void cancelOrder(WeiXinUser user, Long orderId);
 
+	/**
+	 * 获得该时间下，商户默认的配销
+	 * @param merchant
+	 * @param date
+	 * @return
+	 */
+	PlainKanteenDistribution getDefaultDistribution(
+			PlainKanteenMerchant merchant, Date date);
+
 
 	
 }

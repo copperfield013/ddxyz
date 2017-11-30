@@ -156,7 +156,7 @@ define(function(require, exports, module){
 					$title.remove();
 					var __title = $title.text();
 					if(__title){
-						_title = title;
+						_title = __title;
 					}
 				}
 				this.getContent().html(content.html());

@@ -358,3 +358,6 @@ nav{
     line-height: 2em;
     width: 95%;
 }
+input[type="text"][readonly="readonly"].dtrangepicker{
+	cursor: text;
+}

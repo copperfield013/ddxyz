@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -63,6 +64,12 @@ public class KanteenWaresServiceImpl implements KanteenWaresService{
 		if(wDao.disableWares(waresId, disabled) != 1) {
 			throw new RuntimeException("更新商品禁用状态失败");
 		}
+	}
+	
+	@Override
+	public Map<Long, PlainKanteenWares> getWaresMap(Set<Long> waresIds) {
+		return wDao.getWaresMap(waresIds);
+		
 	}
 
 }

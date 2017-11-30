@@ -37,7 +37,7 @@
 					<td>
 						<c:set var="disabled" value="${menu.disabled == 1 }" />
 						<c:set var="operate" value="${disabled?'启用':'禁用' }" />
-						<a confirm="确认${operate }？" href="admin/kanteen/menu/${disabled?'enable':'disable' }/${waresGroup.id}" >${operate }</a>
+						<a confirm="确认${operate }？" href="admin/kanteen/menu/${disabled?'enable':'disable' }/${menu.id}" >${operate }</a>
 					</td>
 				</tr>
 			</c:forEach>

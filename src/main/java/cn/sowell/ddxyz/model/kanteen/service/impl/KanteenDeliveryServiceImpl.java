@@ -2,6 +2,7 @@ package cn.sowell.ddxyz.model.kanteen.service.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -13,6 +14,8 @@ import org.springframework.util.Assert;
 
 import cn.sowell.copframe.dto.page.PageInfo;
 import cn.sowell.copframe.utils.CollectionUtils;
+import cn.sowell.copframe.utils.FormatUtils;
+import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.ddxyz.model.canteen.pojo.PlainKanteenDelivery;
 import cn.sowell.ddxyz.model.common.dao.NormalOperateDao;
 import cn.sowell.ddxyz.model.kanteen.dao.KanteenDeliveryDao;
@@ -53,7 +56,8 @@ public class KanteenDeliveryServiceImpl implements KanteenDeliveryService{
 			item.setDelivery(delivery);
 			PlainKanteenMenu menu = distributionMenuMap.get(delivery.getDistributionId());
 			item.setMenu(menu);
-			item.setOrderCount(deliveryOrderCountMap.get(delivery.getId()));
+			item.setOrderCount(FormatUtils.coalesce(deliveryOrderCountMap.get(delivery.getId()), 0));
+			items.add(item);
 		});
 		
 		return items;
@@ -74,6 +78,31 @@ public class KanteenDeliveryServiceImpl implements KanteenDeliveryService{
 		Date now = new Date();
 		delivery.setCreateTime(now);
 		delivery.setUpdateTime(now);
+		delivery.setCode(generateDeliveryCode(delivery.getMerchantId()));
 		nDao.save(delivery);
+	}
+	
+	Map<Long, byte[]> lockMap = new HashMap<Long, byte[]>();
+	private Object codeLock(Long merchantId){
+		byte[] lock = lockMap.get(merchantId);
+		if(lock == null){
+			lock = new byte[0];
+			lockMap.put(merchantId, lock);
+		}
+		return lock;
+	}
+	private String generateDeliveryCode(Long merchantId) {
+		synchronized(codeLock(merchantId)){
+			long num = 0;
+			String code = deDao.getLastCode(merchantId);
+			if(code != null){
+				num = TextUtils.decode(code.substring(1), 36);
+			}
+			return "S" + TextUtils.convert(num + 1, 36, 4);
+		}
+	}
+	@Override
+	public PlainKanteenDelivery getDelivery(Long deliveryId) {
+		return nDao.get(PlainKanteenDelivery.class, deliveryId);
 	}
 }

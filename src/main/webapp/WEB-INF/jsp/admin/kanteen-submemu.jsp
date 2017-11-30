@@ -53,8 +53,8 @@
 				</a>
 			</li>
 			<li>
-				<a href="#" class="tab" target="" title="配送"> 
-					<span class="menu-text">配送</span>
+				<a href="admin/kanteen/location/list" class="tab" target="location_list" title="配送点管理"> 
+					<span class="menu-text">配送点管理</span>
 				</a>
 			</li>
 		</ul>

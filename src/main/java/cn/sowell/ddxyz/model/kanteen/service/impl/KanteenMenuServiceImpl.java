@@ -16,6 +16,8 @@ import cn.sowell.ddxyz.model.common.dao.NormalOperateDao;
 import cn.sowell.ddxyz.model.kanteen.dao.KanteenMenuDao;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMenu;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMenuWaresGroup;
+import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenWaresGroup;
+import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenWaresGroupWaresItem;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenChooseWaresGroupListCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenMenuCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.KanteenMenuItem;
@@ -102,5 +104,15 @@ public class KanteenMenuServiceImpl implements KanteenMenuService{
 		return mDao.queryWaresGroupForChoose(criteria, pageInfo);
 	}
 	
+	@Override
+	public List<PlainKanteenWaresGroup> getWaresGroupList(Long menuId) {
+		return mDao.getWaresGroupList(menuId);
+	}
+	
+	@Override
+	public List<PlainKanteenWaresGroupWaresItem> getWaresGroupWaresList(
+			Set<Long> groupIds) {
+		return mDao.getWaresGroupWaresList(groupIds);
+	}
 	
 }

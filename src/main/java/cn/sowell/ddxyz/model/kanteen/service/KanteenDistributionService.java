@@ -9,6 +9,8 @@ import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenDistribution;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMenu;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenDistributionChooseMenuCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.KanteenDistributionItem;
+import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.KanteenMenuOrderStat;
+import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.KanteenMenuOrderStatItem;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.waresgroup.KanteenMenuItemForChoose;
 
 public interface KanteenDistributionService {
@@ -45,4 +47,20 @@ public interface KanteenDistributionService {
 	Map<Long, PlainKanteenMenu> getMenuMapByDistributionId(
 			Set<Long> distributionIds);
 
+	/**
+	 * 查询配销对应的菜单的各个商品的统计
+	 * @param distributionId
+	 * @return
+	 */
+	List<KanteenMenuOrderStatItem> queryMenuOrderStats(Long distributionId, PageInfo pageInfo);
+
+	/**
+	 * 配销的各个订单状态统计
+	 * @param distributionId
+	 * @return
+	 */
+	KanteenMenuOrderStat getDistributionOrderStat(Long distributionId);
+
+	
+	
 }

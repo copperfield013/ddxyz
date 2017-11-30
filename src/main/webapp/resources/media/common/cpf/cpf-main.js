@@ -30,6 +30,11 @@ define(function(require){
 	require('tab');
 	require('css');
 	require('control');
+	$CPF.putPageInitSequeue(12, function($page){
+		$(':text.dtrangepicker').each(function(){
+			require('utils').daterangepicker($(this));
+		});
+	});
 	$CPF.init({
 		loadingImg			: 'media/admin/cpf/image/loading.gif',
 		maxPageCount		: 8,

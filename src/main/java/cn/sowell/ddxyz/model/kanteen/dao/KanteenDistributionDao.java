@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import cn.sowell.copframe.dto.page.PageInfo;
+import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenDistributionWares;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMenu;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenDistributionChooseMenuCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.KanteenDistributionItem;
@@ -19,5 +20,21 @@ public interface KanteenDistributionDao {
 
 	Map<Long, PlainKanteenMenu> getMenuMapByDistributionIds(
 			Set<Long> distributionIds);
+
+	/**
+	 * 获得该商家的最新配销的code
+	 * @param merchantId
+	 * @return
+	 */
+	String getLastCode(Long merchantId);
+
+	/**
+	 * 从数据库中查找配销的所有商品
+	 * @param distributionId
+	 * @param pageInfo 
+	 * @return
+	 */
+	List<PlainKanteenDistributionWares> getDistributionWares(
+			Long distributionId, PageInfo pageInfo);
 
 }

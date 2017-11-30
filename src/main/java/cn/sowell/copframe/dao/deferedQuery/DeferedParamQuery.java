@@ -154,8 +154,7 @@ public class DeferedParamQuery{
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private <T extends Query> T createQuery(Class<T> queryClass, Session session, boolean addWhere, Function<String, String> resetSQLFunc) {
-		String sql = this.queryString;
+	private <T extends Query> T createQuery(Class<T> queryClass, Session session, boolean addWhere, Function<String, String> resetSQLFunc) {		String sql = this.queryString;
 		//添加条件语句
 		if(this.conditions != null && this.conditions.size() > 0){
 			String conditionSQL = "";
@@ -227,6 +226,9 @@ public class DeferedParamQuery{
 				//如果没有提供类型，那么按照hibernate的默认规则来按照参数类型来设置参数值
 				Object value = param.getValue();
 				if(param.getType() == null){
+					if(param.isRestrict() && value == null){
+						throw new RuntimeException("参数[" + param.getParameterName() + "]不能为null");
+					}
 					if(value instanceof Collection){
 						query.setParameterList(param.getParameterName(), (Collection) value);
 					}else if(value != null && value.getClass().isArray()){

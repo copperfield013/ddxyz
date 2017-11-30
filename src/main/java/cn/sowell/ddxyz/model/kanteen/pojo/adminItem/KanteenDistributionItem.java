@@ -8,6 +8,9 @@ public class KanteenDistributionItem {
 	@Column(name="d_id")
 	private Long id;
 	
+	@Column(name="c_code")
+	private String code;
+	
 	@Column(name="menu_name")
 	private String menuName;
 	
@@ -76,5 +79,11 @@ public class KanteenDistributionItem {
 	}
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
+	}
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
 	}
 }

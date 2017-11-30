@@ -3,6 +3,7 @@ package cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria;
 import java.util.Date;
 
 public class KanteenDeliveryCriteria {
+	private Long distributionId;
 	private Date startTime;
 	private Long merchantId;
 
@@ -20,6 +21,14 @@ public class KanteenDeliveryCriteria {
 
 	public void setMerchantId(Long merchantId) {
 		this.merchantId = merchantId;
+	}
+
+	public Long getDistributionId() {
+		return distributionId;
+	}
+
+	public void setDistributionId(Long distributionId) {
+		this.distributionId = distributionId;
 	}
 	
 }

@@ -814,5 +814,9 @@ public class KanteenServiceImpl implements KanteenService {
 		return result;
 	}
 	
-	
+	@Override
+	public PlainKanteenDistribution getDefaultDistribution(
+			PlainKanteenMerchant merchant, Date date) {
+		return kDao.getDefaultDistribution(merchant.getId(), date);
+	}
 }

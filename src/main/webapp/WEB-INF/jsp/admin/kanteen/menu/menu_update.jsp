@@ -153,7 +153,7 @@
 				var $thisLi = $(this).closest('li');
 				$thisLi.insertAfter($thisLi.next('li'));
 			});
-			$page.on('click', '.wares-del', function(){
+			$page.on('click', '.waresgroup-del', function(){
 				var $thisLi = $(this).closest('li');
 				$thisLi.remove();
 			});

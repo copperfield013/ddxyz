@@ -17,7 +17,9 @@ import cn.sowell.copframe.dao.deferedQuery.HibernateRefrectResultTransformer;
 import cn.sowell.copframe.dao.deferedQuery.SimpleMapWrapper;
 import cn.sowell.copframe.dao.utils.QueryUtils;
 import cn.sowell.copframe.dto.page.PageInfo;
+import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.ddxyz.model.kanteen.dao.KanteenDistributionDao;
+import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenDistributionWares;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMenu;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenDistributionChooseMenuCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.KanteenDistributionItem;
@@ -35,6 +37,7 @@ public class KanteenDistributionDaoImpl implements KanteenDistributionDao{
 		return QueryUtils.pagingSQLQuery(
 				"	SELECT" +
 				"		d.id d_id," +
+				"		d.c_code," +
 				"		m.c_name menu_name," +
 				"		d.c_start_time," +
 				"		d.c_end_time," +
@@ -94,4 +97,23 @@ public class KanteenDistributionDaoImpl implements KanteenDistributionDao{
 		return menuMap;
 	}
 	
+	@Override
+	public String getLastCode(Long merchantId) {
+		String sql = "select d.c_code from t_distribution_base d where d.merchant_id = :merchantId and d.c_code is not null order by d.create_time desc";
+		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
+		query.setLong("merchantId", merchantId);
+		query.setMaxResults(1);
+		return FormatUtils.toString(query.uniqueResult());
+	}
+	
+	@Override
+	public List<PlainKanteenDistributionWares> getDistributionWares(
+			Long distributionId, PageInfo pageInfo) {
+		return QueryUtils.pagingQuery(
+				"from PlainKanteenDistributionWares dw where dw.distributionId = :distributionId", 
+				sFactory.getCurrentSession(), pageInfo, 
+				dQuery->{
+					dQuery.setParam("distributionId", distributionId);
+				});
+	}
 }

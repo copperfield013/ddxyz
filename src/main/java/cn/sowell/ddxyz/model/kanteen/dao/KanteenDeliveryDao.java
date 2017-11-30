@@ -20,4 +20,6 @@ public interface KanteenDeliveryDao {
 	 */
 	Map<Long, Integer> getDeliveryOrderCountMap(Set<Long> deliveryIds);
 
+	String getLastCode(Long merchantId);
+
 }

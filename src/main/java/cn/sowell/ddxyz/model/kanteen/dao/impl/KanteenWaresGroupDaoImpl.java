@@ -1,6 +1,8 @@
 package cn.sowell.ddxyz.model.kanteen.dao.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -15,6 +17,7 @@ import cn.sowell.copframe.dao.utils.QueryUtils;
 import cn.sowell.copframe.dto.page.PageInfo;
 import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.ddxyz.model.kanteen.dao.KanteenWaresGroupDao;
+import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenWaresGroup;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenWaresGroupWaresItem;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenChooseWaresListCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenWaresGroupCriteria;
@@ -135,6 +138,23 @@ public class KanteenWaresGroupDaoImpl implements KanteenWaresGroupDao {
 				.setParameterList("itemIds", itemIds, StandardBasicTypes.LONG)
 				.executeUpdate();
 		}
+	}
+	
+	@Override
+	public Map<Long, PlainKanteenWaresGroup> getGroupMapByGroupWaresIds(
+			Set<Long> groupWaresIds) {
+		if(groupWaresIds != null && !groupWaresIds.isEmpty()){
+			return QueryUtils.queryMap(
+					"select gw.id groupwares_id, g.* "
+							+ "from t_waresgroup_base g left join t_waresgroup_wares gw on g.id = gw.group_id "
+							+ "where gw.id in (:groupWaresIds)", 
+							sFactory.getCurrentSession(), mw->mw.getLong("groupwares_id"), PlainKanteenWaresGroup.class, 
+							dQuery->dQuery.setParam("groupWaresIds", groupWaresIds)
+					);
+		}else{
+			return new HashMap<Long, PlainKanteenWaresGroup>();
+		}
+		
 	}
 	
 }

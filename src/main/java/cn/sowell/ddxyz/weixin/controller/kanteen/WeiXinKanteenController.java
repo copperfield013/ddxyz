@@ -84,7 +84,8 @@ public class WeiXinKanteenController {
 		if(merchant != null){
 			WeiXinUser user = WxUtils.getCurrentUser(WeiXinUser.class);
 			//获得本周的配销
-			PlainKanteenDistribution distribution = kanteenService.getDistributionOfThisWeek(merchantId, new Date());
+			//PlainKanteenDistribution distribution = kanteenService.getDistributionOfThisWeek(merchantId, new Date());
+			PlainKanteenDistribution distribution = kanteenService.getDefaultDistribution(merchant, new Date());
 			if(distribution != null){
 				Date now = new Date();
 				//获得配销的所有配送信息

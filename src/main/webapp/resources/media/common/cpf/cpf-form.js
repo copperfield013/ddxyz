@@ -77,6 +77,16 @@ define(function(require, exports, module){
 		}).filter('.validate-form').each(function(){
 			//初始化验证插件
 			$(this).bootstrapValidator();
+			//绑定重新校验表单事件
+			$(':input', this).on('cpf-revalidate', function(){
+				var $thisInput = $(this);
+				var fieldName = $thisInput.attr('name');
+				var bv = $thisInput.closest('form').data('bootstrapValidator');
+				if(bv && fieldName){
+					bv.updateStatus(fieldName, 'NOT_VALIDATED', null);
+					bv.validateField(fieldName);
+				}
+			});
 		}).end().submit(function(e){
 			//阻止跳转
 			  e.preventDefault();

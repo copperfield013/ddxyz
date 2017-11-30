@@ -17,7 +17,7 @@ import cn.sowell.copframe.dao.deferedQuery.DeferedParamQuery;
 import cn.sowell.copframe.dao.deferedQuery.DeferedParamSnippet;
 import cn.sowell.copframe.dao.deferedQuery.sqlFunc.WrapForCountFunction;
 import cn.sowell.copframe.dao.utils.QueryUtils;
-import cn.sowell.copframe.dto.page.CommonPageInfo;
+import cn.sowell.copframe.dto.page.PageInfo;
 import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.ddxyz.model.common.pojo.PlainLocation;
 import cn.sowell.ddxyz.model.config.dao.DeliveryLocationDao;
@@ -31,7 +31,7 @@ public class DeliveryLocationDaoImpl implements DeliveryLocationDao {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<PlainLocation> getPlainLocationPageList(DeliveryLocationCriteria criteria, CommonPageInfo pageInfo) {
+	public List<PlainLocation> getPlainLocationPageList(DeliveryLocationCriteria criteria, PageInfo pageInfo) {
 		Session session = sFactory.getCurrentSession();
 		String hql = "from PlainLocation @mainWhere order by createTime desc";
 		DeferedParamQuery dQuery = new DeferedParamQuery(hql);

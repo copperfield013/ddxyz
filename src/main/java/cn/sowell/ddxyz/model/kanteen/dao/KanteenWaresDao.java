@@ -1,8 +1,11 @@
 package cn.sowell.ddxyz.model.kanteen.dao;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import cn.sowell.copframe.dto.page.PageInfo;
+import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenWares;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenWaresCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.KanteenWaresItem;
 
@@ -26,5 +29,7 @@ public interface KanteenWaresDao {
 	void updateWaresSalable(Long waresId, boolean salable);
 
 	int disableWares(Long waresId, Boolean disabled);
+
+	Map<Long, PlainKanteenWares> getWaresMap(Set<Long> waresIds);
 
 }

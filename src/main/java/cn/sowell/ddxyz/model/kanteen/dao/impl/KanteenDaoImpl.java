@@ -508,4 +508,16 @@ public class KanteenDaoImpl implements KanteenDao {
 			.setResultTransformer(HibernateRefrectResultTransformer.getInstance(PlainKanteenCancelOption.class));
 		return (PlainKanteenCancelOption) query.uniqueResult();
 	}
+	
+	@Override
+	public PlainKanteenDistribution getDefaultDistribution(Long merchantId,
+			Date date) {
+		String hql = "from PlainKanteenDistribution d where d.merchantId = :merchantId and d.startTime <= :theTime and d.endTime > :theTime";
+		Query query = sFactory.getCurrentSession().createQuery(hql);
+		query.setLong("merchantId", merchantId);
+		query.setTimestamp("theTime", date);
+		query.setMaxResults(1);
+		return (PlainKanteenDistribution) query.uniqueResult();
+	}
+	
 }
