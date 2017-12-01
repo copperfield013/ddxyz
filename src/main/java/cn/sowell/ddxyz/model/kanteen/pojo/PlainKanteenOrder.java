@@ -53,6 +53,11 @@ public class PlainKanteenOrder {
 	public static final String CANSTATUS_MISSED = "missed";
 
 	public static final String CANSTATUS_CLOSED = "closed";
+	/**
+	 * 订单支付已超时
+	 */
+	public static final String CANSTATUS_PAYEXPIRED = "payexpired";
+	
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

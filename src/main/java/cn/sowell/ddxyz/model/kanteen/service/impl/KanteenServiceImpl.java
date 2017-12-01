@@ -819,4 +819,23 @@ public class KanteenServiceImpl implements KanteenService {
 			PlainKanteenMerchant merchant, Date date) {
 		return kDao.getDefaultDistribution(merchant.getId(), date);
 	}
+	
+	static OrderResourceRecoverer jvmOrderResourceRecoverer = null;
+	OrderResourceRecoverer orderResourceRecoverer;
+	@Override
+	public void startOrderResourceRecoverer(boolean jvmUnique) {
+		if(jvmUnique){
+			if(jvmOrderResourceRecoverer == null){
+				jvmOrderResourceRecoverer = new OrderResourceRecoverer();
+				jvmOrderResourceRecoverer.start();
+			}
+		}else{
+			if(orderResourceRecoverer == null){
+				orderResourceRecoverer = new OrderResourceRecoverer();
+				orderResourceRecoverer.start();
+			}
+		}
+		
+	}
+	
 }

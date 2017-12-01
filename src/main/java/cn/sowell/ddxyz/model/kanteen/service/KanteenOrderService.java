@@ -18,4 +18,9 @@ public interface KanteenOrderService {
 	 */
 	Integer statOrderAmount(KanteenOrderStatCriteria setStatus);
 
+	/**
+	 * 回收没有支付的资源
+	 */
+	void recoverUnpayResource();
+
 }

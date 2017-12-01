@@ -41,7 +41,7 @@ public class PlainKanteenDistributionWares {
 	private Date createTime;
 	
 	@Column(name="create_user_id")
-	private Date createUserId;
+	private Long createUserId;
 	public Long getId() {
 		return id;
 	}
@@ -90,17 +90,17 @@ public class PlainKanteenDistributionWares {
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
-	public Date getCreateUserId() {
-		return createUserId;
-	}
-	public void setCreateUserId(Date createUserId) {
-		this.createUserId = createUserId;
-	}
 	public Long getWaresId() {
 		return waresId;
 	}
 	public void setWaresId(Long waresId) {
 		this.waresId = waresId;
+	}
+	public Long getCreateUserId() {
+		return createUserId;
+	}
+	public void setCreateUserId(Long createUserId) {
+		this.createUserId = createUserId;
 	}
 	
 }

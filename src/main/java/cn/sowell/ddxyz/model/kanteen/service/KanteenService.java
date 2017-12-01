@@ -181,6 +181,12 @@ public interface KanteenService {
 	PlainKanteenDistribution getDefaultDistribution(
 			PlainKanteenMerchant merchant, Date date);
 
+	/**
+	 * 启动订单资源回收器
+	 * @param jvmUnique 订单资源回收器是否在虚拟机中唯一
+	 */
+	void startOrderResourceRecoverer(boolean jvmUnique);
+
 
 	
 }

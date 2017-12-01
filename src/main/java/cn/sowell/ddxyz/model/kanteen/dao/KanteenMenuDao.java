@@ -5,6 +5,8 @@ import java.util.Set;
 
 import cn.sowell.copframe.dto.page.PageInfo;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMenuWaresGroup;
+import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenWaresGroup;
+import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenWaresGroupWaresItem;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenChooseWaresGroupListCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenMenuCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.KanteenMenuItem;
@@ -58,5 +60,20 @@ public interface KanteenMenuDao {
 	 */
 	List<KanteenWaresGroupItemForChoose> queryWaresGroupForChoose(
 			KanteenChooseWaresGroupListCriteria criteria, PageInfo pageInfo);
+
+	/**
+	 * 根据菜单id获得所有商品组
+	 * @param menuId
+	 * @return
+	 */
+	List<PlainKanteenWaresGroup> getWaresGroupList(Long menuId);
+
+	/**
+	 * 根据商品组的id获得所有商品
+	 * @param groupIds
+	 * @return
+	 */
+	List<PlainKanteenWaresGroupWaresItem> getWaresGroupWaresList(
+			Set<Long> groupIds);
 	
 }

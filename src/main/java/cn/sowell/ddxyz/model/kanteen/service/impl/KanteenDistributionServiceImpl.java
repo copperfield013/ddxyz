@@ -85,14 +85,13 @@ public class KanteenDistributionServiceImpl implements KanteenDistributionServic
 		distribution.setCreateTime(now);
 		distribution.setUpdateTime(now);
 		distribution.setCode(generateDistributionCode(distribution.getMerchantId()));
-		Date createUserId;
 		
 		List<PlainKanteenWaresGroup> groupList = menuService.getWaresGroupList(distribution.getMenuId());
 		List<PlainKanteenWaresGroupWaresItem> waresGroupWaresList = menuService.getWaresGroupWaresList(CollectionUtils.toSet(groupList, group->group.getId())); 
 		nDao.save(distribution);
 		waresGroupWaresList.forEach(item->{
 			PlainKanteenDistributionWares dWares = new PlainKanteenDistributionWares();
-			String description;
+			String description = null;
 			Integer maxCount = 1000;
 			dWares.setWaresId(item.getWaresId());
 			dWares.setMenuWaresId(item.getId());
@@ -100,7 +99,7 @@ public class KanteenDistributionServiceImpl implements KanteenDistributionServic
 			dWares.setMaxCount(maxCount);
 			dWares.setCreateTime(new Date());
 			dWares.setDescription(description);
-			dWares.setCreateUserId(createUserId);
+			dWares.setCreateUserId(distribution.getUpdateUserId());
 			dWares.setDistributionId(distribution.getId());
 			nDao.save(dWares);
 		});

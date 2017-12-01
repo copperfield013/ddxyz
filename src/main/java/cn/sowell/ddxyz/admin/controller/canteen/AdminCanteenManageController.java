@@ -96,7 +96,6 @@ public class AdminCanteenManageController {
 		model.addAttribute("pageInfo", pageInfo);
 		model.addAttribute("now", new Date());
 		return AdminConstants.PATH_CANTEEN + "/manage/canteen_week_orders.jsp";
-		
 	}
 	
 	@ResponseBody

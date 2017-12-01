@@ -1,5 +1,6 @@
 package cn.sowell.ddxyz.model.kanteen.dao.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
+import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.SessionFactory;
 import org.hibernate.type.StandardBasicTypes;
@@ -23,6 +25,8 @@ import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.ddxyz.model.kanteen.dao.KanteenMenuDao;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMenuWaresGroup;
+import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenWaresGroup;
+import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenWaresGroupWaresItem;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenChooseWaresGroupListCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenMenuCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.KanteenMenuItem;
@@ -206,5 +210,31 @@ public class KanteenMenuDaoImpl implements KanteenMenuDao{
 		return list;
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PlainKanteenWaresGroup> getWaresGroupList(Long menuId) {
+		String sql = "select g.*, mg.menu_id from t_waresgroup_base g "
+				+ "left join t_menu_waresgroup mg on g.id = mg.waresgroup_id "
+				+ "where mg.menu_id = :menuId";
+		
+		Query query = sFactory.getCurrentSession().createSQLQuery(sql);
+		query.setLong("menuId", menuId);
+		query.setResultTransformer(HibernateRefrectResultTransformer.getInstance(PlainKanteenWaresGroup.class));
+		return query.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PlainKanteenWaresGroupWaresItem> getWaresGroupWaresList(
+			Set<Long> groupIds) {
+		if(groupIds != null && !groupIds.isEmpty()){
+			String hql = "from PlainKanteenWaresGroupWaresItem gw where gw.groupId in (:groupIds) and gw.disabled is null";
+			Query query = sFactory.getCurrentSession().createQuery(hql);
+			query.setParameterList("groupIds", groupIds, StandardBasicTypes.LONG);
+			return query.list();
+		}else{
+			return new ArrayList<PlainKanteenWaresGroupWaresItem>();
+		}
+	}
 	
 }

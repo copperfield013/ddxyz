@@ -70,32 +70,46 @@
     				var $section = $(e.target).closest('section');
     				var orderId = $section.attr('data-id');
 					if(orderId){
-    					Ajax.ajax('weixin/kanteen/check_order_for_pay', {
-    						orderId	: orderId
-    					}, function(data){
-    						if(data.status === 'suc' && data.payParameter){
-    							seajs.use(['order/order-pay'], function(OrderPay){
-    								OrderPay.doPay('weixin/kanteen/order_paied', data.payParameter, orderId, function(){
-    									//后台支付成功
-    									Tips.alert({
-    										content	: '支付成功',
-    										after	: function(){
-    											$section.find('.canteen-order-list_status')
-    												.text('已支付')
-    												.removeClass('order-status-default')
-    												.addClass('order-status-paied')
-    												;
-    											$(e.target).remove();
-    										}
-    									});
-    								}, 
-    								function(){Tips.alert('没有支付');}, 
-    								function(){Tips.alert('无法支付该订单');});
-    							});
-    						}else if(data.msg){
-    							Tips.alert(data.msg);
-    						}
-    					});
+						Tips.confirm({
+							define: '确认',
+							cancel: '取消',
+							content: '确认继续支付？',
+							after: function(b){
+								if(b){
+									Ajax.ajax('weixin/kanteen/check_order_for_pay', {
+			    						orderId	: orderId
+			    					}, function(data){
+			    						if(data.status === 'suc' && data.payParameter){
+			    							seajs.use(['order/order-pay?${RES_STAMP}'], function(OrderPay){
+			    								try{
+				    								OrderPay.doPay('weixin/kanteen/order_paied', data.payParameter, orderId, function(){
+				    									//后台支付成功
+				    									Tips.alert({
+				    										content	: '支付成功',
+				    										after	: function(){
+				    											$section.find('.canteen-order-list_status')
+				    												.text('已支付')
+				    												.removeClass('order-status-default')
+				    												.addClass('order-status-paied')
+				    												;
+				    											$(e.target).remove();
+				    										}
+				    									});
+				    								}, 
+				    								function(){Tips.alert('没有支付');}, 
+				    								function(){Tips.alert('无法支付该订单');});
+			    								}catch(e){
+			    									Tip.alert('调用支付接口失败');
+			    								}
+			    							});
+			    						}else if(data.msg){
+			    							Tips.alert(data.msg);
+			    						}
+			    					});
+								}
+							}
+						});
+    					
 					}
     			});
     			

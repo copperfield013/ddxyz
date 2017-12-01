@@ -26,7 +26,6 @@ import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenLocation;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMerchant;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenDeliveryCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.KanteenDeliveryItem;
-import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.KanteenMenuOrderStatItem;
 import cn.sowell.ddxyz.model.kanteen.service.KanteenDeliveryService;
 import cn.sowell.ddxyz.model.kanteen.service.KanteenDistributionService;
 import cn.sowell.ddxyz.model.kanteen.service.KanteenLocationService;

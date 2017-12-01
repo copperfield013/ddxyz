@@ -32,6 +32,7 @@ define(function(require, exports, module){
 	
 	function doPay(paiedURI, prepayParameter, orderId, whenSuc, whenFail, whenCancel){
 		var WxPay = require('wxpay');
+		alert('111');
 		WxPay.pay(prepayParameter, function(res){
 			if(res['errMsg'] == "chooseWXPay:ok" ) {
 				//支付成功，发送请求到后台，更改订单状态

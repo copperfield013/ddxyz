@@ -33,7 +33,7 @@
 			<c:forEach items="${distributionList }" var="distribution" varStatus="i">
 				<tr data-id="${distribution.id }" >
 					<td>${i.index + 1}</td>
-					<td><a href="admin/kanteen/distribution/detail/${distribution.id }">${distribution.code }</a></td>
+					<td><a  class="tab" target="distribution_detail_${distribution.id }" title="配销详情(${distribution.code })" href="admin/kanteen/distribution/detail/${distribution.id }">${distribution.code }</a></td>
 					<td><a href="#" >${distribution.menuName }</a></td>
 					<td><fmt:formatDate value="${distribution.startTime }" pattern="yyyy-MM-dd HH:mm:ss"/> 
 						~ <fmt:formatDate value="${distribution.endTime }" pattern="yyyy-MM-dd HH:mm:ss"/> </td>
