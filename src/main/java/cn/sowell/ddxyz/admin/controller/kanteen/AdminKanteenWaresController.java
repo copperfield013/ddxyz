@@ -2,7 +2,10 @@ package cn.sowell.ddxyz.admin.controller.kanteen;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -21,6 +24,7 @@ import cn.sowell.copframe.common.file.FileUploadUtils;
 import cn.sowell.copframe.dto.ajax.AjaxPageResponse;
 import cn.sowell.copframe.dto.ajax.JsonResponse;
 import cn.sowell.copframe.dto.page.PageInfo;
+import cn.sowell.copframe.utils.CollectionUtils;
 import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.copframe.utils.qrcode.QrCodeUtils;
 import cn.sowell.copframe.weixin.common.service.WxConfigService;
@@ -33,6 +37,7 @@ import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenWaresCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.KanteenWaresItem;
 import cn.sowell.ddxyz.model.kanteen.service.KanteenMerchantService;
 import cn.sowell.ddxyz.model.kanteen.service.KanteenWaresService;
+import cn.sowell.ddxyz.model.kanteen.service.KanteenWaresOptionService;
 
 @Controller
 @RequestMapping(AdminConstants.URI_BASE + "/kanteen/wares")
@@ -50,7 +55,12 @@ public class AdminKanteenWaresController {
 	@Resource
 	WxConfigService configService;
 	
+	@Resource
+	KanteenWaresOptionService waresOptionService;
+	
+	
 	Logger logger = Logger.getLogger(AdminKanteenWaresController.class);
+
 	
 	
 	@RequestMapping({"", "/"})
@@ -59,6 +69,11 @@ public class AdminKanteenWaresController {
 		if(merchant != null){
 			criteria.setMerchantId(merchant.getId());
 			List<KanteenWaresItem> waresList = waresService.queryWares(criteria, pageInfo);
+			Set<Long> waresIdSet = CollectionUtils.toSet(waresList, wares->wares.getId());
+			Map<Long, Integer> optionCountMap = waresOptionService.queryEnabledOptionCount(waresIdSet);
+			Map<Long, Integer> optionGroupCountMap = waresOptionService.queryEnabledOptionGroupCount(waresIdSet);
+			model.addAttribute("optionCountMap", optionCountMap);
+			model.addAttribute("optionGroupCountMap", optionGroupCountMap);
 			model.addAttribute("waresList", waresList);
 			model.addAttribute("pageInfo", pageInfo);
 		}

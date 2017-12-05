@@ -37,6 +37,7 @@
 				<th>商品名称</th>
 				<th>单价</th>
 				<th>单位</th>
+				<th title="选项组数/选项总数">选项数(G/O)</th>
 				<th>创建时间</th>
 				<th>操作</th>
 			</tr>
@@ -58,6 +59,15 @@
 					<td><a href="#" class="waresName" >${wares.name }<img class="wares-thumb" src="${src }"></a></td>
 					<td><fmt:formatNumber value="${wares.basePrice / 100}" pattern="0.00" /> </td>
 					<td>${wares.priceUnit }</td>
+					<td>
+						<c:set var="optionCount" value="${optionCountMap[wares.id] }" />
+						<c:choose>
+							<c:when test="${optionCount != null && optionCount > 0 }">
+								${optionGroupCountMap[wares.id] }/${optionCount }
+							</c:when>
+							<c:otherwise>-</c:otherwise>
+						</c:choose>
+					</td>
 					<td><fmt:formatDate value="${wares.createTime }"  pattern="yyyy-MM-dd HH:mm:ss" /> </td>
 					<td>
 						<a class="update tab" title="餐品修改" href="admin/kanteen/wares/update/${wares.id }" target="wares_update_${wares.id }">修改</a>

@@ -375,11 +375,12 @@ public class KanteenDaoImpl implements KanteenDao {
 	@Override
 	public void updateOrderAsPaied(PlainKanteenOrder order) {
 		if(PlainKanteenOrder.STATUS_PAIED.equals(order.getStatus())){
-			String sql = "update t_order_kanteen set c_status = :paiedStatus , c_actual_pay = :actualPay where id = :orderId";
+			String sql = "update t_order_kanteen set c_status = :paiedStatus , c_actual_pay = :actualPay, c_pay_time = :payTime where id = :orderId";
 			SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
 			query.setString("paiedStatus", order.getStatus())
 					.setInteger("actualPay", order.getActualPay())
 					.setLong("orderId", order.getId())
+					.setTimestamp("payTime", new Date())
 					.executeUpdate()
 					;
 		}

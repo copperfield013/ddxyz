@@ -29,12 +29,12 @@
 						<div class="col-lg-8 "><fmt:formatNumber value="${totalValidAmount /100 }" pattern="0.00" />元</div>
 					</div>
 					<div class="row delivery-row">
+						<label class="col-lg-3">待支付：</label>
+						<div class="col-lg-3">${stat.waitToPay }</div>
 						<label class="col-lg-3">待完成：</label>
 						<div class="col-lg-3">
 							${stat.effective }
 						</div>
-						<label class="col-lg-3">总订单：</label>
-						<div class="col-lg-3">${stat.totalCount }</div>
 					</div>
 					<div class="row delivery-row">
 						<label class="col-lg-3">已完成：</label>
@@ -48,6 +48,10 @@
 						<div class="col-lg-3 ">${stat.closed }</div>
 						<label class="col-lg-3">已取消：</label>
 						<div class="col-lg-3">${stat.canceled }</div>
+					</div>
+					<div class="row delivery-row">
+						<label class="col-lg-3">总订单：</label>
+						<div class="col-lg-3">${stat.totalCount }</div>
 					</div>
 				</div>
 			</div>

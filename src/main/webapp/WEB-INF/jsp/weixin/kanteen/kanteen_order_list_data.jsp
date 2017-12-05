@@ -2,12 +2,13 @@
 <%@ include file="/WEB-INF/jsp/common/base_empty.jsp"%>
 <c:forEach items="${orderList }" var="order">
 	<c:set var="pOrder" value="${order.plainOrder }" />
+	<c:set var="expiredStatusText" value="支付超时" />
     <section class="canteen-order-list" data-id="${pOrder.id }">
         <p class="canteen-order-list_header" href="weixin/kanteen">
             <a class="canteen-order-list_logo"></a>
             <span class="canteen-order-list_logoname">${pOrder.merchantName }</span>
             <span class="canteen-order-list_status order-status-${pOrder.status }">
-            	${pOrder.status == 'default' && pOrder.payExpiredTime != null && pOrder.payExpiredTime.time < now.time ? '支付超时': orderStatusMap[pOrder.status]  }
+            	${pOrder.status == 'default' && pOrder.payExpiredTime != null && pOrder.payExpiredTime.time < now.time ? expiredStatusText: orderStatusMap[pOrder.status]  }
             </span>
         </p>
         <div class="canteen-order-list_lists">
@@ -26,6 +27,12 @@
         	</c:forEach>
         </div>
         <p class="canteen-order-list_list_totalprice">
+        	<c:if test="${pOrder.status == 'default' && pOrder.payExpiredTime != null && pOrder.payExpiredTime.time >= now.time }">
+	        	<span class="pay-countdown fa fa-clock-o" pay-expired-time="${pOrder.payExpiredTime.time }" pay-expired-status="${expiredStatusText }">
+	        		<i></i>
+	        		<span>13:00</span>
+	        	</span>
+        	</c:if>
             <span class="canteen-order-list_list_totalprice_text">合计：</span>
             <span class="canteen-order-list_list_totalprice_number canteen-icon canteen-rmb-icon"><fmt:formatNumber value="${pOrder.totalPrice /100 }" pattern="0.00" /></span>
         </p>

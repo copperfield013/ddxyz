@@ -156,8 +156,10 @@ public class KanteenDistributionServiceImpl implements KanteenDistributionServic
 		stat.setEffective(orderService.statCount(criteria.setStatus(PlainKanteenOrder.STATUS_PAIED, PlainKanteenOrder.STATUS_CONFIRMED)));
 		//已完成订单
 		stat.setCompleted(orderService.statCount(criteria.setStatus(PlainKanteenOrder.STATUS_COMPLETED)));
+		//待支付订单
+		stat.setWaitToPay(orderService.statCount(criteria.setStatus(PlainKanteenOrder.STATUS_DEFAULT).setPayway(PlainKanteenOrder.PAYWAY_WXPAY)));
 		//总数
-		stat.setTotalCount(orderService.statCount(criteria.setStatus()));
+		stat.setTotalCount(orderService.statCount(criteria.setPayway(null).setStatus()));
 		//已支付的总金额
 		stat.setPaiedAmount(orderService.statOrderAmount(criteria.setStatus(PlainKanteenOrder.STATUS_PAIED)));
 		//已确认但是未支付的总金额
@@ -169,6 +171,12 @@ public class KanteenDistributionServiceImpl implements KanteenDistributionServic
 		//已取消或已关闭订单
 		stat.setCanceled(orderService.statCount(criteria.setAllCanceled(true)));
 		return stat;
+	}
+	
+	@Override
+	public void decreaseDistributionWaresCurrentCount(Long distributionWaresId,
+			Integer decrease) {
+		dDao.decreaseDistributionWaresCurrentCount(distributionWaresId, decrease);
 	}
 	
 }

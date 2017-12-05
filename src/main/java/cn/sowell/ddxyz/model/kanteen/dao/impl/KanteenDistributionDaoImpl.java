@@ -116,4 +116,16 @@ public class KanteenDistributionDaoImpl implements KanteenDistributionDao{
 					dQuery.setParam("distributionId", distributionId);
 				});
 	}
+	
+	@Override
+	public void decreaseDistributionWaresCurrentCount(Long distributionWaresId,
+			Integer decrease) {
+		String sql = "update t_distribution_wares set c_current_count = c_current_count - :dec where id = :distributionId";
+		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
+		query.setLong("distributionId", distributionWaresId)
+				.setInteger("dec", decrease)
+				.executeUpdate();
+	}
+	
+	
 }

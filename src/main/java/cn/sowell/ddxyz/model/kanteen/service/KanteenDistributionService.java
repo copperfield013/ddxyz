@@ -61,6 +61,14 @@ public interface KanteenDistributionService {
 	 */
 	KanteenMenuOrderStat getDistributionOrderStat(Long distributionId);
 
+	/**
+	 * 修改各个配销商品的余量
+	 * @param distributionWaresId
+	 * @param decrease
+	 */
+	void decreaseDistributionWaresCurrentCount(Long distributionWaresId,
+			Integer decrease);
+
 	
 	
 }

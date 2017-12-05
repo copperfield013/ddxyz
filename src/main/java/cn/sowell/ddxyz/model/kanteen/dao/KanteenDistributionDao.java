@@ -37,4 +37,12 @@ public interface KanteenDistributionDao {
 	List<PlainKanteenDistributionWares> getDistributionWares(
 			Long distributionId, PageInfo pageInfo);
 
+	/**
+	 * 修改配销商品的当前占用资源（减少数量）
+	 * @param distributionWaresId
+	 * @param decrease
+	 */
+	void decreaseDistributionWaresCurrentCount(Long distributionWaresId,
+			Integer decrease);
+
 }

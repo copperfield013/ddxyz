@@ -66,6 +66,7 @@ import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenTrolley;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenWares;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenWaresGroup;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenWaresOption;
+import cn.sowell.ddxyz.model.kanteen.service.KanteenOrderService;
 import cn.sowell.ddxyz.model.kanteen.service.KanteenService;
 import cn.sowell.ddxyz.model.weixin.pojo.WeiXinUser;
 
@@ -81,6 +82,9 @@ public class KanteenServiceImpl implements KanteenService {
 	FrameDateFormat dateFormat;
 	@Resource
 	WxPayService payService;
+	
+	@Resource
+	KanteenOrderService orderService;
 	
 	
 	Logger logger = Logger.getLogger(KanteenServiceImpl.class);
@@ -826,12 +830,12 @@ public class KanteenServiceImpl implements KanteenService {
 	public void startOrderResourceRecoverer(boolean jvmUnique) {
 		if(jvmUnique){
 			if(jvmOrderResourceRecoverer == null){
-				jvmOrderResourceRecoverer = new OrderResourceRecoverer();
+				jvmOrderResourceRecoverer = new OrderResourceRecoverer(orderService);
 				jvmOrderResourceRecoverer.start();
 			}
 		}else{
 			if(orderResourceRecoverer == null){
-				orderResourceRecoverer = new OrderResourceRecoverer();
+				orderResourceRecoverer = new OrderResourceRecoverer(orderService);
 				orderResourceRecoverer.start();
 			}
 		}

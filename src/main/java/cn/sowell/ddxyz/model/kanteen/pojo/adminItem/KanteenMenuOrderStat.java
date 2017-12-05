@@ -2,6 +2,8 @@ package cn.sowell.ddxyz.model.kanteen.pojo.adminItem;
 
 
 public class KanteenMenuOrderStat {
+	//待支付订单数
+	private Integer waitToPay;
 	//待完成订单
 	private Integer effective;
 	//已完成订单
@@ -66,6 +68,12 @@ public class KanteenMenuOrderStat {
 	}
 	public void setConfirmedAmount(Integer confirmedAmount) {
 		this.confirmedAmount = confirmedAmount;
+	}
+	public Integer getWaitToPay() {
+		return waitToPay;
+	}
+	public void setWaitToPay(Integer waitToPay) {
+		this.waitToPay = waitToPay;
 	}
 	
 	

@@ -130,6 +130,7 @@ public class WeiXinKanteenController {
 	@RequestMapping("/order_list/{range}")
 	public String orderList(@PathVariable String range, Model model){
 		model.addAttribute("range", range);
+		model.addAttribute("now", new Date());
 		return WeiXinConstants.PATH_KANTEEN + "/kanteen_order_list.jsp";
 	}
 	

@@ -12,8 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.ddxyz.model.kanteen.dao.KanteenOrderDao;
-import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenDistribution;
-import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenDistributionWares;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenSection;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenOrderStatCriteria;
 import cn.sowell.ddxyz.model.kanteen.service.KanteenDistributionService;
@@ -42,21 +40,23 @@ public class KanteenOrderServiceImpl implements KanteenOrderService{
 	public synchronized void recoverUnpayResource() {
 		Date now = new Date();
 		//获得所有已经超过支付时限，但是状态依然是可用的订单id
-		Set<Long> expiredOrderIds = orderDao.getAllExpiredOrderIds();
-		
-		Set<PlainKanteenSection> sections = orderDao.getAllSections();
+		Set<Long> expiredOrderIds = orderDao.getAllExpiredOrderIds(now);
+		//根据订单id获得所有订单条目
+		Set<PlainKanteenSection> sections = orderDao.getAllSections(expiredOrderIds);
 		
 		Map<Long, Integer> recoverCountMap = new HashMap<Long, Integer>();
-		
+		//计算所有超过支付时限的配销商品的数量
 		sections.forEach(section->{
 			Long distributionWaresId = section.getDistributionWaresId();
 			Integer count = FormatUtils.coalesce(recoverCountMap.get(distributionWaresId), 0);
 			recoverCountMap.put(distributionWaresId, count + section.getCount());
 		});
-		
+		//修改各个配销商品的余量
 		recoverCountMap.forEach((distributionWaresId, decrease)->{
+			//减少配送
 			distributionService.decreaseDistributionWaresCurrentCount(distributionWaresId, decrease);
 		});
+		orderDao.setOrderPayExpired(expiredOrderIds);
 	}
 	
 }

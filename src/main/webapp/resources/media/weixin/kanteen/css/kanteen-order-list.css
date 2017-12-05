@@ -335,3 +335,20 @@ a.canteen-order-pay {
 span.canteen-order-list_status.order-status-paied,span.canteen-order-list_status.order-status-confirmed {
     color: #66CD00;
 }
+
+span.pay-countdown {
+    position: absolute;
+    left: 1.5em;
+    color: #666;
+    font-size: 0.8em;
+}
+span.pay-countdown>i{
+	background-image: url("../image/clock.png");
+}
+span.pay-countdown>i {
+    background-image: url(../image/clock.png);
+    background-size: 1em;
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+}

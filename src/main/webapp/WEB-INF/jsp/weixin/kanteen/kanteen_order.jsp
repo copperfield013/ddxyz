@@ -247,31 +247,37 @@
 			    					if(data.status === 'suc'){
 			    						if(data.payParameter){
 			    							seajs.use(['order/order-pay'], function(OrderPay){
-			    								OrderPay.doPay('weixin/kanteen/order_paied', data.payParameter, data.orderId, function(){
-			    									//后台支付成功
-			    									Tips.alert({
-			    										content	: '支付成功',
-			    										after	: function(){
-					    									window.location.href = 'weixin/kanteen/order_list/week';
-			    										}
-			    									});
-			    								}, function(){
-			    									//后台支付失败
-			    									Tips.alert({
-			    										content	: '没有支付',
-			    										after	: function(){
-			    											window.location.href = 'weixin/kanteen/order_list/week';
-			    										}
-			    									});
-			    								}, function(){
-			    									//后台支付失败
-			    									Tips.alert({
-			    										content	: '支付已取消',
-			    										after	: function(){
-			    											window.location.href = 'weixin/kanteen/order_list/week';
-			    										}
-			    									});
-			    								});
+			    								try{
+				    								OrderPay.doPay('weixin/kanteen/order_paied', data.payParameter, data.orderId, function(){
+				    									//后台支付成功
+				    									Tips.alert({
+				    										content	: '支付成功',
+				    										after	: function(){
+						    									window.location.href = 'weixin/kanteen/order_list/week';
+				    										}
+				    									});
+				    								}, function(){
+				    									//后台支付失败
+				    									Tips.alert({
+				    										content	: '没有支付',
+				    										after	: function(){
+				    											window.location.href = 'weixin/kanteen/order_list/week';
+				    										}
+				    									});
+				    								}, function(){
+				    									//后台支付失败
+				    									Tips.alert({
+				    										content	: '支付已取消',
+				    										after	: function(){
+				    											window.location.href = 'weixin/kanteen/order_list/week';
+				    										}
+				    									});
+				    								});
+			    								}catch(e){
+			    									console.error(e);
+			    									Tips.alert('调用支付接口时发生错误，请点击确定后前往订单列表完成支付');
+			    									window.location.href = 'weixin/kanteen/order_list/week';
+			    								}
 			    							});
 			    						}else if(data.ordered){
 			    							Tips.alert('订单已创建。请在可领取时间段内到指定地点领取。', function(){

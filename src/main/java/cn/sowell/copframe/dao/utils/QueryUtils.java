@@ -41,7 +41,9 @@ public class QueryUtils {
 	@SuppressWarnings("unchecked")
 	public static <T> List<T> queryList(String sql, Class<T> itemClass, Session session, Consumer<DeferedParamQuery> consumer){
 		DeferedParamQuery dQuery = new DeferedParamQuery(sql);
-		consumer.accept(dQuery);
+		if(consumer != null){
+			consumer.accept(dQuery);
+		}
 		SQLQuery query = dQuery.createSQLQuery(session, false, null);
 		query.setResultTransformer(HibernateRefrectResultTransformer.getInstance(itemClass));
 		return query.list();
@@ -50,7 +52,9 @@ public class QueryUtils {
 	@SuppressWarnings("unchecked")
 	public static <T> List<T> pagingSQLQuery(String sql, Class<T> itemClass, Session session, PageInfo pageInfo, Consumer<DeferedParamQuery> consumer){
 		DeferedParamQuery dQuery = new DeferedParamQuery(sql);
-		consumer.accept(dQuery);
+		if(consumer != null){
+			consumer.accept(dQuery);
+		}
 		SQLQuery countQuery = dQuery.createSQLQuery(session, false, new WrapForCountFunction());
 		pageInfo.setCount(FormatUtils.toInteger(countQuery.uniqueResult()));
 		if(pageInfo.getCount() > 0){
@@ -66,7 +70,9 @@ public class QueryUtils {
 	@SuppressWarnings("unchecked")
 	public static <T> List<T> pagingQuery(String hql, Session session, PageInfo pageInfo, Consumer<DeferedParamQuery> consumer){
 		DeferedParamQuery dQuery = new DeferedParamQuery(hql);
-		consumer.accept(dQuery);
+		if(consumer != null){
+			consumer.accept(dQuery);
+		}
 		Query countQuery = dQuery.createQuery(session, false, new WrapForCountFunction());
 		pageInfo.setCount(FormatUtils.toInteger(countQuery.uniqueResult()));
 		if(pageInfo.getCount() > 0){
@@ -83,7 +89,9 @@ public class QueryUtils {
 	public static <K, V> Map<K, V> queryMap(String sql, Session session, Function<SimpleMapWrapper, K> keyGetter, Function<SimpleMapWrapper, V> valueGetter, Consumer<DeferedParamQuery> consumer){
 		Map<K, V> groupMap = new HashMap<K, V>();
 		DeferedParamQuery dQuery = new DeferedParamQuery(sql);
-		consumer.accept(dQuery);
+		if(consumer != null){
+			consumer.accept(dQuery);
+		}
 		SQLQuery query = dQuery.createSQLQuery(session, false, null);
 		query.setResultTransformer(new ColumnMapResultTransformer<Void>() {
 			

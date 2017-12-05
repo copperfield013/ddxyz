@@ -9,6 +9,15 @@
     <link rel="stylesheet" href="media/weixin/kanteen/css/kanteen-order-list.css?${GLOBAL_VERSION }">
     <script src="media/weixin/kanteen/js/kanteen-order-list.js?${GLOBAL_VERSION }"></script>
     <script src="${basePath }media/weixin/main/js/ix.js?${GLOBAL_VERSION }"></script>
+    <script type="text/javascript">
+    	$(function(){
+    		var serverTime = new Date(parseInt('${now.time + 10000}'));
+    		var subTime = serverTime.getTime() - (new Date()).getTime();
+    		window.SERVER_TIME = function(){
+    			return new Date((new Date()).getTime() + subTime);
+    		}
+    	});
+    </script>
 </head>
 
 <body>
@@ -55,7 +64,22 @@
     					 // 回调 this是当前容器，boxs是加载的数据项
     				}
     			});
-    			
+    			var countdownTimer = setInterval(function(){
+    				$('.pay-countdown[pay-expired-time]').each(function(){
+    					var $this = $(this);
+    					var expiredTime = new Date(parseInt($this.attr('pay-expired-time')));
+    					var remain = expiredTime.getTime() - SERVER_TIME().getTime();
+    					if(remain > 0){
+	    					var time = new Date(remain - 28800000);
+    						$('span', $this).text(Utils.formatDate(time, 'mm:ss'));
+    					}else{
+    						var $section = $this.closest('section.canteen-order-list');
+    						$section.find('.canteen-order-list_status').text($this.attr('pay-expired-status'));
+    						$section.find('.canteen-order-pay').remove();
+    						$this.remove();
+    					}
+    				});
+    			}, 300);
     			
     			function bindEvent(event, selector, callback){
     				$(document).on(event, selector, function(e){
@@ -80,7 +104,7 @@
 			    						orderId	: orderId
 			    					}, function(data){
 			    						if(data.status === 'suc' && data.payParameter){
-			    							seajs.use(['order/order-pay?${RES_STAMP}'], function(OrderPay){
+			    							seajs.use(['order/order-pay.js?${RES_STAMP}'], function(OrderPay){
 			    								try{
 				    								OrderPay.doPay('weixin/kanteen/order_paied', data.payParameter, orderId, function(){
 				    									//后台支付成功
@@ -99,7 +123,8 @@
 				    								function(){Tips.alert('没有支付');}, 
 				    								function(){Tips.alert('无法支付该订单');});
 			    								}catch(e){
-			    									Tip.alert('调用支付接口失败');
+			    									console.error(e);
+			    									Tips.alert('调用支付接口失败');
 			    								}
 			    							});
 			    						}else if(data.msg){

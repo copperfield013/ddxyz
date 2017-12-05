@@ -10,6 +10,7 @@ public class KanteenOrderStatCriteria {
 	private Set<String> status;
 	private Set<String> canceledStatus;
 	private boolean allCanceled;
+	private String payway;
 	public Long getDistributionId() {
 		return distributionId;
 	}
@@ -45,6 +46,13 @@ public class KanteenOrderStatCriteria {
 	}
 	public Set<String> getCanceledStatus() {
 		return canceledStatus;
+	}
+	public String getPayway() {
+		return payway;
+	}
+	public KanteenOrderStatCriteria setPayway(String payway) {
+		this.payway = payway;
+		return this;
 	}
 	
 	
