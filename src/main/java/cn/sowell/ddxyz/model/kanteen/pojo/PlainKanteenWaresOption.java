@@ -32,6 +32,9 @@ public class PlainKanteenWaresOption {
 	@Column(name="c_disabled")
 	private Integer disabled;
 	
+	@Column(name="c_deleted")
+	private Integer deleted;
+	
 	@Column(name="c_order")
 	private Integer order;
 	
@@ -100,6 +103,14 @@ public class PlainKanteenWaresOption {
 
 	public void setAdditionPrice(Integer additionPrice) {
 		this.additionPrice = additionPrice;
+	}
+
+	public Integer getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Integer deleted) {
+		this.deleted = deleted;
 	}
 	
 	

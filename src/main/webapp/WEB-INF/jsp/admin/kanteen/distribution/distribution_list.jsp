@@ -25,6 +25,7 @@
 				<th>菜单名称</th>
 				<th>可预订时间</th>
 				<th>配送次数</th>
+				<th>订单数</th>
 				<th>修改时间</th>
 				<th>操作</th>
 			</tr>
@@ -43,6 +44,14 @@
 								<a class="tab" href="admin/kanteen/delivery?distributionId=${distribution.id }" target="distribution_delivery_list_${distribution.id }">${distribution.deliveryCount }</a>
 							</c:when>
 							<c:otherwise>${distribution.deliveryCount }</c:otherwise>
+						</c:choose>
+					</td>
+					<td>
+						<c:choose>
+							<c:when test="${orderCountMap[distribution.id] > 0 }">
+								<a class="tab" href="admin/kanteen/order/order_list/distribution/${distribution.id }">${orderCountMap[distribution.id] }</a>							
+							</c:when>
+							<c:otherwise>0</c:otherwise>
 						</c:choose>
 					</td>
 					<td><fmt:formatDate value="${distribution.updateTime }" pattern="yyyy-MM-dd HH:mm:ss"/></td>

@@ -123,6 +123,23 @@ define(function(require, exports){
 			return this;
 		},
 		/**
+		 * 切换对象的一般属性。
+		 * @param attrName 属性名
+		 * @param value1 优先属性，当属性不存在，或者属性值不是value1和value2中的一个，那么将会变成value1
+		 * @param value2 切换属性
+		 */
+		toggleAttr	: function(jqObj, attrName, value1, value2){
+			$(jqObj).each(function(){
+				var $jqObj = $(this);
+				var value = $jqObj.attr(attrName);
+				if(value === value1){
+					$jqObj.attr(attrName, value2);
+				}else{
+					$jqObj.attr(attrName, value1);
+				}
+			});
+		},
+		/**
 		 * 将dom元素的内容设置为数字编辑器
 		 */
 		NumberEdit	: function(_param, whenEnter){

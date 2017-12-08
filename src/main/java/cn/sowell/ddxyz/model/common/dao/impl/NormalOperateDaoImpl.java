@@ -1,5 +1,7 @@
 package cn.sowell.ddxyz.model.common.dao.impl;
 
+import java.io.Serializable;
+
 import javax.annotation.Resource;
 
 import org.hibernate.SessionFactory;
@@ -14,8 +16,8 @@ public class NormalOperateDaoImpl implements NormalOperateDao{
 	SessionFactory sFactory;
 	
 	@Override
-	public void save(Object pojo) {
-		sFactory.getCurrentSession().save(pojo);
+	public Serializable save(Object pojo) {
+		return sFactory.getCurrentSession().save(pojo);
 	}
 
 	@Override

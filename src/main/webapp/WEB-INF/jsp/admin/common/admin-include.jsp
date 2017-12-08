@@ -13,9 +13,13 @@
 <!--  -->
 <link href="media/admin/cpf/css/cpf-main.css" rel="stylesheet" type="text/css" />
 
+<!-- 引入IconFont字体 -->
+<link rel="stylesheet" type="text/css" href="media/common/plugins/iconfont/iconfont.css">
+
 <!-- jQuery -->
 <script src="${basePath }media/jquery-1.11.3.js"></script>
 <script src="${basePath }media/common/plugins/jquery.tmpl.js"></script>
 <script src="${basePath }media/admin/plugins/printArea/jquery.PrintArea.js"></script>
+<script src="${basePath }media/admin/plugins/beyond/js/nestable/jquery.nestable.min.js"></script>
 <!-- SeaJS -->
 <script src="${basePath }media/sea-debug.js"></script>

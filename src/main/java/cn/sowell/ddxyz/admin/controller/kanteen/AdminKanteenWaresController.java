@@ -2,7 +2,9 @@ package cn.sowell.ddxyz.admin.controller.kanteen;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.LinkedHashSet;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -14,14 +16,19 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+
 import cn.sowell.copframe.common.UserIdentifier;
 import cn.sowell.copframe.common.file.FileUploadUtils;
 import cn.sowell.copframe.dto.ajax.AjaxPageResponse;
+import cn.sowell.copframe.dto.ajax.JsonRequest;
 import cn.sowell.copframe.dto.ajax.JsonResponse;
 import cn.sowell.copframe.dto.page.PageInfo;
 import cn.sowell.copframe.utils.CollectionUtils;
@@ -33,11 +40,13 @@ import cn.sowell.ddxyz.DdxyzConstants;
 import cn.sowell.ddxyz.admin.AdminConstants;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMerchant;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenWares;
+import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenWaresOption;
+import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenWaresOptionGroup;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenWaresCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.KanteenWaresItem;
 import cn.sowell.ddxyz.model.kanteen.service.KanteenMerchantService;
-import cn.sowell.ddxyz.model.kanteen.service.KanteenWaresService;
 import cn.sowell.ddxyz.model.kanteen.service.KanteenWaresOptionService;
+import cn.sowell.ddxyz.model.kanteen.service.KanteenWaresService;
 
 @Controller
 @RequestMapping(AdminConstants.URI_BASE + "/kanteen/wares")
@@ -209,4 +218,73 @@ public class AdminKanteenWaresController {
 			return AjaxPageResponse.FAILD("操作失败");
 		}
 	}
+	
+	@RequestMapping("/options/{waresId}")
+	public String options(@PathVariable Long waresId, Model model){
+		PlainKanteenWares wares = waresService.getPlainObject(PlainKanteenWares.class, waresId);
+		//根据商品id获得其所属的所有的选项组
+		List<PlainKanteenWaresOptionGroup> groupList = waresOptionService.queryOptionGroups(waresId);
+		//根据选项组获得所有选项
+		Map<Long, List<PlainKanteenWaresOption>> optionMap = waresOptionService.queryOptionsMap(CollectionUtils.toSet(groupList, group->group.getId()));
+		model.addAttribute("wares", wares);
+		model.addAttribute("groupList", groupList);
+		model.addAttribute("optionMap", optionMap);
+		return AdminConstants.PATH_KANTEEN_WARES + "/wares_options.jsp";
+	}
+	
+	@ResponseBody
+	@RequestMapping("/option_update")
+	public AjaxPageResponse optionUpdate(@RequestBody JsonRequest jReq){
+		JSONObject req = jReq.getJsonObject();
+		Long waresId = req.getLong("waresId");
+		try {
+			if(waresId != null){
+				JSONArray optionData = req.getJSONArray("optionData");
+				if(optionData != null){
+					Map<PlainKanteenWaresOptionGroup, List<PlainKanteenWaresOption>> groupMap = toOptionGroupMap(optionData);
+					waresOptionService.updateWaresOption(waresId, groupMap);
+					return AjaxPageResponse.CLOSE_AND_REFRESH_PAGE("更新成功", "wares_list");
+				}
+			}
+		} catch (Exception e) {
+			logger.error("更新商品选项时发生错误", e);
+		}
+		return AjaxPageResponse.FAILD("更新失败");
+	}
+
+
+	private Map<PlainKanteenWaresOptionGroup, List<PlainKanteenWaresOption>> toOptionGroupMap(JSONArray optionData) {
+		Date now = new Date();
+		Map<PlainKanteenWaresOptionGroup, List<PlainKanteenWaresOption>> groupMap = new LinkedHashMap<PlainKanteenWaresOptionGroup, List<PlainKanteenWaresOption>>(); 
+		for (int i = 0; i < optionData.size(); i++) {
+			JSONObject groupData = optionData.getJSONObject(i);
+			JSONArray groupOptionsData = groupData.getJSONArray("options");
+			if(groupOptionsData != null && !groupOptionsData.isEmpty()){
+				PlainKanteenWaresOptionGroup group = new PlainKanteenWaresOptionGroup();
+				group.setId(groupData.getLong("id"));
+				group.setTitle(groupData.getString("name"));
+				group.setMultiple(groupData.getBoolean("isMulti")?1:null);
+				group.setRequired(groupData.getBoolean("isRequired")?1:null);
+				group.setCreateTime(now);
+				group.setOrder(i);
+				List<PlainKanteenWaresOption> optionList = new ArrayList<PlainKanteenWaresOption>();
+				groupMap.put(group, optionList);
+				for (int j = 0; j < groupOptionsData.size(); j++) {
+					JSONObject groupOptionData = groupOptionsData.getJSONObject(j);
+					PlainKanteenWaresOption option = new PlainKanteenWaresOption();
+					option.setId(groupOptionData.getLong("id"));
+					option.setName(groupOptionData.getString("name"));
+					option.setRule(groupOptionData.getString("rule"));
+					option.setAdditionPrice(groupOptionData.getInteger("additionPrice"));
+					option.setOptiongroupId(group.getId());
+					option.setOrder(j);
+					option.setCreateTime(now);
+					optionList.add(option);
+				}
+			}
+		}
+		return groupMap;
+	}
+	
+	
 }

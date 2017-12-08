@@ -15,12 +15,16 @@ import org.springframework.stereotype.Repository;
 
 import cn.sowell.copframe.dao.deferedQuery.DeferedParamQuery;
 import cn.sowell.copframe.dao.deferedQuery.DeferedParamSnippet;
+import cn.sowell.copframe.dao.utils.QueryUtils;
+import cn.sowell.copframe.dto.page.PageInfo;
 import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.ddxyz.model.kanteen.dao.KanteenOrderDao;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenOrder;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenSection;
+import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenOrderListCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenOrderStatCriteria;
+import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.KanteenOrderItem;
 
 @Repository
 public class KanteenOrderDaoImpl implements KanteenOrderDao{
@@ -111,6 +115,29 @@ public class KanteenOrderDaoImpl implements KanteenOrderDao{
 					.setString("payExpiredStatus", PlainKanteenOrder.CANSTATUS_PAYEXPIRED)
 					.executeUpdate();
 		}
+		
+	}
+	
+	@Override
+	public List<KanteenOrderItem> queryOrderList(
+			KanteenOrderListCriteria criteria, PageInfo pageInfo) {
+		String hql = "from PlainKanteenOrder o where o.merchantId = :merchantId @condition order by o.createTime desc";
+		List<PlainKanteenOrder> orderList = QueryUtils.pagingQuery(hql, sFactory.getCurrentSession(), pageInfo, dQuery->{
+			dQuery.setParam("merchantId", criteria.getMerchantId());
+			DeferedParamSnippet snippet = dQuery.createSnippet("condition", null);
+			if(criteria.getDeliveryId() != null){
+				snippet.append("and o.deliveryId = :deliveryId");
+				dQuery.setParam("deliveryId", criteria.getDeliveryId());
+			}else if(criteria.getDistributionId() != null){
+				snippet.append("and o.distributionId = :distributionId");
+				dQuery.setParam("distributionId", criteria.getDistributionId());
+			}
+			if(TextUtils.hasText(criteria.getOrderCode())){
+				snippet.append("and o.code like :code");
+				dQuery.setParam("code", "%" + criteria.getOrderCode() + "%");
+			}
+		});
+		
 		
 	}
 	

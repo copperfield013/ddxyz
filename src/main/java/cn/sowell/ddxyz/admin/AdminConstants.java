@@ -2,7 +2,7 @@ package cn.sowell.ddxyz.admin;
 
 public interface AdminConstants {
 	final String URI_BASE = "/admin";
-	
+	final String URI_KANTEEN_BASE = URI_BASE + "/kanteen";
 	
 	
 	final String PATH_BASE = "/admin";
@@ -79,6 +79,7 @@ public interface AdminConstants {
 
 	final String PATH_KANTEEN_LOCATION = PATH_KANTEEN + "/location";
 
+	final String PATH_KANTEEN_ORDER = PATH_KANTEEN + "/order";
 
 
 	/**

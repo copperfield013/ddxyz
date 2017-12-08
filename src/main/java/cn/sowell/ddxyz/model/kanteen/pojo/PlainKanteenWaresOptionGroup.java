@@ -31,6 +31,9 @@ public class PlainKanteenWaresOptionGroup {
 	@Column(name="c_disabled")
 	private Integer disabled;
 	
+	@Column(name="c_deleted")
+	private Integer deleted;
+	
 	@Column(name="c_order")
 	private Integer order;
 	
@@ -84,5 +87,11 @@ public class PlainKanteenWaresOptionGroup {
 	}
 	public void setRequired(Integer required) {
 		this.required = required;
+	}
+	public Integer getDeleted() {
+		return deleted;
+	}
+	public void setDeleted(Integer deleted) {
+		this.deleted = deleted;
 	}
 }

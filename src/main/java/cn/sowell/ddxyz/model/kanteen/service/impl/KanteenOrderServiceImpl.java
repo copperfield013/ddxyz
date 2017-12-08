@@ -2,6 +2,7 @@ package cn.sowell.ddxyz.model.kanteen.service.impl;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -10,10 +11,13 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import cn.sowell.copframe.dto.page.PageInfo;
 import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.ddxyz.model.kanteen.dao.KanteenOrderDao;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenSection;
+import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenOrderListCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenOrderStatCriteria;
+import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.KanteenOrderItem;
 import cn.sowell.ddxyz.model.kanteen.service.KanteenDistributionService;
 import cn.sowell.ddxyz.model.kanteen.service.KanteenOrderService;
 
@@ -57,6 +61,12 @@ public class KanteenOrderServiceImpl implements KanteenOrderService{
 			distributionService.decreaseDistributionWaresCurrentCount(distributionWaresId, decrease);
 		});
 		orderDao.setOrderPayExpired(expiredOrderIds);
+	}
+	
+	@Override
+	public List<KanteenOrderItem> queryOrderList(
+			KanteenOrderListCriteria criteria, PageInfo pageInfo) {
+		return orderDao.queryOrderList(criteria, pageInfo);
 	}
 	
 }

@@ -1,10 +1,14 @@
 package cn.sowell.ddxyz.model.kanteen.dao;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
+import cn.sowell.copframe.dto.page.PageInfo;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenSection;
+import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenOrderListCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenOrderStatCriteria;
+import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.KanteenOrderItem;
 
 public interface KanteenOrderDao {
 
@@ -41,5 +45,14 @@ public interface KanteenOrderDao {
 	 * @param expiredOrderIds
 	 */
 	void setOrderPayExpired(Set<Long> expiredOrderIds);
+
+	/**
+	 * 查询订单列表
+	 * @param criteria
+	 * @param pageInfo
+	 * @return
+	 */
+	List<KanteenOrderItem> queryOrderList(KanteenOrderListCriteria criteria,
+			PageInfo pageInfo);
 
 }

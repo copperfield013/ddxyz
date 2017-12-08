@@ -135,13 +135,13 @@ public class KanteenDaoImpl implements KanteenDao {
 	public Map<Long, List<KanteenWaresOptionGroup>> getMenuWaresOptionGroupsMap(
 			Set<Long> waresIds) {
 		if(waresIds != null && waresIds.size() > 0){
-			String hql = "from PlainKanteenWaresOptionGroup g where g.waresId in (:waresIds) and g.disabled is null";
+			String hql = "from PlainKanteenWaresOptionGroup g where g.waresId in (:waresIds) and g.disabled is null and g.deleted is null order by g.order asc";
 			Query query = sFactory.getCurrentSession().createQuery(hql);
 			query.setParameterList("waresIds", waresIds, StandardBasicTypes.LONG);
 			List<PlainKanteenWaresOptionGroup> plainGroups = query.list();
 			
 			if(plainGroups != null && plainGroups.size() > 0){
-				hql = "from PlainKanteenWaresOption o where o.optiongroupId in (:groupIds) and o.disabled is null";
+				hql = "from PlainKanteenWaresOption o where o.optiongroupId in (:groupIds) and o.disabled is null and g.o.deleted is null order by o.order asc";
 				query =  sFactory.getCurrentSession().createQuery(hql);
 				query.setParameterList("groupIds", CollectionUtils.toList(plainGroups, group->group.getId()));
 				List<PlainKanteenWaresOption> plainOptions = query.list();

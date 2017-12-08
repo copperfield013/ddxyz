@@ -1,13 +1,11 @@
 package cn.sowell.ddxyz.model.common.dao;
 
-import java.util.List;
-
-import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.KanteenWaresGroupWaresItem;
+import java.io.Serializable;
 
 
 public interface NormalOperateDao {
 
-	void save(Object pojo);
+	Serializable save(Object pojo);
 	
 	void update(Object pojo);
 	

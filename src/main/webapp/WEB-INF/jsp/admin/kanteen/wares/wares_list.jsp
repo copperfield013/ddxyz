@@ -61,12 +61,14 @@
 					<td>${wares.priceUnit }</td>
 					<td>
 						<c:set var="optionCount" value="${optionCountMap[wares.id] }" />
-						<c:choose>
-							<c:when test="${optionCount != null && optionCount > 0 }">
-								${optionGroupCountMap[wares.id] }/${optionCount }
-							</c:when>
-							<c:otherwise>-</c:otherwise>
-						</c:choose>
+							<a title="查看商品选项" class="tab" target="wares_option_${wares.id }" href="admin/kanteen/wares/options/${wares.id }">
+								<c:choose>
+									<c:when test="${optionCount != null && optionCount > 0 }">
+										${optionGroupCountMap[wares.id] }/${optionCount }
+									</c:when>
+									<c:otherwise>创建</c:otherwise>
+								</c:choose>
+							</a>
 					</td>
 					<td><fmt:formatDate value="${wares.createTime }"  pattern="yyyy-MM-dd HH:mm:ss" /> </td>
 					<td>
