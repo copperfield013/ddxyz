@@ -3,12 +3,15 @@ package cn.sowell.ddxyz.model.kanteen.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -18,6 +21,7 @@ import cn.sowell.copframe.utils.CollectionUtils;
 import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.ddxyz.model.common.dao.NormalOperateDao;
 import cn.sowell.ddxyz.model.kanteen.dao.KanteenDistributionDao;
+import cn.sowell.ddxyz.model.kanteen.pojo.KanteenMenuWares;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenDistribution;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenDistributionWares;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMenu;
@@ -57,6 +61,9 @@ public class KanteenDistributionServiceImpl implements KanteenDistributionServic
 	
 	@Resource
 	KanteenMenuService menuService;
+
+	Logger logger = Logger.getLogger(KanteenDistributionServiceImpl.class);
+	
 	
 	@Override
 	public List<KanteenDistributionItem> queryDistributions(Long merchantId, PageInfo pageInfo) {
@@ -106,6 +113,8 @@ public class KanteenDistributionServiceImpl implements KanteenDistributionServic
 		
 	}
 	Map<Long, byte[]> lockMap = new HashMap<Long, byte[]>();
+
+	
 	private Object codeLock(Long merchantId){
 		byte[] lock = lockMap.get(merchantId);
 		if(lock == null){
@@ -177,6 +186,48 @@ public class KanteenDistributionServiceImpl implements KanteenDistributionServic
 	public void decreaseDistributionWaresCurrentCount(Long distributionWaresId,
 			Integer decrease) {
 		dDao.decreaseDistributionWaresCurrentCount(distributionWaresId, decrease);
+	}
+	
+	@Override
+	public void adaptEffectiveDistributionWaresByMenuId(Long menuId) {
+		Date now = new Date();
+		//获得菜单的所有可用商品
+		List<KanteenMenuWares> menuWaresItems = menuService.getMenuWaresItems(menuId, true);
+		//获得关联到menuId的当前有效的配销
+		List<PlainKanteenDistribution> distributionList = dDao.getEffectiveDistributionListByMenuId(menuId, now);
+		//遍历所有配销
+		for (PlainKanteenDistribution distribution : distributionList) {
+			//获得配销的商品
+			List<PlainKanteenDistributionWares> dWaresList = dDao.getDistributionWares(distribution.getId(), null);
+			//比较配销商品和菜单商品
+			Set<PlainKanteenDistributionWares> toCreateWares = new LinkedHashSet<PlainKanteenDistributionWares>();
+			Set<Long> toDisableDWaresIds = new HashSet<Long>(CollectionUtils.toSet(dWaresList, dWares->dWares.getMenuWaresId()));
+			menuWaresItems.forEach(menuWares->{
+				if(toDisableDWaresIds.contains(menuWares.getGroupWaresId())){
+					toDisableDWaresIds.remove(menuWares.getGroupWaresId());
+				}else{
+					//构造配销商品对象
+					PlainKanteenDistributionWares dWares = new PlainKanteenDistributionWares();
+					dWares.setDistributionId(distribution.getId());
+					dWares.setWaresId(menuWares.getWaresId());
+					dWares.setMenuWaresId(menuWares.getGroupWaresId());
+					dWares.setCurrentCount(0);
+					dWares.setMaxCount(1000);
+					dWares.setCreateTime(now);
+					toCreateWares.add(dWares);
+				}
+			});
+			//添加配销商品
+			toCreateWares.forEach(wares->nDao.save(wares));
+			//禁用配销商品
+			dDao.disableDistributionWares(toDisableDWaresIds);
+		}
+	}
+	
+	@Override
+	public void adaptEffectiveDistributionWaresByGroupId(Long waresGroupId) {
+		List<PlainKanteenMenu> menuList = menuService.getMenusByWaresGroupId(waresGroupId);
+		menuList.forEach(menu->adaptEffectiveDistributionWaresByMenuId(menu.getId()));
 	}
 	
 }

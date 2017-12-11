@@ -3,8 +3,10 @@ package cn.sowell.ddxyz.model.merchant.dao.impl;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -21,7 +23,9 @@ import cn.sowell.copframe.dao.deferedQuery.DeferedParamSnippet;
 import cn.sowell.copframe.dao.deferedQuery.sqlFunc.WrapForCountFunction;
 import cn.sowell.copframe.dao.utils.QueryUtils;
 import cn.sowell.copframe.dto.page.CommonPageInfo;
+import cn.sowell.copframe.utils.CollectionUtils;
 import cn.sowell.copframe.utils.FormatUtils;
+import cn.sowell.ddxyz.model.canteen.pojo.PlainKanteenDelivery;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlan;
 import cn.sowell.ddxyz.model.common.pojo.PlainLocation;
@@ -112,6 +116,20 @@ public class DeliveryDaoImpl implements DeliveryDao{
 			return true;
 		}
 		return false;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Map<Long, PlainKanteenDelivery> getDeliveryMap(Set<Long> deliveryIds) {
+		if(deliveryIds != null){
+			String hql = "from PlainKanteenDelivery d where w.id in (:deliveryIds)";
+			Query query = sFactory.getCurrentSession().createQuery(hql);
+			query.setParameterList("deliveryIds", deliveryIds, StandardBasicTypes.LONG);
+			List<PlainKanteenDelivery> list = query.list();
+			return CollectionUtils.toMap(list, item->item.getId());
+		}else{
+			return new HashMap<Long, PlainKanteenDelivery>();
+		}
 	}
 
 }

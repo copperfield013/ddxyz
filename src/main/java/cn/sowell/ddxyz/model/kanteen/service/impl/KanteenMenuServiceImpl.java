@@ -14,6 +14,7 @@ import cn.sowell.copframe.dto.page.PageInfo;
 import cn.sowell.copframe.utils.CollectionUtils;
 import cn.sowell.ddxyz.model.common.dao.NormalOperateDao;
 import cn.sowell.ddxyz.model.kanteen.dao.KanteenMenuDao;
+import cn.sowell.ddxyz.model.kanteen.pojo.KanteenMenuWares;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMenu;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMenuWaresGroup;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenWaresGroup;
@@ -113,6 +114,17 @@ public class KanteenMenuServiceImpl implements KanteenMenuService{
 	public List<PlainKanteenWaresGroupWaresItem> getWaresGroupWaresList(
 			Set<Long> groupIds) {
 		return mDao.getWaresGroupWaresList(groupIds);
+	}
+	
+	@Override
+	public List<KanteenMenuWares> getMenuWaresItems(Long menuId,
+			boolean effectiveWares) {
+		return mDao.getMenuWaresItems(menuId, effectiveWares);
+	}
+	
+	@Override
+	public List<PlainKanteenMenu> getMenusByWaresGroupId(Long waresGroupId) {
+		return mDao.getMenusByWaresGroupId(waresGroupId);
 	}
 	
 }

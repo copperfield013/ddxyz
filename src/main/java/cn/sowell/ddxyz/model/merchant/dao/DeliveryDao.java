@@ -2,9 +2,11 @@ package cn.sowell.ddxyz.model.merchant.dao;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import cn.sowell.copframe.dto.page.CommonPageInfo;
+import cn.sowell.ddxyz.model.canteen.pojo.PlainKanteenDelivery;
 import cn.sowell.ddxyz.model.common.pojo.PlainDelivery;
 import cn.sowell.ddxyz.model.common.pojo.PlainDeliveryPlan;
 import cn.sowell.ddxyz.model.common.pojo.PlainLocation;
@@ -48,6 +50,13 @@ public interface DeliveryDao {
 	List<PlainDeliveryPlan> getPlainDeliveryPlanPageList(DeliveryPlanCriteria criteria, CommonPageInfo pageInfo);
 	
 	boolean changePlanDisabled(Long planId, Integer disabled);
+
+	/**
+	 * 
+	 * @param set
+	 * @return
+	 */
+	Map<Long, PlainKanteenDelivery> getDeliveryMap(Set<Long> deliveryIds);
 	
 
 }

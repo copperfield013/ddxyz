@@ -174,7 +174,7 @@
 				{{/each}}
 			</div>
 			<div class="options-footer">
-				<span class="options-price"><span class="option-wares-base-price">\${wares.basePriceFloat}</span>元/\${wares.priceUnit}</span>
+				<span class="options-price"><span class="option-wares-base-price" data-basePrice="\${wares.basePrice}">\${wares.basePriceFloat}</span>元/\${wares.priceUnit}</span>
 			</div>
 		</div>
 	</script>
@@ -182,9 +182,19 @@
     <script type="text/javascript">
     	$(function(){
     		seajs.use(['$CPF', 'ajax', 'utils', 'kanteen/js/kanteen-index.js?${GLOBAL_VERSION}'], function($CPF, Ajax, Utils, Kanteen){
-    			var optionGroupJson = {};
+    			var optionGroupJson = {}, optionMap = {};
 	    		try{
 	    			optionGroupJson = $.parseJSON('${menu.optionGroupJson}');
+	    			for(var key in optionGroupJson){
+	    				var wares = optionGroupJson[key];
+	    				for(var i in wares.groups){
+	    					var group = wares.groups[i];
+	    					for(var j in group.options){
+	    						var option = group.options[j];
+	    						optionMap['option_' + option.id] = option;
+	    					}
+	    				}
+	    			}
 	    		}catch(e){
 	    		}
 	    		var trolleyFlag = false;
@@ -266,9 +276,11 @@
 	    		
 	    		$(document).on('touchend', '.options-group span', function(e){
 	    			var $option = $(e.target);
+	    			var $panel = $option.closest('.options-panel');
 	    			var isActive = $option.is('.active'),
 	    				isMulti = $option.closest('.options-group').is('.options-group-multiple'),
 	    				isRequired = $option.closest('.options-group').is('.options-group-required');
+	    				
 	    			if(isActive && isRequired && $option.siblings().filter('span.active').length == 0){
     					return false;
 	    			}else{
@@ -280,8 +292,23 @@
 		    				$active.removeClass('active');
 		    			}
 	    			}
+	    			
+	    			resetOptionPrice($panel);
 	    			return false;
 	    		});
+	    		
+	    		function resetOptionPrice($panel){
+	    			var unitPrice = parseFloat($panel.find('.option-wares-base-price').attr('data-basePrice'));
+	    			//计算选择选项之后的商品单价
+	    			$panel.find('.options-group span.active[data-id]').each(function(){
+	    				var optionId = $(this).attr('data-id');
+	    				var option = optionMap['option_' + optionId];
+	    				unitPrice += option.additionPrice;
+	    			});
+	    			
+	    			$('.option-wares-base-price', $panel).text((unitPrice / 100).toFixed(2));
+	    		}
+	    		
 	    		$(document).on('touchend', 'a.kanteen-optionsgroup', function(e){
 	    			var waresId = $(e.target).closest('[data-wares-id]').attr('data-wares-id'),
 	    				distributionWaresId = $(e.target).closest('[data-prouid]').attr('data-prouid');
@@ -290,7 +317,7 @@
 	    				if(data){
 	    					data.wares.basePriceFloat = parseFloat(data.wares.basePrice / 100).toFixed(2);
 			    			var $content = $('#options-tmpl').tmpl(data);
-			    			
+			    			resetOptionPrice($content);
 			    			Tips.confirm({
 			    				content	: $content.prop('outerHTML'),
 			    				width	: 3/4,

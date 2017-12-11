@@ -26,7 +26,6 @@ import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenLocation;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMerchant;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenDeliveryCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.KanteenDeliveryItem;
-import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.KanteenMenuOrderStatItem;
 import cn.sowell.ddxyz.model.kanteen.service.KanteenDeliveryService;
 import cn.sowell.ddxyz.model.kanteen.service.KanteenDistributionService;
 import cn.sowell.ddxyz.model.kanteen.service.KanteenLocationService;
@@ -110,7 +109,7 @@ public class AdminKanteenDeliveryController {
 	}
 	
 	
-	@RequestMapping("/detail/{deliveryId}")
+	/*@RequestMapping("/detail/{deliveryId}")
 	public String detail(@PathVariable Long deliveryId, Model model){
 		PlainKanteenDelivery delivery = deliveryService.getDelivery(deliveryId);
 		PlainKanteenDistribution distribution = distributionService.getDistribution(delivery.getDistributionId());
@@ -119,7 +118,7 @@ public class AdminKanteenDeliveryController {
 		model.addAttribute("distribution", distribution);
 		model.addAttribute("deliveryWaresItems", deliveryWaresItems);
 		return AdminConstants.PATH_KANTEEN_DELIVERY + "/delivery_detail.jsp";
-	}
+	}*/
 	
 	
 	

@@ -69,4 +69,10 @@ public class KanteenOrderServiceImpl implements KanteenOrderService{
 		return orderDao.queryOrderList(criteria, pageInfo);
 	}
 	
+	@Override
+	public Map<Long, Integer> getDistributionEffectiveOrderCountMap(
+			Set<Long> distributionIdSet) {
+		return orderDao.getDistributionEffectiveOrderCountMap(distributionIdSet);
+	}
+	
 }

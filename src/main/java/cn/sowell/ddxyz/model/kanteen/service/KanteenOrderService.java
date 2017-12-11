@@ -1,6 +1,8 @@
 package cn.sowell.ddxyz.model.kanteen.service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import cn.sowell.copframe.dto.page.PageInfo;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenOrderListCriteria;
@@ -36,5 +38,13 @@ public interface KanteenOrderService {
 	 */
 	List<KanteenOrderItem> queryOrderList(KanteenOrderListCriteria criteria,
 			PageInfo pageInfo);
+
+	/**
+	 * 根据配销id获得各个配销的有效订单数（非默认状态的，并且未被取消的订单）
+	 * @param distributionIdSet
+	 * @return
+	 */
+	Map<Long, Integer> getDistributionEffectiveOrderCountMap(
+			Set<Long> distributionIdSet);
 
 }

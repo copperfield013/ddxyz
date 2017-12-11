@@ -357,7 +357,7 @@
 						waresChain = waresChain && waresChain.substring(0, waresChain.length - 1);
 						content +=
 								'<p><label>商品：</label>' + waresChain + '</p>' + 
-								'<p><label>合计：</label>￥' + order.totalPrice.toFixed(2) + '</p>' + 
+								'<p><label>合计：</label>￥' + (order.totalPrice / 100).toFixed(2) + '</p>' + 
 								'<p><label>领取人姓名：</label>' + order.receiverName + '</p>' + 
 								'<p><label>联系方式：</label>' + order.receiverContact + '</p>' +  
 								'<p><label>部门：</label>' + order.receiverDepart + '</p>' + 

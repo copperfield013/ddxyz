@@ -69,6 +69,18 @@ public interface KanteenDistributionService {
 	void decreaseDistributionWaresCurrentCount(Long distributionWaresId,
 			Integer decrease);
 
+	/**
+	 * 调整当前所有关联到菜单的当前有效的配销商品
+	 * @param menuId
+	 */
+	void adaptEffectiveDistributionWaresByMenuId(Long menuId);
+
+	/**
+	 * 调整当前所有关联到商品组的当前有效的配销商品
+	 * @param id
+	 */
+	void adaptEffectiveDistributionWaresByGroupId(Long waresGroupId);
+
 	
 	
 }

@@ -106,7 +106,7 @@
 			</div>
 			<div class="form-group">
 				<div class="col-lg-offset-2 col-lg-2">
-					<input type="button" id="add-optiongroup" data-role="add" class="btn btn-primary btn-block" value="添加商品组" />
+					<input type="button" id="add-optiongroup" data-role="add" class="btn btn-primary btn-block" value="添加选项组" />
 				</div>
 				<div class="col-lg-2" id="cancel-edit">
 					<input type="button" class="btn btn-default  btn-block" value="取消" />

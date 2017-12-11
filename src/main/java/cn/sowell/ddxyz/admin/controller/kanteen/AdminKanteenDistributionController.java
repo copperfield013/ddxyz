@@ -2,6 +2,7 @@ package cn.sowell.ddxyz.admin.controller.kanteen;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import cn.sowell.copframe.dto.ajax.AjaxPageResponse;
 import cn.sowell.copframe.dto.choose.ChooseTablePage;
 import cn.sowell.copframe.dto.page.PageInfo;
+import cn.sowell.copframe.utils.CollectionUtils;
 import cn.sowell.copframe.utils.date.FrameDateFormat;
 import cn.sowell.ddxyz.admin.AdminConstants;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenDistribution;
@@ -28,6 +30,7 @@ import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.waresgroup.KanteenMenuItemFo
 import cn.sowell.ddxyz.model.kanteen.service.KanteenDistributionService;
 import cn.sowell.ddxyz.model.kanteen.service.KanteenMenuService;
 import cn.sowell.ddxyz.model.kanteen.service.KanteenMerchantService;
+import cn.sowell.ddxyz.model.kanteen.service.KanteenOrderService;
 
 @Controller
 @RequestMapping(AdminConstants.URI_BASE + "/kanteen/distribution")
@@ -45,13 +48,19 @@ public class AdminKanteenDistributionController {
 	@Resource
 	FrameDateFormat dateFormat;
 	
+	@Resource
+	KanteenOrderService orderService;
+	
 	Logger logger = Logger.getLogger(AdminKanteenDistributionController.class);
+
 	
 	@RequestMapping({"", "/"})
 	public String main(PageInfo pageInfo, Model model){
 		PlainKanteenMerchant merchant = merchantService.getCurrentMerchant();
 		List<KanteenDistributionItem> items = distributionService.queryDistributions(merchant.getId(), pageInfo);
+		Map<Long, Integer> orderCountMap = orderService.getDistributionEffectiveOrderCountMap(CollectionUtils.toSet(items, item->item.getId()));
 		model.addAttribute("distributionList", items);
+		model.addAttribute("orderCountMap", orderCountMap);
 		return AdminConstants.PATH_KANTEEN_DISTRIBUTION + "/distribution_list.jsp";
 	}
 	

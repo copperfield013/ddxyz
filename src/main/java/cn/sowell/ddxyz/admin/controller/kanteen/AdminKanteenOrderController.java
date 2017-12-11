@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.sowell.copframe.dto.page.PageInfo;
 import cn.sowell.ddxyz.admin.AdminConstants;
-import cn.sowell.ddxyz.model.kanteen.pojo.KanteenOrder;
-import cn.sowell.ddxyz.model.kanteen.pojo.KanteenOrderCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMerchant;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenOrderListCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.KanteenOrderItem;
@@ -32,6 +30,7 @@ public class AdminKanteenOrderController {
 	@RequestMapping("/order_list/distribution/{distributionId}")
 	public String distributionOrderList(@PathVariable Long distributionId, KanteenOrderListCriteria criteria, PageInfo pageInfo, Model model){
 		PlainKanteenMerchant merchant = merchantService.getCurrentMerchant();
+		criteria.setMerchantId(merchant.getId());
 		List<KanteenOrderItem> orderList = orderService.queryOrderList(criteria, pageInfo);
 		model.addAttribute("orderList", orderList);
 		model.addAttribute("criteria", criteria);

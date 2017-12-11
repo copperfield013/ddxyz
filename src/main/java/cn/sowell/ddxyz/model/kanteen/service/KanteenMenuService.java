@@ -1,10 +1,10 @@
 package cn.sowell.ddxyz.model.kanteen.service;
 
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
 import cn.sowell.copframe.dto.page.PageInfo;
+import cn.sowell.ddxyz.model.kanteen.pojo.KanteenMenuWares;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMenu;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMenuWaresGroup;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenWaresGroup;
@@ -83,6 +83,19 @@ public interface KanteenMenuService {
 	 */
 	List<PlainKanteenWaresGroupWaresItem> getWaresGroupWaresList(
 			Set<Long> groupIds);
-	
+
+	/**
+	 * 查找菜单内的所有可用商品
+	 * @param menuId
+	 * @return
+	 */
+	List<KanteenMenuWares> getMenuWaresItems(Long menuId, boolean effectiveWares);
+
+	/**
+	 * 获得关联到指定商品组的所有菜单
+	 * @param waresGroupId
+	 * @return
+	 */
+	List<PlainKanteenMenu> getMenusByWaresGroupId(Long waresGroupId);
 
 }

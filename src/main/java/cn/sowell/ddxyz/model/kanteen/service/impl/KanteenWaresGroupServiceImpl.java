@@ -21,6 +21,7 @@ import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenWaresGroupCriteri
 import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.KanteenWaresGroupItem;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.KanteenWaresGroupWaresItem;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.waresgroup.KanteenWaresItemForChoose;
+import cn.sowell.ddxyz.model.kanteen.service.KanteenDistributionService;
 import cn.sowell.ddxyz.model.kanteen.service.KanteenWaresGroupService;
 
 @Service
@@ -31,6 +32,9 @@ public class KanteenWaresGroupServiceImpl implements KanteenWaresGroupService{
 	
 	@Resource
 	NormalOperateDao nDao;
+
+	@Resource
+	KanteenDistributionService distributionService;
 	
 	@Override
 	public List<KanteenWaresGroupItem> queryWaresGroups(
@@ -79,6 +83,10 @@ public class KanteenWaresGroupServiceImpl implements KanteenWaresGroupService{
 		toUpdate.forEach(item->wgDao.updateGroupWaresItemOrder(item));
 		toCreate.forEach(item->nDao.save(item));
 		wgDao.disableGroupWaresItemOrder(toDelete);
+		
+		//调整所有关联到当前菜单的配销商品
+		distributionService.adaptEffectiveDistributionWaresByGroupId(origin.getId());
+		
 	}
 	
 	@Override

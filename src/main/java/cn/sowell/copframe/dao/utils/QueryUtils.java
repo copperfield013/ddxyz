@@ -56,8 +56,10 @@ public class QueryUtils {
 			consumer.accept(dQuery);
 		}
 		SQLQuery countQuery = dQuery.createSQLQuery(session, false, new WrapForCountFunction());
-		pageInfo.setCount(FormatUtils.toInteger(countQuery.uniqueResult()));
-		if(pageInfo.getCount() > 0){
+		if(pageInfo != null){
+			pageInfo.setCount(FormatUtils.toInteger(countQuery.uniqueResult()));
+		}
+		if(pageInfo == null || pageInfo.getCount() > 0){
 			SQLQuery query = dQuery.createSQLQuery(session, false, null);
 			query.setResultTransformer(HibernateRefrectResultTransformer.getInstance(itemClass));
 			setPagingParamWithCriteria(query, pageInfo);
@@ -74,8 +76,10 @@ public class QueryUtils {
 			consumer.accept(dQuery);
 		}
 		Query countQuery = dQuery.createQuery(session, false, new WrapForCountFunction());
-		pageInfo.setCount(FormatUtils.toInteger(countQuery.uniqueResult()));
-		if(pageInfo.getCount() > 0){
+		if(pageInfo != null){
+			pageInfo.setCount(FormatUtils.toInteger(countQuery.uniqueResult()));
+		}
+		if(pageInfo == null || pageInfo.getCount() > 0){
 			Query query = dQuery.createQuery(session, false, null);
 			setPagingParamWithCriteria(query, pageInfo);
 			return query.list();

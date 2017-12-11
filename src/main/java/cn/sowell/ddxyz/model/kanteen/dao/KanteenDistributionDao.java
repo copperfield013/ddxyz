@@ -1,10 +1,12 @@
 package cn.sowell.ddxyz.model.kanteen.dao;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import cn.sowell.copframe.dto.page.PageInfo;
+import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenDistribution;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenDistributionWares;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMenu;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenDistributionChooseMenuCriteria;
@@ -44,5 +46,21 @@ public interface KanteenDistributionDao {
 	 */
 	void decreaseDistributionWaresCurrentCount(Long distributionWaresId,
 			Integer decrease);
+
+	/**
+	 * 获得关联到menuId的当前有效的配销
+	 * @param menuId
+	 * @return
+	 */
+	List<PlainKanteenDistribution> getEffectiveDistributionListByMenuId(
+			Long menuId, Date now);
+
+	/**
+	 * 禁用配销商品
+	 * @param toDisableDWaresIds
+	 */
+	void disableDistributionWares(Set<Long> toDisableDWaresIds);
+
+	
 
 }

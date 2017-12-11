@@ -1,8 +1,11 @@
 package cn.sowell.ddxyz.model.kanteen.dao.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -17,20 +20,25 @@ import cn.sowell.copframe.dao.deferedQuery.DeferedParamQuery;
 import cn.sowell.copframe.dao.deferedQuery.DeferedParamSnippet;
 import cn.sowell.copframe.dao.utils.QueryUtils;
 import cn.sowell.copframe.dto.page.PageInfo;
+import cn.sowell.copframe.utils.CollectionUtils;
 import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.copframe.utils.TextUtils;
+import cn.sowell.ddxyz.model.canteen.pojo.PlainKanteenDelivery;
 import cn.sowell.ddxyz.model.kanteen.dao.KanteenOrderDao;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenOrder;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenSection;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenOrderListCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenOrderStatCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.KanteenOrderItem;
+import cn.sowell.ddxyz.model.merchant.dao.DeliveryDao;
 
 @Repository
 public class KanteenOrderDaoImpl implements KanteenOrderDao{
 	
 	@Resource
 	SessionFactory sFactory;
+	@Resource
+	DeliveryDao deliveryDao;
 	
 	@Override
 	public Integer statCount(KanteenOrderStatCriteria criteria) {
@@ -125,6 +133,13 @@ public class KanteenOrderDaoImpl implements KanteenOrderDao{
 		List<PlainKanteenOrder> orderList = QueryUtils.pagingQuery(hql, sFactory.getCurrentSession(), pageInfo, dQuery->{
 			dQuery.setParam("merchantId", criteria.getMerchantId());
 			DeferedParamSnippet snippet = dQuery.createSnippet("condition", null);
+			if(criteria.isFilterEffectiveOrder()){
+				snippet.append("and o.status <> :defaultOrderStatus and o.status is not null");
+				dQuery.setParam("defaultOrderStatus", PlainKanteenOrder.STATUS_DEFAULT);
+			}
+			if(criteria.isFilterCanceled()){
+				snippet.append("and o.canceledStatus is not null");
+			}
 			if(criteria.getDeliveryId() != null){
 				snippet.append("and o.deliveryId = :deliveryId");
 				dQuery.setParam("deliveryId", criteria.getDeliveryId());
@@ -137,8 +152,40 @@ public class KanteenOrderDaoImpl implements KanteenOrderDao{
 				dQuery.setParam("code", "%" + criteria.getOrderCode() + "%");
 			}
 		});
-		
-		
+		List<KanteenOrderItem> list = new ArrayList<KanteenOrderItem>();
+		Map<Long, PlainKanteenDelivery> deliveryMap = deliveryDao.getDeliveryMap(CollectionUtils.toSet(orderList, order->order.getDeliveryId()));
+		orderList.forEach(order->{
+			KanteenOrderItem item = new KanteenOrderItem();
+			item.setOrder(order);
+			item.setDelivery(deliveryMap.get(order.getDeliveryId()));
+			list.add(item);
+		});
+		return list;
+	}
+	
+	@Override
+	public Map<Long, Integer> getDistributionEffectiveOrderCountMap(
+			Set<Long> distributionIdSet) {
+		if(distributionIdSet != null && !distributionIdSet.isEmpty()){
+			return QueryUtils.queryMap(
+					"	SELECT" +
+					"		k.distribution_id , count(k.id) order_count" +
+					"	FROM" +
+					"		t_order_kanteen k" +
+					"	WHERE" +
+					"		k.distribution_id IN (:distributionIds)" +
+					"	AND k.c_status IS NOT NULL" +
+					"	AND k.c_status <> :defaultStatus" +
+					"	AND k.c_canceled_status IS NULL" +
+					"	group by k.distribution_id", sFactory.getCurrentSession(), 
+					mw->mw.getLong("distribution_id"), mw->mw.getInteger("order_count"), 
+					dQuery->
+							dQuery
+							.setParam("distributionIds", distributionIdSet)
+							.setParam("defaultStatus", PlainKanteenOrder.STATUS_DEFAULT));
+		}else{
+			return new HashMap<Long, Integer>();
+		}
 	}
 	
 }

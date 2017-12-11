@@ -141,7 +141,7 @@ public class KanteenDaoImpl implements KanteenDao {
 			List<PlainKanteenWaresOptionGroup> plainGroups = query.list();
 			
 			if(plainGroups != null && plainGroups.size() > 0){
-				hql = "from PlainKanteenWaresOption o where o.optiongroupId in (:groupIds) and o.disabled is null and g.o.deleted is null order by o.order asc";
+				hql = "from PlainKanteenWaresOption o where o.optiongroupId in (:groupIds) and o.disabled is null and o.deleted is null order by o.order asc";
 				query =  sFactory.getCurrentSession().createQuery(hql);
 				query.setParameterList("groupIds", CollectionUtils.toList(plainGroups, group->group.getId()));
 				List<PlainKanteenWaresOption> plainOptions = query.list();

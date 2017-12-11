@@ -2,6 +2,7 @@ package cn.sowell.ddxyz.model.kanteen.dao;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import cn.sowell.copframe.dto.page.PageInfo;
@@ -54,5 +55,13 @@ public interface KanteenOrderDao {
 	 */
 	List<KanteenOrderItem> queryOrderList(KanteenOrderListCriteria criteria,
 			PageInfo pageInfo);
+
+	/**
+	 * 查询各个配销的有效订单数
+	 * @param distributionIdSet
+	 * @return
+	 */
+	Map<Long, Integer> getDistributionEffectiveOrderCountMap(
+			Set<Long> distributionIdSet);
 
 }

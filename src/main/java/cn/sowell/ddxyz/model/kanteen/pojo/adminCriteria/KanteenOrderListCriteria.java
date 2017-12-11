@@ -9,6 +9,10 @@ public class KanteenOrderListCriteria {
 	private String orderCode;
 	private Date orderRangeStart;
 	private Date orderRangeEnd;
+	
+	private boolean filterEffectiveOrder = true;
+	private boolean filterCanceled = false;
+	
 	public Long getMerchantId() {
 		return merchantId;
 	}
@@ -44,6 +48,18 @@ public class KanteenOrderListCriteria {
 	}
 	public void setOrderRangeEnd(Date orderRangeEnd) {
 		this.orderRangeEnd = orderRangeEnd;
+	}
+	public boolean isFilterEffectiveOrder() {
+		return filterEffectiveOrder;
+	}
+	public void setFilterEffectiveOrder(boolean filterEffectiveOrder) {
+		this.filterEffectiveOrder = filterEffectiveOrder;
+	}
+	public boolean isFilterCanceled() {
+		return filterCanceled;
+	}
+	public void setFilterCanceled(boolean filterCanceled) {
+		this.filterCanceled = filterCanceled;
 	}
 	
 }

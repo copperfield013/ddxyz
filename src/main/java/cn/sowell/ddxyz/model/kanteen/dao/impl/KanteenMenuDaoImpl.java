@@ -24,6 +24,8 @@ import cn.sowell.copframe.utils.CollectionUtils;
 import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.copframe.utils.TextUtils;
 import cn.sowell.ddxyz.model.kanteen.dao.KanteenMenuDao;
+import cn.sowell.ddxyz.model.kanteen.pojo.KanteenMenuWares;
+import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMenu;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMenuWaresGroup;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenWaresGroup;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenWaresGroupWaresItem;
@@ -235,6 +237,62 @@ public class KanteenMenuDaoImpl implements KanteenMenuDao{
 		}else{
 			return new ArrayList<PlainKanteenWaresGroupWaresItem>();
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<KanteenMenuWares> getMenuWaresItems(Long menuId,
+			boolean effectiveWares) {
+		String sql = 
+				"	select " +
+				"		m.id menu_id," +
+				"		menu_group.id menugroup_id," +
+				"		g.id group_id," +
+				"		group_wares.id groupwares_id," +
+				"		w.id wares_id," +
+				"		m.c_name menu_name," +
+				"		g.c_name group_name," +
+				"		w.c_name wares_name," +
+				"		m.c_disabled menu_disabled," +
+				"		menu_group.c_disabled menugroup_disabled," +
+				"		g.c_disabled group_disabled," +
+				"		group_wares.c_disabled groupwares_disabled," +
+				"		w.c_disabled wares_disabled," +
+				"		w.c_deleted wares_deleted," +
+				"		w.c_base_price," +
+				"		w.c_price_unit," +
+				"		w.c_unsalable" +
+				"	from t_menu_base m" +
+				"	left join t_menu_waresgroup menu_group on m.id = menu_group.menu_id" +
+				"	left join t_waresgroup_base g on g.id = menu_group.waresgroup_id" +
+				"	left join t_waresgroup_wares group_wares on g.id = group_wares.group_id" +
+				"	left join t_wares_base w on w.id = group_wares.wares_id" +
+				"	where m.id = :menuId"
+				;
+		if(effectiveWares){
+			sql += 	"	and m.c_disabled is null " +
+					"	and menu_group.c_disabled is NULL" +
+					"	and g.c_disabled is NULL" +
+					"	and group_wares.c_disabled is NULL" +
+					"	and w.c_disabled is NULL" +
+					"	and w.c_deleted is null";
+		}
+		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
+		query.setLong("menuId", menuId);
+		query.setResultTransformer(HibernateRefrectResultTransformer.getInstance(KanteenMenuWares.class));
+		return query.list();
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PlainKanteenMenu> getMenusByWaresGroupId(Long waresGroupId) {
+		String sql = "select m.* from t_menu_base m "
+				+ "left join t_menu_waresgroup mg on m.id = mg.menu_id where mg.waresgroup_id = :groupId";
+		SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
+		query.setResultTransformer(HibernateRefrectResultTransformer.getInstance(PlainKanteenMenu.class));
+		query.setLong("groupId", waresGroupId);
+		return query.list();
 	}
 	
 }

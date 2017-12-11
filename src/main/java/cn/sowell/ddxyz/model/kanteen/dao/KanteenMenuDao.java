@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Set;
 
 import cn.sowell.copframe.dto.page.PageInfo;
+import cn.sowell.ddxyz.model.kanteen.pojo.KanteenMenuWares;
+import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMenu;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMenuWaresGroup;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenWaresGroup;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenWaresGroupWaresItem;
@@ -75,5 +77,20 @@ public interface KanteenMenuDao {
 	 */
 	List<PlainKanteenWaresGroupWaresItem> getWaresGroupWaresList(
 			Set<Long> groupIds);
+
+	/**
+	 * 
+	 * @param menuId
+	 * @param effectiveWares
+	 * @return
+	 */
+	List<KanteenMenuWares> getMenuWaresItems(Long menuId, boolean effectiveWares);
+
+	/**
+	 * 根据商品组id获得关联的所有菜单
+	 * @param waresGroupId
+	 * @return
+	 */
+	List<PlainKanteenMenu> getMenusByWaresGroupId(Long waresGroupId);
 	
 }

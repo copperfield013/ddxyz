@@ -1,5 +1,6 @@
 package cn.sowell.ddxyz.model.kanteen.dao.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,6 +8,7 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
+import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.SessionFactory;
 import org.hibernate.type.StandardBasicTypes;
@@ -19,6 +21,7 @@ import cn.sowell.copframe.dao.utils.QueryUtils;
 import cn.sowell.copframe.dto.page.PageInfo;
 import cn.sowell.copframe.utils.FormatUtils;
 import cn.sowell.ddxyz.model.kanteen.dao.KanteenDistributionDao;
+import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenDistribution;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenDistributionWares;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMenu;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenDistributionChooseMenuCriteria;
@@ -128,4 +131,25 @@ public class KanteenDistributionDaoImpl implements KanteenDistributionDao{
 	}
 	
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PlainKanteenDistribution> getEffectiveDistributionListByMenuId(
+			Long menuId, Date now) {
+		String hql = "from PlainKanteenDistribution d where d.menuId = :menuId and d.disabled is null and d.endTime > :now";
+		Query query = sFactory.getCurrentSession().createQuery(hql);
+		query.setLong("menuId", menuId);
+		query.setTimestamp("now", now);
+		return query.list();
+	}
+	
+	
+	@Override
+	public void disableDistributionWares(Set<Long> toDisableDWaresIds) {
+		if(toDisableDWaresIds != null && !toDisableDWaresIds.isEmpty()){
+			String sql = "update t_distribution_wares set c_disabled = 1 where id in (:dWaresIds)";
+			SQLQuery query = sFactory.getCurrentSession().createSQLQuery(sql);
+			query.setParameterList("dWaresIds", toDisableDWaresIds);
+			query.executeUpdate();
+		}
+	}
 }
