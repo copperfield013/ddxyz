@@ -45,6 +45,17 @@ public class WeiXinMainController {
 		return WeiXinConstants.PATH_BASE + "/common/500.jsp";
 	}
 	
+	@RequestMapping("/baidumap")
+	public String baiduMap(){
+		return WeiXinConstants.PATH_BASE + "/common/baidumap.jsp";
+	}
+	
+	
+	@RequestMapping("/amap")
+	public String aMap(){
+		return WeiXinConstants.PATH_BASE + "/common/amap.jsp";
+	}
+	
 
 	@ResponseBody
 	@RequestMapping(value="/prepay", headers="Accept=application/json")

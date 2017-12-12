@@ -122,7 +122,7 @@ public class DeliveryDaoImpl implements DeliveryDao{
 	@Override
 	public Map<Long, PlainKanteenDelivery> getDeliveryMap(Set<Long> deliveryIds) {
 		if(deliveryIds != null){
-			String hql = "from PlainKanteenDelivery d where w.id in (:deliveryIds)";
+			String hql = "from PlainKanteenDelivery d where d.id in (:deliveryIds)";
 			Query query = sFactory.getCurrentSession().createQuery(hql);
 			query.setParameterList("deliveryIds", deliveryIds, StandardBasicTypes.LONG);
 			List<PlainKanteenDelivery> list = query.list();

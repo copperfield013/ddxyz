@@ -41,6 +41,10 @@
                     <span class="canteen-user-information-basic_label">领取时间</span>
                     <label id="fetchTime" class="canteen-user-infomation-basic_select">请选择领取时间</label>
                 </div>
+                <div class="canteen-user-information-basic_list">
+                    <span class="canteen-user-information-basic_label">送货地址</span>
+                    <label id="homeDeliveryAddress" class="canteen-user-infomation-basic_select">点击选择送货上门地址</label>
+                </div>
             </div>
             <div class="canteen-user-information-basic_list">
                 <span class="canteen-user-information-basic_label">支付方式</span>
@@ -229,6 +233,34 @@
 		   		        	paywaySel.show();
 	   		        	}
 	   		        }, false);
+	   		        
+	   		        $('#homeDeliveryAddress').click(function(){
+	   		        	/* WX.getLocation({
+	   		        	 	type: 'gcj02',
+							success: function (res) {
+								WX.openLocation({
+			   		        	    latitude: res.latitude, // 纬度，浮点数，范围为90 ~ -90
+
+			   		        	    longitude: res.longitude, // 经度，浮点数，范围为180 ~ -180。
+
+			   		        	    name: '', // 位置名
+
+			   		        	    address: '', // 地址详情说明
+
+			   		        	    scale: 20, // 地图缩放级别,整形值,范围从1~28。默认为最大
+
+			   		        	    infoUrl: '' // 在查看位置界面底部显示的超链接,可点击跳转
+
+			   		        	});
+						    }
+						}); */
+						WX.openAddress({
+							success: function (res) {
+								alert(JSON.stringify(res));
+						    }
+						});      	
+	   		        });
+	   		        
 	   		        
 	   		     	var hasDelivery = '${hasDelivery}' == 'true';
 	    			if(!hasDelivery){

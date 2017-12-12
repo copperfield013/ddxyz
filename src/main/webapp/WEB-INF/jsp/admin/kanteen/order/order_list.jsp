@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/jsp/common/base_empty.jsp"%>
+<title>订单列表</title>
 <div id="order-list">
 	<div class="page-header">
 		<div class="header-title">
@@ -33,19 +34,30 @@
 			<tbody>
 				<c:forEach items="${orderList }" var="orderItem" varStatus="i">
 					<c:set var="order" value="${orderItem.order }" />
-					<c:set var="delivery" value="${order.delivery }" />
+					<c:set var="delivery" value="${orderItem.delivery }" />
 					<tr data-id="${order.id }">
 						<td>${i.index + 1 }</td>
-						<td>${order.code }</td>
+						<td>${order.orderCode }</td>
 						<td><fmt:formatDate value="${order.createTime }" pattern="yyyy-MM-dd HH:mm:ss" /> </td>
 						<td>${order.receiverName }</td>
-						<td><a href="admin/kanteen/delivery/detail/${delivery.id }">${delivery.code }</a></td>
+						<td>${order.receiverContact }</td>
+						<td><a class="tab" target="delivery_detail_${delivery.id }" href="admin/kanteen/delivery/detail/${delivery.id }">${delivery.code }</a></td>
+						<td>
+							<c:choose>
+								<c:when test="${order.canceledStatus == null}">
+									<span class="order-status-${order.status }">${orderStatusMap[order.status] }</span>
+								</c:when>
+								<c:otherwise>
+									<span class="order-canstatus-${order.canceledStatus }">${canceledOrderStatusMap[order.canceledStatus] }</span>
+								</c:otherwise>
+							</c:choose>
+						</td>
 						<td>
 							<c:if test="${order.payway == 'wxpay' }">
-								<a confirm="确认为订单${order.code }退款？" href="admin/kanteen/order/refund/${order.id }">退款</a>
+								<a confirm="确认为订单${order.orderCode }退款？" href="admin/kanteen/order/refund/${order.id }">退款</a>
 							</c:if>
 							<c:if test="${order.payway == 'spot' }">
-								<a confirm="确认取消订单${order.code }" href="admin/kanteen/order/cancel/${order.id }">取消</a>
+								<a confirm="确认取消订单${order.orderCode }" href="admin/kanteen/order/cancel/${order.id }">取消</a>
 							</c:if>
 						</td>
 					</tr>

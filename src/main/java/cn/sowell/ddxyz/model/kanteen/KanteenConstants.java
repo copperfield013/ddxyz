@@ -17,6 +17,16 @@ public interface KanteenConstants {
 			put(PlainKanteenOrder.STATUS_DEFAULT, "未支付");
 			put(PlainKanteenOrder.STATUS_PAIED, "已支付");
 			put(PlainKanteenOrder.STATUS_CONFIRMED, "已确认");
+			put(PlainKanteenOrder.STATUS_COMPLETED, "已完成");
+		}
+	};
+	Map<String, String> CANCELED_STATUS_MAP = new HashMap<String, String>(){
+		{
+			put(PlainKanteenOrder.CANSTATUS_CANCELED, "已取消");
+			put(PlainKanteenOrder.CANSTATUS_CLOSED, "已关闭");
+			put(PlainKanteenOrder.CANSTATUS_MISSED, "未领取");
+			put(PlainKanteenOrder.CANSTATUS_PAYEXPIRED, "支付过期");
+			put(PlainKanteenOrder.CANSTATUS_REFUNDED, "已退款");
 		}
 	};
 	/**
@@ -51,5 +61,6 @@ public interface KanteenConstants {
 			put(PlainKanteenOrder.PAYWAY_SPOT, "现场支付");
 		}
 	};
+	
 	
 }

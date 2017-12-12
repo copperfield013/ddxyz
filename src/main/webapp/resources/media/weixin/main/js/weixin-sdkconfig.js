@@ -4,7 +4,7 @@ define(function(require, exports, module){
 		//获得默认参数
 		$paramMap = require('$paramMap'),
 		//加载微信jsSDK
-		wx = require('http://res.wx.qq.com/open/js/jweixin-1.0.0.js'),
+		wx = require('http://res.wx.qq.com/open/js/jweixin-1.1.0.js'),
 		cls = require('console');
 	
 	cls.log($paramMap);
@@ -21,7 +21,9 @@ define(function(require, exports, module){
 				            'onMenuShareTimeline',
 				            'onMenuShareAppMessage',
 				            'chooseWXPay',
-				            'scanQRCode'
+				            'scanQRCode',
+				            'openAddress',
+				            'openLocation'
 				            ] 
 			});
 			

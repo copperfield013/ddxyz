@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.sowell.copframe.dto.page.PageInfo;
 import cn.sowell.ddxyz.admin.AdminConstants;
+import cn.sowell.ddxyz.model.kanteen.KanteenConstants;
 import cn.sowell.ddxyz.model.kanteen.pojo.PlainKanteenMerchant;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminCriteria.KanteenOrderListCriteria;
 import cn.sowell.ddxyz.model.kanteen.pojo.adminItem.KanteenOrderItem;
@@ -35,6 +36,8 @@ public class AdminKanteenOrderController {
 		model.addAttribute("orderList", orderList);
 		model.addAttribute("criteria", criteria);
 		model.addAttribute("pageInfo", pageInfo);
+		model.addAttribute("orderStatusMap", KanteenConstants.ORDER_STATUS_MAP);
+		model.addAttribute("canceledStatusMap", KanteenConstants.CANCELED_STATUS_MAP);
 		return AdminConstants.PATH_KANTEEN_ORDER + "/order_list.jsp";
 	}
 	

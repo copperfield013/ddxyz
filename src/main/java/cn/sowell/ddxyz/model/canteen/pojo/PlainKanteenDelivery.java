@@ -53,6 +53,9 @@ public class PlainKanteenDelivery {
 	@Column(name="c_payway")
 	private Integer payWay;
 	
+	@Column(name="c_delivery_method")
+	private String deliveryMethod;
+	
 	@Column(name="merchant_id")
 	private Long merchantId;
 	
@@ -145,6 +148,12 @@ public class PlainKanteenDelivery {
 	}
 	public void setCode(String code) {
 		this.code = code;
+	}
+	public String getDeliveryMethod() {
+		return deliveryMethod;
+	}
+	public void setDeliveryMethod(String deliveryMethod) {
+		this.deliveryMethod = deliveryMethod;
 	}
 	
 }
