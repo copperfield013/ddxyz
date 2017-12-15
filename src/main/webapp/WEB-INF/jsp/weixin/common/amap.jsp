@@ -4,75 +4,118 @@
 <html lang="en">
 
 <head>
+	<base href="${basePath }" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
+	
+	
+	<!-- fromXu Start -->
+	<meta charset="utf-8"/>
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-Control" content="no-cache">
+	<meta http-equiv="Expires" content="-1">
+	<meta name="format-detection" content="telephone=no"><!-- 禁止iphone修改数字样式 -->
+	<meta name="viewport" content="minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,width=device-width,user-scalable=no">
+	<meta name="renderer" content="webkit">
     <title>选择地址</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-	<style>
-		.page-title {
-		    position: absolute;
-		    top: 0;
-		    height: 4em;
-		    left: 0;
-		    right: 0;
-		}
-		.page-title>div {
-		    float: left;
-		}
-		.keyword-box {
-		    width: 90%;
-		}
-		.search-button {
-		    width: 10%;
-		}
-		.search-result {
-		    position: absolute;
-		    top: 4em;
-		    left: 0;
-		    right: 0;
-		    bottom: 0;
-		}
-	</style>
+	<link rel="stylesheet" href="${basePath }media/weixin/main/css/addresschoose.css?${GLOBAL_VERSION}">
+	<script src="${basePath }media/weixin/main/js/jquery-3.1.1.min.js"></script>
+	<script src="${basePath }media/common/plugins/jquery.tmpl.js"></script>
 	<script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.2&key=b4aff5c63afca34942209cc2837a8f98&plugin=AMap.Autocomplete"></script>
-    <script type="text/javascript" src="http://cache.amap.com/lbs/static/addToolbar.js"></script>
 </head>
 <body>
 	<div class="page-title">
 		<div class="keyword-box">
-			<input type="search" id="keyword" />
+			<input type="search" id="keyword" placeholder="请输入关键字" />
 		</div>
 		<div class="search-button">
 			<span id="doSearch">搜索</span>
 		</div>
 	</div>
-	<div class="search-result">
-		<div class="address-row">
+	<div id="search-result">
+	</div>
+	<div id="map-wrapper">
+		<div id="map-cover"></div>
+		<div id="map-container"></div>
+		<span id="map-close"></span>
+	</div>
+	<script id="address-row-tmpl" type="jquery/tmpl">
+		<div class="address-row" data-id="\${id}">
 			<div class="adress-top">
-				<span class="address-short">西溪公园</span>
+				<span class="address-short">\${name}</span>
+				<i class="address-location"></i>
 			</div>
 			<div class="address-bottom">
-				<span class="address-desc">浙江省杭州市西湖区文二西路</span>
+				<span class="address-desc">\${district}-\${address}</span>
 			</div>
 		</div>
-	</div>
-	<div id="myPageTop">
-	    <table>
-	        <tr>
-	            <td>
-	                <label>请输入关键字：</label>
-	            </td>
-	        </tr>
-	        <tr>
-	            <td>
-	                <input id="tipinput"/>
-	            </td>
-	        </tr>
-	    </table>
-	</div>
+	</script>
 	<script type="text/javascript">
-	    //输入提示
-	    /* var auto = new AMap.Autocomplete({
-	        input: "tipinput"
-	    }); */
+		$(function(){
+			var $resultContainer = $('#search-result');
+			AMap.plugin(['AMap.Autocomplete'],function(){
+			    var autocomplete= new AMap.Autocomplete({
+			        city: '杭州', //城市，默认全国
+			    });
+			    function search(){
+			    	var keyword = $('#keyword').val();
+					autocomplete.search(keyword,function(status, result){
+						$resultContainer.empty();
+						if(result.info === 'OK' && result.count > 0){
+							for(var i in result.tips){
+								var tip = result.tips[i];
+								var $row = $('#address-row-tmpl').tmpl(tip);
+								$resultContainer.append($row.data('tip', tip));
+							}
+						}
+					});
+			    }
+			    var disableCloseMap = false;
+			    function showMap(location, label){
+			    	var map = new AMap.Map('map-container',{
+					   resizeEnable: true,
+		    		   zoom: 20,
+		    		   center: [location.lng, location.lat]
+		    		});
+			    	var marker = new AMap.Marker({
+			            position: map.getCenter()
+			        });
+			        marker.setMap(map);
+			        // 设置鼠标划过点标记显示的文字提示
+			        marker.setTitle(label);
+
+			        // 设置label标签
+			        marker.setLabel({//label默认蓝框白底左上角显示，样式className为：amap-marker-label
+			            offset: new AMap.Pixel(20, 20),//修改label相对于maker的位置
+			            content: label
+			        });
+			        disableCloseMap = true;
+			        setTimeout(function(){disableCloseMap = false}, 100);
+			    }
+			    function toggleMapWrapper(toShow){
+			    	if(!disableCloseMap || toShow){
+				    	$('#map-wrapper').toggle(toShow);
+			    	}
+			    }
+			    function toShowMap(){
+			    	var $row = $(this).closest('.address-row');
+					var tip = $row.data('tip');
+					if(tip && tip.location){
+						toggleMapWrapper(true);
+						showMap(tip.location, $row.find('.address-short').text());
+					}
+			    }
+				$('#keyword').keydown(search)[0].addEventListener('input', search)
+				$('#doSearch').click(search).on('touchend', search);
+				$(document).on('click', '.address-location', toShowMap).on('touchend', '.address-location', toShowMap);
+				$('#map-close').click(function(){
+					toggleMapWrapper(false);
+				});
+			});
+			
+		});
 	</script>
 </body>
 </html>

@@ -4,7 +4,8 @@
 <meta name="viewport" content="initial-scale=1, user-scalable=0, user-scalable=no">
 <meta name="renderer" content="webkit">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
+<!-- 引入IconFont字体 -->
+<link rel="stylesheet" type="text/css" href="${basePath }media/common/plugins/iconfont/iconfont.css">
 <link rel="stylesheet" href="media/weixin/main/css/weixin-main.css?${GLOBAL_VERSION }">
 <link rel="stylesheet" href="media/weixin/kanteen/css/reset.css?${GLOBAL_VERSION }">
 <link rel="stylesheet" href="media/weixin/plugins/iTip/iTip.css?${GLOBAL_VERSION }">
@@ -34,7 +35,8 @@
 				'page'		: 'COMMON/cpf/cpf-refer-test.js?${RES_STAMP}',
 				'dialog'	: 'COMMON/cpf/cpf-refer-test.js?${RES_STAMP}',
 				'wxconfig'	: 'MAIN/weixin-sdkconfig.js?${RES_STAMP}',
-				'adsblock'	: 'COMMON/cpf/cpf-adsblock.js?${RES_STAMP}'
+				'adsblock'	: 'COMMON/cpf/cpf-adsblock.js?${RES_STAMP}',
+				'checkbox'	: 'COMMON/cpf/cpf-checkbox.js?${GLOVAL_VERSION}'
 				//..其他模块
 		  	}
 		});

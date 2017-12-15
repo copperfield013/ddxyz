@@ -19,6 +19,7 @@ define(function(require){
 		WX = require('wxconfig'),
 		$paramMap = require('$paramMap')
 		;
+	require('checkbox');
 	$CPF.init({
 		//各个模块的参数
 	});

@@ -16,23 +16,15 @@
 <body>
 	<c:set var="hasDelivery" value="${deliveries != null && fn:length(deliveries) > 0 }" />
     <form id="canteen-order-information">
-        <section class="canteen-user-information-basic">
-            <div class="canteen-user-information-basic_list">
-                <span class="canteen-user-information-basic_label">领取人</span>
-                <input id="receiverName" type="text" value="${receiver.name }" placeholder="请输入姓名">
-            </div>
-            <div class="canteen-user-information-basic_list">
-                <span class="canteen-user-information-basic_label">手机号码</span>
-                <input id="receiverContact" tSype="text"  value="${receiver.contact }" placeholder="请输入联系方式">
-            </div>
-            <div class="canteen-user-information-basic_list">
-                <span class="canteen-user-information-basic_label">部门</span>
-                <input id="receiverDepart" tSype="text"  value="${receiver.depart }" placeholder="请输入领取人部门">
-            </div>
-        </section>
-
-        <section class="canteen-user-information-detail">
+		<section class="canteen-user-information-detail">
             <div class="canteen-user-information-basic_important">
+                <div class="canteen-user-information-basic_list">
+                    <span class="canteen-user-information-basic_label">配送方式</span>
+                    <label class="canteen-user-infomation-basic_select">
+                    	<input data-text="定点领取" type="radio" name="deliveryMethod" id="fixed-delivery" value="fixed" class="ccheckbox" />
+                    	<input data-text="配送上门" type="radio" name="deliveryMethod" id="home-delivery" value="home" class="ccheckbox" />
+                    </label>
+                </div>
                 <div class="canteen-user-information-basic_list">
                     <span class="canteen-user-information-basic_label">领取地点</span>
                     <label id="fetchSite" class="canteen-user-infomation-basic_select">请选择领取地点</label>
@@ -57,6 +49,22 @@
                 </div>
             </div>
         </section>
+        <section class="canteen-user-information-basic">
+            <div class="canteen-user-information-basic_list">
+                <span class="canteen-user-information-basic_label">领取人</span>
+                <input id="receiverName" type="text" value="${receiver.name }" placeholder="请输入姓名">
+            </div>
+            <div class="canteen-user-information-basic_list">
+                <span class="canteen-user-information-basic_label">手机号码</span>
+                <input id="receiverContact" tSype="text"  value="${receiver.contact }" placeholder="请输入联系方式">
+            </div>
+            <div class="canteen-user-information-basic_list">
+                <span class="canteen-user-information-basic_label">部门</span>
+                <input id="receiverDepart" tSype="text"  value="${receiver.depart }" placeholder="请输入领取人部门">
+            </div>
+        </section>
+
+       
 
         <section class="canteen-order-information">
             <p class="canteen-order-information_title">
@@ -96,11 +104,22 @@
     <script type="text/javascript">
     	$(function(){
     		document.onreadystatechange = function () {
-	    		seajs.use(['utils', 'ajax', 'wxconfig', '$CPF'], function(Utils, Ajax, WX, $CPF){
+	    		seajs.use(['utils', 'ajax', 'wxconfig', '$CPF', 'checkbox'], function(Utils, Ajax, WX, $CPF, CCK){
 	    			var selectedDeilvery = null,
 	    				selectedPayway = null,
 	    				selectedLocationId = null;
-	    			
+	    			try{
+		    			var group = CCK.bind($('[name="deliveryMethod"]'), 'fixed', function(checked){
+		    				checked = checked[0];
+		    				if(checked === 'fixed'){
+		    					//TODO: 定点配送表单
+		    					alert('定点配送');
+		    				}else if(checked === 'home'){
+		    					//TODO: 上门配送表单
+		    					alert('配送上门');
+		    				}
+		    			});
+	    			}catch(e){console.error(e)}
 	    			
 	   		        var siteDom = document.getElementById("fetchSite");
 	   		        var timeDom = document.getElementById("fetchTime");

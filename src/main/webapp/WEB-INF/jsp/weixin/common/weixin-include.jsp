@@ -13,10 +13,13 @@
 <meta name="viewport" content="minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,width=device-width,user-scalable=no">
 <meta name="renderer" content="webkit">
 
-<link rel="stylesheet" href="${basePath }media/weixin/main/css/templete.css?${RES_STAMP}">
-<link rel="stylesheet" href="${basePath }media/weixin/main/css/common.css?${RES_STAMP}">
+<link rel="stylesheet" href="${basePath }media/weixin/main/css/templete.css?${GLOBAL_VERSION}">
+<link rel="stylesheet" href="${basePath }media/weixin/main/css/common.css?${GLOBAL_VERSION}">
 
 <!-- fromXu End -->
+
+<!-- 引入IconFont字体 -->
+<link rel="stylesheet" type="text/css" href="${basePath }media/common/plugins/iconfont/iconfont.css">
 
 <script src="${basePath }media/weixin/main/js/jquery-3.1.1.min.js"></script>
 <script src="${basePath }media/common/plugins/jquery.tmpl.js"></script>
