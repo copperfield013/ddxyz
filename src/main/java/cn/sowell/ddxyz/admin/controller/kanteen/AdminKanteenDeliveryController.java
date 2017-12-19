@@ -80,7 +80,8 @@ public class AdminKanteenDeliveryController {
 	public AjaxPageResponse doAdd(@RequestParam Long distributionId, 
 			@RequestParam Long locationId, 
 			@RequestParam String timeRange, 
-			@RequestParam Integer payWay){
+			@RequestParam Integer payWay, 
+			Integer maxDistance){
 		PlainKanteenMerchant merchant = merchantService.getCurrentMerchant();
 		try {
 			PlainKanteenDelivery delivery = new PlainKanteenDelivery();
@@ -98,7 +99,8 @@ public class AdminKanteenDeliveryController {
 			delivery.setEndTime(range[1]);
 			
 			delivery.setPayWay(payWay);
-			
+			delivery.setLocationCoordinate(location.getCoordinate());
+			delivery.setMaxDistance(maxDistance);
 			deliveryService.saveDelivery(delivery);
 			
 			return AjaxPageResponse.CLOSE_AND_REFRESH_PAGE("创建成功", "distribution_delivery_list_" + distributionId);

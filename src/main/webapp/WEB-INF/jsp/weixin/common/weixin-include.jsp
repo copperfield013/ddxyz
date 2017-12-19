@@ -37,15 +37,15 @@
 				MAIN	: '${basePath}media/weixin/main/js/'
 			},
 		  	alias	: {
-		    	'$CPF'		: 'COMMON/cpf/cpf-core.js?${RES_STAMP}',
-				'utils'		: 'COMMON/cpf/cpf-utils.js?${RES_STAMP}',
-				'console'	: 'COMMON/cpf/cpf-console.js?${RES_STAMP}',
-				'wxpay'		: 'COMMON/cpf/cpf-wxpay.js?${RES_STAMP}',
-				'ajax'		: 'COMMON/cpf/cpf-ajax.js?${RES_STAMP}',
-				'page'		: 'COMMON/cpf/cpf-refer-test.js?${RES_STAMP}',
-				'dialog'	: 'COMMON/cpf/cpf-refer-test.js?${RES_STAMP}',
-				'wxconfig'	: 'MAIN/weixin-sdkconfig.js?${RES_STAMP}',
-				'adsblock'	: 'COMMON/cpf/cpf-adsblock.js?${RES_STAMP}'
+		    	'$CPF'		: 'COMMON/cpf/cpf-core.js?${GLOBAL_VERSION}',
+				'utils'		: 'COMMON/cpf/cpf-utils.js?${GLOBAL_VERSION}',
+				'console'	: 'COMMON/cpf/cpf-console.js?${GLOBAL_VERSION}',
+				'wxpay'		: 'COMMON/cpf/cpf-wxpay.js?${GLOBAL_VERSION}',
+				'ajax'		: 'COMMON/cpf/cpf-ajax.js?${GLOBAL_VERSION}',
+				'page'		: 'COMMON/cpf/cpf-refer-test.js?${GLOBAL_VERSION}',
+				'dialog'	: 'COMMON/cpf/cpf-refer-test.js?${GLOBAL_VERSION}',
+				'wxconfig'	: 'MAIN/weixin-sdkconfig.js?${GLOBAL_VERSION}',
+				'adsblock'	: 'COMMON/cpf/cpf-adsblock.js?${GLOBAL_VERSION}'
 				//..其他模块
 		  	}
 		});
@@ -54,7 +54,7 @@
 				$.extend(exports, $.parseJSON('${$paramMapJson}'));
 			}catch(e){}
 		});
-		seajs.use('MAIN/weixin-main.js?${RES_STAMP}');
+		seajs.use('MAIN/weixin-main.js?${GLOBAL_VERSION}');
 	});
 	
 </script>

@@ -12,10 +12,22 @@
 			<div class="col-lg-12">
 				<form class="bv-form form-horizontal validate-form" confirm="确认创建配送？" action="admin/kanteen/delivery/do_add">
 					<input type="hidden" name="distributionId" value="${distribution.id }" />
-					<div>
+					<div class="form-group">
 						<label class="col-lg-2 control-label">配送方式</label>
 						<div class="col-lg-4">
-							
+							<div class="checkbox-inline">
+								<label> 
+									<input type="checkbox" name="deliveryMethod" checked="checked">
+									<span class="text">定点配送</span>
+								</label>
+							</div>
+							<div class="checkbox-inline">
+								<label> 
+									<input type="checkbox" name="deliveryMethod">
+									<span class="text">上门配送</span>
+								</label>
+							</div>
+
 						</div>
 					</div>
 					<div class="form-group">

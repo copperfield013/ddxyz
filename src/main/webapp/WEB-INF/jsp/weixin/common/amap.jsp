@@ -18,8 +18,6 @@
 	<meta name="viewport" content="minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0,width=device-width,user-scalable=no">
 	<meta name="renderer" content="webkit">
     <title>选择地址</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 	<link rel="stylesheet" href="${basePath }media/weixin/main/css/addresschoose.css?${GLOBAL_VERSION}">
 	<script src="${basePath }media/weixin/main/js/jquery-3.1.1.min.js"></script>
 	<script src="${basePath }media/common/plugins/jquery.tmpl.js"></script>
@@ -32,6 +30,9 @@
 		</div>
 		<div class="search-button">
 			<span id="doSearch">搜索</span>
+		</div>
+		<div class="cancel-button">
+			<span id="doCancel">取消</span>
 		</div>
 	</div>
 	<div id="search-result">
@@ -66,8 +67,14 @@
 						if(result.info === 'OK' && result.count > 0){
 							for(var i in result.tips){
 								var tip = result.tips[i];
-								var $row = $('#address-row-tmpl').tmpl(tip);
-								$resultContainer.append($row.data('tip', tip));
+								if(tip.district 
+										&& tip.address 
+										&& tip.location 
+										&& typeof tip.location.lng === 'number' 
+										&& typeof tip.location.lat === 'number'){
+									var $row = $('#address-row-tmpl').tmpl(tip);
+									$resultContainer.append($row.data('tip', tip));
+								}
 							}
 						}
 					});
@@ -106,15 +113,39 @@
 						toggleMapWrapper(true);
 						showMap(tip.location, $row.find('.address-short').text());
 					}
+					return false;
 			    }
 				$('#keyword').keydown(search)[0].addEventListener('input', search)
 				$('#doSearch').click(search).on('touchend', search);
-				$(document).on('click', '.address-location', toShowMap).on('touchend', '.address-location', toShowMap);
+				$(document).on('click touchend', '.address-location', toShowMap);
 				$('#map-close').click(function(){
 					toggleMapWrapper(false);
 				});
+				$('#doCancel').click(function(){
+					if(typeof window.doCanceled === 'function'){
+						window.doCanceled();
+					}
+				});
 			});
-			
+			$(document).on("touchstart", function(e) {
+			    if(!$(e.target).hasClass("disable")) $(e.target).data("isMoved", 0);
+			});
+			$(document).on("touchmove", function(e) {
+			    if(!$(e.target).hasClass("disable")) $(e.target).data("isMoved", 1);
+			});
+			$(document).on("touchend", function(e) {
+			    if(!$(e.target).hasClass("disable") && $(e.target).data("isMoved") == 0) {
+			    	var r = {result: true};
+			    	$(e.target).trigger("tap", [r]);
+			    	return r.result;
+			    }
+			});
+			$(document).on('tap', '.address-row', function(e, r){
+				if(typeof addressSelected === 'function'){
+					addressSelected($(this).data('tip'));
+					r.result = false;
+				}
+			});
 		});
 	</script>
 </body>

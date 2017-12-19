@@ -118,11 +118,25 @@ public class WeiXinKanteenController {
 		//获得配销的所有配送信息
 		List<PlainKanteenDelivery> deliveries = kanteenService.getEnabledDeliveries(distributionId, new Date());
 		
+		boolean allowFixedDelivery = false, allowHomeDelivery = false;
+		for (PlainKanteenDelivery delivery : deliveries) {
+			if(delivery.getDeliveryMethod() != null ){
+				if(delivery.getDeliveryMethod().contains(PlainKanteenDelivery.DELIVERY_METHOD_FIXED)){
+					allowFixedDelivery = true;
+				}
+				if(delivery.getDeliveryMethod().contains(PlainKanteenDelivery.DELIVERY_METHOD_HOME)){
+					allowHomeDelivery = true;
+				}
+			}
+		}
+		
 		model.addAttribute("trolley", trolley);
 		model.addAttribute("receiver", receiver);
 		model.addAttribute("deliveries", deliveries);
 		model.addAttribute("distributionId", distributionId);
 		model.addAttribute("deliveriesJson", JSON.toJSON(deliveries));
+		model.addAttribute("allowFixedDelivery", allowFixedDelivery);
+		model.addAttribute("allowHomeDelivery", allowHomeDelivery);
 		
 		return WeiXinConstants.PATH_KANTEEN + "/kanteen_order.jsp";
 	}

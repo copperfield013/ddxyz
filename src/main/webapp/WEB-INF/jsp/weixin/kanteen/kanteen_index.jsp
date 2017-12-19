@@ -227,15 +227,18 @@
     				}
 	    		}
 	    		var countLimitedWares = {};
-    			try{
-    				countLimitedWares = $.parseJSON('${menu.countLimitedWares}');
-    				if(!countLimitedWares.waresKeyPrefix){
-    					$.error();
-    				}
-    			}catch(e){
-    				console.error(e);
-    				Tips.alert('数据加载失败，请尝试刷新页面');
-    			}
+   				var str = '${menu.countLimitedWares}';
+   				if(str){
+	    			try{
+    					countLimitedWares = $.parseJSON(str);
+	    				if(!countLimitedWares.waresKeyPrefix){
+	    					$.error();
+	    				}
+	    			}catch(e){
+	    				console.error(e);
+						Tips.alert('数据加载失败，请尝试刷新页面');
+	    			}
+   				}
     			Utils.bind('addWares', function(e, dWaresId, addition){
     				var limit = countLimitedWares[countLimitedWares.waresKeyPrefix + dWaresId]
     				if(limit){
@@ -431,6 +434,7 @@
 	    				Kanteen.ca.init();
     					Utils.bindOrTrigger('afterKanteenInit', [Kanteen]);
     				}catch(e){
+    					console.error(e);
     					Tips.alert('页面初始化失败，请尝试刷新页面');
     				}finally{
 	    				$CPF.closeLoading();

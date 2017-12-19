@@ -18,6 +18,9 @@ public class PlainKanteenDelivery {
 	public static final int PAYWAY_WXPAY = 1;
 	public static final int PAYWAY_SPOT = 2;
 	public static final int PAYWAY_WXPAY_AND_SPOT = 3;
+	public static final String DELIVERY_METHOD_FIXED = "fixed";
+	public static final String DELIVERY_METHOD_HOME = "home";
+	
 	@SuppressWarnings("serial")
 	public static final Map<Integer, String> PAYWAY_MAP = new HashMap<Integer, String>(){
 		{
@@ -43,6 +46,15 @@ public class PlainKanteenDelivery {
 	
 	@Column(name="c_location_name")
 	private String locationName;
+	
+	@Column(name="c_location_coordinate")
+	private String locationCoordinate;
+	
+	@Column(name="c_max_distance")
+	private Integer maxDistance;
+	
+	@Column(name="c_fee")
+	private Integer fee;
 	
 	@Column(name="c_start_time")
 	private Date startTime;
@@ -154,6 +166,24 @@ public class PlainKanteenDelivery {
 	}
 	public void setDeliveryMethod(String deliveryMethod) {
 		this.deliveryMethod = deliveryMethod;
+	}
+	public String getLocationCoordinate() {
+		return locationCoordinate;
+	}
+	public void setLocationCoordinate(String locationCoordinate) {
+		this.locationCoordinate = locationCoordinate;
+	}
+	public Integer getMaxDistance() {
+		return maxDistance;
+	}
+	public void setMaxDistance(Integer maxDistance) {
+		this.maxDistance = maxDistance;
+	}
+	public Integer getFee() {
+		return fee;
+	}
+	public void setFee(Integer fee) {
+		this.fee = fee;
 	}
 	
 }

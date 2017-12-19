@@ -19,7 +19,7 @@ body{
 .keyword-box {
     line-height: 2.8em;
     height: 100%;
-    width: 85%;
+    width: 70%;
 }
 input#keyword {
     line-height: 2.2em;
@@ -29,7 +29,7 @@ input#keyword {
     border: 1px solid #fff;
     margin-left: 10px;
 }
-.search-button {
+.search-button, .cancel-button {
     height: 100%;
     line-height: 3em;
     width: 15%;
@@ -41,8 +41,18 @@ span#doSearch {
     display: inline;
     padding: 5px 10px;
 }
+span#doCancel {
+    background-color: #999;
+    border-color: #999;
+    color: #fff;
+    display: inline;
+    padding: 5px 10px;
+}
 @media screen and (max-device-width: 350px) {
 	span#doSearch {
+	    padding: 2px 5px;
+	}
+	span#doCancel {
 	    padding: 2px 5px;
 	}
 }

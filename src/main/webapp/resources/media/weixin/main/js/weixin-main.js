@@ -15,16 +15,17 @@ define(function(require){
 	adsBlock.start();
 	var $CPF = require('$CPF'),
 		utils = require('utils'),
+		CCK = require('checkbox'),
 		cnsl = require('console'),
 		WX = require('wxconfig'),
 		$paramMap = require('$paramMap')
 		;
-	require('checkbox');
 	$CPF.init({
 		//各个模块的参数
 	});
 	//初始化当前页面
 	$CPF.initPage(document);
+	utils.bindOrTrigger('main-inited');
 	if(WX && WX.ready){
 		WX.ready(function(){
 			WX.onMenuShareAppMessage({

@@ -21,26 +21,45 @@
                 <div class="canteen-user-information-basic_list">
                     <span class="canteen-user-information-basic_label">配送方式</span>
                     <label class="canteen-user-infomation-basic_select">
-                    	<input data-text="定点领取" type="radio" name="deliveryMethod" id="fixed-delivery" value="fixed" class="ccheckbox" />
-                    	<input data-text="配送上门" type="radio" name="deliveryMethod" id="home-delivery" value="home" class="ccheckbox" />
+                    	<c:if test="${allowFixedDelivery }">
+    	                	<input data-text="定点领取" type="radio" name="deliveryMethod" id="fixed-delivery" value="fixed" class="ccheckbox" />
+                    	</c:if>
+                    	<c:if test="${allowHomeDelivery }">
+	                    	<input data-text="配送上门" type="radio" name="deliveryMethod" id="home-delivery" value="home" class="ccheckbox" />
+                    	</c:if>
                     </label>
                 </div>
-                <div class="canteen-user-information-basic_list">
+                <div class="canteen-user-information-basic_list delivery-method-fixed">
                     <span class="canteen-user-information-basic_label">领取地点</span>
                     <label id="fetchSite" class="canteen-user-infomation-basic_select">请选择领取地点</label>
                 </div>
-                <div class="canteen-user-information-basic_list">
+                <div class="canteen-user-information-basic_list delivery-method-home">
+                    <span class="canteen-user-information-basic_label">送货地址</span>
+                    <label id="homeDeliveryAddress" class="canteen-user-infomation-basic_select">小区/大厦/学校</label>
+                    <input type="hidden" id="homeDeliveryLongitude" />
+                    <input type="hidden" id="homeDeliveryLatitude" />
+                    <input type="hidden" id="homeDeliveryAddressId" />
+                    <input type="hidden" id="homeDeliveryFullAddress" />
+                </div>
+                <div class="canteen-user-information-basic_list delivery-method-home">
+                    <span class="canteen-user-information-basic_label">详细地址</span>
+                    <input type="text" id="detailedAddress" class="canteen-user-infomation-basic_select" placeholder="请输入详细地址" />
+                </div>
+                <div class="canteen-user-information-basic_list delivery-method-fixed">
                     <span class="canteen-user-information-basic_label">领取时间</span>
                     <label id="fetchTime" class="canteen-user-infomation-basic_select">请选择领取时间</label>
                 </div>
-                <div class="canteen-user-information-basic_list">
-                    <span class="canteen-user-information-basic_label">送货地址</span>
-                    <label id="homeDeliveryAddress" class="canteen-user-infomation-basic_select">点击选择送货上门地址</label>
+                <div class="canteen-user-information-basic_list delivery-method-home">
+                    <span class="canteen-user-information-basic_label">配送时间</span>
+                    <label id="deliveryTime" class="canteen-user-infomation-basic_select">请选择配送时间</label>
                 </div>
-            </div>
-            <div class="canteen-user-information-basic_list">
-                <span class="canteen-user-information-basic_label">支付方式</span>
-                <label id="payWay" class="canteen-user-infomation-basic_select">请选择支付方式</label>
+	            <div class="canteen-user-information-basic_list">
+	                <span class="canteen-user-information-basic_label">支付方式</span>
+	                <label id="payWay" class="canteen-user-infomation-basic_select">请选择支付方式</label>
+	            </div>
+	            <div class="canteen-user-information-basic_list" id="delivery-fee-row">
+	            	<span>该配送需另支付配送费：<span id="deliveryFee">5.00</span></span>
+	            </div>
             </div>
             <div class="canteen-user-information-basic_mark">
                 <p class="canteen-user-information-basic__mark_label">买家备注</p>
@@ -101,340 +120,39 @@
     <section id="sitebutton"></section>
     <section id="timebutton"></section>
     <section id="paybutton"></section>
+    <section id="deliveryTimeButton"></section>
     <script type="text/javascript">
     	$(function(){
-    		document.onreadystatechange = function () {
-	    		seajs.use(['utils', 'ajax', 'wxconfig', '$CPF', 'checkbox'], function(Utils, Ajax, WX, $CPF, CCK){
-	    			var selectedDeilvery = null,
-	    				selectedPayway = null,
-	    				selectedLocationId = null;
-	    			try{
-		    			var group = CCK.bind($('[name="deliveryMethod"]'), 'fixed', function(checked){
-		    				checked = checked[0];
-		    				if(checked === 'fixed'){
-		    					//TODO: 定点配送表单
-		    					alert('定点配送');
-		    				}else if(checked === 'home'){
-		    					//TODO: 上门配送表单
-		    					alert('配送上门');
-		    				}
-		    			});
-	    			}catch(e){console.error(e)}
-	    			
-	   		        var siteDom = document.getElementById("fetchSite");
-	   		        var timeDom = document.getElementById("fetchTime");
-	   		        var payDom = document.getElementById("payWay");
-	   		        
-	   		        var locationIdDom = document.getElementById('locationId');
-	   		        
-	   		        var deliveriesMap = {};
-	   		        var locations = [];
-	   		        var paywayMap = {
-	   		        	'key_1'	: [{
-	   		        		text	: '微信支付',
-	   		        		key		: 'wxpay'
-	   		        	}],
-	   		        	'key_2'	: [{
-	   		        		text	: '现场支付',
-	   		        		key		: 'spot'
-	   		        	}],
-	   		        	'key_3'	: [{
-	   		        		text	: '微信支付',
-	   		        		key		: 'wxpay'
-	   		        	},{
-	   		        		text	: '现场支付',
-	   		        		key		: 'spot'
-	   		        	}]
-	   		        };
-	   		        $CPF.showLoading('mobile');
-	   		        try{
-	   		        	var deliveries = $.parseJSON('${deliveriesJson}');
-	   		        	for(var i in deliveries){
-	   		        		var locationId = deliveries[i].locationId;
-	   		        		var location = deliveriesMap['lid_' + locationId];
-	   		        		var data = {
-	   		        				delivery	: deliveries[i],
-	   		        				text		: Utils.formatDate(new Date(deliveries[i].startTime), 'yyyy-MM-dd hh:mm')
-	   		        								+ '~'
-	   		        								+ Utils.formatDate(new Date(deliveries[i].endTime), 'yyyy-MM-dd hh:mm'),
-	   		        				payways		: paywayMap['key_' + deliveries[i].payWay]
-	   		        			};
-	   		        		if(location){
-	   		        			var j = 0;
-	   		        			while(j < location.deliveries.length && deliveries[i].startTime > location.deliveries[j].delivery.startTime) j++;
-	   		        			location.deliveries.splice(j, 0, data);
-	   		        		}else{
-	   		        			locations.push(deliveriesMap['lid_' + locationId] = {
-	   		        				deliveries	: [data],
-	   		        				locationId	: locationId,
-	   		        				text		: deliveries[i].locationName
-	   		        			});
-	   		        		}
-	       		        }
-	   		        }catch(e){
-	   		        	Tips.alert('页面初始化失败，请尝试刷新页面');
-	   		        }finally{
-	   		        	$CPF.closeLoading();
-	   		        }
-	   		        
-	   		        var locationSel = null,
-	   		        	timeSel = null,
-	   		        	paywaySel = null;
-	   		        
-	   		        
-	   		        
-	   		        //实例化pushbutton
-	   		        locationSel = new Pushbutton('#sitebutton', {
-	   		            data	: locations,
-	   		            // 点击回调 返回true 则不隐藏弹出框
-	   		            onClick: function (e1) {
-	   		            	if(!$(e1.target).is('.pushbutton-cancel')){
-	   		            		try{
-	   		            			if(selectedLocationId != e1.data.locationId){
-		   		            			selectedLocationId = e1.data.locationId;
-		   		            			selectedDelivery = null;
-		   		            			selectedPayway = null;
-		   		            			timeSel = null;
-		   		            			paywaySel = null;
-		   		            			timeDom.innerHTML = '请选择领取时间';
-		   		            			payDom.innerHTML = '请选择支付方式';
-		   		            			
-			   		            		siteDom.innerHTML = e1.data.text;
-			   		            		timeSel = new Pushbutton('#timebutton', {
-			   		            			data	: e1.data.deliveries,
-			   		            			onClick	: function(e2){
-			   		            				if(!$(e2.target).is('.pushbutton-cancel')){
-			   		            					try{
-				   		            					if(selectedDelivery != e2.data.delivery){
-						   		            				selectedDelivery = e2.data.delivery;
-						   		            				selectedPayway = null;
-						   		            				paywaySel = null;
-						   		            				payDom.innerHTML = '请选择支付方式';
-						   		            				
-						   		            				timeDom.innerHTML = '<span style="font-size:13px">' + e2.data.text + '</span>';
-						   		            				paywaySel = new Pushbutton('#paybutton', {
-							   		            					data	: e2.data.payways,
-							   		            					onClick	: function(e3){
-								   		            					if(!$(e3.target).is('.pushbutton-cancel')){
-								   		            						try{
-									   		            						selectedPayway = e3.data.key;
-								   		            							payDom.innerHTML = e3.data.text;
-								   		            						}catch(e){}
-								   		            					}
-							   		            					}
-						   		            				});
-				   		            					}
-			   		            					}catch(e){}
-			   		            				}
-			   		            			}
-			   		            		});
-	   		            			}
-	   		            		}catch(e){}
-	   		            		
-	   		            	}
-	   		            },
-	   		            isShow: false   
-	   		        });
-	   		        
-	   		        siteDom.addEventListener('click', function (e) {
-	   		        	if(locationSel){
-		   		        	locationSel.show();
-	   		        	}
-	   		        }, false);
-	
-	   		        timeDom.addEventListener('click', function (e) {
-	   		        	if(timeSel){
-		   		        	timeSel.show();
-	   		        	}
-	   		        }, false);
-	   		        payDom.addEventListener('click', function (e) {
-	   		        	if(paywaySel){
-		   		        	paywaySel.show();
-	   		        	}
-	   		        }, false);
-	   		        
-	   		        $('#homeDeliveryAddress').click(function(){
-	   		        	/* WX.getLocation({
-	   		        	 	type: 'gcj02',
-							success: function (res) {
-								WX.openLocation({
-			   		        	    latitude: res.latitude, // 纬度，浮点数，范围为90 ~ -90
-
-			   		        	    longitude: res.longitude, // 经度，浮点数，范围为180 ~ -180。
-
-			   		        	    name: '', // 位置名
-
-			   		        	    address: '', // 地址详情说明
-
-			   		        	    scale: 20, // 地图缩放级别,整形值,范围从1~28。默认为最大
-
-			   		        	    infoUrl: '' // 在查看位置界面底部显示的超链接,可点击跳转
-
-			   		        	});
-						    }
-						}); */
-						WX.openAddress({
-							success: function (res) {
-								alert(JSON.stringify(res));
-						    }
-						});      	
-	   		        });
-	   		        
-	   		        
-	   		     	var hasDelivery = '${hasDelivery}' == 'true';
-	    			if(!hasDelivery){
-	   					Tips.alert('当前没有可用配送');
-	    			}
-		    		$('#order-submit').on('touchend', function(){
-		    			try{
-		    				if(!hasDelivery){
-			   					Tips.alert('当前没有可用配送');
-			   					return false;
-			    			}
-			    			var order = getSubmitOrder();
-			    			showOrderMsg(order, function(){
-			    				$CPF.showLoading('mobile');
-			    				Ajax.postJson('weixin/kanteen/confirm_order/${distributionId}', order, function(data){
-			    					if(data.status === 'suc'){
-			    						if(data.payParameter){
-			    							seajs.use(['order/order-pay'], function(OrderPay){
-			    								try{
-				    								OrderPay.doPay('weixin/kanteen/order_paied', data.payParameter, data.orderId, function(){
-				    									//后台支付成功
-				    									Tips.alert({
-				    										content	: '支付成功',
-				    										after	: function(){
-						    									window.location.href = 'weixin/kanteen/order_list/week';
-				    										}
-				    									});
-				    								}, function(){
-				    									//后台支付失败
-				    									Tips.alert({
-				    										content	: '没有支付',
-				    										after	: function(){
-				    											window.location.href = 'weixin/kanteen/order_list/week';
-				    										}
-				    									});
-				    								}, function(){
-				    									//后台支付失败
-				    									Tips.alert({
-				    										content	: '支付已取消',
-				    										after	: function(){
-				    											window.location.href = 'weixin/kanteen/order_list/week';
-				    										}
-				    									});
-				    								});
-			    								}catch(e){
-			    									console.error(e);
-			    									Tips.alert('调用支付接口时发生错误，请点击确定后前往订单列表完成支付');
-			    									window.location.href = 'weixin/kanteen/order_list/week';
-			    								}
-			    							});
-			    						}else if(data.ordered){
-			    							Tips.alert('订单已创建。请在可领取时间段内到指定地点领取。', function(){
-			    								window.location.href = 'weixin/kanteen/order_list/week';
-			    							});
-			    						}
-			    					}else{
-			    						Tips.alert('订单提交失败');
-			    						$CPF.closeLoading();
-			    					}
-			    				});
-			    			});
-		    			}catch(e){
-		    				console.log(e);
-		    			}
-		    			
-		    		});
-		    		
-		    		
-		    		function getSubmitOrder(){
-		    			var receiverName = $('#receiverName').val(),
-		    				receiverContact = $('#receiverContact').val(),
-		    				receiverDepart = $('#receiverDepart').val();
-		    			if(receiverName === ''){
-		    				showErrorMsg('请输入领取人姓名');
-		    			}
-		    			if(!Utils.testContactNumber(receiverContact)){
-		    				showErrorMsg('请输入正确的领取人手机号');
-		    			}
-		    			if(selectedLocationId == null){
-		    				showErrorMsg('请选择领取地点');
-		    			}
-		    			if(selectedDelivery == null){
-		    				showErrorMsg('请选择领取时间');
-		    			}
-		    			if(selectedPayway == null){
-		    				showErrorMsg('请选择支付方式');
-		    			}
-		    			var sections = [];
-		    			$('.canteen-order-information_lists .canteen-order-information_list').each(function(){
-		    				var $this = $(this);
-		    				sections.push({
-		    					distributionWareId	: $this.attr('data-dwid'),
-		    					count				: parseInt($this.attr('data-count')),
-		    					waresName			: $this.find('.canteen-order-information_list_name').text()
-		    				});
-		    			});
-		    			return {
-		    				receiverName	: receiverName,
-		    				receiverContact	: receiverContact,
-		    				receiverDepart	: receiverDepart,
-		    				deliveryId		: selectedDelivery.id,
-		    				locationName	: selectedDelivery.locationName,
-		    				startTimeStr	: Utils.formatDate(new Date(selectedDelivery.startTime), 'yyyy-MM-dd hh:mm'),
-		    				endTimeStr		: Utils.formatDate(new Date(selectedDelivery.endTime), 'yyyy-MM-dd hh:mm'),
-		    				paywayName		: $(payDom).text(),
-		    				payway			: selectedPayway,
-		    				sections		: sections,
-		    				totalPrice		: parseFloat('${trolley.totalValidPrice }'),
-		    				remark			: $('#remark').val()
-		    			};
-		    		}
-		    		function showErrorMsg(msg){
-		    			Tips.alert({
-	    					content: msg,
-	    					define: '知道了'
-	    				});
-		    			$.error(msg);
-		    		}
-					function showOrderMsg(order, callback){
-						var content = '<h3 style="font-size:1.3em">确认订单</h3>';
-						var waresChain = '';
-						for(var i in order.sections){
-							var section = order.sections[i];
-							waresChain += section.waresName + '×' + section.count + ',';
+	    	seajs.use(['utils'], function(Utils){
+	    		Utils.bindOrTrigger('main-inited', function(){
+		    		Utils.bindOrTrigger('whenAttributeInited', [{
+		    			deliveriesJson 			: $.parseJSON('${deliveriesJson}'),
+		    			hasDelivery				: '${hasDelivery}' == 'true',
+		    			distributionId			: '${distributionId}',
+		    			trolleyTotalValidPrice	: parseInt('${trolley.totalValidPrice }'),
+		    			paywayMap				: {
+								'key_1'	: [{
+									text	: '微信支付',
+									key		: 'wxpay'
+								}],
+								'key_2'	: [{
+									text	: '现场支付',
+									key		: 'spot'
+								}],
+								'key_3'	: [{
+									text	: '微信支付',
+									key		: 'wxpay'
+								},{
+									text	: '现场支付',
+									key		: 'spot'
+								}]
 						}
-						waresChain = waresChain && waresChain.substring(0, waresChain.length - 1);
-						content +=
-								'<p><label>商品：</label>' + waresChain + '</p>' + 
-								'<p><label>合计：</label>￥' + (order.totalPrice / 100).toFixed(2) + '</p>' + 
-								'<p><label>领取人姓名：</label>' + order.receiverName + '</p>' + 
-								'<p><label>联系方式：</label>' + order.receiverContact + '</p>' +  
-								'<p><label>部门：</label>' + order.receiverDepart + '</p>' + 
-								'<p><label>领取地点：</label>' + order.locationName + '</p>' +
-								'<p><label>领取开始时间：</label>' + order.startTimeStr + '</p>' +
-								'<p><label>领取结束时间：</label>' + order.endTimeStr + '</p>' + 
-								'<p><label>付款方式：</label>' + order.paywayName + '</p>' +
-								'<p><label>备注：</label>' + order.remark + '</p>';
-						Tips.confirm({
-							define: '确认',
-							cancel: '取消',
-							content: '<div id="order-detail">' + content + '</div>',
-							after: function(b){
-								if(b){
-									callback();
-								}
-							}
-						});
-					}	    		
+		    		}]);
 	    		});
-	    		
-	    		
-	    		
-   		    }
+	    	});
     	});
     </script>
+    <script type="text/javascript" src="media/weixin/kanteen/js/kanteen-order.js"></script>
 </body>
 
 </html>

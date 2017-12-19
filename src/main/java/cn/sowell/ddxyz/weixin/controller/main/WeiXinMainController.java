@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,8 +52,9 @@ public class WeiXinMainController {
 	}
 	
 	
-	@RequestMapping("/amap")
-	public String aMap(){
+	@RequestMapping(value="/amap")
+	public String aMap(HttpServletResponse response){
+		response.setHeader("X-Frame-Options", "SAMEORIGIN");
 		return WeiXinConstants.PATH_BASE + "/common/amap.jsp";
 	}
 	

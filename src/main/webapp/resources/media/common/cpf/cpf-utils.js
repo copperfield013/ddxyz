@@ -5,7 +5,7 @@ define(function(require, exports){
 	var eventFieldMap = {};
 	$.extend(exports, {
 		/**
-		 * 判断一个是否是整数
+		 * 判断一个是否是整数，不包含判断类型
 		 */
 		isInteger	: function(o){
 			return (o | 0) == o;
@@ -397,14 +397,38 @@ define(function(require, exports){
 					if(typeof obj.callback === 'function'){
 						obj.callback.apply(this, callback);
 					}
+					obj.param = callback;
 					obj.flag = true;
 				}else if(typeof callback === 'function'){
 					obj.callback = callback;
 					if(obj.flag){
-						this.bindOrTrigger(event);
+						this.bindOrTrigger(event, obj.param);
 					}
 				}
 			}
+		},
+		bindTap		: function(target, handler){
+			$(target).on('cpf-tap', handler);
+			//自定义tap
+			$(target).on("touchstart", function(e) {
+			    if(!$(e.target).hasClass("disable")) $(e.target).data("isMoved", 0);
+			});
+			$(target).on("touchmove", function(e) {
+			    if(!$(e.target).hasClass("disable")) $(e.target).data("isMoved", 1);
+			});
+			$(target).on("touchend", function(e) {
+			    if(!$(e.target).hasClass("disable") && $(e.target).data("isMoved") == 0) $(e.target).trigger("cpf-tap");
+			});
+		},
+		/**
+		 * 计算地球上两个坐标的直线距离， 单位公里
+		 */
+		distanceBetween	: function(posA, posB){
+			var lngA = posA.lng, latA = posA.lat,
+				lngB = posB.lng, latB = posB.lat;
+			var R = 6371.004;//地球半径
+			var c = Math.sin(latA) * Math.sin(latB) * Math.cos(lngA - lngB) + Math.cos(latA) * Math.cos(latB);
+			return R * Math.acos(c) * Math.PI / 180;
 		}
 	});
 	

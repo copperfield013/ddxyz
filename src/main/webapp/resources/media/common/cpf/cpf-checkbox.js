@@ -72,12 +72,25 @@ define(function(require, exports, module){
 		}
 		
 		this.setValue = function(val){
-			for(var i in param.checkboxs){
-				var checkbox = param.checkboxs[i];
-				if(checkbox instanceof Ccheckbox){
-					var value = checkbox.getValue();
-					if(value == val){
-						checkbox.toggleChecked(true);
+			if(typeof val === 'number' && Utils.isInteger(val) && val >= 0){
+				//参数是一个数字时，勾选索引为该数字的选项
+				var checkbox = param.checkboxs[val];
+				if(checkbox){
+					checkbox.toggleChecked(true);
+				}
+			}else if($.isArray(val)){
+				//参数是一个数组时，勾选数组内所有元素的值
+				for(var i in val){
+					this.setValue(val[i]);
+				}
+			}else if(typeof val === 'string'){
+				for(var i in param.checkboxs){
+					var checkbox = param.checkboxs[i];
+					if(checkbox instanceof Ccheckbox){
+						var value = checkbox.getValue();
+						if(value == val){
+							checkbox.toggleChecked(true);
+						}
 					}
 				}
 			}
@@ -207,7 +220,9 @@ define(function(require, exports, module){
 							$input	: $this
 						});
 						$label.on('click', function(){
-							ccheckbox.toggleChecked();
+							if(!ccheckbox.isChecked() || ccheckbox.getType() === 'checkbox'){
+								ccheckbox.toggleChecked();
+							}
 						});
 						checkboxs.push(ccheckbox);
 					}
