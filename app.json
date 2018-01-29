@@ -1,0 +1,34 @@
+{
+  "pages":[
+    "pages/index/index",
+    "pages/logs/logs",
+    "pages/activity/index",
+    "pages/member/index",
+    "pages/member/add",
+    "pages/config/index"
+  ],
+  "window":{
+    "backgroundTextStyle":"light",
+    "navigationBarBackgroundColor": "#337ab7",
+    "navigationBarTitleText": "分摊计算器",
+    "navigationBarTextStyle":"white",
+    "backgroundColor":"#337ab7"
+  },
+  "tabBar":{
+    "color": "#000",
+    "selectedColor": "#000",
+    "borderStyle": "black",
+    "backgroundColor": "#fff",
+    "list":[{
+      "pagePath": "pages/index/index",
+      "iconPath": "media/image/home.png",
+      "selectedIconPath":"media/image/home.png",
+      "text": "首页"
+    },{
+      "pagePath": "pages/member/index",
+      "iconPath": "media/image/member.png",
+      "selectedIconPath": "media/image/member.png",
+      "text": "成员"
+    }]
+  }
+}

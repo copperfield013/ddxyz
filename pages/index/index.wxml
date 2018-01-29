@@ -1,0 +1,21 @@
+<!--index.wxml-->
+<view class="container">
+  <scroll-view class="container-row" id="wrapper" scroll-y bindscrolltoupper="upper" enable-back-to-top  bindscrolltolower="lower">
+    <view id="activity-item-container">
+      <view class="activity-item">
+        <text class="activity-name">活动1</text>
+        <text class="activity-price">￥50.77</text>
+        <view class="activity-detail">
+          <view class="activity-date-range">
+            <text class="detail-title">活动日期:</text>
+            <text>2018-1-19~2018-1-22</text>
+          </view>
+          <view>
+            <text class="detail-titile">最近记录时间</text>
+            <text>2018-1-18 15:52:02</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+</view>
