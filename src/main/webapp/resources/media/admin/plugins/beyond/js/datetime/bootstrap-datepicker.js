@@ -21,8 +21,9 @@
 	
 	// Picker object
 	
-	var Datepicker = function(element, options){
+	var Datepicker = function(element, options,scrollEle){
 		this.element = $(element);
+		this.scrollEle = scrollEle? $(scrollEle) : $('body');  //所在的滚动层
 		this.format = DPGlobal.parseFormat(options.format||this.element.data('date-format')||'mm/dd/yyyy');
 		this.picker = $(DPGlobal.template)
 							.appendTo('body')
@@ -82,25 +83,46 @@
 		this.fillDow();
 		this.fillMonths();
 		this.update();
-		this.showMode();
+        this.showMode();
 	};
 	
 	Datepicker.prototype = {
 		constructor: Datepicker,
 		
 		show: function(e) {
+			e.stopPropagation();
+			e.preventDefault();
+			var triggerEle = this.component ? this.component : this.element;
+			var PICKER = this.picker;
 			this.picker.show();
 			this.height = this.component ? this.component.outerHeight() : this.element.outerHeight();
+			var EleHeight = this.height; //触发元素的高度
 			this.place();
 			$(window).on('resize', $.proxy(this.place, this));
-			if (e ) {
-				e.stopPropagation();
-				e.preventDefault();
-			}
 			if (!this.isInput) {
 			}
 			var that = this;
 			$(document).on('mousedown', function(ev){
+				if ($(ev.target).closest('.datepicker').length == 0) {
+					that.hide();
+				}
+            });
+            $(this.scrollEle).on('scroll', function(){
+            	console.log('scroll');
+                var offset = triggerEle.offset();
+                //判断生成的picker 是在触发元素的上方还是下方
+                if(PICKER.hasClass('bottom')){
+                	PICKER.css({
+                        top: offset.top - 232
+                    })
+                }else {
+                    PICKER.css({
+                        top: offset.top + EleHeight,
+                    })
+                }
+
+			});
+			$(document).on('', function(ev){
 				if ($(ev.target).closest('.datepicker').length == 0) {
 					that.hide();
 				}
@@ -150,10 +172,23 @@
 		},
 		
 		place: function(){
+
+			var windowHeight = $(window).height();
 			var offset = this.component ? this.component.offset() : this.element.offset();
+			var bottomHeight = windowHeight - offset.top - this.height;  //触发元素距离底部的距离
+			var	pickerLeft = offset.left;
+			var pickerTop;
+
+			if( bottomHeight > 240 ){
+				pickerTop = offset.top + this.height;
+				this.picker.removeClass('bottom');
+			}else {
+				pickerTop = offset.top - 232;
+				this.picker.addClass('bottom');
+			}
 			this.picker.css({
-				top: offset.top + this.height,
-				left: offset.left
+				top: pickerTop,
+				left: pickerLeft
 			});
 		},
 		
@@ -313,6 +348,7 @@
 								date: this.date,
 								viewMode: DPGlobal.modes[this.viewMode].clsName
 							});
+							this.hide();  //点击完日期后隐藏弹出框
 						}
 						break;
 				}
@@ -332,15 +368,15 @@
 		}
 	};
 	
-	$.fn.datepicker = function ( option, val ) {
+	$.fn.datepicker = function ( option, scrollEle ) {   //第二个参数val  暂时不确定val的作用，先删除.
 		return this.each(function () {
 			var $this = $(this),
 				data = $this.data('datepicker'),
 				options = typeof option === 'object' && option;
 			if (!data) {
-				$this.data('datepicker', (data = new Datepicker(this, $.extend({}, $.fn.datepicker.defaults,options))));
+				$this.data('datepicker', (data = new Datepicker(this, $.extend({}, $.fn.datepicker.defaults,options),scrollEle)));
 			}
-			if (typeof option === 'string') data[option](val);
+			// if (typeof option === 'string') data[option](val);
 		});
 	};
 

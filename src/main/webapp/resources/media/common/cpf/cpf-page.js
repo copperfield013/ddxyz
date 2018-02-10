@@ -33,8 +33,26 @@ define(function(require, exports, module){
 			if(page.getType() === 'dialog'){
 				$('a[href],button[href]', page.getContainer()).click(function(e){
 					var href = $(this).attr('href');
-					if(href !== '#'){
-						goPage(this, page);
+					var je = /^javascript:(.*)$/;
+					if(je.test(href)){
+						try{
+							eval(je.exec(href)[1]);
+						}catch(e){}
+					}else if(href && href !== '#'){
+						var reg = /^page:(\w+)$/; 
+						if(reg.test(href)){
+							var action = reg.exec(href)[1];
+							switch(action){
+							case 'refresh'	:
+								$page.getLocatePage().refresh();
+								break;
+							case 'close'	:
+								$page.getLocatePage().close();
+								break;
+							}
+						}else{
+							goPage(this, page);
+						}
 					}
 				});
 			}else{
@@ -42,14 +60,32 @@ define(function(require, exports, module){
 					var $this = $(this);
 					if(!$this.is('.tab,.dialog')){
 						var href =$this.attr('href');
-						if(href && href !== '#'){
+						var je = /^javascript:(.*)$/;
+						if(je.test(href)){
+							try{
+								eval(je.exec(href)[1]);
+							}catch(e){}
+						}else if(href && href !== '#'){
 							var confirmStr = $this.attr('confirm');
 							if(confirmStr){
 								require('dialog').confirm(confirmStr, function(yes){
 									if(yes) goPage($this, page);
 								});
 							}else{
-								goPage($this, page);
+								var reg = /^page:(\w+)$/; 
+								if(reg.test(href)){
+									var action = reg.exec(href)[1];
+									switch(action){
+									case 'refresh'	:
+										$page.getLocatePage().refresh();
+										break;
+									case 'close'	:
+										$page.getLocatePage().close();
+										break;
+									}
+								}else{
+									goPage($this, page);
+								}
 							}
 						}
 					}
@@ -175,6 +211,14 @@ define(function(require, exports, module){
 				}
 			}
 		}
+		/**
+		 * 
+		 */
+		this.getEventCallbacks = function(){
+			if(typeof pageObj.getEventCallbacks === 'function'){
+				return pageObj.getEventCallbacks.apply(pageObj, arguments);
+			}
+		}
 	}
 	
 	$.extend(Page, {
@@ -188,6 +232,7 @@ define(function(require, exports, module){
 			pageMap[pageId] = undefined;
 		}
 	});
+	
 	
 	//将整个Page类作为对外接口
 	module.exports = Page;

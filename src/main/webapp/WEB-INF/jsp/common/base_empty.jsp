@@ -4,3 +4,4 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <c:set var="GLOBAL_VERSION" value="0.19" />
+<c:set var="cpfVersion" value="1.1" />

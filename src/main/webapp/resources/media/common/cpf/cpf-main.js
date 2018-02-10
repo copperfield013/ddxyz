@@ -28,6 +28,7 @@ define(function(require){
 	require('dialog');
 	require('tree');
 	require('tab');
+	require('innerpage');
 	require('css');
 	require('control');
 	$CPF.putPageInitSequeue(12, function($page){
@@ -37,6 +38,7 @@ define(function(require){
 	});
 	$CPF.init({
 		loadingImg			: 'media/admin/cpf/image/loading.gif',
+		innerPageLoadingImg	: 'media/admin/cpf/image/innerpage-loading.gif',
 		maxPageCount		: 8,
 		sessionInvalidURL	: 'admin/login'
 	});

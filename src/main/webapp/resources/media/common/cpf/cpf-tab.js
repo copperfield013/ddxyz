@@ -11,7 +11,8 @@ define(function(require, exports, module){
 	;
 	//id-tab的map
 	var tabMap = {},
-		nextTab = 1
+		nextTab = 1,
+		activatedTabQueue = []
 		;
 	/**
 	 * 设置参数
@@ -67,7 +68,13 @@ define(function(require, exports, module){
 			onPageLoad		: $.noop,
 			onClose			: $.noop,
 			$title			: undefined,
-			$content		: undefined
+			$content		: undefined,
+			events			: {
+				afterClose		: null,
+				//调用该事件需要修改bootstrap的源码中的Tab.prototype.activate#next方法
+				//为$active触发一个事件.trigger('inactivate')
+				afterInactivate	: null
+			}
 		};
 		var param = $.extend({}, defaultParam, _param);
 		var id = param.id,
@@ -94,6 +101,8 @@ define(function(require, exports, module){
 		});
 		
 		tabDomObj.$title.data($CPF.getParam('tabTitleDataKey'), this);
+		tabDomObj.$title.on('cpf-activate', function(){_this.getEventCallbacks('afterActivate').fire([_this])});
+		tabDomObj.$title.on('cpf-inactivate', function(){_this.getEventCallbacks('afterInactivate').fire([_this])});
 		this.getId = function(){
 			return id;
 		};
@@ -289,6 +298,7 @@ define(function(require, exports, module){
 			this.getTitleDom().remove();
 			this.getContent().remove();
 			this.destruct();
+			this.getEventCallbacks('afterClose').fire([this]);
 			if(finalWidth >= warpWidth){
 				if(ulLeft < 0){
 					ulDom.css("left",ulLeft+closeWidth)
@@ -322,6 +332,18 @@ define(function(require, exports, module){
 		this.destruct = function(){
 			Page.remove(id);
 		};
+		/**
+		 * 
+		 */
+		this.getEventCallbacks = function(eventName, flag){
+			if(eventName && typeof eventName === 'string'){
+				var event = param.events[eventName];
+				if(!event){
+					param.events[eventName] = event = $.Callbacks(flag || 'stopOnFalse');
+				}
+				return event;
+			}
+		}
 	
 	}
 	
@@ -386,13 +408,13 @@ define(function(require, exports, module){
 	 */
 	function bindPageTabEvent($page){
 		//阻止跳转
-		$('a[href]', $page).click(function(e){
-			  e.preventDefault();
+		$($page).on('click', 'a[href]', function(e){
+			e.preventDefault();
 		});
 		/**
 		 * 将a标签天跳转页面修改为在标签页中打开
 		 */
-		$('a.tab[href]', $page).click(function(){
+		$($page).on('click', 'a.tab[href]', $page, function(){
 			var _this = $(this);
 			var uri = _this.attr('href'),
 				tabId = _this.attr('target'),
@@ -415,6 +437,7 @@ define(function(require, exports, module){
 				return false;
 			}
 		});
+		
 	};
 	
 	

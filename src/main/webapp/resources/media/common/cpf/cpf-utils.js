@@ -1,8 +1,10 @@
 define(function(require, exports){
 	var CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
 	var SEQUENCE_MAP = {}
+	var sFocus;
 	var bindOrTriggerMap = {};
 	var eventFieldMap = {};
+
 	$.extend(exports, {
 		/**
 		 * 判断一个是否是整数，不包含判断类型
@@ -112,13 +114,22 @@ define(function(require, exports){
 		 * @param class2 {String}
 		 * @param flag {Boolean} 为true的话，jqObj一定有class1没有class2；为false的话，jqObj有class2没有class1
 		 */
-		switchClass	: function(jqObj, class1, class2, flag){
+		switchClass	: function(jqObj, class1, class2, flag, callback){
 			var hasClass1 = jqObj.is('.' + class1),
 				hasClass2 = jqObj.is('.' + class2);
 			if((hasClass1 ^ hasClass2) === 1){
-				flag = flag || hasClass2;
+				if(typeof flag === 'function'){
+					callback = flag;
+					flag = hasClass2;
+				}else{
+					callback = (typeof callback === 'function')? callback: $.noop;
+					flag = flag || hasClass2;
+				}
 				jqObj.toggleClass(class1, flag);
 				jqObj.toggleClass(class2, !flag);
+				try{
+					callback.apply(jqObj, [flag]);
+				}catch(e){}
 			}
 			return this;
 		},
@@ -192,7 +203,7 @@ define(function(require, exports){
 			if(position instanceof $){
 				$position = position;
 			}else if(position === 0){
-				$position = $container.children('*').first();
+				$position = $container.children('div,span').first();
 			}else{
 				$position = $container.children().last()
 			}
@@ -273,10 +284,12 @@ define(function(require, exports){
 		 */
 		removeStyle		: function(dom, styleName){
 			if(styleName){
-				var style = $(dom).attr('style'),
-					reg = new RegExp(styleName + '\\s*:\\s*([^;]+;)|([^;]+$)', 'gi')
-				style = style.replace(reg, '');
-				$(dom).attr('style', style);
+				var style = $(dom).attr('style');
+				if(style){
+					var reg = new RegExp(styleName + '\\s*:\\s*([^;]+;)|([^;]+$)', 'gi')
+					style = style.replace(reg, '');
+					$(dom).attr('style', style);
+				}
 			}
 			return this;
 		},
@@ -294,13 +307,21 @@ define(function(require, exports){
 			SEQUENCE_MAP[key] = currentSeq + 1;
 			return currentSeq;
 		},
-		datepicker		: function($dom){
+		datepicker		: function($dom,scrollEle){
 			return $($dom).datepicker({
 				format		: 'yyyy-mm-dd',
 				weekStart	: 1,
 				daysOfWeek : [ '日', '一', '二', '三', '四', '五', '六' ],  
                 monthNames : [ '一月', '二月', '三月', '四月', '五月', '六月',  
                         '七月', '八月', '九月', '十月', '十一月', '十二月' ]
+			},scrollEle);
+		},
+		/**
+		 * 获取焦点
+		 */
+		focus		: function($dom){
+			return $($dom).focus(function(){
+				sFocus = $(this);
 			});
 		},
 		daterangepicker: function($dom, _param){

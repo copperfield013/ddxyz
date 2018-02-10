@@ -75,16 +75,18 @@ define(function(require, exports, module){
 			var pageInfo = $CPF.getParam('pageInfoGetter')($(this));
 			if(Utils.isInteger(pageInfo.pageNo) && Utils.isInteger(pageInfo.pageSize)&& Utils.isInteger(pageInfo.count)){
 				//构造分页
-				var paginator = $CPF.getParam('paginatorBuilder')(pageInfo);
-				if(paginator){
-					paginator
-						.data($CPF.getParam('pageInfoKey'), paginator)
+				var $paginator = $CPF.getParam('paginatorBuilder')(pageInfo);
+				if($paginator){
+					$paginator
+						.data($CPF.getParam('pageInfoKey'), $paginator)
 						.appendTo($(this).empty());
 						;
 					//表单提交时，默认放入分页参数
-					$('form', $page).first().on('cpf-submit', function(e, formData){
-						formData.append('pageNo', pageInfo.pageNo);
-						formData.append('pageSize', pageInfo.pageSize);
+					$('form', $page).on('cpf-submit', function(e, formData){
+						if($(this).getLocatePage() == $paginator.getLocatePage()){
+							formData.append('pageNo', pageInfo.pageNo);
+							formData.append('pageSize', pageInfo.pageSize);
+						}
 					});
 				}
 			}else{
@@ -196,7 +198,7 @@ define(function(require, exports, module){
 		pageSizeSelect.val(pageInfo.pageSize);
 		ul.prepend($('<li class="cpf-paginator-pagesize">')
 				.append(pageSizeSelect)
-			);
+			).prepend($('<li class="cpf-paginator-total-count"><span>共' + pageInfo.count + '条</span></li>'));
 		//修改每页条数时，触发跳转
 		pageSizeSelect.change(function(e){
 			e.stopImmediatePropagation();

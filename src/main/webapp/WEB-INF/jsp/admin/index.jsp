@@ -236,22 +236,26 @@
 					  MAIN		: '${basePath}media/admin/main/js/'
 				},
 				alias	: {
-					'$CPF'		: 'COMMON/cpf/cpf-core.js',
-					'utils'		: 'COMMON/cpf/cpf-utils.js',
-					'page'		: 'COMMON/cpf/cpf-page.js',
-					'dialog'	: 'COMMON/cpf/cpf-dialog.js',
-					'paging'	: 'COMMON/cpf/cpf-paging.js',
-					'tree'		: 'COMMON/cpf/cpf-tree.js',
-					'form'		: 'COMMON/cpf/cpf-form.js',
-					'tab' 		: 'COMMON/cpf/cpf-tab.js',
-					'ajax'		: 'COMMON/cpf/cpf-ajax.js',
-					'css'		: 'COMMON/cpf/cpf-css.js',
-					'timer'		: 'COMMON/cpf/cpf-timer.js',
-					'console'	: 'COMMON/cpf/cpf-console.js',
-					'control'	: 'COMMON/cpf/cpf-control.js'
+					'jquery'	: 'COMMON/cpf/cpf-jquery.js?v=${cpfVersion}',
+					'$CPF'		: 'COMMON/cpf/cpf-core.js?v=${cpfVersion}',
+					'utils'		: 'COMMON/cpf/cpf-utils.js?v=${cpfVersion}',
+					'page'		: 'COMMON/cpf/cpf-page.js?v=${cpfVersion}',
+					'dialog'	: 'COMMON/cpf/cpf-dialog.js?v=${cpfVersion}',
+					'paging'	: 'COMMON/cpf/cpf-paging.js?v=${cpfVersion}',
+					'tree'		: 'COMMON/cpf/cpf-tree.js?v=${cpfVersion}',
+					'form'		: 'COMMON/cpf/cpf-form.js?v=${cpfVersion}',
+					'tab' 		: 'COMMON/cpf/cpf-tab.js?v=${cpfVersion}',
+					'ajax'		: 'COMMON/cpf/cpf-ajax.js?v=${cpfVersion}',
+					'css'		: 'COMMON/cpf/cpf-css.js?v=${cpfVersion}',
+					'timer'		: 'COMMON/cpf/cpf-timer.js?v=${cpfVersion}',
+					'console'	: 'COMMON/cpf/cpf-console.js?v=${cpfVersion}',
+					'control'	: 'COMMON/cpf/cpf-control.js?v=${cpfVersion}',
+					'innerpage'	: 'COMMON/cpf/cpf-innerpage.js?v=$${cpfVersion}',
+					'bloodhound': '${basePath}media/admin/plugins/typeahead/dist/typeahead.bundle.js?v=$${cpfVersion}'
 				}
 	    		});
-	    		seajs.use('COMMON/cpf/cpf-main.js');
+	    		
+	    		seajs.use('COMMON/cpf/cpf-main.js?v=${cpfVersion}');
 	    	});
 	    </script>
 	</body>
